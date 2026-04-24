@@ -77,11 +77,12 @@ class NotificationService
             $count = count($payload);
 
             $schoolId = isset($data['school_id']) ? (int) $data['school_id'] : null;
+            [$pushTitle, $pushBody, $pushData] = $this->resolvePushPresentation($type, $title, $body, $data);
             $this->push->sendToUsers(
                 $recipients->pluck('id')->all(),
-                $title,
-                $body,
-                array_merge($data, ['type' => $type]),
+                $pushTitle,
+                $pushBody,
+                $pushData,
                 $schoolId && $schoolId > 0 ? $schoolId : null,
             );
 
@@ -211,5 +212,36 @@ class NotificationService
             ->unique()
             ->values()
             ->all();
+    }
+
+    private function resolvePushPresentation(string $type, string $title, string $body, array $data): array
+    {
+        $pushTitle = trim($title);
+        $pushBody = trim($body);
+
+        if ($type === 'message') {
+            $senderName = trim((string) ($data['sender_name'] ?? ''));
+            $schoolName = trim((string) ($data['school_name'] ?? ''));
+            $messageBody = trim((string) ($data['message_body'] ?? $body));
+
+            $pushTitle = $senderName !== ''
+                ? $senderName
+                : ($schoolName !== '' ? $schoolName : ($pushTitle !== '' ? $pushTitle : 'MyEdu'));
+
+            $pushBody = $messageBody !== '' ? $messageBody : ($pushBody !== '' ? $pushBody : 'New message');
+        } else {
+            $pushTitle = $pushTitle !== '' ? $pushTitle : 'MyEdu';
+            $pushBody = $pushBody !== '' ? $pushBody : 'You have a new notification.';
+        }
+
+        return [
+            $pushTitle,
+            $pushBody,
+            array_merge($data, [
+                'type' => $type,
+                'title' => $pushTitle,
+                'body' => $pushBody,
+            ]),
+        ];
     }
 }

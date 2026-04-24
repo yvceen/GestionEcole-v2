@@ -5,19 +5,26 @@ use App\Http\Controllers\DocumentDownloadController;
 use App\Http\Controllers\Api\DeviceTokenController;
 use App\Http\Controllers\Api\MobileAttendanceScanController;
 use App\Http\Controllers\Api\MobileAgendaController;
+use App\Http\Controllers\Api\MobileAttendanceController;
 use App\Http\Controllers\Api\MobileAppointmentController;
+use App\Http\Controllers\Api\MobileActivityController;
 use App\Http\Controllers\Api\MobileAuthController;
+use App\Http\Controllers\Api\MobileCourseController;
 use App\Http\Controllers\Api\MobileDashboardController;
 use App\Http\Controllers\Api\MobileDocumentController;
 use App\Http\Controllers\Api\MobileBehaviorFeedController;
+use App\Http\Controllers\Api\MobileFinanceController;
+use App\Http\Controllers\Api\MobileGradesController;
 use App\Http\Controllers\Api\MobileHomeworkController;
 use App\Http\Controllers\Api\MobileMessageController;
 use App\Http\Controllers\Api\MobileNewsController;
 use App\Http\Controllers\Api\MobileNotificationController;
 use App\Http\Controllers\Api\MobilePasswordController;
+use App\Http\Controllers\Api\MobilePickupRequestController;
 use App\Http\Controllers\Api\MobileSchoolLifeController;
 use App\Http\Controllers\Api\MobileTeacherAttendanceController;
 use App\Http\Controllers\Api\MobileTeacherHomeworkController;
+use App\Http\Controllers\Api\MobileTimetableController;
 use App\Http\Controllers\Api\MobileTransportController;
 use App\Http\Middleware\AuthenticateMobileApiToken;
 use App\Http\Middleware\EnsureApiSchoolAccess;
@@ -34,6 +41,21 @@ Route::middleware([IdentifySchoolFromSubdomain::class])->group(function (): void
         Route::get('/me', [MobileAuthController::class, 'me'])->name('api.me');
         Route::get('/dashboard', [MobileDashboardController::class, 'show'])->name('api.dashboard.show');
         Route::get('/agenda', [MobileAgendaController::class, 'index'])->name('api.agenda.index');
+        Route::get('/attendance', [MobileAttendanceController::class, 'index'])->name('api.attendance.index');
+        Route::get('/grades', [MobileGradesController::class, 'index'])->name('api.grades.index');
+        Route::get('/courses', [MobileCourseController::class, 'index'])->name('api.courses.index');
+        Route::get('/timetable', [MobileTimetableController::class, 'index'])->name('api.timetable.index');
+        Route::get('/finance', [MobileFinanceController::class, 'index'])->name('api.finance.index');
+        Route::get('/finance/receipts/{receipt}/download', [MobileFinanceController::class, 'downloadReceipt'])
+            ->whereNumber('receipt')
+            ->name('api.finance.receipts.download');
+        Route::get('/activities', [MobileActivityController::class, 'index'])->name('api.activities.index');
+        Route::get('/activities/{activity}', [MobileActivityController::class, 'show'])
+            ->whereNumber('activity')
+            ->name('api.activities.show');
+        Route::get('/courses/attachments/{attachment}', [MobileCourseController::class, 'downloadAttachment'])
+            ->whereNumber('attachment')
+            ->name('api.mobile.courses.attachments.download');
         Route::get('/news', [MobileNewsController::class, 'index'])->name('api.news.index');
         Route::get('/news/{news}', [MobileNewsController::class, 'show'])->whereNumber('news')->name('api.news.show');
         Route::get('/transport', [MobileTransportController::class, 'show'])->name('api.transport.show');
@@ -44,6 +66,8 @@ Route::middleware([IdentifySchoolFromSubdomain::class])->group(function (): void
         Route::get('/behavior-notes', [MobileBehaviorFeedController::class, 'index'])->name('api.behavior-notes.index');
         Route::get('/appointments', [MobileAppointmentController::class, 'index'])->name('api.appointments.index');
         Route::post('/appointments', [MobileAppointmentController::class, 'store'])->name('api.appointments.store');
+        Route::get('/pickup-requests', [MobilePickupRequestController::class, 'index'])->name('api.pickup-requests.index');
+        Route::post('/pickup-requests', [MobilePickupRequestController::class, 'store'])->name('api.pickup-requests.store');
         Route::post('/mobile/attendance/scan', [MobileAttendanceScanController::class, 'store'])->name('api.mobile.attendance.scan');
         Route::post('/mobile/device-tokens', [DeviceTokenController::class, 'store'])->name('api.mobile.device-tokens.store');
         Route::get('/notifications', [MobileNotificationController::class, 'index'])->name('api.notifications.index');

@@ -26,12 +26,6 @@
                     <p class="text-sm text-slate-600">All your recent updates.</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    @if(Route::has($routePrefix.'.notifications.push_test'))
-                        <form method="POST" action="{{ route($routePrefix.'.notifications.push_test') }}">
-                            @csrf
-                            <button class="app-button-secondary" type="submit">Tester push Android</button>
-                        </form>
-                    @endif
                     @if(Route::has($routePrefix.'.notifications.read_all'))
                         <form method="POST" action="{{ route($routePrefix.'.notifications.read_all') }}">
                             @csrf

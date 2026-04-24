@@ -195,6 +195,17 @@ trait InteractsWithMessages
             }
         }
 
+        if (!empty($data['message_id']) && is_numeric($data['message_id'])) {
+            $message = Message::query()
+                ->with('sender:id,name')
+                ->find((int) $data['message_id']);
+
+            if ($message) {
+                $data['sender_name'] = $message->sender?->name;
+                $data['message_body'] = $message->bodyText();
+            }
+        }
+
         app(NotificationService::class)->notifyUsers(
             $userIds,
             'message',

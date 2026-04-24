@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Assessment;
 use App\Models\Classroom;
 use App\Models\Grade;
+use App\Models\ParentStudentFee;
+use App\Models\PickupRequest;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\Vehicle;
@@ -13,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\Password;
@@ -275,19 +278,17 @@ class UserController extends Controller
             return back()->with('success', 'Impossible de supprimer votre propre compte.');
         }
 
-        if (Assessment::where('teacher_id', $user->id)->exists()) {
-            return back()->withErrors([
-                'delete_user' => 'Impossible: cet utilisateur est encore reference par des evaluations.',
-            ]);
-        }
+        DB::transaction(function () use ($user, $schoolId): void {
+            $linkedStudent = $this->linkedStudent($user, $schoolId);
 
-        if (Grade::where('teacher_id', $user->id)->exists()) {
-            return back()->withErrors([
-                'delete_user' => 'Impossible: cet utilisateur est encore reference par des notes.',
-            ]);
-        }
+            if ($linkedStudent) {
+                $this->deleteStudentRelations($linkedStudent, $schoolId);
+                $linkedStudent->delete();
+            }
 
-        $user->delete();
+            $this->deleteUserRelations($user, $schoolId);
+            $user->delete();
+        });
 
         return redirect()->route('admin.users.index')->with('success', 'Utilisateur supprime.');
     }
@@ -355,6 +356,254 @@ class UserController extends Controller
             ->where(fn ($query) => $query
                 ->where('school_id', $schoolId)
                 ->where('role', User::ROLE_PARENT));
+    }
+
+    private function deleteStudentRelations(Student $student, int $schoolId): void
+    {
+        $submissionIds = DB::table('homework_submissions')
+            ->where('student_id', $student->id)
+            ->pluck('id');
+
+        if ($submissionIds->isNotEmpty()) {
+            DB::table('homework_submission_files')
+                ->whereIn('submission_id', $submissionIds->all())
+                ->delete();
+        }
+
+        DB::table('homework_submissions')
+            ->where('student_id', $student->id)
+            ->delete();
+
+        PickupRequest::query()
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('appointments')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('payment_items')
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('payments')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('parent_student_fees')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('student_fee_plans')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('activity_participants')
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('grades')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('attendances')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('student_notes')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('student_behaviors')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('support_plans')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('transport_logs')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('transport_assignments')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+    }
+
+    private function deleteUserRelations(User $user, int $schoolId): void
+    {
+        $user->deviceTokens()->delete();
+        $user->notifications()->delete();
+        $user->tokens()->delete();
+        $user->parentProfile()?->delete();
+
+        if (Schema::hasTable('messages')) {
+            DB::table('messages')
+                ->where('school_id', $schoolId)
+                ->where(function ($query) use ($user) {
+                    $query->where('sender_id', $user->id);
+
+                    if (Schema::hasColumn('messages', 'target_type') && Schema::hasColumn('messages', 'target_id')) {
+                        $query->orWhere(function ($nested) use ($user) {
+                            $nested->where('target_type', 'user')
+                                ->where('target_id', $user->id);
+                        });
+                    }
+
+                    if (Schema::hasColumn('messages', 'recipient_type') && Schema::hasColumn('messages', 'recipient_id')) {
+                        $query->orWhere(function ($nested) use ($user) {
+                            $nested->where('recipient_type', 'user')
+                                ->where('recipient_id', $user->id);
+                        });
+                    }
+                })
+                ->delete();
+        }
+
+        $this->removeUserFromMessageTargets((int) $user->id, $schoolId);
+
+        DB::table('appointments')
+            ->where('school_id', $schoolId)
+            ->where('parent_user_id', $user->id)
+            ->delete();
+
+        PickupRequest::query()
+            ->where('school_id', $schoolId)
+            ->where('parent_user_id', $user->id)
+            ->delete();
+
+        ParentStudentFee::query()
+            ->where('school_id', $schoolId)
+            ->where('parent_user_id', $user->id)
+            ->delete();
+
+        Student::query()
+            ->where('school_id', $schoolId)
+            ->where('parent_user_id', $user->id)
+            ->update(['parent_user_id' => null]);
+
+        DB::table('classroom_teacher')
+            ->where('teacher_id', $user->id)
+            ->delete();
+
+        DB::table('teacher_subjects')
+            ->where('teacher_id', $user->id)
+            ->delete();
+
+        DB::table('transport_logs')
+            ->where('school_id', $schoolId)
+            ->where('recorded_by_user_id', $user->id)
+            ->delete();
+
+        DB::table('student_notes')
+            ->where('school_id', $schoolId)
+            ->where('created_by_user_id', $user->id)
+            ->delete();
+
+        DB::table('student_behaviors')
+            ->where('school_id', $schoolId)
+            ->where('created_by_user_id', $user->id)
+            ->delete();
+
+        DB::table('support_plans')
+            ->where('school_id', $schoolId)
+            ->where('created_by_user_id', $user->id)
+            ->delete();
+
+        Vehicle::query()
+            ->where('school_id', $schoolId)
+            ->where('driver_id', $user->id)
+            ->update(['driver_id' => null]);
+
+        Grade::query()
+            ->where('school_id', $schoolId)
+            ->where('teacher_id', $user->id)
+            ->delete();
+
+        Assessment::query()
+            ->where('school_id', $schoolId)
+            ->where('teacher_id', $user->id)
+            ->delete();
+
+        DB::table('timetables')
+            ->where('teacher_id', $user->id)
+            ->delete();
+
+        if (Schema::hasTable('teacher_pedagogical_resources')) {
+            DB::table('teacher_pedagogical_resources')
+                ->where('teacher_id', $user->id)
+                ->delete();
+        }
+
+        if (Schema::hasTable('activity_reports')) {
+            DB::table('activity_reports')
+                ->where('created_by_user_id', $user->id)
+                ->delete();
+        }
+
+        if (Schema::hasTable('homework_user_views')) {
+            DB::table('homework_user_views')
+                ->where('user_id', $user->id)
+                ->delete();
+        }
+    }
+
+    private function removeUserFromMessageTargets(int $userId, int $schoolId): void
+    {
+        if (!Schema::hasTable('messages') || !Schema::hasColumn('messages', 'target_user_ids')) {
+            return;
+        }
+
+        $messages = DB::table('messages')
+            ->select('id', 'target_type', 'target_id', 'target_user_ids')
+            ->where('school_id', $schoolId)
+            ->whereNotNull('target_user_ids')
+            ->get();
+
+        foreach ($messages as $message) {
+            $targetUserIds = json_decode((string) $message->target_user_ids, true);
+            if (!is_array($targetUserIds)) {
+                continue;
+            }
+
+            $filteredIds = array_values(array_filter(
+                array_map('intval', $targetUserIds),
+                fn (int $id) => $id !== $userId
+            ));
+
+            if (count($filteredIds) === count($targetUserIds)) {
+                continue;
+            }
+
+            $isDirectTarget = (string) ($message->target_type ?? '') === 'user'
+                && (int) ($message->target_id ?? 0) === $userId;
+
+            if ($filteredIds === [] && $isDirectTarget) {
+                DB::table('messages')->where('id', $message->id)->delete();
+                continue;
+            }
+
+            DB::table('messages')
+                ->where('id', $message->id)
+                ->update([
+                    'target_user_ids' => $filteredIds === [] ? null : json_encode($filteredIds),
+                    'target_id' => $isDirectTarget ? ($filteredIds[0] ?? null) : $message->target_id,
+                    'target_type' => $filteredIds === [] && $isDirectTarget ? null : $message->target_type,
+                ]);
+        }
     }
 
     private function studentClassrooms(int $schoolId)

@@ -10,6 +10,7 @@ use App\Models\Attendance;
 use App\Models\Grade;
 use App\Models\ParentStudentFee;
 use App\Models\Payment;
+use App\Models\PickupRequest;
 use App\Models\Route as TransportRoute;
 use App\Models\Student;
 use App\Models\StudentFeePlan;
@@ -19,6 +20,7 @@ use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
 class StudentController extends Controller
 {
@@ -401,46 +403,269 @@ class StudentController extends Controller
         $schoolId = (int) app('current_school_id');
         abort_unless((int) $student->school_id === $schoolId, 404);
 
-        $blockingReasons = [];
-
-        if ($student->user_id) {
-            $blockingReasons[] = 'un compte eleve lie';
-        }
-
-        if (Grade::where('school_id', $schoolId)->where('student_id', $student->id)->exists()) {
-            $blockingReasons[] = 'des notes';
-        }
-
-        if (Attendance::where('school_id', $schoolId)->where('student_id', $student->id)->exists()) {
-            $blockingReasons[] = 'des presences/absences';
-        }
-
-        if (Payment::where('school_id', $schoolId)->where('student_id', $student->id)->exists()) {
-            $blockingReasons[] = 'des paiements';
-        }
-
-        if (TransportAssignment::where('school_id', $schoolId)->where('student_id', $student->id)->exists()) {
-            $blockingReasons[] = 'un dossier transport';
-        }
-
-        if (!empty($blockingReasons)) {
-            return back()->withErrors([
-                'delete_student' => 'Suppression bloquee: cet eleve possede ' . implode(', ', $blockingReasons) . '. Archivez ou nettoyez ces donnees avant suppression.',
-            ]);
-        }
-
         DB::transaction(function () use ($schoolId, $student): void {
-            StudentFeePlan::where('school_id', $schoolId)
-                ->where('student_id', $student->id)
-                ->delete();
+            $linkedUser = $student->studentUser()->where('school_id', $schoolId)->first();
 
-            ParentStudentFee::where('school_id', $schoolId)
-                ->where('student_id', $student->id)
-                ->delete();
+            $this->deleteStudentRelations($student, $schoolId);
+
+            if ($linkedUser) {
+                $this->deleteUserRelations($linkedUser, $schoolId, $student->id);
+                $linkedUser->delete();
+            }
 
             $student->delete();
         });
 
         return redirect()->route('admin.students.index')->with('success', 'Eleve supprime.');
+    }
+
+    private function deleteStudentRelations(Student $student, int $schoolId): void
+    {
+        $submissionIds = DB::table('homework_submissions')
+            ->where('student_id', $student->id)
+            ->pluck('id');
+
+        if ($submissionIds->isNotEmpty()) {
+            DB::table('homework_submission_files')
+                ->whereIn('submission_id', $submissionIds->all())
+                ->delete();
+        }
+
+        DB::table('homework_submissions')
+            ->where('student_id', $student->id)
+            ->delete();
+
+        PickupRequest::query()
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('appointments')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('payment_items')
+            ->where('student_id', $student->id)
+            ->delete();
+
+        Payment::query()
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        ParentStudentFee::query()
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        StudentFeePlan::query()
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('activity_participants')
+            ->where('student_id', $student->id)
+            ->delete();
+
+        Grade::query()
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        Attendance::query()
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('student_notes')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('student_behaviors')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('support_plans')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        DB::table('transport_logs')
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        TransportAssignment::query()
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+    }
+
+    private function deleteUserRelations(User $user, int $schoolId, ?int $linkedStudentId = null): void
+    {
+        $user->deviceTokens()->delete();
+        $user->notifications()->delete();
+        $user->tokens()->delete();
+        $user->parentProfile()?->delete();
+
+        if (Schema::hasTable('messages')) {
+            DB::table('messages')
+                ->where('school_id', $schoolId)
+                ->where(function ($query) use ($user) {
+                    $query->where('sender_id', $user->id);
+
+                    if (Schema::hasColumn('messages', 'target_type') && Schema::hasColumn('messages', 'target_id')) {
+                        $query->orWhere(function ($nested) use ($user) {
+                            $nested->where('target_type', 'user')
+                                ->where('target_id', $user->id);
+                        });
+                    }
+
+                    if (Schema::hasColumn('messages', 'recipient_type') && Schema::hasColumn('messages', 'recipient_id')) {
+                        $query->orWhere(function ($nested) use ($user) {
+                            $nested->where('recipient_type', 'user')
+                                ->where('recipient_id', $user->id);
+                        });
+                    }
+                })
+                ->delete();
+        }
+
+        $this->removeUserFromMessageTargets((int) $user->id, $schoolId);
+
+        DB::table('appointments')
+            ->where('school_id', $schoolId)
+            ->where('parent_user_id', $user->id)
+            ->delete();
+
+        PickupRequest::query()
+            ->where('school_id', $schoolId)
+            ->where('parent_user_id', $user->id)
+            ->delete();
+
+        ParentStudentFee::query()
+            ->where('school_id', $schoolId)
+            ->where('parent_user_id', $user->id)
+            ->delete();
+
+        if ($linkedStudentId === null) {
+            Student::query()
+                ->where('school_id', $schoolId)
+                ->where('parent_user_id', $user->id)
+                ->update(['parent_user_id' => null]);
+        }
+
+        DB::table('classroom_teacher')
+            ->where('teacher_id', $user->id)
+            ->delete();
+
+        DB::table('teacher_subjects')
+            ->where('teacher_id', $user->id)
+            ->delete();
+
+        DB::table('transport_logs')
+            ->where('school_id', $schoolId)
+            ->where('recorded_by_user_id', $user->id)
+            ->delete();
+
+        DB::table('student_notes')
+            ->where('school_id', $schoolId)
+            ->where('created_by_user_id', $user->id)
+            ->delete();
+
+        DB::table('student_behaviors')
+            ->where('school_id', $schoolId)
+            ->where('created_by_user_id', $user->id)
+            ->delete();
+
+        DB::table('support_plans')
+            ->where('school_id', $schoolId)
+            ->where('created_by_user_id', $user->id)
+            ->delete();
+
+        DB::table('vehicles')
+            ->where('school_id', $schoolId)
+            ->where('driver_id', $user->id)
+            ->update(['driver_id' => null]);
+
+        DB::table('grades')
+            ->where('school_id', $schoolId)
+            ->where('teacher_id', $user->id)
+            ->delete();
+
+        DB::table('assessments')
+            ->where('school_id', $schoolId)
+            ->where('teacher_id', $user->id)
+            ->delete();
+
+        DB::table('timetables')
+            ->where('teacher_id', $user->id)
+            ->delete();
+
+        if (Schema::hasTable('teacher_pedagogical_resources')) {
+            DB::table('teacher_pedagogical_resources')
+                ->where('teacher_id', $user->id)
+                ->delete();
+        }
+
+        if (Schema::hasTable('activity_reports')) {
+            DB::table('activity_reports')
+                ->where('created_by_user_id', $user->id)
+                ->delete();
+        }
+
+        if (Schema::hasTable('homework_user_views')) {
+            DB::table('homework_user_views')
+                ->where('user_id', $user->id)
+                ->delete();
+        }
+    }
+
+    private function removeUserFromMessageTargets(int $userId, int $schoolId): void
+    {
+        if (!Schema::hasTable('messages') || !Schema::hasColumn('messages', 'target_user_ids')) {
+            return;
+        }
+
+        $messages = DB::table('messages')
+            ->select('id', 'target_type', 'target_id', 'target_user_ids')
+            ->where('school_id', $schoolId)
+            ->whereNotNull('target_user_ids')
+            ->get();
+
+        foreach ($messages as $message) {
+            $targetUserIds = json_decode((string) $message->target_user_ids, true);
+            if (!is_array($targetUserIds)) {
+                continue;
+            }
+
+            $filteredIds = array_values(array_filter(
+                array_map('intval', $targetUserIds),
+                fn (int $id) => $id !== $userId
+            ));
+
+            if (count($filteredIds) === count($targetUserIds)) {
+                continue;
+            }
+
+            $isDirectTarget = (string) ($message->target_type ?? '') === 'user'
+                && (int) ($message->target_id ?? 0) === $userId;
+
+            if ($filteredIds === [] && $isDirectTarget) {
+                DB::table('messages')->where('id', $message->id)->delete();
+                continue;
+            }
+
+            DB::table('messages')
+                ->where('id', $message->id)
+                ->update([
+                    'target_user_ids' => $filteredIds === [] ? null : json_encode($filteredIds),
+                    'target_id' => $isDirectTarget ? ($filteredIds[0] ?? null) : $message->target_id,
+                    'target_type' => $filteredIds === [] && $isDirectTarget ? null : $message->target_type,
+                ]);
+        }
     }
 }
