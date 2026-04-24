@@ -1,0 +1,377 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Assessment;
+use App\Models\Classroom;
+use App\Models\Grade;
+use App\Models\Student;
+use App\Models\User;
+use App\Models\Vehicle;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Exists;
+use Illuminate\Validation\Rules\Password;
+
+class UserController extends Controller
+{
+    private function schoolIdOrFail(): int
+    {
+        $schoolId = app()->bound('current_school_id') ? app('current_school_id') : null;
+        if (!$schoolId) {
+            abort(403, 'School context missing.');
+        }
+
+        return (int) $schoolId;
+    }
+
+    private function allowedRoles(): array
+    {
+        return [
+            User::ROLE_ADMIN,
+            User::ROLE_DIRECTOR,
+            User::ROLE_TEACHER,
+            User::ROLE_PARENT,
+            User::ROLE_STUDENT,
+            User::ROLE_CHAUFFEUR,
+            User::ROLE_SCHOOL_LIFE,
+        ];
+    }
+
+    public function index(Request $request)
+    {
+        $schoolId = $this->schoolIdOrFail();
+
+        $role = $request->get('role');
+        $q = trim((string) $request->get('q'));
+
+        $users = User::query()
+            ->where('school_id', $schoolId)
+            ->when($role, fn ($query) => $query->where('role', $role))
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($nested) use ($q) {
+                    $nested->where('name', 'like', "%{$q}%")
+                        ->orWhere('email', 'like', "%{$q}%")
+                        ->orWhere('phone', 'like', "%{$q}%");
+                });
+            })
+            ->orderByDesc('id')
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('admin.users.index', compact('users', 'role', 'q'));
+    }
+
+    public function suggest(Request $request)
+    {
+        $schoolId = $this->schoolIdOrFail();
+
+        $q = trim((string) $request->get('q'));
+        $role = $request->get('role');
+
+        if (mb_strlen($q) < 2) {
+            return response()->json([]);
+        }
+
+        $items = User::query()
+            ->where('school_id', $schoolId)
+            ->when($role, fn ($query) => $query->where('role', $role))
+            ->where(function ($nested) use ($q) {
+                $nested->where('name', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%")
+                    ->orWhere('phone', 'like', "%{$q}%");
+            })
+            ->orderBy('name')
+            ->limit(8)
+            ->get()
+            ->map(fn ($user) => [
+                'id' => $user->id,
+                'label' => $user->name,
+                'meta' => ($user->email ?? '-') . ' - ' . ($user->phone ?? '-') . ' - ' . $user->role,
+            ]);
+
+        return response()->json($items);
+    }
+
+    public function create()
+    {
+        return view('admin.users.create', [
+            'roles' => $this->allowedRoles(),
+            'roleLabels' => User::roleLabels(),
+            'classrooms' => $this->studentClassrooms($this->schoolIdOrFail()),
+            'parents' => $this->parentUsers($this->schoolIdOrFail()),
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $schoolId = $this->schoolIdOrFail();
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'role' => ['required', 'in:' . implode(',', $this->allowedRoles())],
+            'password' => ['required', Password::min(8)->letters()->numbers()],
+            'classroom_id' => [
+                Rule::requiredIf(fn () => $request->input('role') === User::ROLE_STUDENT),
+                'nullable',
+                'integer',
+                $this->classroomRule($schoolId),
+            ],
+            'parent_user_id' => ['nullable', 'integer', $this->parentRule($schoolId)],
+            'birth_date' => ['nullable', 'date', 'before:today'],
+            'gender' => ['nullable', 'in:male,female'],
+        ]);
+
+        DB::transaction(function () use ($data, $schoolId): void {
+            $user = User::create([
+                'school_id' => $schoolId,
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'] ?? null,
+                'role' => $data['role'],
+                'password' => Hash::make($data['password']),
+                'is_active' => true,
+            ]);
+
+            if ((string) $data['role'] === User::ROLE_STUDENT) {
+                $this->upsertStudentProfile($user, $data, $schoolId);
+            }
+        });
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Utilisateur cree.');
+    }
+
+    public function edit(User $user)
+    {
+        $schoolId = $this->schoolIdOrFail();
+        abort_if((int) $user->school_id !== (int) $schoolId, 404);
+
+        return view('admin.users.edit', [
+            'user' => $user,
+            'roles' => $this->allowedRoles(),
+            'roleLabels' => User::roleLabels(),
+            'classrooms' => $this->studentClassrooms($schoolId),
+            'parents' => $this->parentUsers($schoolId),
+            'linkedStudent' => $this->linkedStudent($user, $schoolId),
+        ]);
+    }
+
+    public function show(User $user)
+    {
+        $schoolId = $this->schoolIdOrFail();
+        abort_if((int) $user->school_id !== (int) $schoolId, 404);
+
+        $user->load([
+            'school:id,name',
+            'parentProfile',
+            'studentProfile' => fn ($query) => $query
+                ->where('school_id', $schoolId)
+                ->with([
+                    'classroom:id,name,school_id',
+                    'parentUser:id,name,email,phone,school_id',
+                    'transportAssignment.route:id,route_name,school_id,vehicle_id',
+                    'transportAssignment.vehicle:id,name,registration_number,driver_id,school_id',
+                ]),
+            'children' => fn ($query) => $query
+                ->where('school_id', $schoolId)
+                ->with([
+                    'classroom:id,name,school_id',
+                    'studentUser:id,email,school_id',
+                ])
+                ->orderBy('full_name'),
+            'subjects' => fn ($query) => $query
+                ->where('subjects.school_id', $schoolId)
+                ->orderBy('name'),
+            'teacherClassrooms' => fn ($query) => $query
+                ->where('classrooms.school_id', $schoolId)
+                ->orderBy('name'),
+        ]);
+
+        $driverVehicles = collect();
+        if ((string) $user->role === User::ROLE_CHAUFFEUR) {
+            $driverVehicles = Vehicle::query()
+                ->where('school_id', $schoolId)
+                ->where('driver_id', $user->id)
+                ->with(['routes' => fn ($query) => $query->orderBy('route_name')])
+                ->orderByRaw('COALESCE(name, registration_number)')
+                ->get();
+        }
+
+        return view('admin.users.show', [
+            'user' => $user,
+            'driverVehicles' => $driverVehicles,
+            'linkedStudent' => $user->studentProfile,
+            'linkedChildren' => $user->children,
+            'teacherSubjects' => $user->subjects,
+            'teacherClassrooms' => $user->teacherClassrooms,
+        ]);
+    }
+
+    public function update(Request $request, User $user)
+    {
+        $schoolId = $this->schoolIdOrFail();
+        abort_if((int) $user->school_id !== (int) $schoolId, 404);
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'role' => ['required', 'in:' . implode(',', $this->allowedRoles())],
+            'password' => ['nullable', Password::min(8)->letters()->numbers()],
+            'classroom_id' => [
+                Rule::requiredIf(fn () => $request->input('role') === User::ROLE_STUDENT),
+                'nullable',
+                'integer',
+                $this->classroomRule($schoolId),
+            ],
+            'parent_user_id' => ['nullable', 'integer', $this->parentRule($schoolId)],
+            'birth_date' => ['nullable', 'date', 'before:today'],
+            'gender' => ['nullable', 'in:male,female'],
+        ]);
+
+        $linkedStudent = $this->linkedStudent($user, $schoolId);
+        if ($linkedStudent && (string) $data['role'] !== User::ROLE_STUDENT) {
+            return back()
+                ->withErrors(['role' => 'Ce compte est lie a un dossier eleve. Modifiez le dossier eleve avant de changer ce role.'])
+                ->withInput();
+        }
+
+        if (!empty($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        DB::transaction(function () use ($user, $data, $schoolId): void {
+            $user->update([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'] ?? null,
+                'role' => $data['role'],
+                'password' => $data['password'] ?? $user->password,
+            ]);
+
+            if ((string) $data['role'] === User::ROLE_STUDENT) {
+                $this->upsertStudentProfile($user, $data, $schoolId);
+            }
+        });
+
+        return redirect()->route('admin.users.index')->with('success', 'Utilisateur modifie.');
+    }
+
+    public function destroy(User $user)
+    {
+        $schoolId = $this->schoolIdOrFail();
+        abort_if((int) $user->school_id !== (int) $schoolId, 404);
+
+        if (Auth::id() === $user->id) {
+            return back()->with('success', 'Impossible de supprimer votre propre compte.');
+        }
+
+        if (Assessment::where('teacher_id', $user->id)->exists()) {
+            return back()->withErrors([
+                'delete_user' => 'Impossible: cet utilisateur est encore reference par des evaluations.',
+            ]);
+        }
+
+        if (Grade::where('teacher_id', $user->id)->exists()) {
+            return back()->withErrors([
+                'delete_user' => 'Impossible: cet utilisateur est encore reference par des notes.',
+            ]);
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.users.index')->with('success', 'Utilisateur supprime.');
+    }
+
+    public function suggestParents(Request $request)
+    {
+        $schoolId = $this->schoolIdOrFail();
+
+        $q = trim((string) $request->get('q'));
+        if (mb_strlen($q) < 2) {
+            return response()->json([]);
+        }
+
+        $items = User::query()
+            ->where('school_id', $schoolId)
+            ->where('role', 'parent')
+            ->where(function ($query) use ($q) {
+                $query->where('name', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%")
+                    ->orWhere('phone', 'like', "%{$q}%");
+            })
+            ->orderBy('name')
+            ->limit(10)
+            ->get()
+            ->map(fn ($user) => [
+                'id' => $user->id,
+                'label' => $user->name . ' (' . $user->email . ')' . ($user->phone ? (' - ' . $user->phone) : ''),
+            ]);
+
+        return response()->json($items);
+    }
+
+    private function linkedStudent(User $user, int $schoolId): ?Student
+    {
+        return Student::query()
+            ->where('school_id', $schoolId)
+            ->where('user_id', $user->id)
+            ->first();
+    }
+
+    private function upsertStudentProfile(User $user, array $data, int $schoolId): void
+    {
+        Student::query()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'school_id' => $schoolId,
+                'full_name' => $data['name'],
+                'birth_date' => $data['birth_date'] ?? null,
+                'gender' => $data['gender'] ?? null,
+                'parent_user_id' => $data['parent_user_id'] ?? null,
+                'classroom_id' => (int) $data['classroom_id'],
+            ]
+        );
+    }
+
+    private function classroomRule(int $schoolId): Exists
+    {
+        return Rule::exists('classrooms', 'id')
+            ->where(fn ($query) => $query->where('school_id', $schoolId));
+    }
+
+    private function parentRule(int $schoolId): Exists
+    {
+        return Rule::exists('users', 'id')
+            ->where(fn ($query) => $query
+                ->where('school_id', $schoolId)
+                ->where('role', User::ROLE_PARENT));
+    }
+
+    private function studentClassrooms(int $schoolId)
+    {
+        return Classroom::query()
+            ->where('school_id', $schoolId)
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get(['id', 'name']);
+    }
+
+    private function parentUsers(int $schoolId)
+    {
+        return User::query()
+            ->where('school_id', $schoolId)
+            ->where('role', User::ROLE_PARENT)
+            ->orderBy('name')
+            ->get(['id', 'name', 'email']);
+    }
+}

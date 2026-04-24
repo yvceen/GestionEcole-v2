@@ -1,0 +1,27 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('device_tokens', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id')->index();
+            $table->unsignedBigInteger('school_id')->nullable()->index();
+            $table->string('platform', 20)->default('android')->index();
+            $table->text('token');
+            $table->string('token_hash', 64)->unique();
+            $table->timestamp('last_used_at')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('device_tokens');
+    }
+};

@@ -1,0 +1,26 @@
+{
+  "appId": "com.myedu.schoolapp",
+  "appName": "MyEdu",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://myedu.school",
+    "appStartPath": "/",
+    "cleartext": false,
+    "allowNavigation": [
+      "https://myedu.school",
+      "https://*.myedu.school"
+    ]
+  },
+  "android": {
+    "allowMixedContent": false,
+    "appendUserAgent": " MyEduAndroid",
+    "backgroundColor": "#f8fafc",
+    "captureInput": false,
+    "resolveServiceWorkerRequests": true,
+    "zoomEnabled": false
+  },
+  "ios": {
+    "allowMixedContent": false
+  }
+}

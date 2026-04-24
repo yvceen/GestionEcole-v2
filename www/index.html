@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang=" en\>
+<head>
+ <meta charset=\utf-8\ />
+ <meta name=\viewport\ content=\width=device-width initial-scale=1\ />
+ <title>Myedu</title>
+ <style>
+ body {
+ margin: 0;
+ min-height: 100vh;
+ background: linear-gradient(180deg, #0d47a1, #1e88e5);
+ color: #fff;
+ font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ text-align: center;
+ }
+ .box {
+ padding: 2rem;
+ width: min(400px, 90vw);
+ }
+ .spinner {
+ width: 48px;
+ height: 48px;
+ border: 4px solid rgba(255, 255, 255, 0.3);
+ border-top-color: #ffd54f;
+ border-radius: 50%;
+ margin: 1rem auto 0;
+ animation: spin 0.9s linear infinite;
+ }
+ @keyframes spin {
+ to {
+ transform: rotate(360deg);
+ }
+ }
+ .hint {
+ font-size: 0.95rem;
+ margin-top: 0.75rem;
+ color: rgba(255, 255, 255, 0.85);
+ }
+ </style>
+</head>
+<body>
+ <div class=\box\>
+ <h1>Myedu</h1>
+ <p>Connecting to https://myedu.school…</p>
+ <div class=\spinner\ aria-hidden=\true\></div>
+ <p class=\hint\>If you are offline, tap below once connectivity is restored.</p>
+ </div>
+ <script>
+ if (!navigator.onLine) {
+ window.location.replace('offline.html');
+ }
+ </script>
+</body>
+</html>

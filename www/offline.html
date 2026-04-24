@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyEdu hors-ligne</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <script>
+        if (!window.messageComposer) {
+            window.messageComposer = function (initialTabs = []) {
+                const sanitizedTabs = Array.isArray(initialTabs)
+                    ? initialTabs.filter((tab) => tab && tab.key)
+                    : [];
+                const selected = {};
+                sanitizedTabs.forEach((tab) => {
+                    selected[tab.key] = Array.isArray(tab.initialSelected) ? [...tab.initialSelected] : [];
+                });
+
+                return {
+                    tabs: sanitizedTabs,
+                    activeTab: sanitizedTabs[0]?.key ?? null,
+                    searchTerm: '',
+                    selected,
+                    get currentTab() {
+                        return this.tabs.find((tab) => tab.key === this.activeTab) ?? null;
+                    },
+                    get activeItems() {
+                        const tab = this.currentTab;
+                        if (!tab) return [];
+                        const term = this.searchTerm.trim().toLowerCase();
+                        return tab.items
+                            .map((item) => ({
+                                ...item,
+                                initials: this.makeInitials(item.label),
+                            }))
+                            .filter((item) => {
+                                if (!term) return true;
+                                const meta = item.meta ? item.meta.toLowerCase() : '';
+                                return item.label.toLowerCase().includes(term) || meta.includes(term);
+                            });
+                    },
+                    get selectedCount() {
+                        return Object.values(this.selected).reduce((total, arr) => total + (Array.isArray(arr) ? arr.length : 0), 0);
+                    },
+                    get hasSelection() {
+                        return this.selectedCount > 0;
+                    },
+                    get selectedChips() {
+                        const chips = [];
+                        this.tabs.forEach((tab) => {
+                            (this.selected[tab.key] || []).forEach((value) => {
+                                const item = tab.items.find((it) => String(it.id) === String(value));
+                                if (item) {
+                                    chips.push({
+                                        tab: tab.key,
+                                        id: value,
+                                        label: item.label,
+                                    });
+                                }
+                            });
+                        });
+                        return chips;
+                    },
+                    makeInitials(label) {
+                        if (!label) return '';
+                        const words = label.split(/\s+/).filter(Boolean);
+                        if (!words.length) return '';
+                        if (words.length === 1) {
+                            return words[0].slice(0, 2).toUpperCase();
+                        }
+                        return (words[0][0] + words[1][0]).toUpperCase();
+                    },
+                    setTab(key) {
+                        if (this.activeTab === key) return;
+                        this.activeTab = key;
+                        this.searchTerm = '';
+                    },
+                    toggleSelection(tabKey, itemId) {
+                        const tab = this.tabs.find((t) => t.key === tabKey);
+                        if (!tab) return;
+                        const normalizedId = String(itemId);
+                        const current = this.selected[tabKey] || [];
+                        if (tab.multi) {
+                            if (current.includes(normalizedId)) {
+                                this.selected[tabKey] = current.filter((value) => value !== normalizedId);
+                            } else {
+                                this.selected[tabKey] = [...current, normalizedId];
+                            }
+                        } else {
+                            this.selected[tabKey] = current[0] === normalizedId ? [] : [normalizedId];
+                        }
+                    },
+                    deselect(tabKey, itemId) {
+                        this.toggleSelection(tabKey, itemId);
+                    },
+                    selectAll(tabKey) {
+                        const tab = this.tabs.find((t) => t.key === tabKey);
+                        if (!tab) return;
+                        if (!tab.multi) {
+                            this.selected[tabKey] = tab.items.length ? [String(tab.items[0].id)] : [];
+                            return;
+                        }
+                        this.selected[tabKey] = tab.items.map((item) => String(item.id));
+                    },
+                    clearSelection(tabKey) {
+                        if (!(tabKey in this.selected)) return;
+                        this.selected[tabKey] = [];
+                    },
+                };
+            };
+        }
+
+        window.offlineTabs = [
+            {
+                key: 'classes',
+                label: 'Classes',
+                description: 'Préparez un message pour toute une classe.',
+                multi: false,
+                field: 'classroom_id',
+                initialSelected: [],
+                items: [
+                    { id: 'c1', label: '3ᵉ Sciences', meta: 'Niveau 3e' },
+                    { id: 'c2', label: '2nde Innovation', meta: 'Niveau 2nde' },
+                    { id: 'c3', label: '1ʳᵉ Pro', meta: 'Niveau 1ʳᵉ' },
+                ],
+            },
+            {
+                key: 'parents',
+                label: 'Parents',
+                description: 'Choisissez des parents pour un suivi ciblé.',
+                multi: true,
+                field: 'parent_ids[]',
+                initialSelected: [],
+                items: [
+                    { id: 'p1', label: 'Sonia Dupont', meta: 'sonia.dupont@example.com' },
+                    { id: 'p2', label: 'Karim El M', meta: '+33 6 12 34 56 78' },
+                    { id: 'p3', label: 'Lina Boud', meta: 'lina.b@example.com' },
+                    { id: 'p4', label: 'Youssef Naoui', meta: '+33 7 45 21 11 03' },
+                ],
+            },
+            {
+                key: 'staff',
+                label: 'Personnel',
+                description: 'Admins, direction et enseignants.',
+                multi: true,
+                field: 'staff_ids[]',
+                initialSelected: [],
+                items: [
+                    { id: 's1', label: 'M. Martin', meta: 'Directeur' },
+                    { id: 's2', label: 'Mme Morel', meta: 'Coordinatrice pédagogique' },
+                    { id: 's3', label: 'M. Rachid', meta: 'Professeur Maths' },
+                ],
+            },
+        ];
+    </script>
+    <script defer src="https://unpkg.com/alpinejs@3.13.2/dist/cdn.min.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 text-slate-900">
+    <div
+        x-data="messageComposer(window.offlineTabs)"
+        class="min-h-screen bg-slate-50 py-8"
+    >
+        <header class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="rounded-[34px] bg-gradient-to-r from-indigo-600 via-sky-500 to-cyan-500 p-6 text-white shadow-[0_30px_80px_-40px_rgba(15,23,42,0.9)]">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 shadow-lg">
+                        <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 8h18M3 12h12M3 16h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.4em] text-white/80">Messagerie</p>
+                        <h1 class="text-3xl font-semibold leading-tight">Préparez votre message</h1>
+                        <p class="text-sm text-white/90">Vous êtes hors ligne, mais votre message sera envoyé dès la reconnexion.</p>
+                    </div>
+                    <div class="ml-auto hidden lg:flex flex-col rounded-2xl border border-white/30 bg-white/20 px-4 py-3 text-xs font-semibold uppercase tracking-[0.4em] text-white/80">
+                        Hors-ligne
+                        <span class="mt-1 text-lg text-white">Mode déconnecté</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="mx-auto mt-8 max-w-6xl px-4 sm:px-6 lg:px-8">
+            <form
+                class="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]"
+                x-on:submit.prevent
+            >
+                <section class="space-y-4 rounded-[30px] border border-slate-100 bg-white/90 p-6 shadow-[0_30px_80px_-40px_rgba(15,23,42,0.35)]">
+                    <div class="space-y-2">
+                        <label class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Sujet</label>
+                        <input
+                            type="text"
+                            placeholder="Sujet bref"
+                            class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                        />
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Message</label>
+                        <textarea
+                            rows="8"
+                            placeholder="Rédigez votre message, il sera synchronisé dès que possible."
+                            class="min-h-[220px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                        ></textarea>
+                    </div>
+
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button
+                            type="button"
+                            class="inline-flex grow items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-600 to-sky-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/40 transition hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
+                            :disabled="!hasSelection"
+                        >
+                            Envoyer dès la reconnexion
+                        </button>
+                        <span class="text-xs text-slate-500">Sélectionnez au moins un destinataire pour débloquer l'envoi.</span>
+                    </div>
+                </section>
+
+                <section class="space-y-4 rounded-[30px] border border-slate-100 bg-slate-50/80 p-6 shadow-[0_30px_80px_-40px_rgba(15,23,42,0.35)]">
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Destinataires</p>
+                            <p class="text-sm font-semibold text-slate-900" x-text="selectedCount + ' sélectionné(s)'"></p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 text-xs font-semibold text-slate-600">
+                            <button
+                                type="button"
+                                class="rounded-full bg-white px-3 py-1 transition hover:bg-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-400/70"
+                                @click="selectAll(activeTab)"
+                            >
+                                Tout
+                            </button>
+                            <button
+                                type="button"
+                                class="rounded-full bg-white px-3 py-1 transition hover:bg-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-400/70"
+                                @click="clearSelection(activeTab)"
+                            >
+                                Effacer
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="min-h-[52px]">
+                        <template x-for="chip in selectedChips" :key="chip.tab + chip.id">
+                            <span class="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100">
+                                <span x-text="chip.label"></span>
+                                <button
+                                    type="button"
+                                    class="rounded-full p-1 text-indigo-500 transition hover:text-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-400/70"
+                                    @click="deselect(chip.tab, chip.id)"
+                                >
+                                    &times;
+                                </button>
+                            </span>
+                        </template>
+                        <p class="text-xs text-slate-400" x-show="selectedCount === 0">Choisissez une classe ou plusieurs personnes.</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-inner">
+                        <div class="relative flex items-center">
+                            <svg class="absolute left-3 h-4 w-4 text-slate-400" viewBox="0 0 24 24" fill="none">
+                                <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"></circle>
+                                <path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                            </svg>
+                            <input
+                                x-model="searchTerm"
+                                type="search"
+                                placeholder="Rechercher un destinataire"
+                                class="w-full rounded-2xl bg-transparent pl-10 text-sm text-slate-700 outline-none transition focus:ring-2 focus:ring-indigo-300"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <template x-for="tab in tabs" :key="tab.key">
+                            <button
+                                type="button"
+                                class="rounded-full border px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-400/70"
+                                :class="{
+                                    'border-indigo-500 bg-indigo-50 text-indigo-600': activeTab === tab.key,
+                                    'border-slate-200 bg-white text-slate-600 hover:border-indigo-200': activeTab !== tab.key
+                                }"
+                                @click="setTab(tab.key)"
+                            >
+                                <span x-text="tab.label"></span>
+                            </button>
+                        </template>
+                    </div>
+
+                    <div class="max-h-[320px] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-3">
+                        <template x-if="activeItems.length === 0">
+                            <p class="text-center text-xs text-slate-400">Aucun destinataire disponible.</p>
+                        </template>
+                        <template x-for="item in activeItems" :key="item.id">
+                            <button
+                                type="button"
+                                class="flex w-full items-center gap-3 rounded-2xl border px-3 py-2 text-left transition hover:-translate-y-0.5 hover:border-indigo-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-400/70"
+                                :class="selected[activeTab]?.includes(String(item.id)) ? 'border-indigo-400 bg-indigo-50 shadow-[0_10px_30px_-20px_rgba(37,99,235,0.8)]' : 'border-slate-200 bg-white'"
+                                @click="toggleSelection(activeTab, item.id)"
+                            >
+                                <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-50 text-sm font-semibold text-indigo-700 shadow-inner">
+                                    <span x-text="item.initials"></span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-semibold text-slate-900" x-text="item.label"></p>
+                                    <p class="text-xs text-slate-400" x-text="item.meta"></p>
+                                </div>
+                                <svg
+                                    class="h-4 w-4 text-indigo-500"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    :class="selected[activeTab]?.includes(String(item.id)) ? 'opacity-100' : 'opacity-0'"
+                                >
+                                    <path d="M5 13l4 4 10-10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                        </template>
+                    </div>
+                </section>
+            </form>
+        </main>
+    </div>
+</body>
+</html>
