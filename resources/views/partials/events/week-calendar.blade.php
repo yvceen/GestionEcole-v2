@@ -10,22 +10,22 @@
 <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
     <article class="app-stat-card">
         <p class="app-stat-label">Evenements</p>
-        <p class="app-stat-value">{{ $summary['total'] }}</p>
+        <p class="app-stat-value">{{ $summary['total'] ?? 0 }}</p>
         <p class="app-stat-meta">Tous les blocs agenda de l ecole active.</p>
     </article>
     <article class="app-stat-card">
         <p class="app-stat-label">Cours</p>
-        <p class="app-stat-value text-teal-700">{{ $summary['course'] }}</p>
+        <p class="app-stat-value text-teal-700">{{ $summary['course'] ?? 0 }}</p>
         <p class="app-stat-meta">Seances affichees sur la semaine.</p>
     </article>
     <article class="app-stat-card">
         <p class="app-stat-label">Examens</p>
-        <p class="app-stat-value text-rose-700">{{ $summary['exam'] }}</p>
+        <p class="app-stat-value text-rose-700">{{ $summary['exam'] ?? 0 }}</p>
         <p class="app-stat-meta">Evaluations et controles.</p>
     </article>
     <article class="app-stat-card">
         <p class="app-stat-label">Activites</p>
-        <p class="app-stat-value text-sky-700">{{ $summary['activity'] }}</p>
+        <p class="app-stat-value text-sky-700">{{ $summary['activity'] ?? 0 }}</p>
         <p class="app-stat-meta">Sorties, clubs et temps forts.</p>
     </article>
 </section>

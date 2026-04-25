@@ -5,22 +5,22 @@
 <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
     <article class="app-stat-card">
         <p class="app-stat-label">Evenements</p>
-        <p class="app-stat-value">{{ $summary['total'] }}</p>
+        <p class="app-stat-value">{{ $summary['total'] ?? 0 }}</p>
         <p class="app-stat-meta">Total affiche pour le mois choisi.</p>
     </article>
     <article class="app-stat-card">
         <p class="app-stat-label">Examens</p>
-        <p class="app-stat-value text-amber-700">{{ $summary['exam'] }}</p>
+        <p class="app-stat-value text-amber-700">{{ $summary['exam'] ?? 0 }}</p>
         <p class="app-stat-meta">Evaluations et temps forts pedagogiques.</p>
     </article>
     <article class="app-stat-card">
         <p class="app-stat-label">Vacances</p>
-        <p class="app-stat-value text-emerald-700">{{ $summary['holiday'] }}</p>
+        <p class="app-stat-value text-emerald-700">{{ $summary['holiday'] ?? 0 }}</p>
         <p class="app-stat-meta">Fermetures et conges scolaires.</p>
     </article>
     <article class="app-stat-card">
         <p class="app-stat-label">Evenements</p>
-        <p class="app-stat-value text-sky-700">{{ $summary['event'] }}</p>
+        <p class="app-stat-value text-sky-700">{{ $summary['event'] ?? 0 }}</p>
         <p class="app-stat-meta">Vie scolaire, reunions et activites.</p>
     </article>
 </section>

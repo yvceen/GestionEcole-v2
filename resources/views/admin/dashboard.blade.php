@@ -317,19 +317,19 @@
             @forelse(($attendanceSummary['weekly_overview'] ?? collect()) as $day)
                 <div class="rounded-[24px] border border-slate-200/80 bg-gradient-to-br from-slate-50 to-white px-4 py-4 shadow-sm shadow-slate-200/60 transition duration-300 hover:-translate-y-1">
                     <div class="flex items-center justify-between gap-3">
-                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">{{ $day['label'] }}</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">{{ $day['label'] ?? 'Jour' }}</p>
                         <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-xs font-semibold text-white">
-                            {{ \Illuminate\Support\Str::substr((string) $day['label'], 0, 1) }}
+                            {{ \Illuminate\Support\Str::substr((string) ($day['label'] ?? 'J'), 0, 1) }}
                         </span>
                     </div>
                     <div class="mt-3 space-y-2">
                         <div class="flex items-center justify-between rounded-2xl bg-rose-50 px-3 py-2 text-sm">
                             <span class="text-slate-600">Absences</span>
-                            <span class="font-semibold text-rose-700">{{ $day['absent'] }}</span>
+                            <span class="font-semibold text-rose-700">{{ $day['absent'] ?? 0 }}</span>
                         </div>
                         <div class="flex items-center justify-between rounded-2xl bg-amber-50 px-3 py-2 text-sm">
                             <span class="text-slate-600">Retards</span>
-                            <span class="font-semibold text-amber-700">{{ $day['late'] }}</span>
+                            <span class="font-semibold text-amber-700">{{ $day['late'] ?? 0 }}</span>
                         </div>
                     </div>
                 </div>

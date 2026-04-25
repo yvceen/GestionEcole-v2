@@ -19,22 +19,22 @@
             <div class="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 <article class="app-stat-card min-h-[9.5rem]">
                     <p class="app-stat-label">Total</p>
-                    <p class="app-stat-value">{{ $stats['total'] }}</p>
+                    <p class="app-stat-value">{{ $stats['total'] ?? 0 }}</p>
                     <p class="app-stat-meta">Matieres configurees.</p>
                 </article>
                 <article class="app-stat-card min-h-[9.5rem]">
                     <p class="app-stat-label">Actives</p>
-                    <p class="app-stat-value text-emerald-700">{{ $stats['active'] }}</p>
+                    <p class="app-stat-value text-emerald-700">{{ $stats['active'] ?? 0 }}</p>
                     <p class="app-stat-meta">Disponibles pour le flux scolaire.</p>
                 </article>
                 <article class="app-stat-card min-h-[9.5rem]">
                     <p class="app-stat-label">Inactives</p>
-                    <p class="app-stat-value text-slate-700">{{ $stats['inactive'] }}</p>
+                    <p class="app-stat-value text-slate-700">{{ $stats['inactive'] ?? 0 }}</p>
                     <p class="app-stat-meta">Cachees sans suppression.</p>
                 </article>
                 <article class="app-stat-card min-h-[9.5rem]">
                     <p class="app-stat-label">Affectees</p>
-                    <p class="app-stat-value text-sky-700">{{ $stats['assigned'] }}</p>
+                    <p class="app-stat-value text-sky-700">{{ $stats['assigned'] ?? 0 }}</p>
                     <p class="app-stat-meta">Au moins un enseignant assigne.</p>
                 </article>
             </div>

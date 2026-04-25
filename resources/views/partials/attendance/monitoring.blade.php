@@ -24,25 +24,25 @@
 <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
     <div class="app-stat-card">
         <p class="app-stat-label">Enregistrements</p>
-        <p class="app-stat-value">{{ $summary['total'] }}</p>
+        <p class="app-stat-value">{{ $summary['total'] ?? 0 }}</p>
         <p class="app-stat-meta">Toutes presences, absences et retards sur la selection.</p>
     </div>
 
     <div class="app-stat-card">
         <p class="app-stat-label">Presents</p>
-        <p class="app-stat-value text-emerald-700">{{ $summary['present'] }}</p>
+        <p class="app-stat-value text-emerald-700">{{ $summary['present'] ?? 0 }}</p>
         <p class="app-stat-meta">Eleves marques presents.</p>
     </div>
 
     <div class="app-stat-card">
         <p class="app-stat-label">Absences</p>
-        <p class="app-stat-value text-rose-700">{{ $summary['absent'] }}</p>
+        <p class="app-stat-value text-rose-700">{{ $summary['absent'] ?? 0 }}</p>
         <p class="app-stat-meta">Suivi des absences a surveiller.</p>
     </div>
 
     <div class="app-stat-card">
         <p class="app-stat-label">Retards</p>
-        <p class="app-stat-value text-amber-700">{{ $summary['late'] }}</p>
+        <p class="app-stat-value text-amber-700">{{ $summary['late'] ?? 0 }}</p>
         <p class="app-stat-meta">Eleves arrives apres l'appel.</p>
     </div>
 </section>
