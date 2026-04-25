@@ -62,11 +62,6 @@
 
             <div class="hidden items-center gap-4 lg:flex">
                 <a href="#demo" class="fut-button fut-button-primary">Demander une demonstration</a>
-                @if (Route::has('login'))
-                    <a href="{{ route('login') }}" class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 transition hover:text-white">
-                        Acces prive
-                    </a>
-                @endif
             </div>
 
             <button @click="open = ! open" type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-slate-100 backdrop-blur lg:hidden" aria-label="Ouvrir le menu">
@@ -84,35 +79,30 @@
                 <a href="#mobile" class="block rounded-2xl px-4 py-3 transition hover:bg-white/5">Application mobile</a>
                 <a href="#organisation" class="block rounded-2xl px-4 py-3 transition hover:bg-white/5">Organisation</a>
                 <a href="#demo" class="block rounded-2xl px-4 py-3 transition hover:bg-white/5">Demonstration</a>
-                @if (Route::has('login'))
-                    <a href="{{ route('login') }}" class="block rounded-2xl px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 transition hover:bg-white/5 hover:text-white">
-                        Acces prive
-                    </a>
-                @endif
             </div>
         </div>
     </header>
 
-    <main>
+    <main class="fut-main-flow">
         <section class="relative">
-            <div class="mx-auto grid max-w-7xl gap-16 px-4 pb-20 pt-12 sm:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:px-8 lg:pb-28 lg:pt-20">
+            <div class="mx-auto grid max-w-7xl gap-20 px-4 pb-28 pt-20 sm:px-6 md:gap-24 md:pb-32 md:pt-24 lg:grid-cols-[1.02fr_0.98fr] lg:px-8 lg:gap-28 lg:pb-40 lg:pt-32">
                 <div class="max-w-3xl">
                     <span class="fut-eyebrow">Vision numerique pour l etablissement</span>
 
-                    <h1 class="mt-8 text-4xl font-semibold leading-[1.02] tracking-[-0.04em] text-white sm:text-5xl lg:text-7xl">
+                    <h1 class="mt-9 text-4xl font-semibold leading-[1.02] tracking-[-0.04em] text-white sm:text-5xl lg:text-7xl">
                         La plateforme qui donne une nouvelle dimension a la gestion scolaire.
                     </h1>
 
-                    <p class="mt-7 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
+                    <p class="mt-8 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
                         {{ config('app.name', 'MyEdu') }} centralise la vie de l etablissement dans une experience contemporaine, claire et fluide pour l administration, les enseignants, les parents et les eleves.
                     </p>
 
-                    <div class="mt-10 flex flex-col gap-4 sm:flex-row">
+                    <div class="mt-12 flex flex-col gap-4 sm:flex-row">
                         <a href="#demo" class="fut-button fut-button-primary">Demander une demonstration</a>
                         <a href="#modules" class="fut-button fut-button-secondary">Explorer les modules</a>
                     </div>
 
-                    <div class="mt-12 grid gap-4 sm:grid-cols-3">
+                    <div class="mt-16 grid gap-4 sm:grid-cols-3">
                         @foreach($proofs as $proof)
                             <div class="fut-mini-panel">
                                 <p class="text-sm font-semibold text-white">{{ $proof['value'] }}</p>
@@ -222,7 +212,7 @@
                     </p>
                 </div>
 
-                <div class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                <div class="mt-14 grid gap-5 md:gap-6 md:grid-cols-2 xl:grid-cols-3">
                     @foreach($trustCards as $card)
                         <article class="fut-feature-card">
                             <div class="fut-feature-icon">
@@ -266,7 +256,7 @@
                     <div class="fut-side-note">Concu pour accompagner l administration, les enseignants, la direction, les parents et les eleves.</div>
                 </div>
 
-                <div class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+                <div class="mt-14 grid gap-5 md:gap-6 md:grid-cols-2 xl:grid-cols-4">
                     @foreach($modules as $module)
                         <article class="fut-module-card">
                             <div class="flex items-center justify-between gap-3">
@@ -319,13 +309,13 @@
                             Consultez les informations importantes, suivez les alertes, verifiez les devoirs et retrouvez les reperes du quotidien depuis une interface mobile plus claire et plus rassurante.
                         </p>
 
-                        <div class="mt-8 grid gap-4 sm:grid-cols-3">
+                        <div class="mt-10 grid gap-4 sm:grid-cols-3">
                             <div class="fut-mini-panel"><p class="text-sm font-semibold text-white">Parents</p><p class="mt-2 text-sm leading-6 text-slate-400">Suivi des enfants, informations utiles et echanges essentiels.</p></div>
                             <div class="fut-mini-panel"><p class="text-sm font-semibold text-white">Eleves</p><p class="mt-2 text-sm leading-6 text-slate-400">Agenda, cours, devoirs et repere quotidien toujours accessibles.</p></div>
                             <div class="fut-mini-panel"><p class="text-sm font-semibold text-white">Equipes</p><p class="mt-2 text-sm leading-6 text-slate-400">Consultation rapide pour agir avec plus de fluidite sur le terrain.</p></div>
                         </div>
 
-                        <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+                        <div class="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
                             <a href="{{ url('/download/myedu.apk') }}" class="fut-button fut-button-primary">Telecharger l application</a>
                             <span class="text-sm font-medium text-slate-400">Disponible sur Android pour un acces simple et fluide.</span>
                         </div>
@@ -367,7 +357,7 @@
 
         <section id="organisation" class="fut-section-wrap">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+                <div class="grid gap-8 lg:gap-10 lg:grid-cols-[0.95fr_1.05fr]">
                     <div class="fut-info-panel">
                         <p class="fut-section-label">Organisation et confiance</p>
                         <h2 class="mt-4 text-3xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">
@@ -378,7 +368,7 @@
                         </p>
                     </div>
 
-                    <div class="grid gap-5 md:grid-cols-2">
+                    <div class="grid gap-5 md:gap-6 md:grid-cols-2">
                         <article class="fut-trust-panel"><h3 class="text-lg font-semibold text-white">Confidentialite respectee</h3><p class="mt-3 text-sm leading-7 text-slate-300">Les informations sont presentees avec sobriete et reservees aux personnes concernees selon leur espace.</p></article>
                         <article class="fut-trust-panel"><h3 class="text-lg font-semibold text-white">Organisation plus fluide</h3><p class="mt-3 text-sm leading-7 text-slate-300">Les services de l etablissement gagnent en lisibilite et en coordination au quotidien.</p></article>
                         <article class="fut-trust-panel"><h3 class="text-lg font-semibold text-white">Communication mieux structuree</h3><p class="mt-3 text-sm leading-7 text-slate-300">Les annonces, echanges et rappels sont mieux organises pour limiter les pertes d information.</p></article>
@@ -388,7 +378,7 @@
             </div>
         </section>
 
-        <section id="demo" class="pb-24 pt-8">
+        <section id="demo" class="pb-28 pt-16 sm:pt-18 lg:pb-32 lg:pt-24">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="fut-demo-panel">
                     <div class="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
@@ -401,7 +391,7 @@
                                 Echangeons sur vos besoins, votre organisation et les espaces a mettre en valeur pour vos equipes et vos familles.
                             </p>
 
-                            <div class="mt-8 space-y-4">
+                            <div class="mt-10 space-y-4">
                                 <div class="fut-mini-panel"><p class="text-sm font-semibold text-white">Presentation professionnelle</p><p class="mt-2 text-sm leading-6 text-slate-400">Un parcours clair pour montrer comment la plateforme accompagne votre fonctionnement quotidien.</p></div>
                                 <div class="fut-mini-panel"><p class="text-sm font-semibold text-white">Approche etablissement</p><p class="mt-2 text-sm leading-6 text-slate-400">Un discours adapte aux enjeux de gestion, de suivi et de relation avec les familles.</p></div>
                             </div>
@@ -423,7 +413,7 @@
                                     <div class="mt-6 rounded-3xl border border-rose-400/20 bg-rose-400/10 px-5 py-4 text-sm text-rose-100">{{ $errors->first('contact') }}</div>
                                 @endif
 
-                                <form action="{{ route('contact.send') }}" method="POST" class="mt-8 space-y-5">
+                                <form action="{{ route('contact.send') }}" method="POST" class="mt-10 space-y-5">
                                     @csrf
                                     <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off">
 
@@ -477,9 +467,6 @@
                 <a href="#modules" class="transition hover:text-white">Modules</a>
                 <a href="#mobile" class="transition hover:text-white">Application mobile</a>
                 <a href="#demo" class="transition hover:text-white">Demonstration</a>
-                @if (Route::has('login'))
-                    <a href="{{ route('login') }}" class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 transition hover:text-white">Acces prive</a>
-                @endif
             </div>
         </div>
     </footer>
