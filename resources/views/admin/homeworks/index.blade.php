@@ -125,209 +125,126 @@
         </form>
     </section>
 
-    <section class="app-card mt-5 overflow-hidden p-0">
-        <div class="flex flex-col gap-4 border-b border-slate-200/80 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
-            <div class="min-w-0">
-                <h3 class="text-base font-semibold text-slate-950">Demandes a valider</h3>
-                <p class="mt-1 text-sm text-slate-500">Lecture plus claire des devoirs, pieces jointes, statuts et actions de moderation.</p>
-            </div>
-
+    <x-ui.card
+        title="Demandes a valider"
+        subtitle="Consultez rapidement chaque devoir, son contexte de publication et les actions disponibles."
+        class="mt-5"
+    >
+        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex flex-wrap items-center gap-2">
                 <x-ui.badge variant="info">{{ $homeworks->total() }} resultat(s)</x-ui.badge>
                 @if(($statusFilter ?? 'all') !== 'all')
                     <x-ui.badge variant="warning">Filtre actif</x-ui.badge>
                 @endif
             </div>
+            <p class="text-sm text-slate-500">
+                Vue type rendez-vous, plus lisible sur mobile comme sur desktop.
+            </p>
         </div>
 
-        <div class="grid gap-4 px-4 py-4 xl:hidden md:grid-cols-2">
-            @forelse($homeworks as $hw)
-                @php
-                    $normalized = $hw->normalized_status ?? 'pending';
-                    $statusMeta = $desktopStatusTone($normalized);
-                @endphp
-                <article class="rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm transition hover:border-slate-300 hover:shadow-md">
-                    <div class="flex items-start justify-between gap-3">
-                        <div class="min-w-0">
-                            <p class="line-clamp-2 text-base font-semibold text-slate-950">{{ $hw->title }}</p>
-                            <p class="mt-1 text-xs text-slate-500">{{ $hw->classroom?->name ?? '-' }} | {{ $hw->teacher?->name ?? '-' }}</p>
-                        </div>
-                        <x-ui.badge :variant="$statusMeta['badge']">{{ $statusMeta['label'] }}</x-ui.badge>
-                    </div>
-
-                    <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
-                        <div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3">
-                            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Echeance</p>
-                            <p class="mt-1 font-semibold text-slate-900">{{ optional($hw->due_at)->format('d/m/Y H:i') ?? '-' }}</p>
-                        </div>
-                        <div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3">
-                            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Pieces</p>
-                            <p class="mt-1 font-semibold text-slate-900">{{ (int) ($hw->attachments_count ?? 0) }}</p>
-                        </div>
-                        <div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 col-span-2">
-                            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Cree le</p>
-                            <p class="mt-1 font-semibold text-slate-900">{{ optional($hw->created_at)->format('d/m/Y H:i') ?? '-' }}</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 flex flex-wrap gap-2">
-                        <x-ui.button :href="route($routePrefix . '.show', $hw)" variant="secondary" size="sm">
-                            Voir
-                        </x-ui.button>
-                        <x-ui.button :href="route($routePrefix . '.edit', $hw)" variant="ghost" size="sm">
-                            Modifier
-                        </x-ui.button>
-
-                        @if($normalized === 'pending')
-                            <form method="POST" action="{{ route($routePrefix . '.approve', $hw) }}">
-                                @csrf
-                                <button class="app-button-outline min-h-9 rounded-lg px-3 py-2 text-xs">
-                                    Approuver
-                                </button>
-                            </form>
-                            <form method="POST" action="{{ route($routePrefix . '.reject', $hw) }}">
-                                @csrf
-                                <button class="app-button-danger min-h-9 rounded-lg px-3 py-2 text-xs">
-                                    Rejeter
-                                </button>
-                            </form>
-                        @endif
-
-                        <form method="POST" action="{{ route($routePrefix . '.destroy', $hw) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button class="app-button-danger min-h-9 rounded-lg px-3 py-2 text-xs" onclick="return confirm('Supprimer ce devoir ?');">
-                                Supprimer
-                            </button>
-                        </form>
-                    </div>
-                </article>
-            @empty
-                <div class="col-span-full px-4 py-10 text-center text-sm text-slate-500">
-                    Aucun devoir pour ce filtre.
+        @if($homeworks->isEmpty())
+            <div class="rounded-[28px] border border-dashed border-slate-300 bg-slate-50/80 px-6 py-14 text-center">
+                <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-slate-200">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6 text-slate-400" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h8M8 10h8M8 14h5M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/>
+                    </svg>
                 </div>
-            @endforelse
-        </div>
-
-        <div class="hidden xl:block">
-            <div class="overflow-x-auto">
-                <table class="w-full table-fixed border-separate border-spacing-0">
-                    <colgroup>
-                        <col class="w-[14%]">
-                        <col class="w-[28%]">
-                        <col class="w-[15%]">
-                        <col class="w-[13%]">
-                        <col class="w-[9%]">
-                        <col class="w-[9%]">
-                        <col class="w-[12%]">
-                    </colgroup>
-                    <thead class="bg-slate-50/95">
-                        <tr class="text-left text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                            <th class="px-5 py-4">Titre</th>
-                            <th class="px-5 py-4">Classe / enseignant</th>
-                            <th class="px-5 py-4">Echeance</th>
-                            <th class="px-5 py-4">Pieces</th>
-                            <th class="px-5 py-4">Statut</th>
-                            <th class="px-5 py-4">Cree le</th>
-                            <th class="px-5 py-4 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="align-top">
-                        @forelse($homeworks as $hw)
-                            @php
-                                $normalized = $hw->normalized_status ?? 'pending';
-                                $statusMeta = $desktopStatusTone($normalized);
-                            @endphp
-                            <tr class="border-t border-slate-200/80 transition {{ $statusMeta['row'] }}">
-                                <td class="px-5 py-4">
-                                    <div class="min-w-0">
-                                        <p class="line-clamp-2 font-semibold text-slate-950">{{ $hw->title }}</p>
-                                        <p class="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">
-                                            {{ $hw->subject?->name ? $hw->subject->name . ' - ' : '' }}Validation et maintenance apres publication depuis le meme flux.
-                                        </p>
-                                    </div>
-                                </td>
-                                <td class="px-5 py-4">
-                                    <div class="space-y-1">
-                                        <p class="font-semibold text-slate-900">{{ $hw->classroom?->name ?? '-' }}</p>
-                                        <p class="text-sm text-slate-600">{{ $hw->teacher?->name ?? '-' }}</p>
-                                    </div>
-                                </td>
-                                <td class="px-5 py-4 text-sm text-slate-600">
-                                    {{ optional($hw->due_at)->format('d/m/Y') ?? '-' }}
-                                    <div class="mt-1 text-xs text-slate-500">
-                                        {{ optional($hw->due_at)->format('H:i') ?? 'Sans heure' }}
-                                    </div>
-                                </td>
-                                <td class="px-5 py-4">
-                                    <span class="inline-flex min-w-10 items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">
-                                        {{ (int) ($hw->attachments_count ?? 0) }}
-                                    </span>
-                                </td>
-                                <td class="px-5 py-4">
-                                    <x-ui.badge :variant="$statusMeta['badge']" class="uppercase tracking-[0.12em]">
-                                        {{ $statusMeta['label'] }}
-                                    </x-ui.badge>
-                                </td>
-                                <td class="px-5 py-4 text-sm text-slate-500">
-                                    {{ optional($hw->created_at)->format('d/m/Y') ?? '-' }}
-                                    <div class="mt-1 text-xs text-slate-400">{{ optional($hw->created_at)->format('H:i') ?? '' }}</div>
-                                </td>
-                                <td class="px-5 py-4">
-                                    <div class="flex justify-end">
-                                        <details class="relative">
-                                            <summary class="list-none cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">
-                                                Actions
-                                            </summary>
-                                            <div class="absolute right-0 z-20 mt-2 w-48 rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_18px_48px_-24px_rgba(15,23,42,0.3)]">
-                                                <div class="flex flex-col gap-2">
-                                                    <x-ui.button :href="route($routePrefix . '.show', $hw)" variant="secondary" size="sm" class="justify-start">
-                                                        Voir
-                                                    </x-ui.button>
-                                                    <x-ui.button :href="route($routePrefix . '.edit', $hw)" variant="ghost" size="sm" class="justify-start">
-                                                        Modifier
-                                                    </x-ui.button>
-
-                                                    @if($normalized === 'pending')
-                                                        <form method="POST" action="{{ route($routePrefix . '.approve', $hw) }}">
-                                                            @csrf
-                                                            <button class="app-button-outline min-h-9 w-full rounded-lg px-3 py-2 text-left text-xs">
-                                                                Approuver
-                                                            </button>
-                                                        </form>
-                                                        <form method="POST" action="{{ route($routePrefix . '.reject', $hw) }}">
-                                                            @csrf
-                                                            <button class="app-button-danger min-h-9 w-full rounded-lg px-3 py-2 text-left text-xs">
-                                                                Rejeter
-                                                            </button>
-                                                        </form>
-                                                    @endif
-
-                                                    <form method="POST" action="{{ route($routePrefix . '.destroy', $hw) }}">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button class="app-button-danger min-h-9 w-full rounded-lg px-3 py-2 text-left text-xs" onclick="return confirm('Supprimer ce devoir ?');">
-                                                            Supprimer
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </details>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="px-6 py-14 text-center text-sm text-slate-500">
-                                    Aucun devoir pour ce filtre.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                <h3 class="mt-4 text-base font-semibold text-slate-900">Aucun devoir trouve</h3>
+                <p class="mt-2 text-sm leading-6 text-slate-500">
+                    Aucun devoir ne correspond aux filtres actuels. Ajustez la recherche ou reinitialisez les criteres pour afficher plus de demandes.
+                </p>
+                <div class="mt-6 flex justify-center">
+                    <x-ui.button :href="route($routePrefix . '.index')" variant="secondary">Reinitialiser les filtres</x-ui.button>
+                </div>
             </div>
-        </div>
-    </section>
+        @else
+            <div class="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+                @foreach($homeworks as $hw)
+                    @php
+                        $normalized = $hw->normalized_status ?? 'pending';
+                        $statusMeta = $desktopStatusTone($normalized);
+                        $summary = trim((string) ($hw->description ?? ''));
+                    @endphp
+                    <article class="group flex h-full flex-col rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_18px_40px_-26px_rgba(15,23,42,0.28)]">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Demande de devoir</p>
+                                <h3 class="mt-2 line-clamp-2 text-lg font-semibold tracking-tight text-slate-950">{{ $hw->title }}</h3>
+                            </div>
+                            <x-ui.badge :variant="$statusMeta['badge']" class="shrink-0 uppercase tracking-[0.12em]">
+                                {{ $statusMeta['label'] }}
+                            </x-ui.badge>
+                        </div>
+
+                        <p class="mt-3 line-clamp-3 text-sm leading-6 text-slate-500">
+                            {{ $summary !== '' ? \Illuminate\Support\Str::limit($summary, 150) : 'Aucun resume ajoute pour cette demande.' }}
+                        </p>
+
+                        <div class="mt-5 grid gap-3 sm:grid-cols-2">
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3">
+                                <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Classe</p>
+                                <p class="mt-1 text-sm font-semibold text-slate-900">{{ $hw->classroom?->name ?? '-' }}</p>
+                            </div>
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3">
+                                <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Enseignant</p>
+                                <p class="mt-1 text-sm font-semibold text-slate-900">{{ $hw->teacher?->name ?? '-' }}</p>
+                            </div>
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3">
+                                <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Echeance</p>
+                                <p class="mt-1 text-sm font-semibold text-slate-900">{{ optional($hw->due_at)->format('d/m/Y') ?? '-' }}</p>
+                                <p class="mt-1 text-xs text-slate-500">{{ optional($hw->due_at)->format('H:i') ?? 'Sans heure' }}</p>
+                            </div>
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3">
+                                <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Pieces jointes</p>
+                                <p class="mt-1 text-sm font-semibold text-slate-900">{{ (int) ($hw->attachments_count ?? 0) }}</p>
+                                <p class="mt-1 text-xs text-slate-500">Documents ajoutes a la demande</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 rounded-2xl border border-slate-200 bg-white/70 px-4 py-3">
+                            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Cree le</p>
+                            <p class="mt-1 text-sm font-semibold text-slate-900">{{ optional($hw->created_at)->format('d/m/Y') ?? '-' }}</p>
+                            <p class="mt-1 text-xs text-slate-500">{{ optional($hw->created_at)->format('H:i') ?? 'Heure non renseignee' }}</p>
+                        </div>
+
+                        <div class="mt-5 border-t border-slate-200 pt-4">
+                            <div class="flex flex-wrap gap-2">
+                                <x-ui.button :href="route($routePrefix . '.show', $hw)" variant="ghost" size="sm">
+                                    Voir
+                                </x-ui.button>
+                                <x-ui.button :href="route($routePrefix . '.edit', $hw)" variant="secondary" size="sm">
+                                    Modifier
+                                </x-ui.button>
+
+                                @if($normalized === 'pending')
+                                    <form method="POST" action="{{ route($routePrefix . '.approve', $hw) }}">
+                                        @csrf
+                                        <x-ui.button type="submit" variant="outline" size="sm">
+                                            Approuver
+                                        </x-ui.button>
+                                    </form>
+                                    <form method="POST" action="{{ route($routePrefix . '.reject', $hw) }}">
+                                        @csrf
+                                        <x-ui.button type="submit" variant="danger" size="sm">
+                                            Rejeter
+                                        </x-ui.button>
+                                    </form>
+                                @endif
+
+                                <form method="POST" action="{{ route($routePrefix . '.destroy', $hw) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <x-ui.button type="submit" variant="danger" size="sm" onclick="return confirm('Supprimer ce devoir ?');">
+                                        Supprimer
+                                    </x-ui.button>
+                                </form>
+                            </div>
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+        @endif
+    </x-ui.card>
 
     <div class="mt-6">{{ $homeworks->links() }}</div>
 </x-admin-layout>

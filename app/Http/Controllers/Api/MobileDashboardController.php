@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\AcademicYear;
 use App\Models\AppNotification;
 use App\Models\Attendance;
 use App\Models\Classroom;
@@ -16,9 +17,12 @@ use App\Models\Student;
 use App\Models\StudentBehavior;
 use App\Models\Timetable;
 use App\Models\User;
+use App\Services\AcademicYearService;
 use App\Services\AttendanceReportingService;
 use App\Services\FinanceArrearsService;
+use App\Services\StudentPlacementService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -47,6 +51,7 @@ class MobileDashboardController extends Controller
             'student' => $this->studentPayload($user, $schoolId),
             'recent_notifications' => $this->recentNotificationsPayload($user),
             'sections' => $this->sectionsPayload($user, $schoolId),
+            'current_academic_year' => $this->currentAcademicYearPayload($schoolId),
             'app_update' => $this->appUpdatePayload($schoolId),
         ]);
     }
@@ -94,12 +99,12 @@ class MobileDashboardController extends Controller
         $childIds = $children->pluck('id');
         $presentToday = $childIds->isEmpty()
             ? 0
-            : Attendance::query()
+            : $this->yearAwareQuery(Attendance::query(), $schoolId)
                 ->whereIn('student_id', $childIds)
                 ->whereDate('date', now()->toDateString())
                 ->where('status', Attendance::STATUS_PRESENT)
                 ->count();
-        $arrears = $this->financeArrears->forChildren($children, $schoolId);
+        $arrears = $this->financeArrears->forChildren($children, $schoolId, null, $this->currentAcademicYearId($schoolId));
 
         return [
             $this->stat('Children', (string) $children->count(), 'Linked student profiles', 'family_restroom'),
@@ -114,9 +119,10 @@ class MobileDashboardController extends Controller
         $student = $this->studentRecord($user, $schoolId);
         $attendanceRate = $this->attendanceRateForStudent($student?->id);
         $gradeAverage = $this->gradeAverageForStudent($student?->id);
+        $classroom = $student ? app(StudentPlacementService::class)->classroomNameForStudent($student, $schoolId, $this->currentAcademicYearId($schoolId)) : '-';
 
         return [
-            $this->stat('Class', $student?->classroom?->name ?: '-', 'Current classroom', 'class'),
+            $this->stat('Class', $classroom ?: '-', 'Current classroom', 'class'),
             $this->stat('Attendance', $attendanceRate !== null ? $attendanceRate . '%' : '-', 'Last 30 days', 'fact_check'),
             $this->stat('Average', $gradeAverage !== null ? $gradeAverage . '%' : '-', 'Recorded grades', 'grade'),
             $this->stat('Unread alerts', (string) $unread, 'Notifications waiting', 'notifications_active'),
@@ -132,7 +138,7 @@ class MobileDashboardController extends Controller
             $this->stat('Subjects', (string) $user->subjects()->count(), 'Teaching load', 'menu_book'),
             $this->stat(
                 'Grades this week',
-                (string) Grade::query()
+                (string) $this->yearAwareQuery(Grade::query(), $schoolId)
                     ->where('teacher_id', (int) $user->id)
                     ->whereBetween('created_at', [now()->startOfWeek(Carbon::MONDAY), now()->endOfWeek(Carbon::SUNDAY)])
                     ->count(),
@@ -149,8 +155,8 @@ class MobileDashboardController extends Controller
 
         return [
             $this->stat('Students', (string) Student::query()->where('school_id', $schoolId)->active()->count(), 'Active records', 'school'),
-            $this->stat('Absent today', (string) Attendance::query()->where('school_id', $schoolId)->whereDate('date', $today)->where('status', Attendance::STATUS_ABSENT)->count(), 'Attendance monitoring', 'error_outline'),
-            $this->stat('Late today', (string) Attendance::query()->where('school_id', $schoolId)->whereDate('date', $today)->where('status', Attendance::STATUS_LATE)->count(), 'Operations', 'schedule'),
+            $this->stat('Absent today', (string) $this->yearAwareQuery(Attendance::query(), $schoolId)->where('school_id', $schoolId)->whereDate('date', $today)->where('status', Attendance::STATUS_ABSENT)->count(), 'Attendance monitoring', 'error_outline'),
+            $this->stat('Late today', (string) $this->yearAwareQuery(Attendance::query(), $schoolId)->where('school_id', $schoolId)->whereDate('date', $today)->where('status', Attendance::STATUS_LATE)->count(), 'Operations', 'schedule'),
             $this->stat('Pickup pending', (string) PickupRequest::query()->where('school_id', $schoolId)->where('status', PickupRequest::STATUS_PENDING)->count(), 'Awaiting action', 'local_taxi'),
         ];
     }
@@ -162,7 +168,7 @@ class MobileDashboardController extends Controller
         return [
             $this->stat('Students', (string) Student::query()->where('school_id', $schoolId)->count(), 'Total student records', 'school'),
             $this->stat('Teachers', (string) User::query()->where('school_id', $schoolId)->where('role', User::ROLE_TEACHER)->count(), 'Faculty members', 'group'),
-            $this->stat('Classes', (string) Classroom::query()->where('school_id', $schoolId)->count(), 'Learning groups', 'meeting_room'),
+            $this->stat('Classes', (string) $this->classroomCountForCurrentYear($schoolId), 'Learning groups', 'meeting_room'),
             $this->stat('Absent today', (string) $attendanceSummary['today_absent'], 'School attendance', 'error_outline'),
         ];
     }
@@ -174,7 +180,7 @@ class MobileDashboardController extends Controller
         return [
             $this->stat('Users', (string) User::query()->where('school_id', $schoolId)->count(), 'People in scope', 'group'),
             $this->stat('Students', (string) Student::query()->where('school_id', $schoolId)->active()->count(), 'Active student records', 'school'),
-            $this->stat('Classes', (string) Classroom::query()->where('school_id', $schoolId)->count(), 'Learning groups', 'meeting_room'),
+            $this->stat('Classes', (string) $this->classroomCountForCurrentYear($schoolId), 'Learning groups', 'meeting_room'),
             $this->stat('Late today', (string) $attendanceSummary['today_late'], 'Attendance operations', 'schedule'),
         ];
     }
@@ -200,13 +206,13 @@ class MobileDashboardController extends Controller
             ->orderBy('full_name')
             ->limit(12)
             ->get()
-            ->map(function (Student $student): array {
-                $latestAttendance = Attendance::query()->where('student_id', (int) $student->id)->latest('date')->first();
+            ->map(function (Student $student) use ($schoolId): array {
+                $latestAttendance = $this->yearAwareQuery(Attendance::query(), $schoolId)->where('student_id', (int) $student->id)->latest('date')->first();
 
                 return [
                     'id' => (int) $student->id,
                     'name' => (string) $student->full_name,
-                    'classroom' => (string) ($student->classroom?->name ?? ''),
+                    'classroom' => app(StudentPlacementService::class)->classroomNameForStudent($student, $schoolId, $this->currentAcademicYearId($schoolId)),
                     'attendance_status' => (string) ($latestAttendance->status ?? ''),
                     'attendance_date' => $latestAttendance?->date?->toDateString(),
                     'average_grade' => $this->gradeAverageForStudent((int) $student->id),
@@ -227,12 +233,12 @@ class MobileDashboardController extends Controller
             return null;
         }
 
-        $latestAttendance = Attendance::query()->where('student_id', (int) $student->id)->latest('date')->first();
+        $latestAttendance = $this->yearAwareQuery(Attendance::query(), $schoolId)->where('student_id', (int) $student->id)->latest('date')->first();
 
         return [
             'id' => (int) $student->id,
             'name' => (string) $student->full_name,
-            'classroom' => (string) ($student->classroom?->name ?? ''),
+            'classroom' => app(StudentPlacementService::class)->classroomNameForStudent($student, $schoolId, $this->currentAcademicYearId($schoolId)),
             'attendance_status' => (string) ($latestAttendance->status ?? ''),
             'attendance_date' => $latestAttendance?->date?->toDateString(),
             'average_grade' => $this->gradeAverageForStudent((int) $student->id),
@@ -312,7 +318,7 @@ class MobileDashboardController extends Controller
     private function parentSections(User $user, int $schoolId): array
     {
         $children = $this->parentChildrenQuery($user, $schoolId)->with(['classroom:id,name', 'feePlan'])->get();
-        $grades = Grade::query()
+        $grades = $this->yearAwareQuery(Grade::query(), $schoolId)
             ->where('school_id', $schoolId)
             ->whereIn('student_id', $children->pluck('id'))
             ->with(['student:id,full_name', 'subject:id,name', 'teacher:id,name'])
@@ -320,7 +326,7 @@ class MobileDashboardController extends Controller
             ->limit(6)
             ->get();
         $attendanceAlerts = $this->attendanceReporting->recentAttendanceAlertsForStudents($children->pluck('id'), $schoolId, 6);
-        $arrears = $this->financeArrears->forChildren($children, $schoolId);
+        $arrears = $this->financeArrears->forChildren($children, $schoolId, null, $this->currentAcademicYearId($schoolId));
 
         return [
             $this->section('recent_results', 'Recent results', 'Latest recorded grades from the platform.', $grades->map(function (Grade $grade) {
@@ -362,23 +368,23 @@ class MobileDashboardController extends Controller
             return [];
         }
 
-        $grades = Grade::query()
+        $grades = $this->yearAwareQuery(Grade::query(), $schoolId)
             ->where('school_id', $schoolId)
             ->where('student_id', $student->id)
             ->with(['subject:id,name', 'teacher:id,name'])
             ->latest('id')
             ->limit(8)
             ->get();
-        $attendanceRows = Attendance::query()
+        $attendanceRows = $this->yearAwareQuery(Attendance::query(), $schoolId)
             ->where('school_id', $schoolId)
             ->where('student_id', $student->id)
             ->with('markedBy:id,name')
             ->latest('date')
             ->limit(6)
             ->get();
-        $upcomingHomeworks = Homework::query()
+        $upcomingHomeworks = $this->yearAwareQuery(Homework::query(), $schoolId)
             ->where('school_id', $schoolId)
-            ->where('classroom_id', (int) $student->classroom_id)
+            ->where('classroom_id', (int) app(StudentPlacementService::class)->classroomIdForStudent($student, $schoolId, $this->currentAcademicYearId($schoolId)))
             ->whereNotNull('due_at')
             ->where('due_at', '>=', now())
             ->with('teacher:id,name')
@@ -429,7 +435,7 @@ class MobileDashboardController extends Controller
             ->get(['classrooms.id', 'classrooms.name', 'classrooms.level_id']);
         $classroomIds = $classrooms->pluck('id')->all();
 
-        $todayRecorded = Attendance::query()
+        $todayRecorded = $this->yearAwareQuery(Attendance::query(), $schoolId)
             ->where('school_id', $schoolId)
             ->whereDate('date', now()->toDateString())
             ->whereIn('classroom_id', $classroomIds)
@@ -440,7 +446,7 @@ class MobileDashboardController extends Controller
 
         $pendingAttendance = $classrooms->filter(fn ($classroom) => !$todayRecorded->contains($classroom->id))->values();
         $sessions = $this->attendanceReporting->teacherSessionHistory($schoolId, (int) $user->id, $classroomIds, 6);
-        $slots = Timetable::query()
+        $slots = $this->yearAwareQuery(Timetable::query(), $schoolId)
             ->where('school_id', $schoolId)
             ->where(function ($query) use ($user, $classroomIds) {
                 $query->where('teacher_id', (int) $user->id);
@@ -488,7 +494,7 @@ class MobileDashboardController extends Controller
     private function schoolLifeSections(int $schoolId): array
     {
         $attendanceSummary = $this->attendanceReporting->schoolDashboardSummary($schoolId, now()->startOfDay());
-        $recentAttendance = Attendance::query()
+        $recentAttendance = $this->yearAwareQuery(Attendance::query(), $schoolId)
             ->where('school_id', $schoolId)
             ->whereIn('status', [Attendance::STATUS_ABSENT, Attendance::STATUS_LATE])
             ->with(['student.classroom', 'markedBy:id,name'])
@@ -515,9 +521,11 @@ class MobileDashboardController extends Controller
             ->withCount([
                 'attendances as absences_count' => fn ($query) => $query
                     ->where('school_id', $schoolId)
+                    ->when(true, fn ($builder) => $this->yearAwareQuery($builder, $schoolId))
                     ->where('status', Attendance::STATUS_ABSENT),
                 'attendances as late_count' => fn ($query) => $query
                     ->where('school_id', $schoolId)
+                    ->when(true, fn ($builder) => $this->yearAwareQuery($builder, $schoolId))
                     ->where('status', Attendance::STATUS_LATE),
                 'behaviors',
             ])
@@ -575,14 +583,36 @@ class MobileDashboardController extends Controller
         $endOfWeek = now()->endOfWeek(Carbon::SUNDAY);
         $attendanceSummary = $this->attendanceReporting->schoolDashboardSummary($schoolId, now()->startOfDay());
 
+        $currentAcademicYearId = $this->currentAcademicYearId($schoolId);
+
         $classroomsNoCourses = Classroom::query()->where('school_id', $schoolId)
             ->whereNotExists(function ($query) use ($schoolId, $startOfWeek, $endOfWeek) {
-                $query->selectRaw('1')->from('courses')->whereColumn('courses.classroom_id', 'classrooms.id')->where('courses.school_id', $schoolId)->whereBetween('courses.created_at', [$startOfWeek, $endOfWeek]);
+                $query->selectRaw('1')
+                    ->from('courses')
+                    ->whereColumn('courses.classroom_id', 'classrooms.id')
+                    ->where('courses.school_id', $schoolId)
+                    ->whereBetween('courses.created_at', [$startOfWeek, $endOfWeek])
+                    ->when($currentAcademicYearId, function ($builder) use ($currentAcademicYearId) {
+                        $builder->where(function ($inner) use ($currentAcademicYearId) {
+                            $inner->where('courses.academic_year_id', $currentAcademicYearId)
+                                ->orWhereNull('courses.academic_year_id');
+                        });
+                    });
             })->orderBy('name')->limit(8)->get(['id', 'name']);
 
         $teachersNoHomeworks = User::query()->where('school_id', $schoolId)->where('role', User::ROLE_TEACHER)
-            ->whereNotExists(function ($query) use ($schoolId, $startOfWeek, $endOfWeek) {
-                $query->selectRaw('1')->from('homeworks')->whereColumn('homeworks.teacher_id', 'users.id')->where('homeworks.school_id', $schoolId)->whereBetween('homeworks.created_at', [$startOfWeek, $endOfWeek]);
+            ->whereNotExists(function ($query) use ($schoolId, $startOfWeek, $endOfWeek, $currentAcademicYearId) {
+                $query->selectRaw('1')
+                    ->from('homeworks')
+                    ->whereColumn('homeworks.teacher_id', 'users.id')
+                    ->where('homeworks.school_id', $schoolId)
+                    ->whereBetween('homeworks.created_at', [$startOfWeek, $endOfWeek])
+                    ->when($currentAcademicYearId, function ($builder) use ($currentAcademicYearId) {
+                        $builder->where(function ($inner) use ($currentAcademicYearId) {
+                            $inner->where('homeworks.academic_year_id', $currentAcademicYearId)
+                                ->orWhereNull('homeworks.academic_year_id');
+                        });
+                    });
             })->orderBy('name')->limit(8)->get(['id', 'name', 'is_active']);
 
         return [
@@ -608,7 +638,7 @@ class MobileDashboardController extends Controller
 
     private function adminSections(int $schoolId): array
     {
-        $pendingHomeworks = Homework::query()
+        $pendingHomeworks = $this->yearAwareQuery(Homework::query(), $schoolId)
             ->where('school_id', $schoolId)
             ->where(function ($query) {
                 $query->whereNull('status')->orWhere('status', '')->orWhereIn('status', ['pending', 'draft']);
@@ -617,7 +647,7 @@ class MobileDashboardController extends Controller
             ->latest('id')
             ->limit(8)
             ->get();
-        $recentPayments = Payment::query()->where('school_id', $schoolId)->with(['student:id,full_name'])->latest('paid_at')->limit(8)->get();
+        $recentPayments = $this->yearAwareQuery(Payment::query(), $schoolId)->where('school_id', $schoolId)->with(['student:id,full_name'])->latest('paid_at')->limit(8)->get();
 
         return [
             $this->section('pending_homeworks', 'Pending homework approvals', 'Homework items still awaiting admin review.', $pendingHomeworks->map(fn ($homework) => [
@@ -676,7 +706,10 @@ class MobileDashboardController extends Controller
             return null;
         }
 
-        $attendanceQuery = Attendance::query()->where('student_id', $studentId)->whereDate('date', '>=', now()->subDays(30)->toDateString());
+        $schoolId = app()->bound('current_school_id') ? (int) app('current_school_id') : 0;
+        $attendanceQuery = $this->yearAwareQuery(Attendance::query(), $schoolId)
+            ->where('student_id', $studentId)
+            ->whereDate('date', '>=', now()->subDays(30)->toDateString());
         $total = (clone $attendanceQuery)->count();
         if ($total === 0) {
             return null;
@@ -692,7 +725,8 @@ class MobileDashboardController extends Controller
             return null;
         }
 
-        $grades = Grade::query()->where('student_id', $studentId)->get(['score', 'max_score']);
+        $schoolId = app()->bound('current_school_id') ? (int) app('current_school_id') : 0;
+        $grades = $this->yearAwareQuery(Grade::query(), $schoolId)->where('student_id', $studentId)->get(['score', 'max_score']);
         if ($grades->isEmpty()) {
             return null;
         }
@@ -799,5 +833,71 @@ class MobileDashboardController extends Controller
             'empty_message' => $emptyMessage,
             'items' => array_values($items),
         ];
+    }
+
+    private function requestedAcademicYearId(): ?int
+    {
+        $value = (int) request()->integer('academic_year_id');
+
+        return $value > 0 ? $value : null;
+    }
+
+    private function resolvedAcademicYear(int $schoolId): ?AcademicYear
+    {
+        if ($schoolId <= 0) {
+            return null;
+        }
+
+        return app(AcademicYearService::class)->resolveYearForSchool($schoolId, $this->requestedAcademicYearId());
+    }
+
+    private function currentAcademicYearId(int $schoolId): ?int
+    {
+        return $this->resolvedAcademicYear($schoolId)?->id;
+    }
+
+    private function currentAcademicYearPayload(int $schoolId): ?array
+    {
+        $year = $this->resolvedAcademicYear($schoolId);
+        if (!$year) {
+            return null;
+        }
+
+        return [
+            'id' => (int) $year->id,
+            'name' => (string) $year->name,
+            'starts_at' => $year->starts_at?->toDateString(),
+            'ends_at' => $year->ends_at?->toDateString(),
+            'is_current' => (bool) $year->is_current,
+            'status' => (string) $year->status,
+        ];
+    }
+
+    private function yearAwareQuery(Builder $query, int $schoolId): Builder
+    {
+        if ($schoolId <= 0) {
+            return $query;
+        }
+
+        return app(AcademicYearService::class)->applyYearScope(
+            $query,
+            $schoolId,
+            $this->requestedAcademicYearId(),
+        );
+    }
+
+    private function classroomCountForCurrentYear(int $schoolId): int
+    {
+        $academicYearId = $this->currentAcademicYearId($schoolId);
+        if (!$academicYearId || !class_exists(\App\Models\StudentAcademicYear::class)) {
+            return (int) Classroom::query()->where('school_id', $schoolId)->count();
+        }
+
+        return (int) \App\Models\StudentAcademicYear::query()
+            ->where('school_id', $schoolId)
+            ->where('academic_year_id', $academicYearId)
+            ->whereNotNull('classroom_id')
+            ->distinct('classroom_id')
+            ->count('classroom_id');
     }
 }

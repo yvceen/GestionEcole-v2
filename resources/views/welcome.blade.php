@@ -3,128 +3,90 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'MyEdu') }} | Accueil</title>
+    <title>{{ config('app.name', 'MyEdu') }} | Plateforme de gestion scolaire</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="app-shell-body text-slate-900 antialiased">
+<body class="fut-landing-body antialiased">
 @php
-    $highlights = [
-        [
-            'title' => 'Encadrement de qualité',
-            'description' => 'Une équipe pédagogique structurée, disponible et attentive à la progression de chaque élève.',
-        ],
-        [
-            'title' => 'Pédagogie moderne',
-            'description' => 'Des outils clairs pour organiser les apprentissages, suivre les évaluations et valoriser les acquis.',
-        ],
-        [
-            'title' => 'Suivi des élèves',
-            'description' => 'Absences, résultats, observations et informations essentielles centralisés dans un même espace.',
-        ],
-        [
-            'title' => 'Relation familles-école',
-            'description' => 'Une communication plus simple avec les parents grâce à des échanges mieux organisés.',
-        ],
+    $trustCards = [
+        ['title' => 'Gestion administrative', 'description' => 'Organisation des classes, dossiers, inscriptions et suivi quotidien dans un espace plus lisible.', 'icon' => 'admin'],
+        ['title' => 'Suivi des eleves', 'description' => 'Vision claire des parcours, des observations, des resultats et des informations utiles a l accompagnement.', 'icon' => 'students'],
+        ['title' => 'Communication parents-ecole', 'description' => 'Messages, informations et rendez-vous partages dans un cadre fluide et professionnel.', 'icon' => 'chat'],
+        ['title' => 'Presences et devoirs', 'description' => 'Pointages, retards, absences et travaux scolaires rassembles pour une meilleure coordination.', 'icon' => 'attendance'],
+        ['title' => 'Transport scolaire', 'description' => 'Circuits, affectations et informations pratiques accessibles dans un suivi mieux structure.', 'icon' => 'transport'],
+        ['title' => 'Application mobile', 'description' => 'Acces dedie pour les familles, les eleves et les equipes depuis un usage mobile clair et rassurant.', 'icon' => 'mobile'],
     ];
 
-    $features = [
-        [
-            'title' => 'Gestion des élèves',
-            'description' => 'Inscriptions, dossiers, classes et historique scolaire dans un parcours fluide.',
-        ],
-        [
-            'title' => 'Suivi pédagogique',
-            'description' => 'Devoirs, évaluations, notes et observations accessibles selon le profil utilisateur.',
-        ],
-        [
-            'title' => 'Communication',
-            'description' => 'Informations, messages et annonces transmis avec plus de régularité et de visibilité.',
-        ],
-        [
-            'title' => 'Emploi du temps',
-            'description' => 'Une organisation claire des cours, des salles et des créneaux pour chaque niveau.',
-        ],
-        [
-            'title' => 'Transport scolaire',
-            'description' => 'Gestion des circuits, des points d’arrêt et des affectations en toute lisibilité.',
-        ],
-        [
-            'title' => 'Paiements et services',
-            'description' => 'Suivi administratif et financier avec un espace mieux structuré pour l’établissement.',
-        ],
-        [
-            'title' => 'Actualités de l’école',
-            'description' => 'Vie scolaire, temps forts et informations pratiques diffusés dans un cadre professionnel.',
-        ],
-        [
-            'title' => 'Espaces dédiés',
-            'description' => 'Interfaces distinctes pour l’administration, les enseignants, les parents et les élèves.',
-        ],
+    $modules = [
+        ['title' => 'Eleves', 'description' => 'Dossiers, affectations, parcours et suivi global.', 'icon' => 'students'],
+        ['title' => 'Parents', 'description' => 'Acces aux informations essentielles et aux echanges utiles.', 'icon' => 'parents'],
+        ['title' => 'Enseignants', 'description' => 'Cours, devoirs, presences et evaluation dans le meme espace.', 'icon' => 'teachers'],
+        ['title' => 'Direction', 'description' => 'Vue d ensemble sur l organisation et les priorites de l etablissement.', 'icon' => 'direction'],
+        ['title' => 'Finance', 'description' => 'Paiements, suivis et rappels presentes avec plus de clarte.', 'icon' => 'finance'],
+        ['title' => 'Notifications', 'description' => 'Informations importantes diffusees au bon moment.', 'icon' => 'notifications'],
+        ['title' => 'Documents', 'description' => 'Partage des pieces utiles selon les profils concernes.', 'icon' => 'documents'],
+        ['title' => 'Agenda', 'description' => 'Evenements, rendez-vous et rythme scolaire dans une lecture unifiee.', 'icon' => 'agenda'],
     ];
 
-    $stats = [
-        ['value' => '1 portail', 'label' => 'pour coordonner les services'],
-        ['value' => '3 espaces', 'label' => 'administration, enseignants, parents'],
-        ['value' => '100 %', 'label' => 'pensé pour un usage quotidien'],
-        ['value' => '24/7', 'label' => 'accès aux informations essentielles'],
+    $proofs = [
+        ['value' => 'Une seule plateforme', 'label' => 'pour relier l administration, les equipes et les familles'],
+        ['value' => 'Des espaces dedies', 'label' => 'pour chaque profil de la communaute scolaire'],
+        ['value' => 'Une experience mobile', 'label' => 'pour consulter l essentiel en toute fluidite'],
     ];
 @endphp
 @php($errors = $errors ?? new \Illuminate\Support\ViewErrorBag)
 
-<div class="landing-page">
-    <div class="landing-glow landing-glow-left" aria-hidden="true"></div>
-    <div class="landing-glow landing-glow-right" aria-hidden="true"></div>
+<div class="fut-landing">
+    <div class="fut-landing-noise" aria-hidden="true"></div>
+    <div class="fut-landing-orb fut-landing-orb-a" aria-hidden="true"></div>
+    <div class="fut-landing-orb fut-landing-orb-b" aria-hidden="true"></div>
+    <div class="fut-landing-orb fut-landing-orb-c" aria-hidden="true"></div>
 
-    <div class="landing-content">
-    <header x-data="{ open: false }" class="sticky top-0 z-50 border-b border-white/70 bg-white/80 backdrop-blur-xl">
+    <header x-data="{ open: false }" class="fut-nav-wrap">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-            <a href="{{ url('/') }}" class="flex min-h-[4.75rem] items-center gap-3">
-                <div class="grid h-11 w-11 place-items-center rounded-2xl bg-slate-900 text-sm font-semibold tracking-[0.18em] text-white shadow-[0_18px_35px_-24px_rgba(15,23,42,0.7)]">
-                    ME
-                </div>
+            <a href="{{ url('/') }}" class="flex min-h-[5.25rem] items-center gap-4">
+                <div class="fut-brand-mark">ME</div>
                 <div>
-                    <p class="text-sm font-semibold text-slate-950">{{ config('app.name', 'MyEdu') }}</p>
-                    <p class="text-xs text-slate-500">Plateforme de gestion scolaire</p>
+                    <p class="text-base font-semibold tracking-[0.12em] text-white">{{ config('app.name', 'MyEdu') }}</p>
+                    <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Plateforme scolaire nouvelle generation</p>
                 </div>
             </a>
 
-            <nav class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
-                <a href="#presentation" class="transition hover:text-slate-950">Établissement</a>
-                <a href="#atouts" class="transition hover:text-slate-950">Atouts</a>
-                <a href="#plateforme" class="transition hover:text-slate-950">Plateforme</a>
-                <a href="#application" class="transition hover:text-slate-950">Application</a>
-                <a href="#contact" class="transition hover:text-slate-950">Contact</a>
+            <nav class="hidden items-center gap-7 text-sm font-medium text-slate-300 lg:flex">
+                <a href="#valeurs" class="transition hover:text-white">Valeurs</a>
+                <a href="#modules" class="transition hover:text-white">Modules</a>
+                <a href="#mobile" class="transition hover:text-white">Application mobile</a>
+                <a href="#organisation" class="transition hover:text-white">Organisation</a>
+                <a href="#demo" class="transition hover:text-white">Demonstration</a>
             </nav>
 
-            <div class="hidden items-center gap-3 md:flex">
-                <a href="#contact" class="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
-                    Nous contacter
-                </a>
+            <div class="hidden items-center gap-4 lg:flex">
+                <a href="#demo" class="fut-button fut-button-primary">Demander une demonstration</a>
                 @if (Route::has('login'))
-                    <a href="{{ route('login') }}" class="inline-flex min-h-11 items-center justify-center rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_18px_35px_-24px_rgba(15,23,42,0.8)] transition hover:bg-slate-800">
-                        Accéder à la plateforme
+                    <a href="{{ route('login') }}" class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 transition hover:text-white">
+                        Acces prive
                     </a>
                 @endif
             </div>
 
-            <button @click="open = ! open" type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 transition hover:border-slate-300 hover:text-slate-950 md:hidden" aria-label="Ouvrir le menu">
-                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 7h16M4 12h16M4 17h16" />
-                    <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 6l12 12M18 6l-12 12" />
+            <button @click="open = ! open" type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-slate-100 backdrop-blur lg:hidden" aria-label="Ouvrir le menu">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+                    <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6l-12 12" />
                 </svg>
             </button>
         </div>
 
-        <div :class="{ 'block': open, 'hidden': !open }" class="hidden border-t border-slate-200 bg-white md:hidden">
-            <div class="space-y-1 px-4 py-4 text-sm font-medium text-slate-700">
-                <a href="#presentation" class="block rounded-2xl px-4 py-3 transition hover:bg-slate-50">Établissement</a>
-                <a href="#atouts" class="block rounded-2xl px-4 py-3 transition hover:bg-slate-50">Atouts</a>
-                <a href="#plateforme" class="block rounded-2xl px-4 py-3 transition hover:bg-slate-50">Plateforme</a>
-                <a href="#application" class="block rounded-2xl px-4 py-3 transition hover:bg-slate-50">Application mobile</a>
-                <a href="#contact" class="block rounded-2xl px-4 py-3 transition hover:bg-slate-50">Contact</a>
+        <div :class="{ 'block': open, 'hidden': !open }" class="hidden border-t border-white/10 bg-slate-950/95 backdrop-blur lg:hidden">
+            <div class="mx-auto max-w-7xl space-y-1 px-4 py-4 text-sm text-slate-200 sm:px-6">
+                <a href="#valeurs" class="block rounded-2xl px-4 py-3 transition hover:bg-white/5">Valeurs</a>
+                <a href="#modules" class="block rounded-2xl px-4 py-3 transition hover:bg-white/5">Modules</a>
+                <a href="#mobile" class="block rounded-2xl px-4 py-3 transition hover:bg-white/5">Application mobile</a>
+                <a href="#organisation" class="block rounded-2xl px-4 py-3 transition hover:bg-white/5">Organisation</a>
+                <a href="#demo" class="block rounded-2xl px-4 py-3 transition hover:bg-white/5">Demonstration</a>
                 @if (Route::has('login'))
-                    <a href="{{ route('login') }}" class="mt-2 inline-flex w-full min-h-11 items-center justify-center rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800">
-                        Accéder à la plateforme
+                    <a href="{{ route('login') }}" class="block rounded-2xl px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 transition hover:bg-white/5 hover:text-white">
+                        Acces prive
                     </a>
                 @endif
             </div>
@@ -133,410 +95,371 @@
 
     <main>
         <section class="relative">
-            <div class="mx-auto grid max-w-7xl gap-14 px-4 pb-20 pt-14 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:px-8 lg:pb-28 lg:pt-20">
-                <div class="max-w-2xl">
-                    <span class="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white/85 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-sky-800 shadow-sm backdrop-blur">
-                        <span class="h-2 w-2 rounded-full bg-sky-600"></span>
-                        Éducation, rigueur et clarté
-                    </span>
+            <div class="mx-auto grid max-w-7xl gap-16 px-4 pb-20 pt-12 sm:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:px-8 lg:pb-28 lg:pt-20">
+                <div class="max-w-3xl">
+                    <span class="fut-eyebrow">Vision numerique pour l etablissement</span>
 
-                    <h1 class="mt-8 max-w-xl font-serif text-4xl leading-tight tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
-                        Une page d’accueil à l’image d’un établissement exigeant.
+                    <h1 class="mt-8 text-4xl font-semibold leading-[1.02] tracking-[-0.04em] text-white sm:text-5xl lg:text-7xl">
+                        La plateforme qui donne une nouvelle dimension a la gestion scolaire.
                     </h1>
 
-                    <p class="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-                        {{ config('app.name', 'MyEdu') }} réunit la vie scolaire, le suivi pédagogique et la relation avec les familles dans une expérience plus lisible, plus fiable et plus professionnelle.
+                    <p class="mt-7 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
+                        {{ config('app.name', 'MyEdu') }} centralise la vie de l etablissement dans une experience contemporaine, claire et fluide pour l administration, les enseignants, les parents et les eleves.
                     </p>
 
-                    <div class="mt-10 flex flex-col gap-3 sm:flex-row">
-                        @if (Route::has('login'))
-                            <a href="{{ route('login') }}" class="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-[0_22px_45px_-28px_rgba(15,23,42,0.75)] transition hover:bg-slate-800">
-                                Accéder à la plateforme
-                            </a>
-                        @endif
-                        <a href="#presentation" class="inline-flex min-h-12 items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
-                            Découvrir l’établissement
-                        </a>
+                    <div class="mt-10 flex flex-col gap-4 sm:flex-row">
+                        <a href="#demo" class="fut-button fut-button-primary">Demander une demonstration</a>
+                        <a href="#modules" class="fut-button fut-button-secondary">Explorer les modules</a>
                     </div>
 
                     <div class="mt-12 grid gap-4 sm:grid-cols-3">
-                        <div class="rounded-3xl border border-white/80 bg-white/80 p-5 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.32)] backdrop-blur">
-                            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Pilotage</p>
-                            <p class="mt-2 text-lg font-semibold text-slate-950">Administration structurée</p>
-                        </div>
-                        <div class="rounded-3xl border border-white/80 bg-white/80 p-5 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.32)] backdrop-blur">
-                            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Pédagogie</p>
-                            <p class="mt-2 text-lg font-semibold text-slate-950">Suivi clair des apprentissages</p>
-                        </div>
-                        <div class="rounded-3xl border border-white/80 bg-white/80 p-5 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.32)] backdrop-blur">
-                            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Familles</p>
-                            <p class="mt-2 text-lg font-semibold text-slate-950">Communication maîtrisée</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="relative">
-                    <div class="relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/80 p-6 shadow-[0_30px_80px_-45px_rgba(15,23,42,0.35)] backdrop-blur sm:p-8">
-                        <div class="flex items-start justify-between gap-4">
-                            <div>
-                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Vue d’ensemble</p>
-                                <h2 class="mt-3 font-serif text-2xl text-slate-950">Un accueil clair pour toute la communauté scolaire</h2>
-                            </div>
-                            <div class="rounded-2xl bg-slate-950 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white">
-                                Premium
-                            </div>
-                        </div>
-
-                        <div class="mt-8 grid gap-4">
-                            <div class="rounded-3xl bg-slate-950 p-6 text-white">
-                                <div class="flex items-center justify-between gap-4">
-                                    <div>
-                                        <p class="text-xs uppercase tracking-[0.18em] text-white/60">Direction</p>
-                                        <p class="mt-2 text-xl font-semibold">Vision unifiée de l’activité scolaire</p>
-                                    </div>
-                                    <div class="rounded-2xl bg-white/10 p-3">
-                                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 17l5-5 3 3 8-8" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <p class="mt-4 text-sm leading-6 text-white/75">
-                                    Présences, communication, organisation et services réunis dans une interface cohérente.
-                                </p>
-                            </div>
-
-                            <div class="grid gap-4 sm:grid-cols-2">
-                                <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Parents</p>
-                                    <p class="mt-2 text-lg font-semibold text-slate-950">Informations utiles au bon moment</p>
-                                    <p class="mt-3 text-sm leading-6 text-slate-600">Suivi, messages et services accessibles dans un espace dédié.</p>
-                                </div>
-                                <div class="rounded-3xl border border-slate-200 bg-white p-5">
-                                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Équipe pédagogique</p>
-                                    <p class="mt-2 text-lg font-semibold text-slate-950">Organisation quotidienne simplifiée</p>
-                                    <p class="mt-3 text-sm leading-6 text-slate-600">Cours, évaluations et emploi du temps rassemblés de manière lisible.</p>
-                                </div>
-                            </div>
-
-                            <div class="rounded-3xl border border-slate-200 bg-white p-5">
-                                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                    <div>
-                                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Expérience</p>
-                                        <p class="mt-2 text-lg font-semibold text-slate-950">Une page d’accueil pensée pour inspirer confiance</p>
-                                    </div>
-                                    <a href="#contact" class="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white hover:text-slate-950">
-                                        Demander des informations
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="atouts" class="scroll-mt-24 border-y border-white/10 py-20">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="max-w-3xl landing-section-copy">
-                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-200">Nos atouts</p>
-                    <h2 class="mt-4 font-serif text-3xl tracking-tight text-slate-950 sm:text-4xl">Un cadre de travail rassurant, moderne et bien structuré.</h2>
-                    <p class="mt-5 text-base leading-7 text-slate-600">
-                        Chaque section de la plateforme répond à un besoin concret de l’établissement: mieux organiser, mieux communiquer et mieux suivre la vie scolaire.
-                    </p>
-                </div>
-
-                <div class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-                    @foreach ($highlights as $highlight)
-                        <article class="group rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.28)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_28px_80px_-46px_rgba(15,23,42,0.32)]">
-                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-950 text-white">
-                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3l7 4v5c0 4.2-2.8 8-7 9-4.2-1-7-4.8-7-9V7l7-4z" />
-                                </svg>
-                            </div>
-                            <h3 class="mt-5 text-xl font-semibold tracking-tight text-slate-950">{{ $highlight['title'] }}</h3>
-                            <p class="mt-3 text-sm leading-6 text-slate-600">{{ $highlight['description'] }}</p>
-                        </article>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-
-        <section id="presentation" class="scroll-mt-24 py-20">
-            <div class="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
-                <div class="landing-panel-light rounded-[2rem] p-8 text-slate-900 sm:p-10">
-                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-200">Présentation</p>
-                    <h2 class="mt-4 font-serif text-3xl tracking-tight sm:text-4xl">Une identité institutionnelle claire dès la première visite.</h2>
-                    <p class="mt-6 text-base leading-7 text-slate-600">
-                        Cette page d’accueil donne immédiatement une image sérieuse de l’établissement ou de la plateforme. Elle met en avant l’organisation, la qualité du suivi et la simplicité des échanges.
-                    </p>
-                    <div class="mt-8 space-y-4">
-                        <div class="rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4">
-                            <p class="text-sm font-semibold">Accueil premium</p>
-                            <p class="mt-1 text-sm leading-6 text-white/65">Une hiérarchie visuelle nette, des appels à l’action visibles et un ton professionnel.</p>
-                        </div>
-                        <div class="rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4">
-                            <p class="text-sm font-semibold">Lecture intuitive</p>
-                            <p class="mt-1 text-sm leading-6 text-white/65">Les visiteurs comprennent rapidement l’offre, les services et les prochaines étapes.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid gap-5">
-                    <div class="landing-panel-light rounded-[2rem] p-8 sm:p-10">
-                        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-800">Ce que la page raconte</p>
-                        <h3 class="mt-4 text-2xl font-semibold tracking-tight text-slate-950">Un établissement bien organisé, tourné vers la qualité de service.</h3>
-                        <p class="mt-5 text-base leading-7 text-slate-600">
-                            La présentation met en avant une école attentive à ses élèves, structurée dans sa gestion et exigeante dans sa communication. Le message reste simple, crédible et utile.
-                        </p>
-                        <div class="mt-8 grid gap-4 sm:grid-cols-2">
-                            <div class="rounded-3xl bg-slate-50 p-5">
-                                <p class="text-sm font-semibold text-slate-950">Vie scolaire mieux suivie</p>
-                                <p class="mt-2 text-sm leading-6 text-slate-600">Des informations plus accessibles pour les équipes comme pour les familles.</p>
-                            </div>
-                            <div class="rounded-3xl bg-slate-50 p-5">
-                                <p class="text-sm font-semibold text-slate-950">Services plus visibles</p>
-                                <p class="mt-2 text-sm leading-6 text-slate-600">Modules, fonctionnalités et parcours de connexion clairement présentés.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="landing-panel-light rounded-[2rem] p-8">
-                        <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-                            <div>
-                                <p class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Parcours</p>
-                                <h3 class="mt-3 text-2xl font-semibold tracking-tight text-slate-950">Une progression naturelle d’une section à l’autre</h3>
-                            </div>
-                            <div class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700">
-                                Hero, atouts, services, contact
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="plateforme" class="scroll-mt-24 py-20">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-                    <div class="max-w-3xl landing-section-copy">
-                        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-800">Modules et services</p>
-                        <h2 class="mt-4 font-serif text-3xl tracking-tight text-slate-950 sm:text-4xl">Les fonctions clés d’une gestion scolaire professionnelle.</h2>
-                        <p class="mt-5 text-base leading-7 text-slate-600">
-                            La page valorise les modules les plus utiles au fonctionnement quotidien d’un établissement moderne, sans surcharge visuelle ni complexité inutile.
-                        </p>
-                    </div>
-                    <div class="rounded-full border border-slate-200 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur">
-                        Pensé pour l’administration, les enseignants et les familles
-                    </div>
-                </div>
-
-                <div class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-                    @foreach ($features as $feature)
-                        <article class="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.24)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_30px_80px_-46px_rgba(15,23,42,0.3)]">
-                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-50 text-sky-800">
-                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 12h14M12 5l7 7-7 7" />
-                                </svg>
-                            </div>
-                            <h3 class="mt-5 text-lg font-semibold tracking-tight text-slate-950">{{ $feature['title'] }}</h3>
-                            <p class="mt-3 text-sm leading-6 text-slate-600">{{ $feature['description'] }}</p>
-                        </article>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-
-        <section id="application" class="scroll-mt-24 py-20">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="relative overflow-hidden rounded-[2rem] border border-white/80 bg-slate-950 px-6 py-8 text-white shadow-[0_30px_90px_-50px_rgba(15,23,42,0.75)] sm:px-8 sm:py-10 lg:px-12">
-                    <div class="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-sky-400/25 blur-3xl" aria-hidden="true"></div>
-                    <div class="pointer-events-none absolute -bottom-28 left-10 h-72 w-72 rounded-full bg-teal-300/20 blur-3xl" aria-hidden="true"></div>
-
-                    <div class="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-center">
-                        <div class="max-w-3xl">
-                            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-200">Application mobile</p>
-                            <h2 class="mt-4 font-serif text-3xl tracking-tight sm:text-4xl">
-                                Téléchargez notre application mobile
-                            </h2>
-                            <p class="mt-5 max-w-2xl text-base leading-7 text-white/75">
-                                Accédez facilement à votre espace scolaire depuis votre téléphone : absences, notes, devoirs, paiements et notifications.
-                            </p>
-
-                            <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-                                <a href="{{ url('/download/myedu.apk') }}" class="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-950 shadow-[0_22px_45px_-28px_rgba(255,255,255,0.6)] transition hover:bg-slate-100">
-                                    Télécharger l'application
-                                </a>
-                                <p class="text-sm font-medium text-white/65">Disponible pour Android · Installation simple et rapide</p>
-                            </div>
-                        </div>
-
-                        <div class="rounded-[1.75rem] border border-white/15 bg-white/10 p-5 backdrop-blur">
-                            <div class="mx-auto max-w-56 rounded-[2rem] border border-white/20 bg-slate-900 p-3 shadow-2xl">
-                                <div class="rounded-[1.5rem] bg-white p-4 text-slate-950">
-                                    <div class="flex items-center gap-3">
-                                        <div class="grid h-10 w-10 place-items-center rounded-2xl bg-slate-950 text-xs font-semibold tracking-[0.16em] text-white">
-                                            ME
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-semibold">MyEdu</p>
-                                            <p class="text-xs text-slate-500">Portail scolaire</p>
-                                        </div>
-                                    </div>
-                                    <div class="mt-5 space-y-3">
-                                        <div class="rounded-2xl bg-sky-50 px-4 py-3">
-                                            <p class="text-xs font-semibold text-sky-800">Notifications</p>
-                                            <p class="mt-1 text-sm font-semibold text-slate-900">Suivi en temps réel</p>
-                                        </div>
-                                        <div class="grid grid-cols-2 gap-3">
-                                            <div class="rounded-2xl bg-slate-50 p-3">
-                                                <p class="text-xs text-slate-500">Notes</p>
-                                                <p class="text-lg font-semibold">18/20</p>
-                                            </div>
-                                            <div class="rounded-2xl bg-slate-50 p-3">
-                                                <p class="text-xs text-slate-500">Absences</p>
-                                                <p class="text-lg font-semibold">0</p>
-                                            </div>
-                                        </div>
-                                        <div class="h-2 rounded-full bg-slate-100">
-                                            <div class="h-2 w-3/4 rounded-full bg-slate-950"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-20">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="landing-panel-light rounded-[2rem] p-8 sm:p-10">
-                    <div class="max-w-2xl">
-                        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-800">Indicateurs de confiance</p>
-                        <h2 class="mt-4 font-serif text-3xl tracking-tight text-slate-950">Des repères sobres pour rassurer dès le premier écran.</h2>
-                    </div>
-                    <div class="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                        @foreach ($stats as $stat)
-                            <div class="rounded-3xl bg-slate-50 px-6 py-6">
-                                <p class="text-3xl font-semibold tracking-tight text-slate-950">{{ $stat['value'] }}</p>
-                                <p class="mt-2 text-sm leading-6 text-slate-600">{{ $stat['label'] }}</p>
+                        @foreach($proofs as $proof)
+                            <div class="fut-mini-panel">
+                                <p class="text-sm font-semibold text-white">{{ $proof['value'] }}</p>
+                                <p class="mt-2 text-sm leading-6 text-slate-400">{{ $proof['label'] }}</p>
                             </div>
                         @endforeach
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <section id="contact" class="scroll-mt-24 pb-20">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="landing-panel-light overflow-hidden rounded-[2rem]">
-                    <div class="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
-                        <div class="relative p-8 text-slate-900 sm:p-10 lg:p-12">
-                            <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(186,230,253,0.42),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(224,231,255,0.32),transparent_24%)]"></div>
-                            <div class="relative">
-                                <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-200">Prendre contact</p>
-                                <h2 class="mt-4 font-serif text-3xl tracking-tight sm:text-4xl">Échangeons sur votre établissement et vos besoins.</h2>
-                                <p class="mt-5 max-w-xl text-base leading-7 text-slate-600">
-                                    Invitez vos visiteurs à se connecter, demander des informations ou préparer une présentation de la plateforme dans un cadre simple et professionnel.
-                                </p>
+                <div class="relative">
+                    <div class="fut-floating-chip fut-floating-chip-a">Pilotage intelligent</div>
+                    <div class="fut-floating-chip fut-floating-chip-b">Communication fluide</div>
 
-                                <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-                                    @if (Route::has('login'))
-                                        <a href="{{ route('login') }}" class="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-100">
-                                            Se connecter
-                                        </a>
-                                    @endif
-                                    <a href="#presentation" class="inline-flex min-h-12 items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-slate-950">
-                                        Découvrir l’école
-                                    </a>
+                    <div class="fut-hero-mockup">
+                        <div class="fut-hero-mockup-grid"></div>
+
+                        <div class="flex items-center justify-between gap-4">
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200/80">Tableau de pilotage</p>
+                                <h2 class="mt-3 text-2xl font-semibold text-white">Une lecture instantanee des operations de l etablissement</h2>
+                            </div>
+                            <div class="fut-status-pill">Temps reel</div>
+                        </div>
+
+                        <div class="mt-8 grid gap-4 sm:grid-cols-[1.2fr_0.8fr]">
+                            <div class="fut-glass-card">
+                                <div class="flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-xs uppercase tracking-[0.18em] text-slate-400">Vue generale</p>
+                                        <p class="mt-2 text-xl font-semibold text-white">Structure, presences, finance, coordination</p>
+                                    </div>
+                                    <div class="fut-icon-wrap">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="1.8">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 17l5-5 3 3 8-8" />
+                                        </svg>
+                                    </div>
                                 </div>
 
-                                <div class="mt-10 space-y-4">
-                                    <div class="rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4">
-                                        <p class="text-sm font-semibold">Accueil administratif</p>
-                                        <p class="mt-1 text-sm leading-6 text-white/65">Un point de contact clair pour les familles, les équipes et les nouveaux visiteurs.</p>
+                                <div class="mt-6 grid gap-3 sm:grid-cols-3">
+                                    <div class="fut-metric-panel">
+                                        <span class="fut-metric-label">Eleves</span>
+                                        <span class="fut-metric-value">Vision unifiee</span>
                                     </div>
-                                    <div class="rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4">
-                                        <p class="text-sm font-semibold">Demande d’informations</p>
-                                        <p class="mt-1 text-sm leading-6 text-white/65">Le formulaire ci-contre reste connecté à la route existante de l’application.</p>
+                                    <div class="fut-metric-panel">
+                                        <span class="fut-metric-label">Presences</span>
+                                        <span class="fut-metric-value">Suivi direct</span>
+                                    </div>
+                                    <div class="fut-metric-panel">
+                                        <span class="fut-metric-label">Rendez-vous</span>
+                                        <span class="fut-metric-value">Actions claires</span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6 rounded-[24px] border border-white/10 bg-slate-950/55 p-4">
+                                    <div class="mb-4 flex items-center justify-between gap-3">
+                                        <p class="text-sm font-semibold text-white">Activite du jour</p>
+                                        <span class="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300">Stable</span>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <div class="fut-bar-row">
+                                            <span>Administration</span>
+                                            <div class="fut-bar-track"><div class="fut-bar-fill w-[78%]"></div></div>
+                                        </div>
+                                        <div class="fut-bar-row">
+                                            <span>Classes</span>
+                                            <div class="fut-bar-track"><div class="fut-bar-fill w-[64%]"></div></div>
+                                        </div>
+                                        <div class="fut-bar-row">
+                                            <span>Familles</span>
+                                            <div class="fut-bar-track"><div class="fut-bar-fill w-[86%]"></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="fut-glass-card">
+                                    <p class="text-xs uppercase tracking-[0.18em] text-slate-400">Experience</p>
+                                    <p class="mt-3 text-lg font-semibold text-white">Navigation claire pour chaque profil</p>
+                                    <p class="mt-3 text-sm leading-6 text-slate-400">Chaque espace met en avant les informations utiles au bon moment.</p>
+                                </div>
+
+                                <div class="fut-glass-card">
+                                    <p class="text-xs uppercase tracking-[0.18em] text-slate-400">Coordination</p>
+                                    <div class="mt-4 space-y-3">
+                                        <div class="fut-line-item"><span class="fut-line-dot bg-cyan-300"></span><span>Suivi administratif structure</span></div>
+                                        <div class="fut-line-item"><span class="fut-line-dot bg-violet-300"></span><span>Vie scolaire mieux synchronisee</span></div>
+                                        <div class="fut-line-item"><span class="fut-line-dot bg-amber-300"></span><span>Communication mieux organisee</span></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <section id="valeurs" class="fut-section-wrap">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="max-w-3xl">
+                    <p class="fut-section-label">Valeur apportee</p>
+                    <h2 class="mt-4 text-3xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">
+                        Une plateforme qui structure les operations et renforce la relation avec toute la communaute scolaire.
+                    </h2>
+                    <p class="mt-5 text-base leading-8 text-slate-300">
+                        Chaque module a ete pense pour rendre la gestion plus sereine, fluidifier le suivi et offrir une image plus moderne de l etablissement.
+                    </p>
+                </div>
+
+                <div class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                    @foreach($trustCards as $card)
+                        <article class="fut-feature-card">
+                            <div class="fut-feature-icon">
+                                @switch($card['icon'])
+                                    @case('admin')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6" stroke-width="1.8"><rect x="4" y="5" width="16" height="14" rx="2" /><path stroke-linecap="round" stroke-linejoin="round" d="M8 9h8M8 13h5" /></svg>
+                                        @break
+                                    @case('students')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16 19a4 4 0 0 0-8 0" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19 19a3 3 0 0 0-3-2.8M17 10.5a2.5 2.5 0 1 0-1.1-4.8M5 19a3 3 0 0 1 3-2.8M7 10.5A2.5 2.5 0 1 1 8.1 5.7" /></svg>
+                                        @break
+                                    @case('chat')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16v9H8l-4 4V6Z" /></svg>
+                                        @break
+                                    @case('attendance')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6" stroke-width="1.8"><circle cx="12" cy="12" r="8" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l2.5 2.5" /></svg>
+                                        @break
+                                    @case('transport')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16V9a2 2 0 0 1 2-2h9l5 4v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M7 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z" /></svg>
+                                        @break
+                                    @default
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6" stroke-width="1.8"><rect x="7" y="3.5" width="10" height="17" rx="2.5" /><path stroke-linecap="round" stroke-linejoin="round" d="M10 7h4M10 11h4M10 15h4" /></svg>
+                                @endswitch
+                            </div>
+                            <h3 class="mt-6 text-xl font-semibold text-white">{{ $card['title'] }}</h3>
+                            <p class="mt-3 text-sm leading-7 text-slate-300">{{ $card['description'] }}</p>
+                        </article>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        <section id="modules" class="fut-section-wrap">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                    <div class="max-w-3xl">
+                        <p class="fut-section-label">Modules de la plateforme</p>
+                        <h2 class="mt-4 text-3xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">
+                            Les espaces essentiels pour une gestion scolaire moderne et sereine.
+                        </h2>
+                    </div>
+                    <div class="fut-side-note">Concu pour accompagner l administration, les enseignants, la direction, les parents et les eleves.</div>
+                </div>
+
+                <div class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+                    @foreach($modules as $module)
+                        <article class="fut-module-card">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="fut-module-icon">
+                                    @switch($module['icon'])
+                                        @case('parents')
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19a7 7 0 0 1 14 0" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" /></svg>
+                                            @break
+                                        @case('teachers')
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4 4 8l8 4 8-4-8-4Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M8 11.5V15c0 1.66 1.79 3 4 3s4-1.34 4-3v-3.5" /></svg>
+                                            @break
+                                        @case('direction')
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 18h16M7 18V8m5 10V5m5 13v-7" /></svg>
+                                            @break
+                                        @case('finance')
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18M7 7.5c0-1.38 2.24-2.5 5-2.5s5 1.12 5 2.5-2.24 2.5-5 2.5-5 1.12-5 2.5 2.24 2.5 5 2.5 5 1.12 5 2.5-2.24 2.5-5 2.5-5-1.12-5-2.5" /></svg>
+                                            @break
+                                        @case('notifications')
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5" /><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a3 3 0 0 0 6 0" /></svg>
+                                            @break
+                                        @case('documents')
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M7 3.5h6l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 6 20V5A1.5 1.5 0 0 1 7.5 3.5Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13 3.5V8h4.5M9 12h6M9 16h6" /></svg>
+                                            @break
+                                        @case('agenda')
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="1.8"><rect x="4" y="5" width="16" height="15" rx="2" /><path stroke-linecap="round" stroke-linejoin="round" d="M8 3v4M16 3v4M4 10h16" /></svg>
+                                            @break
+                                        @default
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16 19a4 4 0 0 0-8 0" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3Z" /></svg>
+                                    @endswitch
+                                </div>
+                                <span class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Module</span>
+                            </div>
+                            <h3 class="mt-6 text-xl font-semibold text-white">{{ $module['title'] }}</h3>
+                            <p class="mt-3 text-sm leading-7 text-slate-300">{{ $module['description'] }}</p>
+                        </article>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        <section id="mobile" class="fut-section-wrap">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="fut-mobile-showcase">
+                    <div class="fut-mobile-copy">
+                        <p class="fut-section-label">Application mobile</p>
+                        <h2 class="mt-4 text-3xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">
+                            Une experience mobile premium pour les parents, les eleves et les equipes.
+                        </h2>
+                        <p class="mt-5 max-w-2xl text-base leading-8 text-slate-300">
+                            Consultez les informations importantes, suivez les alertes, verifiez les devoirs et retrouvez les reperes du quotidien depuis une interface mobile plus claire et plus rassurante.
+                        </p>
+
+                        <div class="mt-8 grid gap-4 sm:grid-cols-3">
+                            <div class="fut-mini-panel"><p class="text-sm font-semibold text-white">Parents</p><p class="mt-2 text-sm leading-6 text-slate-400">Suivi des enfants, informations utiles et echanges essentiels.</p></div>
+                            <div class="fut-mini-panel"><p class="text-sm font-semibold text-white">Eleves</p><p class="mt-2 text-sm leading-6 text-slate-400">Agenda, cours, devoirs et repere quotidien toujours accessibles.</p></div>
+                            <div class="fut-mini-panel"><p class="text-sm font-semibold text-white">Equipes</p><p class="mt-2 text-sm leading-6 text-slate-400">Consultation rapide pour agir avec plus de fluidite sur le terrain.</p></div>
+                        </div>
+
+                        <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+                            <a href="{{ url('/download/myedu.apk') }}" class="fut-button fut-button-primary">Telecharger l application</a>
+                            <span class="text-sm font-medium text-slate-400">Disponible sur Android pour un acces simple et fluide.</span>
+                        </div>
+                    </div>
+
+                    <div class="relative flex items-center justify-center">
+                        <div class="fut-phone-shell">
+                            <div class="fut-phone-notch"></div>
+                            <div class="fut-phone-screen">
+                                <div class="fut-phone-head">
+                                    <div>
+                                        <p class="text-xs uppercase tracking-[0.18em] text-cyan-200/70">MyEdu mobile</p>
+                                        <p class="mt-2 text-lg font-semibold text-white">Votre espace scolaire, partout</p>
+                                    </div>
+                                    <div class="h-9 w-9 rounded-2xl bg-white/10"></div>
+                                </div>
+
+                                <div class="mt-5 rounded-[24px] border border-cyan-400/20 bg-cyan-400/8 p-4">
+                                    <p class="text-xs uppercase tracking-[0.18em] text-cyan-200/80">Accueil mobile</p>
+                                    <p class="mt-2 text-sm font-semibold text-white">Informations prioritaires et raccourcis utiles</p>
+                                </div>
+
+                                <div class="mt-4 grid grid-cols-2 gap-3">
+                                    <div class="fut-phone-tile"><span class="fut-phone-kicker">Presences</span><span class="fut-phone-value">Suivi rapide</span></div>
+                                    <div class="fut-phone-tile"><span class="fut-phone-kicker">Messages</span><span class="fut-phone-value">Communication claire</span></div>
+                                </div>
+
+                                <div class="mt-4 space-y-3">
+                                    <div class="fut-phone-row"><span>Agenda</span><span class="text-cyan-200">Organise</span></div>
+                                    <div class="fut-phone-row"><span>Documents</span><span class="text-violet-200">Disponibles</span></div>
+                                    <div class="fut-phone-row"><span>Notifications</span><span class="text-emerald-200">Actives</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="organisation" class="fut-section-wrap">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+                    <div class="fut-info-panel">
+                        <p class="fut-section-label">Organisation et confiance</p>
+                        <h2 class="mt-4 text-3xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">
+                            Une plateforme rassurante, claire et adaptee au rythme de l etablissement.
+                        </h2>
+                        <p class="mt-5 text-base leading-8 text-slate-300">
+                            MyEdu aide les equipes a mieux s organiser, a partager les bonnes informations et a proposer une experience plus coherente a l ensemble de la communaute scolaire.
+                        </p>
+                    </div>
+
+                    <div class="grid gap-5 md:grid-cols-2">
+                        <article class="fut-trust-panel"><h3 class="text-lg font-semibold text-white">Confidentialite respectee</h3><p class="mt-3 text-sm leading-7 text-slate-300">Les informations sont presentees avec sobriete et reservees aux personnes concernees selon leur espace.</p></article>
+                        <article class="fut-trust-panel"><h3 class="text-lg font-semibold text-white">Organisation plus fluide</h3><p class="mt-3 text-sm leading-7 text-slate-300">Les services de l etablissement gagnent en lisibilite et en coordination au quotidien.</p></article>
+                        <article class="fut-trust-panel"><h3 class="text-lg font-semibold text-white">Communication mieux structuree</h3><p class="mt-3 text-sm leading-7 text-slate-300">Les annonces, echanges et rappels sont mieux organises pour limiter les pertes d information.</p></article>
+                        <article class="fut-trust-panel"><h3 class="text-lg font-semibold text-white">Image institutionnelle renforcee</h3><p class="mt-3 text-sm leading-7 text-slate-300">L etablissement affiche une presence numerique contemporaine, elegante et professionnelle.</p></article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="pb-24 pt-8">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="fut-demo-panel">
+                    <div class="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
                         <div class="p-8 sm:p-10 lg:p-12">
+                            <p class="fut-section-label">Demonstration</p>
+                            <h2 class="mt-4 text-3xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">
+                                Demandez une demonstration adaptee a votre etablissement.
+                            </h2>
+                            <p class="mt-5 max-w-xl text-base leading-8 text-slate-300">
+                                Echangeons sur vos besoins, votre organisation et les espaces a mettre en valeur pour vos equipes et vos familles.
+                            </p>
+
+                            <div class="mt-8 space-y-4">
+                                <div class="fut-mini-panel"><p class="text-sm font-semibold text-white">Presentation professionnelle</p><p class="mt-2 text-sm leading-6 text-slate-400">Un parcours clair pour montrer comment la plateforme accompagne votre fonctionnement quotidien.</p></div>
+                                <div class="fut-mini-panel"><p class="text-sm font-semibold text-white">Approche etablissement</p><p class="mt-2 text-sm leading-6 text-slate-400">Un discours adapte aux enjeux de gestion, de suivi et de relation avec les familles.</p></div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-white/10 p-8 sm:p-10 lg:border-l lg:border-t-0 lg:p-12">
                             <div class="max-w-xl">
-                                <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-800">Formulaire</p>
-                                <h3 class="mt-4 text-2xl font-semibold tracking-tight text-slate-950">Demander des informations</h3>
-                                <p class="mt-3 text-sm leading-6 text-slate-600">
-                                    Renseignez vos coordonnées et votre besoin. Le message est transmis via le flux déjà prévu par l’application.
+                                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-200/80">Formulaire de contact</p>
+                                <h3 class="mt-4 text-2xl font-semibold text-white">Demander une demonstration</h3>
+                                <p class="mt-3 text-sm leading-7 text-slate-400">
+                                    Renseignez vos coordonnees et votre besoin. Nous vous recontacterons dans un cadre professionnel.
                                 </p>
 
                                 @if (session('success'))
-                                    <div class="app-alert app-alert-success mt-6">
-                                        {{ session('success') }}
-                                    </div>
+                                    <div class="mt-6 rounded-3xl border border-emerald-400/20 bg-emerald-400/10 px-5 py-4 text-sm text-emerald-100">{{ session('success') }}</div>
                                 @endif
 
                                 @if (($errors ?? null) && $errors->has('contact'))
-                                    <div class="app-alert app-alert-error mt-6">
-                                        {{ $errors->first('contact') }}
-                                    </div>
+                                    <div class="mt-6 rounded-3xl border border-rose-400/20 bg-rose-400/10 px-5 py-4 text-sm text-rose-100">{{ $errors->first('contact') }}</div>
                                 @endif
 
                                 <form action="{{ route('contact.send') }}" method="POST" class="mt-8 space-y-5">
                                     @csrf
-
                                     <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off">
 
                                     <div class="grid gap-5 sm:grid-cols-2">
-                                        <div class="app-field">
-                                            <label for="name" class="app-label">Nom complet</label>
-                                            <input id="name" name="name" type="text" value="{{ old('name') }}" class="app-input" placeholder="Votre nom complet">
-                                            @error('name')
-                                                <p class="app-error">{{ $message }}</p>
-                                            @enderror
+                                        <div>
+                                            <label for="name" class="fut-label">Nom complet</label>
+                                            <input id="name" name="name" type="text" value="{{ old('name') }}" class="fut-input" placeholder="Votre nom complet">
+                                            @error('name')<p class="app-error mt-2">{{ $message }}</p>@enderror
                                         </div>
-
-                                        <div class="app-field">
-                                            <label for="email" class="app-label">Email</label>
-                                            <input id="email" name="email" type="email" value="{{ old('email') }}" class="app-input" placeholder="vous@exemple.com">
-                                            @error('email')
-                                                <p class="app-error">{{ $message }}</p>
-                                            @enderror
+                                        <div>
+                                            <label for="email" class="fut-label">Email</label>
+                                            <input id="email" name="email" type="email" value="{{ old('email') }}" class="fut-input" placeholder="vous@etablissement.com">
+                                            @error('email')<p class="app-error mt-2">{{ $message }}</p>@enderror
                                         </div>
                                     </div>
 
                                     <div class="grid gap-5 sm:grid-cols-2">
-                                        <div class="app-field">
-                                            <label for="phone" class="app-label">Téléphone</label>
-                                            <input id="phone" name="phone" type="text" value="{{ old('phone') }}" class="app-input" placeholder="+212 ...">
-                                            @error('phone')
-                                                <p class="app-error">{{ $message }}</p>
-                                            @enderror
+                                        <div>
+                                            <label for="phone" class="fut-label">Telephone</label>
+                                            <input id="phone" name="phone" type="text" value="{{ old('phone') }}" class="fut-input" placeholder="+212 ...">
+                                            @error('phone')<p class="app-error mt-2">{{ $message }}</p>@enderror
                                         </div>
-
-                                        <div class="app-field">
-                                            <label for="subject" class="app-label">Objet</label>
-                                            <input id="subject" name="subject" type="text" value="{{ old('subject') }}" class="app-input" placeholder="Objet de votre demande">
-                                            @error('subject')
-                                                <p class="app-error">{{ $message }}</p>
-                                            @enderror
+                                        <div>
+                                            <label for="subject" class="fut-label">Objet</label>
+                                            <input id="subject" name="subject" type="text" value="{{ old('subject') }}" class="fut-input" placeholder="Demande de demonstration">
+                                            @error('subject')<p class="app-error mt-2">{{ $message }}</p>@enderror
                                         </div>
                                     </div>
 
-                                    <div class="app-field">
-                                        <label for="message" class="app-label">Message</label>
-                                        <textarea id="message" name="message" rows="5" class="app-input" placeholder="Présentez votre établissement ou votre besoin.">{{ old('message') }}</textarea>
-                                        @error('message')
-                                            <p class="app-error">{{ $message }}</p>
-                                        @enderror
+                                    <div>
+                                        <label for="message" class="fut-label">Message</label>
+                                        <textarea id="message" name="message" rows="5" class="fut-input fut-textarea" placeholder="Presentez votre etablissement et vos attentes.">{{ old('message') }}</textarea>
+                                        @error('message')<p class="app-error mt-2">{{ $message }}</p>@enderror
                                     </div>
 
-                                    <button type="submit" class="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-                                        Envoyer la demande
-                                    </button>
+                                    <button type="submit" class="fut-button fut-button-primary w-full justify-center">Envoyer la demande</button>
                                 </form>
                             </div>
                         </div>
@@ -546,21 +469,20 @@
         </section>
     </main>
 
-    <footer class="landing-footer border-t border-white/10 bg-transparent">
-        <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 text-sm text-slate-400 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-            <p>© {{ date('Y') }} {{ config('app.name', 'MyEdu') }}. Tous droits réservés.</p>
+    <footer class="border-t border-white/10">
+        <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-7 text-sm text-slate-500 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+            <p>© {{ date('Y') }} {{ config('app.name', 'MyEdu') }}. Tous droits reserves.</p>
             <div class="flex flex-wrap items-center gap-5">
-                <a href="#presentation" class="transition hover:text-slate-950">Présentation</a>
-                <a href="#plateforme" class="transition hover:text-slate-950">Modules</a>
-                <a href="#application" class="transition hover:text-slate-950">Application</a>
-                <a href="#contact" class="transition hover:text-slate-950">Contact</a>
+                <a href="#valeurs" class="transition hover:text-white">Valeurs</a>
+                <a href="#modules" class="transition hover:text-white">Modules</a>
+                <a href="#mobile" class="transition hover:text-white">Application mobile</a>
+                <a href="#demo" class="transition hover:text-white">Demonstration</a>
                 @if (Route::has('login'))
-                    <a href="{{ route('login') }}" class="font-semibold text-slate-700 transition hover:text-slate-950">Connexion</a>
+                    <a href="{{ route('login') }}" class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 transition hover:text-white">Acces prive</a>
                 @endif
             </div>
         </div>
     </footer>
-    </div>
 </div>
 </body>
 </html>

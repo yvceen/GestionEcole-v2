@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Classroom;
 use App\Models\Course;
+use App\Services\AcademicYearService;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,6 +13,11 @@ use Illuminate\Support\Facades\Schema;
 
 class CourseController extends Controller
 {
+    public function __construct(
+        private readonly AcademicYearService $academicYears,
+    ) {
+    }
+
     public function index(Request $request)
     {
         $schoolId = app()->bound('current_school_id') ? (int) app('current_school_id') : 0;
@@ -21,7 +27,9 @@ class CourseController extends Controller
 
         $q = trim((string) $request->get('q', ''));
 
-        $courses = Course::query()
+        $academicYearId = $this->academicYears->resolveYearForSchool($schoolId, $request->integer('academic_year_id') ?: null)->id;
+
+        $courses = $this->academicYears->applyYearScope(Course::query(), $schoolId, $request->integer('academic_year_id') ?: null)
             ->where('school_id', $schoolId)
             ->when($q !== '', function ($query) use ($q) {
                 $query->where('title', 'like', "%{$q}%");
@@ -38,7 +46,7 @@ class CourseController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.courses.index', compact('courses', 'q'));
+        return view('admin.courses.index', compact('courses', 'q', 'academicYearId'));
     }
 
     public function create()
@@ -83,6 +91,7 @@ class CourseController extends Controller
 
         Course::create([
             'school_id' => $schoolId,
+            'academic_year_id' => $this->academicYears->requireCurrentYearForSchool($schoolId)->id,
             'classroom_id' => (int) $data['classroom_id'],
             'teacher_id' => auth()->id(),
             'created_by_user_id' => auth()->id(),

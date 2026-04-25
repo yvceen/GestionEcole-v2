@@ -1,4 +1,4 @@
-<x-admin-layout title="Rappels de paiement" subtitle="Programmez des relances propres, school-scopees et alignees sur les impayes reels.">
+<x-admin-layout title="Rappels de paiement" subtitle="Programmez des relances claires, ciblees sur les familles concernees et alignees sur les impayes reels.">
     @php
         $setting = $setting ?? null;
         $summary = $summary ?? [];
@@ -57,7 +57,7 @@
                     <input type="checkbox" name="is_enabled" value="1" @checked((bool) ($setting?->is_enabled ?? false)) class="mt-1 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
                     <span>
                         <span class="block text-sm font-semibold text-slate-900">Activer les rappels automatiques</span>
-                        <span class="mt-1 block text-sm text-slate-500">Le scheduler Laravel verifiera chaque matin si la date du jour correspond au jour configure.</span>
+                        <span class="mt-1 block text-sm text-slate-500">La verification se fera automatiquement chaque matin selon le jour que vous avez defini.</span>
                     </span>
                 </label>
 

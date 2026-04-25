@@ -83,7 +83,7 @@
                     </div>
 
                     <div id="debugBox" class="mt-4 hidden rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                        <p class="font-semibold">Chargement impossible</p>
+                        <p class="font-semibold">Informations indisponibles</p>
                         <p id="debugText" class="mt-1 text-xs text-rose-600"></p>
                     </div>
 
@@ -341,7 +341,7 @@
             }
 
             function showDebug(message) {
-                debugText.textContent = message || 'Erreur inconnue.';
+                debugText.textContent = message || 'Une erreur est survenue. Veuillez reessayer.';
                 debugBox.classList.remove('hidden');
             }
 
@@ -562,7 +562,7 @@
                     }
 
                     setStudentsPlaceholder('Impossible de charger les eleves.', 'error');
-                    showDebug(error?.message || 'Erreur reseau.');
+                    showDebug(error?.message || 'Connexion temporairement indisponible. Veuillez reessayer.');
                     updateSummary();
                 } finally {
                     if (requestId === state.requestId) {

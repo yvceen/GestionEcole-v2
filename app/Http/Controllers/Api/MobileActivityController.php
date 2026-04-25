@@ -9,6 +9,8 @@ use App\Models\Activity;
 use App\Models\ActivityParticipant;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\AcademicYearService;
+use App\Services\StudentPlacementService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,6 +24,8 @@ class MobileActivityController extends Controller
         InteractsWithParentPortal::visibleCoursesQuery insteadof InteractsWithStudentPortal;
         InteractsWithParentPortal::visibleHomeworksQuery insteadof InteractsWithStudentPortal;
         InteractsWithParentPortal::unreadNotificationsCount insteadof InteractsWithStudentPortal;
+        InteractsWithParentPortal::requestedAcademicYearId insteadof InteractsWithStudentPortal;
+        InteractsWithParentPortal::resolvedAcademicYearId insteadof InteractsWithStudentPortal;
     }
 
     public function index(Request $request): JsonResponse
@@ -56,8 +60,13 @@ class MobileActivityController extends Controller
         $selectedChild = $this->resolveSelectedChild($children, $request->integer('child_id'));
         $schoolId = $this->schoolIdOrFail();
         $childIds = $selectedChild ? collect([$selectedChild->id]) : $children->pluck('id');
+        $academicYearId = $this->resolvedAcademicYearId();
 
-        $activities = Activity::query()
+        $activities = app(AcademicYearService::class)->applyYearScope(
+            Activity::query(),
+            $schoolId,
+            $this->requestedAcademicYearId(),
+        )
             ->where('school_id', $schoolId)
             ->whereHas('participants', fn (Builder $query) => $query->whereIn('student_id', $childIds))
             ->with([
@@ -74,18 +83,25 @@ class MobileActivityController extends Controller
             'children' => $children->map(fn (Student $student): array => [
                 'id' => (int) $student->id,
                 'name' => (string) $student->full_name,
-                'classroom' => (string) ($student->classroom?->name ?? ''),
+                'classroom' => app(StudentPlacementService::class)->classroomNameForStudent($student, $schoolId, $academicYearId),
             ])->values()->all(),
             'selected_child_id' => $selectedChild?->id,
+            'selected_academic_year_id' => $academicYearId,
         ]);
     }
 
     private function studentIndex(): JsonResponse
     {
         $student = $this->currentStudent(['classroom:id,name']);
+        $schoolId = $this->schoolIdOrFail();
+        $academicYearId = $this->resolvedAcademicYearId();
 
-        $activities = Activity::query()
-            ->where('school_id', $this->schoolIdOrFail())
+        $activities = app(AcademicYearService::class)->applyYearScope(
+            Activity::query(),
+            $schoolId,
+            $this->requestedAcademicYearId(),
+        )
+            ->where('school_id', $schoolId)
             ->whereHas('participants', fn (Builder $query) => $query->where('student_id', $student->id))
             ->with([
                 'classroom:id,name',
@@ -100,6 +116,7 @@ class MobileActivityController extends Controller
             'items' => $activities->map(fn (Activity $activity): array => $this->mapActivity($activity))->values()->all(),
             'children' => [],
             'selected_child_id' => null,
+            'selected_academic_year_id' => $academicYearId,
         ]);
     }
 
@@ -108,7 +125,11 @@ class MobileActivityController extends Controller
         $children = $this->ownedChildren(['classroom:id,name']);
         $childIds = $children->pluck('id');
 
-        $resolved = Activity::query()
+        $resolved = app(AcademicYearService::class)->applyYearScope(
+            Activity::query(),
+            $this->schoolIdOrFail(),
+            $this->requestedAcademicYearId(),
+        )
             ->where('school_id', $this->schoolIdOrFail())
             ->whereKey($activity->id)
             ->whereHas('participants', fn (Builder $query) => $query->whereIn('student_id', $childIds))
@@ -128,7 +149,11 @@ class MobileActivityController extends Controller
     {
         $student = $this->currentStudent(['classroom:id,name']);
 
-        $resolved = Activity::query()
+        $resolved = app(AcademicYearService::class)->applyYearScope(
+            Activity::query(),
+            $this->schoolIdOrFail(),
+            $this->requestedAcademicYearId(),
+        )
             ->where('school_id', $this->schoolIdOrFail())
             ->whereKey($activity->id)
             ->whereHas('participants', fn (Builder $query) => $query->where('student_id', $student->id))

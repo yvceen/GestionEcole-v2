@@ -12,6 +12,7 @@ class Timetable extends Model
 
     protected $fillable = [
         'school_id',
+        'academic_year_id',
         'classroom_id',
         'day',
         'start_time',
@@ -26,9 +27,13 @@ class Timetable extends Model
         return $this->belongsTo(Classroom::class);
     }
 
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
+
     public function teacher(): BelongsTo
     {
         return $this->belongsTo(User::class, 'teacher_id');
     }
 }
-

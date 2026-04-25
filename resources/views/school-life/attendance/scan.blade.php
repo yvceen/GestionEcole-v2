@@ -1,6 +1,6 @@
 @include('partials.attendance.qr-scanner-scripts')
 
-<x-school-life-layout title="Scan QR presences" subtitle="Enregistrez rapidement les arrivees et sorties a partir des cartes eleves, avec camera si le navigateur le permet et saisie manuelle en secours.">
+<x-school-life-layout title="Scan QR presences" subtitle="Enregistrez rapidement les arrivees et sorties a partir des cartes eleves, avec camera si disponible et saisie manuelle si besoin.">
     <x-ui.page-header
         title="Scan arrivee / sortie"
         subtitle="Premier scan du jour : arrivee. Scan suivant : sortie. Les corrections restent possibles sur les derniers pointages."
@@ -112,7 +112,7 @@
                 </form>
 
                 <p class="text-xs leading-5 text-slate-500">
-                    Le QR eleve encode uniquement un token interne. Si le scan camera n est pas disponible, la saisie manuelle du code carte fonctionne aussi.
+                    Le QR eleve contient uniquement un code securise. Si le scan camera n est pas disponible, vous pouvez aussi saisir le code de la carte manuellement.
                 </p>
                 <p class="text-xs leading-5 text-slate-500" x-show="cameraError" x-text="cameraError"></p>
             </div>

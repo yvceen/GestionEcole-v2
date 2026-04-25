@@ -23,7 +23,7 @@
 
 <x-ui.card
     :title="$isStudents ? 'Cartes eleves' : 'Cartes parents'"
-    :subtitle="$isStudents ? 'Chaque carte contient un token interne et un QR exploitable pour le pointage.' : 'Les cartes parents restent consultables et imprimables sans exposer de donnees sensibles.'"
+    :subtitle="$isStudents ? 'Chaque carte contient un code securise et un QR utilisable pour le pointage.' : 'Les cartes parents restent consultables et imprimables sans exposer de donnees sensibles.'"
 >
     <div class="overflow-x-auto rounded-2xl border border-slate-200">
         <table class="app-table min-w-[880px]">

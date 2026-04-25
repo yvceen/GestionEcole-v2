@@ -4,12 +4,14 @@ namespace App\Services;
 
 use App\Models\Payment;
 use App\Models\Student;
+use App\Models\StudentFeePlan;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 
 class FinanceArrearsService
 {
-    public function forChildren(Collection $children, int $schoolId, ?Carbon $today = null): array
+    public function forChildren(Collection $children, int $schoolId, ?Carbon $today = null, ?int $academicYearId = null): array
     {
         $today ??= now();
 
@@ -26,9 +28,18 @@ class FinanceArrearsService
         $children = $children->loadMissing('feePlan');
         $childIds = $children->pluck('id')->all();
 
-        $paidMonths = Payment::query()
+        $paymentsQuery = Payment::query()
             ->where('school_id', $schoolId)
-            ->whereIn('student_id', $childIds)
+            ->whereIn('student_id', $childIds);
+
+        if (Schema::hasTable('payments') && Schema::hasColumn('payments', 'academic_year_id') && $academicYearId) {
+            $paymentsQuery->where(function ($query) use ($academicYearId) {
+                $query->where('academic_year_id', $academicYearId)
+                    ->orWhereNull('academic_year_id');
+            });
+        }
+
+        $paidMonths = $paymentsQuery
             ->get(['student_id', 'period_month'])
             ->groupBy('student_id')
             ->map(fn (Collection $payments) => $payments
@@ -37,8 +48,10 @@ class FinanceArrearsService
                 ->unique()
                 ->values());
 
-        $byChild = $children->mapWithKeys(function (Student $child) use ($paidMonths, $today) {
-            $feePlan = $child->feePlan;
+        $feePlans = $this->resolveFeePlans($childIds, $schoolId, $academicYearId);
+
+        $byChild = $children->mapWithKeys(function (Student $child) use ($paidMonths, $today, $feePlans) {
+            $feePlan = $feePlans->get($child->id) ?: $child->feePlan;
             $monthlyDue = $feePlan
                 ? (float) $feePlan->tuition_monthly + (float) $feePlan->transport_monthly + (float) $feePlan->canteen_monthly
                 : 0.0;
@@ -77,6 +90,26 @@ class FinanceArrearsService
             'total_due' => (float) $byChild->sum('unpaid_total'),
             'total_overdue' => (float) $byChild->sum('overdue_total'),
         ];
+    }
+
+    private function resolveFeePlans(array $childIds, int $schoolId, ?int $academicYearId): Collection
+    {
+        if (empty($childIds) || !Schema::hasTable('student_fee_plans')) {
+            return collect();
+        }
+
+        $query = StudentFeePlan::query()
+            ->where('school_id', $schoolId)
+            ->whereIn('student_id', $childIds);
+
+        if (Schema::hasColumn('student_fee_plans', 'academic_year_id') && $academicYearId) {
+            $query->where(function ($builder) use ($academicYearId) {
+                $builder->where('academic_year_id', $academicYearId)
+                    ->orWhereNull('academic_year_id');
+            });
+        }
+
+        return $query->get()->keyBy('student_id');
     }
 
     private function expectedMonths(int $startsMonth, Carbon $today): Collection

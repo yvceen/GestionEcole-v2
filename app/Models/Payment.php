@@ -11,6 +11,7 @@ class Payment extends Model
     
     protected $fillable = [
         'school_id',
+        'academic_year_id',
         'student_id',
         'receipt_id',
         'amount',
@@ -29,6 +30,11 @@ class Payment extends Model
     public function student()
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class);
     }
 
     public function receipt()

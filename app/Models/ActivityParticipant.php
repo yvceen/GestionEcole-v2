@@ -18,6 +18,7 @@ class ActivityParticipant extends Model
 
     protected $fillable = [
         'school_id',
+        'academic_year_id',
         'activity_id',
         'student_id',
         'confirmation_status',
@@ -35,6 +36,11 @@ class ActivityParticipant extends Model
     public function activity(): BelongsTo
     {
         return $this->belongsTo(Activity::class);
+    }
+
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class);
     }
 
     public function student(): BelongsTo

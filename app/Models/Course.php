@@ -13,6 +13,7 @@ class Course extends Model
 
     protected $fillable = [
         'school_id',
+        'academic_year_id',
         'classroom_id',
         'teacher_id',
         'created_by_user_id',
@@ -36,6 +37,11 @@ class Course extends Model
     public function classroom()
     {
         return $this->belongsTo(Classroom::class);
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class);
     }
 
     public function teacher()

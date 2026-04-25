@@ -13,9 +13,11 @@ use App\Models\Payment;
 use App\Models\PickupRequest;
 use App\Models\Route as TransportRoute;
 use App\Models\Student;
+use App\Models\StudentAcademicYear;
 use App\Models\StudentFeePlan;
 use App\Models\TransportAssignment;
 use App\Models\User;
+use App\Services\AcademicYearService;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +26,11 @@ use Illuminate\Support\Facades\Schema;
 
 class StudentController extends Controller
 {
+    public function __construct(
+        private readonly AcademicYearService $academicYears,
+    ) {
+    }
+
     public function index(Request $request)
     {
         $classroomId = $request->get('classroom');
@@ -182,6 +189,7 @@ class StudentController extends Controller
             $vehicleId,
             $route
         ): void {
+            $academicYearId = $this->academicYears->requireCurrentYearForSchool($schoolId)->id;
             $resolvedParentId = $parentId;
 
             if ($createParent) {
@@ -219,9 +227,10 @@ class StudentController extends Controller
             ]);
 
             \App\Models\StudentFeePlan::updateOrCreate(
-                ['student_id' => $student->id],
+                ['student_id' => $student->id, 'academic_year_id' => $academicYearId],
                 [
                     'school_id' => $schoolId,
+                    'academic_year_id' => $academicYearId,
                     'tuition_monthly' => $data['tuition_monthly'],
                     'canteen_monthly' => $data['canteen_monthly'] ?? 0,
                     'transport_monthly' => $data['transport_monthly'] ?? 0,
@@ -234,6 +243,7 @@ class StudentController extends Controller
             if ($transportEnabled) {
                 TransportAssignment::create([
                     'school_id' => $schoolId,
+                    'academic_year_id' => $academicYearId,
                     'student_id' => $student->id,
                     'route_id' => $routeId,
                     'vehicle_id' => $vehicleId ?: ($route?->vehicle_id ?? null),
@@ -244,6 +254,18 @@ class StudentController extends Controller
                     'is_active' => true,
                 ]);
             }
+
+            StudentAcademicYear::query()->updateOrCreate(
+                [
+                    'school_id' => $schoolId,
+                    'student_id' => $student->id,
+                    'academic_year_id' => $academicYearId,
+                ],
+                [
+                    'classroom_id' => $student->classroom_id,
+                    'status' => StudentAcademicYear::STATUS_ENROLLED,
+                ]
+            );
         });
 
         return redirect()->route('admin.students.index')->with('success', 'Eleve ajoute.');
@@ -329,6 +351,7 @@ class StudentController extends Controller
     {
         $data = $request->validated();
         $schoolId = (int) app('current_school_id');
+        $academicYearId = $this->academicYears->requireCurrentYearForSchool($schoolId)->id;
 
         $student->update([
             'full_name' => $data['full_name'],
@@ -339,9 +362,10 @@ class StudentController extends Controller
         ]);
 
         $student->feePlan()->updateOrCreate(
-            ['student_id' => $student->id],
+            ['student_id' => $student->id, 'academic_year_id' => $academicYearId],
             [
                 'school_id' => $schoolId,
+                'academic_year_id' => $academicYearId,
                 'tuition_monthly' => $data['tuition_monthly'],
                 'canteen_monthly' => $data['canteen_monthly'] ?? 0,
                 'transport_monthly' => $data['transport_monthly'] ?? 0,
@@ -357,6 +381,15 @@ class StudentController extends Controller
 
         $assignment = TransportAssignment::where('school_id', $schoolId)
             ->where('student_id', $student->id)
+            ->where(function ($query) use ($academicYearId) {
+                if (Schema::hasColumn('transport_assignments', 'academic_year_id')) {
+                    $query->where('academic_year_id', $academicYearId)
+                        ->orWhereNull('academic_year_id');
+                    return;
+                }
+
+                $query->whereRaw('1 = 1');
+            })
             ->latest('id')
             ->first();
 
@@ -373,6 +406,7 @@ class StudentController extends Controller
 
             $payload = [
                 'school_id' => $schoolId,
+                'academic_year_id' => $academicYearId,
                 'student_id' => $student->id,
                 'route_id' => $routeId,
                 'vehicle_id' => $vehicleId ?: ($route?->vehicle_id ?? null),
@@ -394,6 +428,18 @@ class StudentController extends Controller
                 'ended_date' => now()->toDateString(),
             ]);
         }
+
+        StudentAcademicYear::query()->updateOrCreate(
+            [
+                'school_id' => $schoolId,
+                'student_id' => $student->id,
+                'academic_year_id' => $academicYearId,
+            ],
+            [
+                'classroom_id' => (int) $data['classroom_id'],
+                'status' => $student->archived_at ? StudentAcademicYear::STATUS_LEFT : StudentAcademicYear::STATUS_ENROLLED,
+            ]
+        );
 
         return redirect()->route('admin.students.index')->with('success', 'Eleve modifie.');
     }
@@ -421,33 +467,42 @@ class StudentController extends Controller
 
     private function deleteStudentRelations(Student $student, int $schoolId): void
     {
-        $submissionIds = DB::table('homework_submissions')
-            ->where('student_id', $student->id)
-            ->pluck('id');
+        if ($this->hasTableColumns('homework_submissions', ['id', 'student_id'])) {
+            $submissionIds = DB::table('homework_submissions')
+                ->where('student_id', $student->id)
+                ->pluck('id');
 
-        if ($submissionIds->isNotEmpty()) {
-            DB::table('homework_submission_files')
-                ->whereIn('submission_id', $submissionIds->all())
+            if (
+                $submissionIds->isNotEmpty()
+                && $this->hasTableColumns('homework_submission_files', ['submission_id'])
+            ) {
+                DB::table('homework_submission_files')
+                    ->whereIn('submission_id', $submissionIds->all())
+                    ->delete();
+            }
+
+            DB::table('homework_submissions')
+                ->where('student_id', $student->id)
                 ->delete();
         }
-
-        DB::table('homework_submissions')
-            ->where('student_id', $student->id)
-            ->delete();
 
         PickupRequest::query()
             ->where('school_id', $schoolId)
             ->where('student_id', $student->id)
             ->delete();
 
-        DB::table('appointments')
-            ->where('school_id', $schoolId)
-            ->where('student_id', $student->id)
-            ->delete();
+        if ($this->hasTableColumns('appointments', ['school_id', 'student_id'])) {
+            DB::table('appointments')
+                ->where('school_id', $schoolId)
+                ->where('student_id', $student->id)
+                ->delete();
+        }
 
-        DB::table('payment_items')
-            ->where('student_id', $student->id)
-            ->delete();
+        if ($this->hasTableColumns('payment_items', ['student_id'])) {
+            DB::table('payment_items')
+                ->where('student_id', $student->id)
+                ->delete();
+        }
 
         Payment::query()
             ->where('school_id', $schoolId)
@@ -464,9 +519,11 @@ class StudentController extends Controller
             ->where('student_id', $student->id)
             ->delete();
 
-        DB::table('activity_participants')
-            ->where('student_id', $student->id)
-            ->delete();
+        if ($this->hasTableColumns('activity_participants', ['student_id'])) {
+            DB::table('activity_participants')
+                ->where('student_id', $student->id)
+                ->delete();
+        }
 
         Grade::query()
             ->where('school_id', $schoolId)
@@ -478,27 +535,40 @@ class StudentController extends Controller
             ->where('student_id', $student->id)
             ->delete();
 
-        DB::table('student_notes')
-            ->where('school_id', $schoolId)
-            ->where('student_id', $student->id)
-            ->delete();
+        if ($this->hasTableColumns('student_notes', ['school_id', 'student_id'])) {
+            DB::table('student_notes')
+                ->where('school_id', $schoolId)
+                ->where('student_id', $student->id)
+                ->delete();
+        }
 
-        DB::table('student_behaviors')
-            ->where('school_id', $schoolId)
-            ->where('student_id', $student->id)
-            ->delete();
+        if ($this->hasTableColumns('student_behaviors', ['school_id', 'student_id'])) {
+            DB::table('student_behaviors')
+                ->where('school_id', $schoolId)
+                ->where('student_id', $student->id)
+                ->delete();
+        }
 
-        DB::table('support_plans')
-            ->where('school_id', $schoolId)
-            ->where('student_id', $student->id)
-            ->delete();
+        if ($this->hasTableColumns('support_plans', ['school_id', 'student_id'])) {
+            DB::table('support_plans')
+                ->where('school_id', $schoolId)
+                ->where('student_id', $student->id)
+                ->delete();
+        }
 
-        DB::table('transport_logs')
-            ->where('school_id', $schoolId)
-            ->where('student_id', $student->id)
-            ->delete();
+        if ($this->hasTableColumns('transport_logs', ['school_id', 'student_id'])) {
+            DB::table('transport_logs')
+                ->where('school_id', $schoolId)
+                ->where('student_id', $student->id)
+                ->delete();
+        }
 
         TransportAssignment::query()
+            ->where('school_id', $schoolId)
+            ->where('student_id', $student->id)
+            ->delete();
+
+        StudentAcademicYear::query()
             ->where('school_id', $schoolId)
             ->where('student_id', $student->id)
             ->delete();
@@ -511,7 +581,7 @@ class StudentController extends Controller
         $user->tokens()->delete();
         $user->parentProfile()?->delete();
 
-        if (Schema::hasTable('messages')) {
+        if ($this->hasTableColumns('messages', ['school_id', 'sender_id'])) {
             DB::table('messages')
                 ->where('school_id', $schoolId)
                 ->where(function ($query) use ($user) {
@@ -536,10 +606,12 @@ class StudentController extends Controller
 
         $this->removeUserFromMessageTargets((int) $user->id, $schoolId);
 
-        DB::table('appointments')
-            ->where('school_id', $schoolId)
-            ->where('parent_user_id', $user->id)
-            ->delete();
+        if ($this->hasTableColumns('appointments', ['school_id', 'parent_user_id'])) {
+            DB::table('appointments')
+                ->where('school_id', $schoolId)
+                ->where('parent_user_id', $user->id)
+                ->delete();
+        }
 
         PickupRequest::query()
             ->where('school_id', $schoolId)
@@ -558,38 +630,52 @@ class StudentController extends Controller
                 ->update(['parent_user_id' => null]);
         }
 
-        DB::table('classroom_teacher')
-            ->where('teacher_id', $user->id)
-            ->delete();
+        if ($this->hasTableColumns('classroom_teacher', ['teacher_id'])) {
+            DB::table('classroom_teacher')
+                ->where('teacher_id', $user->id)
+                ->delete();
+        }
 
-        DB::table('teacher_subjects')
-            ->where('teacher_id', $user->id)
-            ->delete();
+        if ($this->hasTableColumns('teacher_subjects', ['teacher_id'])) {
+            DB::table('teacher_subjects')
+                ->where('teacher_id', $user->id)
+                ->delete();
+        }
 
-        DB::table('transport_logs')
-            ->where('school_id', $schoolId)
-            ->where('recorded_by_user_id', $user->id)
-            ->delete();
+        if ($this->hasTableColumns('transport_logs', ['school_id', 'recorded_by_user_id'])) {
+            DB::table('transport_logs')
+                ->where('school_id', $schoolId)
+                ->where('recorded_by_user_id', $user->id)
+                ->delete();
+        }
 
-        DB::table('student_notes')
-            ->where('school_id', $schoolId)
-            ->where('created_by_user_id', $user->id)
-            ->delete();
+        if ($this->hasTableColumns('student_notes', ['school_id', 'created_by_user_id'])) {
+            DB::table('student_notes')
+                ->where('school_id', $schoolId)
+                ->where('created_by_user_id', $user->id)
+                ->delete();
+        }
 
-        DB::table('student_behaviors')
-            ->where('school_id', $schoolId)
-            ->where('created_by_user_id', $user->id)
-            ->delete();
+        if ($this->hasTableColumns('student_behaviors', ['school_id', 'created_by_user_id'])) {
+            DB::table('student_behaviors')
+                ->where('school_id', $schoolId)
+                ->where('created_by_user_id', $user->id)
+                ->delete();
+        }
 
-        DB::table('support_plans')
-            ->where('school_id', $schoolId)
-            ->where('created_by_user_id', $user->id)
-            ->delete();
+        if ($this->hasTableColumns('support_plans', ['school_id', 'created_by_user_id'])) {
+            DB::table('support_plans')
+                ->where('school_id', $schoolId)
+                ->where('created_by_user_id', $user->id)
+                ->delete();
+        }
 
-        DB::table('vehicles')
-            ->where('school_id', $schoolId)
-            ->where('driver_id', $user->id)
-            ->update(['driver_id' => null]);
+        if ($this->hasTableColumns('vehicles', ['school_id', 'driver_id'])) {
+            DB::table('vehicles')
+                ->where('school_id', $schoolId)
+                ->where('driver_id', $user->id)
+                ->update(['driver_id' => null]);
+        }
 
         DB::table('grades')
             ->where('school_id', $schoolId)
@@ -601,23 +687,25 @@ class StudentController extends Controller
             ->where('teacher_id', $user->id)
             ->delete();
 
-        DB::table('timetables')
-            ->where('teacher_id', $user->id)
-            ->delete();
+        if ($this->hasTableColumns('timetables', ['teacher_id'])) {
+            DB::table('timetables')
+                ->where('teacher_id', $user->id)
+                ->delete();
+        }
 
-        if (Schema::hasTable('teacher_pedagogical_resources')) {
+        if ($this->hasTableColumns('teacher_pedagogical_resources', ['teacher_id'])) {
             DB::table('teacher_pedagogical_resources')
                 ->where('teacher_id', $user->id)
                 ->delete();
         }
 
-        if (Schema::hasTable('activity_reports')) {
+        if ($this->hasTableColumns('activity_reports', ['created_by_user_id'])) {
             DB::table('activity_reports')
                 ->where('created_by_user_id', $user->id)
                 ->delete();
         }
 
-        if (Schema::hasTable('homework_user_views')) {
+        if ($this->hasTableColumns('homework_user_views', ['user_id'])) {
             DB::table('homework_user_views')
                 ->where('user_id', $user->id)
                 ->delete();
@@ -626,15 +714,27 @@ class StudentController extends Controller
 
     private function removeUserFromMessageTargets(int $userId, int $schoolId): void
     {
-        if (!Schema::hasTable('messages') || !Schema::hasColumn('messages', 'target_user_ids')) {
+        if (!$this->hasTableColumns('messages', ['id', 'school_id', 'target_user_ids'])) {
             return;
         }
 
-        $messages = DB::table('messages')
-            ->select('id', 'target_type', 'target_id', 'target_user_ids')
+        $messagesQuery = DB::table('messages')
+            ->select('id', 'target_user_ids')
             ->where('school_id', $schoolId)
-            ->whereNotNull('target_user_ids')
-            ->get();
+            ->whereNotNull('target_user_ids');
+
+        $hasTargetType = Schema::hasColumn('messages', 'target_type');
+        $hasTargetId = Schema::hasColumn('messages', 'target_id');
+
+        if ($hasTargetType) {
+            $messagesQuery->addSelect('target_type');
+        }
+
+        if ($hasTargetId) {
+            $messagesQuery->addSelect('target_id');
+        }
+
+        $messages = $messagesQuery->get();
 
         foreach ($messages as $message) {
             $targetUserIds = json_decode((string) $message->target_user_ids, true);
@@ -651,7 +751,9 @@ class StudentController extends Controller
                 continue;
             }
 
-            $isDirectTarget = (string) ($message->target_type ?? '') === 'user'
+            $isDirectTarget = $hasTargetType
+                && $hasTargetId
+                && (string) ($message->target_type ?? '') === 'user'
                 && (int) ($message->target_id ?? 0) === $userId;
 
             if ($filteredIds === [] && $isDirectTarget) {
@@ -659,13 +761,36 @@ class StudentController extends Controller
                 continue;
             }
 
+            $updates = [
+                'target_user_ids' => $filteredIds === [] ? null : json_encode($filteredIds),
+            ];
+
+            if ($hasTargetId) {
+                $updates['target_id'] = $isDirectTarget ? ($filteredIds[0] ?? null) : $message->target_id;
+            }
+
+            if ($hasTargetType) {
+                $updates['target_type'] = $filteredIds === [] && $isDirectTarget ? null : $message->target_type;
+            }
+
             DB::table('messages')
                 ->where('id', $message->id)
-                ->update([
-                    'target_user_ids' => $filteredIds === [] ? null : json_encode($filteredIds),
-                    'target_id' => $isDirectTarget ? ($filteredIds[0] ?? null) : $message->target_id,
-                    'target_type' => $filteredIds === [] && $isDirectTarget ? null : $message->target_type,
-                ]);
+                ->update($updates);
         }
+    }
+
+    private function hasTableColumns(string $table, array $columns = []): bool
+    {
+        if (!Schema::hasTable($table)) {
+            return false;
+        }
+
+        foreach ($columns as $column) {
+            if (!Schema::hasColumn($table, $column)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

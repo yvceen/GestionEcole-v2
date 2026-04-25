@@ -20,6 +20,7 @@ class Activity extends Model
 
     protected $fillable = [
         'school_id',
+        'academic_year_id',
         'title',
         'description',
         'type',
@@ -76,6 +77,11 @@ class Activity extends Model
     public function classroom(): BelongsTo
     {
         return $this->belongsTo(Classroom::class);
+    }
+
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class);
     }
 
     public function teacher(): BelongsTo

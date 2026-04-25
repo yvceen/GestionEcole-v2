@@ -8,6 +8,7 @@ use App\Models\Payment;
 use App\Models\Receipt;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\AcademicYearService;
 use App\Services\FinanceArrearsService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -32,6 +33,9 @@ class MobileFinanceController extends Controller
         $children = $this->ownedChildren(['classroom:id,name', 'feePlan']);
         $selectedChild = $this->resolveSelectedChild($children, $request->integer('child_id'));
         $schoolId = $this->schoolIdOrFail();
+        $academicYearId = app(AcademicYearService::class)
+            ->resolveYearForSchool($schoolId, $request->integer('academic_year_id') ?: null)
+            ->id;
         $scopedChildren = $selectedChild ? $children->where('id', $selectedChild->id)->values() : $children;
         $childIds = $scopedChildren->pluck('id');
 
@@ -60,7 +64,7 @@ class MobileFinanceController extends Controller
             ->limit(30)
             ->get();
 
-        $arrears = $this->arrearsService->forChildren($scopedChildren, $schoolId);
+        $arrears = $this->arrearsService->forChildren($scopedChildren, $schoolId, null, $academicYearId);
 
         return response()->json([
             'children' => $children->map(fn (Student $student): array => [
@@ -69,6 +73,7 @@ class MobileFinanceController extends Controller
                 'classroom' => (string) ($student->classroom?->name ?? ''),
             ])->values()->all(),
             'selected_child_id' => $selectedChild?->id,
+            'selected_academic_year_id' => $academicYearId,
             'summary' => [
                 'payments_total' => (float) (clone $paymentsQuery)->sum('amount'),
                 'payments_count' => (int) (clone $paymentsQuery)->count(),

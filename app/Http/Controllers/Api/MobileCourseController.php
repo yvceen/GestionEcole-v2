@@ -7,6 +7,8 @@ use App\Models\Course;
 use App\Models\CourseAttachment;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\AcademicYearService;
+use App\Services\StudentPlacementService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,13 +28,15 @@ class MobileCourseController extends Controller
             $children = $this->parentChildren($user, $schoolId);
             $childId = (int) $request->integer('child_id');
             $selectedChild = $childId > 0 ? $children->firstWhere('id', $childId) : null;
-            $classroomIds = $selectedChild && $selectedChild->classroom_id
-                ? collect([(int) $selectedChild->classroom_id])
-                : $children->pluck('classroom_id')->filter()->unique()->values();
+            $academicYearId = $this->resolvedAcademicYearId($schoolId, $request);
+            $placements = app(StudentPlacementService::class)->placementsForStudents($children->pluck('id'), $schoolId, $academicYearId);
+            $classroomIds = $selectedChild
+                ? collect([(int) ($placements->get($selectedChild->id)?->classroom_id ?: $selectedChild->classroom_id)])->filter()->values()
+                : $children->map(fn (Student $student) => (int) ($placements->get($student->id)?->classroom_id ?: $student->classroom_id))->filter()->unique()->values();
 
             $items = $classroomIds->isEmpty()
                 ? collect()
-                : $this->visibleCoursesQuery($schoolId, $classroomIds->all())
+                : $this->visibleCoursesQuery($schoolId, $classroomIds->all(), $request)
                     ->when($q !== '', function (Builder $builder) use ($q): void {
                         $builder->where(function ($nested) use ($q): void {
                             $nested->where('title', 'like', "%{$q}%")
@@ -45,16 +49,19 @@ class MobileCourseController extends Controller
                     ->get();
 
             return response()->json([
-                'items' => $items->map(fn (Course $course) => $this->coursePayload($course, $children))->values(),
-                'children' => $children->map(fn (Student $student) => $this->studentOptionPayload($student))->values(),
+                'items' => $items->map(fn (Course $course) => $this->coursePayload($course, $children, $schoolId, $academicYearId))->values(),
+                'children' => $children->map(fn (Student $student) => $this->studentOptionPayload($student, $schoolId, $academicYearId))->values(),
                 'selected_child_id' => $selectedChild ? (int) $selectedChild->id : null,
+                'selected_academic_year_id' => $academicYearId,
             ]);
         }
 
         $student = $this->studentRecord($user, $schoolId);
-        abort_unless($student && $student->classroom_id, 404, 'Student classroom not found.');
+        $academicYearId = $this->resolvedAcademicYearId($schoolId, $request);
+        $classroomId = app(StudentPlacementService::class)->classroomIdForStudent($student, $schoolId, $academicYearId);
+        abort_unless($student && $classroomId, 404, 'Student classroom not found.');
 
-        $items = $this->visibleCoursesQuery($schoolId, [(int) $student->classroom_id])
+        $items = $this->visibleCoursesQuery($schoolId, [(int) $classroomId], $request)
             ->when($q !== '', function (Builder $builder) use ($q): void {
                 $builder->where(function ($nested) use ($q): void {
                     $nested->where('title', 'like', "%{$q}%")
@@ -67,9 +74,10 @@ class MobileCourseController extends Controller
             ->get();
 
         return response()->json([
-            'items' => $items->map(fn (Course $course) => $this->coursePayload($course, collect([$student])))->values(),
+            'items' => $items->map(fn (Course $course) => $this->coursePayload($course, collect([$student]), $schoolId, $academicYearId))->values(),
             'children' => [],
             'selected_child_id' => null,
+            'selected_academic_year_id' => $academicYearId,
         ]);
     }
 
@@ -131,15 +139,21 @@ class MobileCourseController extends Controller
             ->first(['id', 'full_name', 'classroom_id']);
     }
 
-    private function visibleCoursesQuery(int $schoolId, array $classroomIds): Builder
+    private function visibleCoursesQuery(int $schoolId, array $classroomIds, Request $request): Builder
     {
-        return Course::query()
+        $query = Course::query()
             ->where('school_id', $schoolId)
             ->whereIn('classroom_id', $classroomIds)
             ->when(
                 Schema::hasTable('courses') && Schema::hasColumn('courses', 'status'),
                 fn (Builder $query) => $query->whereIn('status', ['approved', 'confirmed'])
             );
+
+        return app(AcademicYearService::class)->applyYearScope(
+            $query,
+            $schoolId,
+            $this->requestedAcademicYearId($request),
+        );
     }
 
     private function canAccessCourse(Course $course, User $user, int $schoolId): bool
@@ -153,21 +167,41 @@ class MobileCourseController extends Controller
                 ->active()
                 ->where('school_id', $schoolId)
                 ->where('parent_user_id', (int) $user->id)
-                ->where('classroom_id', (int) $course->classroom_id)
-                ->exists(),
-            User::ROLE_STUDENT => (int) (Student::query()
-                ->active()
-                ->where('school_id', $schoolId)
-                ->where('user_id', (int) $user->id)
-                ->value('classroom_id') ?? 0) === (int) $course->classroom_id,
+                ->get()
+                ->contains(function (Student $student) use ($course, $schoolId) {
+                    return (int) app(StudentPlacementService::class)->classroomIdForStudent(
+                        $student,
+                        $schoolId,
+                        $this->resolvedAcademicYearId($schoolId, request()),
+                    ) === (int) $course->classroom_id;
+                }),
+            User::ROLE_STUDENT => (function () use ($schoolId, $user, $course): bool {
+                $student = Student::query()
+                    ->active()
+                    ->where('school_id', $schoolId)
+                    ->where('user_id', (int) $user->id)
+                    ->first();
+
+                if (!$student) {
+                    return false;
+                }
+
+                return (int) app(StudentPlacementService::class)->classroomIdForStudent(
+                    $student,
+                    $schoolId,
+                    $this->resolvedAcademicYearId($schoolId, request()),
+                ) === (int) $course->classroom_id;
+            })(),
             default => false,
         };
     }
 
-    private function coursePayload(Course $course, Collection $students): array
+    private function coursePayload(Course $course, Collection $students, int $schoolId, ?int $academicYearId): array
     {
         $affectedChildren = $students
-            ->where('classroom_id', (int) $course->classroom_id)
+            ->filter(function (Student $student) use ($course, $schoolId, $academicYearId) {
+                return (int) app(StudentPlacementService::class)->classroomIdForStudent($student, $schoolId, $academicYearId) === (int) $course->classroom_id;
+            })
             ->pluck('full_name')
             ->map(fn ($name) => (string) $name)
             ->filter()
@@ -195,12 +229,26 @@ class MobileCourseController extends Controller
         ];
     }
 
-    private function studentOptionPayload(Student $student): array
+    private function studentOptionPayload(Student $student, int $schoolId, ?int $academicYearId): array
     {
         return [
             'id' => (int) $student->id,
             'name' => (string) $student->full_name,
-            'classroom' => (string) ($student->classroom?->name ?? ''),
+            'classroom' => app(StudentPlacementService::class)->classroomNameForStudent($student, $schoolId, $academicYearId),
         ];
+    }
+
+    private function requestedAcademicYearId(Request $request): ?int
+    {
+        $value = (int) $request->integer('academic_year_id');
+
+        return $value > 0 ? $value : null;
+    }
+
+    private function resolvedAcademicYearId(int $schoolId, Request $request): int
+    {
+        return app(AcademicYearService::class)
+            ->resolveYearForSchool($schoolId, $this->requestedAcademicYearId($request))
+            ->id;
     }
 }

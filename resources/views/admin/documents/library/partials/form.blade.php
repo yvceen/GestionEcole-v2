@@ -38,6 +38,7 @@
 <div>
     <label class="app-label" for="document">Fichier</label>
     <input id="document" type="file" name="document" class="app-input">
+    <p class="mt-2 text-xs text-slate-500">Ajoutez un document clair et lisible pour les utilisateurs concernes.</p>
     @if($doc?->file_url)
         <p class="mt-2 text-xs text-slate-500">Fichier actuel :
             <a href="{{ $doc->file_url }}" target="_blank" rel="noopener" class="font-semibold text-sky-700 hover:underline">ouvrir</a>

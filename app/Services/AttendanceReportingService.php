@@ -10,11 +10,20 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 
 class AttendanceReportingService
 {
+    public function __construct(
+        private readonly AcademicYearService $academicYears,
+        private readonly StudentPlacementService $placements,
+    ) {
+    }
+
     public function buildMonitoringData(int $schoolId, Request $request, int $perPage = 20): array
     {
+        $academicYear = $this->academicYears->resolveYearForSchool($schoolId, $request->integer('academic_year_id') ?: null);
+
         [
             'classrooms' => $classrooms,
             'students' => $students,
@@ -23,9 +32,9 @@ class AttendanceReportingService
             'status' => $status,
             'dateFrom' => $dateFrom,
             'dateTo' => $dateTo,
-        ] = $this->resolveMonitoringFilters($schoolId, $request);
+        ] = $this->resolveMonitoringFilters($schoolId, $request, $academicYear->id);
 
-        $query = $this->filteredQuery($schoolId, $selectedClassroom, $selectedStudent, $status, $dateFrom, $dateTo);
+        $query = $this->filteredQuery($schoolId, $selectedClassroom, $selectedStudent, $status, $dateFrom, $dateTo, $academicYear->id);
 
         $summarySource = (clone $query)->get(['id', 'status']);
         $summary = [
@@ -78,6 +87,7 @@ class AttendanceReportingService
             'status' => $status,
             'dateFrom' => $dateFrom,
             'dateTo' => $dateTo,
+            'currentAcademicYear' => $academicYear,
             'summary' => $summary,
             'classSummary' => $classSummary,
             'studentSummary' => $studentSummary,
@@ -87,32 +97,34 @@ class AttendanceReportingService
 
     public function exportMonitoringRecords(int $schoolId, Request $request): Collection
     {
+        $academicYear = $this->academicYears->resolveYearForSchool($schoolId, $request->integer('academic_year_id') ?: null);
+
         [
             'selectedClassroom' => $selectedClassroom,
             'selectedStudent' => $selectedStudent,
             'status' => $status,
             'dateFrom' => $dateFrom,
             'dateTo' => $dateTo,
-        ] = $this->resolveMonitoringFilters($schoolId, $request);
+        ] = $this->resolveMonitoringFilters($schoolId, $request, $academicYear->id);
 
-        return $this->filteredQuery($schoolId, $selectedClassroom, $selectedStudent, $status, $dateFrom, $dateTo)
+        return $this->filteredQuery($schoolId, $selectedClassroom, $selectedStudent, $status, $dateFrom, $dateTo, $academicYear->id)
             ->orderByDesc('date')
             ->orderBy('student_id')
             ->get();
     }
 
-    public function schoolDashboardSummary(int $schoolId, ?Carbon $today = null): array
+    public function schoolDashboardSummary(int $schoolId, ?Carbon $today = null, ?int $academicYearId = null): array
     {
         $today ??= now()->startOfDay();
         $weekStart = $today->copy()->startOfWeek(Carbon::MONDAY);
         $weekEnd = $today->copy()->endOfWeek(Carbon::SUNDAY);
 
-        $todayQuery = Attendance::query()
-            ->where('school_id', $schoolId)
+        $resolvedAcademicYearId = $academicYearId ?: $this->academicYears->requireCurrentYearForSchool($schoolId)->id;
+
+        $todayQuery = $this->yearAwareAttendanceQuery($schoolId, $resolvedAcademicYearId)
             ->whereDate('date', $today->toDateString());
 
-        $weeklyRows = Attendance::query()
-            ->where('school_id', $schoolId)
+        $weeklyRows = $this->yearAwareAttendanceQuery($schoolId, $resolvedAcademicYearId)
             ->whereBetween('date', [$weekStart->toDateString(), $weekEnd->toDateString()])
             ->selectRaw("
                 date,
@@ -150,8 +162,7 @@ class AttendanceReportingService
             return collect();
         }
 
-        return Attendance::query()
-            ->where('school_id', $schoolId)
+        return $this->yearAwareAttendanceQuery($schoolId, $this->academicYears->requireCurrentYearForSchool($schoolId)->id)
             ->whereIn('student_id', $studentIds)
             ->whereIn('status', [Attendance::STATUS_ABSENT, Attendance::STATUS_LATE])
             ->with(['student:id,full_name,classroom_id', 'classroom:id,name', 'markedBy:id,name'])
@@ -166,8 +177,7 @@ class AttendanceReportingService
             return collect();
         }
 
-        $rows = Attendance::query()
-            ->where('school_id', $schoolId)
+        $rows = $this->yearAwareAttendanceQuery($schoolId, $this->academicYears->requireCurrentYearForSchool($schoolId)->id)
             ->whereIn('classroom_id', $classroomIds)
             ->where('marked_by_user_id', $teacherId)
             ->selectRaw("
@@ -182,15 +192,13 @@ class AttendanceReportingService
             ->limit($limit)
             ->get();
 
-        $classrooms = Classroom::query()
-            ->where('school_id', $schoolId)
-            ->whereIn('id', $rows->pluck('classroom_id')->unique()->all())
-            ->pluck('name', 'id');
+        $academicYearId = $this->academicYears->requireCurrentYearForSchool($schoolId)->id;
+        $classroomNames = $this->classroomNamesForYear($schoolId, $academicYearId);
 
-        return $rows->map(function ($row) use ($classrooms) {
+        return $rows->map(function ($row) use ($classroomNames) {
             return [
                 'classroom_id' => (int) $row->classroom_id,
-                'classroom_name' => $classrooms[(int) $row->classroom_id] ?? ('Classe #' . $row->classroom_id),
+                'classroom_name' => $classroomNames[(int) $row->classroom_id] ?? ('Classe #' . $row->classroom_id),
                 'date' => Carbon::parse($row->date),
                 'total_students' => (int) $row->total_students,
                 'absent_count' => (int) $row->absent_count,
@@ -218,9 +226,10 @@ class AttendanceReportingService
         ?Student $selectedStudent,
         string $status,
         ?Carbon $dateFrom,
-        ?Carbon $dateTo
+        ?Carbon $dateTo,
+        ?int $academicYearId
     ): Builder {
-        return $this->baseQuery($schoolId)
+        return $this->academicYears->applyYearScope($this->baseQuery($schoolId), $schoolId, $academicYearId, 'attendances', true)
             ->when($selectedClassroom, fn (Builder $builder) => $builder->where('classroom_id', $selectedClassroom->id))
             ->when($selectedStudent, fn (Builder $builder) => $builder->where('student_id', $selectedStudent->id))
             ->when($status !== '', fn (Builder $builder) => $builder->where('status', $status))
@@ -228,13 +237,9 @@ class AttendanceReportingService
             ->when($dateTo, fn (Builder $builder) => $builder->where('date', '<=', $dateTo));
     }
 
-    private function resolveMonitoringFilters(int $schoolId, Request $request): array
+    private function resolveMonitoringFilters(int $schoolId, Request $request, ?int $academicYearId): array
     {
-        $classrooms = Classroom::query()
-            ->where('school_id', $schoolId)
-            ->with('level:id,name')
-            ->orderBy('name')
-            ->get(['id', 'name', 'level_id']);
+        $classrooms = $this->classroomsForYear($schoolId, $academicYearId);
 
         $selectedClassroom = $classrooms->firstWhere('id', $request->integer('classroom_id'));
         $dateFrom = $this->parseDate((string) $request->get('date_from', ''));
@@ -246,7 +251,19 @@ class AttendanceReportingService
 
         $students = Student::query()
             ->where('school_id', $schoolId)
-            ->when($selectedClassroom, fn (Builder $query) => $query->where('classroom_id', $selectedClassroom->id))
+            ->when($selectedClassroom, function (Builder $query) use ($selectedClassroom, $schoolId, $academicYearId) {
+                if ($this->placements->supportsPlacements() && $academicYearId) {
+                    $query->whereHas('academicYears', function (Builder $placements) use ($selectedClassroom, $schoolId, $academicYearId) {
+                        $placements->where('school_id', $schoolId)
+                            ->where('academic_year_id', $academicYearId)
+                            ->where('classroom_id', $selectedClassroom->id);
+                    });
+
+                    return;
+                }
+
+                $query->where('classroom_id', $selectedClassroom->id);
+            })
             ->orderBy('full_name')
             ->get(['id', 'full_name', 'classroom_id']);
 
@@ -258,10 +275,10 @@ class AttendanceReportingService
             if ($selectedStudent) {
                 $students = Student::query()
                     ->where('school_id', $schoolId)
-                    ->when($selectedStudent->classroom_id, fn (Builder $query) => $query->where('classroom_id', $selectedStudent->classroom_id))
+                    ->when($this->placements->classroomIdForStudent($selectedStudent, $schoolId, $academicYearId), fn (Builder $query, $classroomId) => $query->where('classroom_id', $classroomId))
                     ->orderBy('full_name')
                     ->get(['id', 'full_name', 'classroom_id']);
-                $selectedClassroom ??= $classrooms->firstWhere('id', $selectedStudent->classroom_id);
+                $selectedClassroom ??= $classrooms->firstWhere('id', $this->placements->classroomIdForStudent($selectedStudent, $schoolId, $academicYearId));
             }
         }
 
@@ -290,5 +307,46 @@ class AttendanceReportingService
         } catch (\Throwable $e) {
             return null;
         }
+    }
+
+    private function yearAwareAttendanceQuery(int $schoolId, ?int $academicYearId): Builder
+    {
+        return $this->academicYears->applyYearScope(
+            Attendance::query()->where('school_id', $schoolId),
+            $schoolId,
+            $academicYearId,
+            'attendances',
+            true,
+        );
+    }
+
+    private function classroomsForYear(int $schoolId, ?int $academicYearId): Collection
+    {
+        $query = Classroom::query()
+            ->where('school_id', $schoolId)
+            ->with('level:id,name')
+            ->orderBy('name');
+
+        if ($this->placements->supportsPlacements() && $academicYearId) {
+            $classroomIds = \App\Models\StudentAcademicYear::query()
+                ->where('school_id', $schoolId)
+                ->where('academic_year_id', $academicYearId)
+                ->whereNotNull('classroom_id')
+                ->distinct()
+                ->pluck('classroom_id');
+
+            if ($classroomIds->isNotEmpty()) {
+                $query->whereIn('id', $classroomIds->all());
+            }
+        }
+
+        return $query->get(['id', 'name', 'level_id']);
+    }
+
+    private function classroomNamesForYear(int $schoolId, ?int $academicYearId): array
+    {
+        return $this->classroomsForYear($schoolId, $academicYearId)
+            ->pluck('name', 'id')
+            ->all();
     }
 }

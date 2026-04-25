@@ -1,6 +1,6 @@
 <x-super-layout
     title="Nouvelle ecole"
-    subtitle="Creez un nouvel espace, associez son administrateur principal et preparez son acces SaaS."
+    subtitle="Creez un nouvel espace, associez son administrateur principal et preparez son ouverture."
 >
     @php
         $domainService = app(\App\Services\SchoolDomainService::class);
@@ -12,7 +12,7 @@
 
     <x-page-header
         title="Nouvelle ecole"
-        subtitle="La creation initialise l'ecole, son compte admin et redirige ensuite vers le nouveau sous-domaine."
+        subtitle="La creation prepare l ecole, son compte administrateur et son adresse d acces."
         eyebrow="Onboarding"
     >
         <x-ui.button :href="route('super.schools.index')" variant="secondary">
@@ -40,33 +40,33 @@
         <div class="super-form-stack">
             <x-super.panel
                 title="Informations de l'ecole"
-                subtitle="Le sous-domaine est genere de maniere sure a partir du nom. Le slug reste une cle interne optionnelle."
+                subtitle="L adresse d acces est proposee automatiquement a partir du nom. Le nom court reste facultatif."
             >
                 <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div class="app-field md:col-span-2">
                         <label for="school_name" class="app-label">Nom de l ecole</label>
                         <input id="school_name" name="school_name" value="{{ old('school_name') }}" class="app-input" placeholder="Groupe scolaire Marie Curie" required>
-                        <p class="app-hint">Visible dans l'interface, les emails et utilise pour proposer le sous-domaine.</p>
+                        <p class="app-hint">Visible dans l interface, les emails et utilise pour proposer l adresse d acces.</p>
                         @error('school_name')
                             <p class="app-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div class="app-field md:col-span-2">
-                        <label for="slug" class="app-label">Slug interne</label>
+                        <label for="slug" class="app-label">Nom court (optionnel)</label>
                         <input id="slug" name="slug" value="{{ old('slug') }}" class="app-input" placeholder="marie-curie">
-                        <p class="app-hint">Optionnel. Utilise comme identifiant technique stable si vous souhaitez le definir.</p>
+                        <p class="app-hint">Optionnel. Permet de definir un libelle court et stable pour l etablissement.</p>
                         @error('slug')
                             <p class="app-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div class="md:col-span-2 rounded-[24px] border border-slate-200 bg-slate-50/80 px-5 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Sous-domaine estime</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Adresse d acces proposee</p>
                         <p class="mt-2 text-lg font-semibold text-slate-950">
                             <span id="subdomain-preview">{{ $initialPreview !== '' ? $initialPreview : 'nom-ecole' }}</span>.{{ $primaryDomain }}
                         </p>
-                        <p class="mt-1 text-sm text-slate-500">Le systeme reserve automatiquement les noms sensibles et applique un suffixe si necessaire.</p>
+                        <p class="mt-1 text-sm text-slate-500">Le systeme ajuste automatiquement le nom propose si celui-ci est deja utilise.</p>
                     </div>
                 </div>
             </x-super.panel>
@@ -112,7 +112,7 @@
                 <label class="flex items-start justify-between gap-4 rounded-[22px] border border-slate-200 bg-slate-50/75 px-4 py-4">
                     <div>
                         <p class="text-sm font-semibold text-slate-900">Activer des maintenant</p>
-                        <p class="mt-1 text-sm text-slate-500">Si active, l'administrateur pourra se connecter immediatement sur le nouveau sous-domaine.</p>
+                        <p class="mt-1 text-sm text-slate-500">Si active, l administrateur pourra se connecter immediatement sur la nouvelle adresse d acces.</p>
                     </div>
                     <input type="checkbox" name="is_active" value="1" @checked(old('is_active', true)) class="mt-1 h-5 w-5 rounded border-slate-300 text-sky-700 focus:ring-sky-200">
                 </label>
@@ -143,10 +143,10 @@
                     </div>
                     <div class="super-detail-item">
                         <dt>Redirection finale</dt>
-                        <dd>Nouveau sous-domaine de l'ecole</dd>
+                        <dd>Nouvelle adresse d acces de l ecole</dd>
                     </div>
                     <div class="super-detail-item">
-                        <dt>Sous-domaine</dt>
+                        <dt>Adresse d acces</dt>
                         <dd><span id="subdomain-preview-side">{{ $initialPreview !== '' ? $initialPreview : 'nom-ecole' }}</span>.{{ $primaryDomain }}</dd>
                     </div>
                     <div class="super-detail-item">

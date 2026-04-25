@@ -10,6 +10,8 @@ use App\Models\Receipt;
 use App\Models\Student;
 use App\Models\Timetable;
 use App\Models\User;
+use App\Services\AcademicYearService;
+use App\Services\StudentPlacementService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
@@ -59,8 +61,17 @@ trait InteractsWithParentPortal
 
     private function ownedClassroomIds(): Collection
     {
-        return $this->ownedChildren()
-            ->pluck('classroom_id')
+        $children = $this->ownedChildren(['classroom:id,name']);
+        $schoolId = $this->schoolIdOrFail();
+        $academicYearId = $this->resolvedAcademicYearId();
+        $placements = app(StudentPlacementService::class)->placementsForStudents(
+            $children->pluck('id'),
+            $schoolId,
+            $academicYearId,
+        );
+
+        return $children
+            ->map(fn (Student $student) => (int) ($placements->get($student->id)?->classroom_id ?: $student->classroom_id))
             ->filter()
             ->unique()
             ->values();
@@ -68,24 +79,36 @@ trait InteractsWithParentPortal
 
     private function visibleCoursesQuery(Collection $classroomIds): Builder
     {
-        return Course::query()
+        $query = Course::query()
             ->where('school_id', $this->schoolIdOrFail())
             ->whereIn('classroom_id', $classroomIds)
             ->when(
                 Schema::hasTable('courses') && Schema::hasColumn('courses', 'status'),
                 fn (Builder $query) => $query->whereIn('status', ['approved', 'confirmed'])
             );
+
+        return app(AcademicYearService::class)->applyYearScope(
+            $query,
+            $this->schoolIdOrFail(),
+            $this->requestedAcademicYearId(),
+        );
     }
 
     private function visibleHomeworksQuery(Collection $classroomIds): Builder
     {
-        return Homework::query()
+        $query = Homework::query()
             ->where('school_id', $this->schoolIdOrFail())
             ->whereIn('classroom_id', $classroomIds)
             ->when(
                 Schema::hasTable('homeworks') && Schema::hasColumn('homeworks', 'status'),
                 fn (Builder $query) => $query->whereIn('status', ['approved', 'confirmed'])
             );
+
+        return app(AcademicYearService::class)->applyYearScope(
+            $query,
+            $this->schoolIdOrFail(),
+            $this->requestedAcademicYearId(),
+        );
     }
 
     private function unreadNotificationsCount(): int
@@ -107,9 +130,15 @@ trait InteractsWithParentPortal
 
     private function ownedPaymentsQuery(): Builder
     {
-        return Payment::query()
+        $query = Payment::query()
             ->where('school_id', $this->schoolIdOrFail())
             ->whereIn('student_id', $this->ownedChildren()->pluck('id'));
+
+        return app(AcademicYearService::class)->applyYearScope(
+            $query,
+            $this->schoolIdOrFail(),
+            $this->requestedAcademicYearId(),
+        );
     }
 
     private function ownedReceiptsQuery(): Builder
@@ -117,6 +146,7 @@ trait InteractsWithParentPortal
         $schoolId = $this->schoolIdOrFail();
         $childIds = $this->ownedChildren()->pluck('id');
         $parentId = $this->currentParent()->id;
+        $requestedAcademicYearId = $this->requestedAcademicYearId();
 
         return Receipt::query()
             ->where('school_id', $schoolId)
@@ -125,23 +155,46 @@ trait InteractsWithParentPortal
                     ->orWhereHas('payments', fn (Builder $payments) => $payments
                         ->where('school_id', $schoolId)
                         ->whereIn('student_id', $childIds));
+            })
+            ->when($requestedAcademicYearId, function (Builder $query) use ($schoolId, $requestedAcademicYearId, $childIds): void {
+                $query->whereHas('payments', fn (Builder $payments) => app(AcademicYearService::class)
+                    ->applyYearScope($payments, $schoolId, $requestedAcademicYearId, 'payments', false)
+                    ->where('school_id', $schoolId)
+                    ->whereIn('student_id', $childIds));
             });
     }
 
     private function nextTimetableSlotForChildren(Collection $children): ?array
     {
-        $classroomIds = $children->pluck('classroom_id')->filter()->unique()->values();
+        $schoolId = $this->schoolIdOrFail();
+        $academicYearId = $this->resolvedAcademicYearId();
+        $placements = app(StudentPlacementService::class)->placementsForStudents(
+            $children->pluck('id'),
+            $schoolId,
+            $academicYearId,
+        );
+        $classroomIds = $children
+            ->map(fn (Student $student) => (int) ($placements->get($student->id)?->classroom_id ?: $student->classroom_id))
+            ->filter()
+            ->unique()
+            ->values();
+
         if ($classroomIds->isEmpty()) {
             return null;
         }
 
-        $slots = Timetable::query()
+        $query = Timetable::query()
             ->where('school_id', $this->schoolIdOrFail())
             ->whereIn('classroom_id', $classroomIds)
             ->with(['teacher:id,name', 'classroom:id,name'])
             ->orderBy('day')
-            ->orderBy('start_time')
-            ->get();
+            ->orderBy('start_time');
+
+        $slots = app(AcademicYearService::class)->applyYearScope(
+            $query,
+            $schoolId,
+            $this->requestedAcademicYearId(),
+        )->get();
 
         if ($slots->isEmpty()) {
             return null;
@@ -160,7 +213,9 @@ trait InteractsWithParentPortal
             return null;
         }
 
-        $child = $children->firstWhere('classroom_id', $slot->classroom_id);
+        $child = $children->first(function (Student $student) use ($placements, $slot) {
+            return (int) ($placements->get($student->id)?->classroom_id ?: $student->classroom_id) === (int) $slot->classroom_id;
+        });
 
         $days = [
             1 => 'Lundi',
@@ -180,5 +235,42 @@ trait InteractsWithParentPortal
             'time' => substr((string) $slot->start_time, 0, 5) . ' - ' . substr((string) $slot->end_time, 0, 5),
             'room' => $slot->room,
         ];
+    }
+
+    private function requestedAcademicYearId(): ?int
+    {
+        $request = request();
+        if (!$request) {
+            return null;
+        }
+
+        $value = (int) $request->integer('academic_year_id');
+
+        return $value > 0 ? $value : null;
+    }
+
+    private function resolvedAcademicYearId(): ?int
+    {
+        return app(AcademicYearService::class)
+            ->resolveYearForSchool($this->schoolIdOrFail(), $this->requestedAcademicYearId())
+            ->id;
+    }
+
+    private function classroomIdForChild(Student $student): ?int
+    {
+        return app(StudentPlacementService::class)->classroomIdForStudent(
+            $student,
+            $this->schoolIdOrFail(),
+            $this->resolvedAcademicYearId(),
+        );
+    }
+
+    private function classroomNameForChild(Student $student): string
+    {
+        return app(StudentPlacementService::class)->classroomNameForStudent(
+            $student,
+            $this->schoolIdOrFail(),
+            $this->resolvedAcademicYearId(),
+        );
     }
 }

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Student;
 use App\Models\Classroom;
+use App\Models\StudentAcademicYear;
 use App\Models\Homework;
+use App\Services\AcademicYearService;
 use App\Services\AttendanceAutoAbsentService;
 use App\Services\AttendanceReportingService;
 use Illuminate\Http\Request;
@@ -17,6 +19,7 @@ use Illuminate\Support\Facades\Schema;
 class DashboardController extends Controller
 {
     public function __construct(
+        private readonly AcademicYearService $academicYears,
         private readonly AttendanceReportingService $attendanceReporting,
         private readonly AttendanceAutoAbsentService $attendanceAutoAbsences,
     ) {
@@ -30,9 +33,29 @@ class DashboardController extends Controller
             abort(403, 'School context missing.');
         }
 
-        // ✅ Scoped counts
-        $studentsCount   = Student::query()->where('school_id', $schoolId)->active()->count();
-        $classroomsCount = Classroom::query()->where('school_id', $schoolId)->count();
+        $academicYear = $this->academicYears->resolveYearForSchool($schoolId, $request->integer('academic_year_id') ?: null);
+        $academicYearId = (int) $academicYear->id;
+
+        $studentsCount = StudentAcademicYear::query()
+            ->where('school_id', $schoolId)
+            ->where('academic_year_id', $academicYearId)
+            ->distinct('student_id')
+            ->count('student_id');
+
+        if ($studentsCount === 0) {
+            $studentsCount = Student::query()->where('school_id', $schoolId)->active()->count();
+        }
+
+        $classroomsCount = StudentAcademicYear::query()
+            ->where('school_id', $schoolId)
+            ->where('academic_year_id', $academicYearId)
+            ->whereNotNull('classroom_id')
+            ->distinct('classroom_id')
+            ->count('classroom_id');
+
+        if ($classroomsCount === 0) {
+            $classroomsCount = Classroom::query()->where('school_id', $schoolId)->count();
+        }
 
         $usersCount    = User::query()->where('school_id', $schoolId)->count();
         $teachersCount = User::query()->where('school_id', $schoolId)->where('role', 'teacher')->count();
@@ -43,6 +66,15 @@ class DashboardController extends Controller
         if (Schema::hasTable('homeworks') && Schema::hasColumn('homeworks', 'status')) {
             $pendingHomeworks = Homework::query()
                 ->where('school_id', $schoolId)
+                ->where(function ($query) use ($academicYearId) {
+                    if (Schema::hasColumn('homeworks', 'academic_year_id')) {
+                        $query->where('academic_year_id', $academicYearId)
+                            ->orWhereNull('academic_year_id');
+                        return;
+                    }
+
+                    $query->whereRaw('1 = 1');
+                })
                 ->where(function ($q) {
                     $q->whereNull('status')
                         ->orWhere('status', '')
@@ -54,6 +86,12 @@ class DashboardController extends Controller
         // ✅ Revenue this month (scoped)
         $revenueThisMonth = (float) DB::table('payments')
             ->where('school_id', $schoolId)
+            ->when(Schema::hasColumn('payments', 'academic_year_id'), function ($query) use ($academicYearId) {
+                $query->where(function ($inner) use ($academicYearId) {
+                    $inner->where('academic_year_id', $academicYearId)
+                        ->orWhereNull('academic_year_id');
+                });
+            })
             ->whereBetween('paid_at', [$now->copy()->startOfMonth(), $now->copy()->endOfMonth()])
             ->sum('amount');
 
@@ -61,6 +99,12 @@ class DashboardController extends Controller
         $rows = DB::table('payments')
             ->selectRaw('YEAR(paid_at) as y, MONTH(paid_at) as m, SUM(amount) as total')
             ->where('school_id', $schoolId)
+            ->when(Schema::hasColumn('payments', 'academic_year_id'), function ($query) use ($academicYearId) {
+                $query->where(function ($inner) use ($academicYearId) {
+                    $inner->where('academic_year_id', $academicYearId)
+                        ->orWhereNull('academic_year_id');
+                });
+            })
             ->where('paid_at', '>=', $now->copy()->startOfMonth()->subMonths(11))
             ->groupBy('y', 'm')
             ->orderBy('y')
@@ -95,6 +139,12 @@ class DashboardController extends Controller
 
             $monthPayments = DB::table('payments')
                 ->where('school_id', $schoolId)
+                ->when(Schema::hasColumn('payments', 'academic_year_id'), function ($query) use ($academicYearId) {
+                    $query->where(function ($inner) use ($academicYearId) {
+                        $inner->where('academic_year_id', $academicYearId)
+                            ->orWhereNull('academic_year_id');
+                    });
+                })
                 ->whereBetween('paid_at', [
                     $selectedMonth->copy()->startOfMonth(),
                     $selectedMonth->copy()->endOfMonth()
@@ -106,7 +156,7 @@ class DashboardController extends Controller
 
         $this->attendanceAutoAbsences->markDueAbsencesForSchool($schoolId, $now);
 
-        $attendanceSummary = $this->attendanceReporting->schoolDashboardSummary($schoolId, $now->copy()->startOfDay());
+        $attendanceSummary = $this->attendanceReporting->schoolDashboardSummary($schoolId, $now->copy()->startOfDay(), $academicYearId);
 
         return view('admin.dashboard', compact(
             'studentsCount',
@@ -121,7 +171,8 @@ class DashboardController extends Controller
             'selected',
             'monthPayments',
             'pendingHomeworks',
-            'attendanceSummary'
+            'attendanceSummary',
+            'academicYear'
         ));
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Classroom;
 use App\Models\User;
+use App\Services\AcademicYearService;
 use App\Services\ActivityParticipationService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -13,6 +14,7 @@ use Illuminate\Validation\Rule;
 class ActivityController extends Controller
 {
     public function __construct(
+        private readonly AcademicYearService $academicYears,
         private readonly ActivityParticipationService $participants,
     ) {
     }
@@ -28,7 +30,9 @@ class ActivityController extends Controller
             $type = '';
         }
 
-        $activities = Activity::query()
+        $requestedAcademicYearId = $request->integer('academic_year_id') ?: null;
+
+        $activities = $this->academicYears->applyYearScope(Activity::query(), $schoolId, $requestedAcademicYearId)
             ->where('school_id', $schoolId)
             ->when($classroomId > 0, fn ($query) => $query->where('classroom_id', $classroomId))
             ->when($teacherId > 0, fn ($query) => $query->where('teacher_id', $teacherId))
@@ -42,7 +46,9 @@ class ActivityController extends Controller
         $classrooms = Classroom::query()->where('school_id', $schoolId)->orderBy('name')->get(['id', 'name']);
         $teachers = User::query()->where('school_id', $schoolId)->where('role', User::ROLE_TEACHER)->orderBy('name')->get(['id', 'name']);
 
-        return view('admin.activities.index', compact('activities', 'classrooms', 'teachers', 'classroomId', 'teacherId', 'type'));
+        $currentAcademicYear = $this->academicYears->resolveYearForSchool($schoolId, $requestedAcademicYearId);
+
+        return view('admin.activities.index', compact('activities', 'classrooms', 'teachers', 'classroomId', 'teacherId', 'type', 'currentAcademicYear'));
     }
 
     public function create()
@@ -54,6 +60,7 @@ class ActivityController extends Controller
     {
         $data = $this->validatedData($request);
         $data['school_id'] = $this->schoolId();
+        $data['academic_year_id'] = $this->academicYears->requireCurrentYearForSchool($data['school_id'])->id;
         $data['color'] = $data['color'] ?: Activity::defaultColorForType((string) $data['type']);
 
         $activity = Activity::create($data);

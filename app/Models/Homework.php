@@ -17,6 +17,7 @@ class Homework extends Model
 
     protected $fillable = [
         'school_id',
+        'academic_year_id',
         'classroom_id',
         'teacher_id',
         'subject_id',
@@ -42,6 +43,11 @@ class Homework extends Model
     public function classroom()
     {
         return $this->belongsTo(Classroom::class, 'classroom_id');
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class);
     }
 
     public function teacher()

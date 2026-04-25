@@ -46,7 +46,7 @@
                         <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Code carte</p>
                         <p class="mt-2 text-base font-semibold text-slate-950">{{ $token }}</p>
                         <p class="mt-2 text-xs leading-5 text-slate-500">
-                            Le QR contient uniquement un token interne securise, sans donnees personnelles directes.
+                            Le QR contient un code securise propre a la carte, sans afficher d informations personnelles.
                         </p>
                     </div>
                 </div>

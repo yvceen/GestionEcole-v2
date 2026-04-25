@@ -21,7 +21,7 @@
     <section class="super-toolbar">
         <div>
             <p class="text-sm font-semibold text-slate-950">Recherche et filtres</p>
-            <p class="mt-1 text-sm text-slate-500">Affinez la liste par nom, slug, sous-domaine ou statut sans perdre l acces aux actions principales.</p>
+            <p class="mt-1 text-sm text-slate-500">Affinez la liste par nom, nom court, adresse d acces ou statut sans perdre l acces aux actions principales.</p>
         </div>
 
         <form method="GET" class="w-full lg:w-auto">
@@ -31,7 +31,7 @@
                     name="q"
                     value="{{ $q ?? '' }}"
                     class="app-input"
-                    placeholder="Rechercher une ecole, un slug ou un sous-domaine"
+                    placeholder="Rechercher une ecole, un nom court ou une adresse d acces"
                 >
 
                 <select name="status" class="app-input">

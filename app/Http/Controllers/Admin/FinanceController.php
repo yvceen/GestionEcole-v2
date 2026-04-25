@@ -8,6 +8,7 @@ use App\Models\Payment;
 use App\Models\Receipt;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\AcademicYearService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -17,6 +18,11 @@ use Illuminate\Support\Facades\Schema;
 
 class FinanceController extends Controller
 {
+    public function __construct(
+        private readonly AcademicYearService $academicYears,
+    ) {
+    }
+
     private function schoolId(): int
     {
         $schoolId = app()->bound('current_school_id') ? (int) app('current_school_id') : 0;
@@ -33,6 +39,9 @@ class FinanceController extends Controller
 
         $month = $request->get('month') ?: now()->format('Y-m');
         $monthDate = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+        $requestedAcademicYearId = $request->integer('academic_year_id') ?: null;
+        $academicYear = $this->academicYears->resolveYearForSchool($schoolId, $requestedAcademicYearId);
+        $academicYearId = (int) $academicYear->id;
         $q = trim((string) $request->get('q', ''));
         $levelId = max(0, (int) $request->integer('level_id'));
         $parentId = max(0, (int) $request->integer('parent_id'));
@@ -45,8 +54,7 @@ class FinanceController extends Controller
         $paymentsRangeStart = $dateFrom ?: $monthStart;
         $paymentsRangeEnd = $dateTo ?: $monthEnd;
 
-        $thisMonthRevenue = Payment::query()
-            ->where('school_id', $schoolId)
+        $thisMonthRevenue = $this->yearAwarePayments(Payment::query()->where('school_id', $schoolId), $schoolId, $requestedAcademicYearId)
             ->whereBetween('paid_at', [$monthStart, $monthEnd])
             ->sum('amount');
 
@@ -104,13 +112,13 @@ class FinanceController extends Controller
         $parentHistoryLastPaidAt = null;
 
         if ($parentId > 0) {
-            $parentHistoryPayments = $this->paymentsForParent(Payment::query(), $parentId, $schoolId)
+            $parentHistoryPayments = $this->paymentsForParent($this->yearAwarePayments(Payment::query(), $schoolId, $requestedAcademicYearId), $parentId, $schoolId)
                 ->with(['student.classroom', 'receipt.parent'])
                 ->orderByDesc('paid_at')
                 ->limit(8)
                 ->get();
 
-            $parentHistoryTotal = (float) $this->paymentsForParent(Payment::query(), $parentId, $schoolId)->sum('amount');
+            $parentHistoryTotal = (float) $this->paymentsForParent($this->yearAwarePayments(Payment::query(), $schoolId, $requestedAcademicYearId), $parentId, $schoolId)->sum('amount');
             $parentHistoryLastPaidAt = $parentHistoryPayments->first()?->paid_at;
         }
 
@@ -118,7 +126,7 @@ class FinanceController extends Controller
         $to12 = $monthDate->copy()->endOfMonth();
 
         $payments12 = $this->applyPaymentFilters(
-            Payment::query()->where('school_id', $schoolId),
+            $this->yearAwarePayments(Payment::query()->where('school_id', $schoolId), $schoolId, $requestedAcademicYearId),
             $schoolId,
             $q,
             $parentId,
@@ -248,7 +256,8 @@ class FinanceController extends Controller
             'selectedParent',
             'parentHistoryPayments',
             'parentHistoryTotal',
-            'parentHistoryLastPaidAt'
+            'parentHistoryLastPaidAt',
+            'academicYear'
         ));
     }
 
@@ -294,6 +303,7 @@ class FinanceController extends Controller
         }
 
         $paidAt = !empty($data['paid_at']) ? Carbon::parse($data['paid_at']) : now();
+        $academicYearId = $this->academicYears->requireCurrentYearForSchool($schoolId)->id;
 
         try {
             $result = DB::transaction(function () use ($data, $paidAt, $schoolId, $parent) {
@@ -353,6 +363,12 @@ class FinanceController extends Controller
 
                         $exists = Payment::query()
                             ->where('school_id', $schoolId)
+                            ->when(Schema::hasColumn('payments', 'academic_year_id'), function ($query) use ($academicYearId) {
+                                $query->where(function ($inner) use ($academicYearId) {
+                                    $inner->where('academic_year_id', $academicYearId)
+                                        ->orWhereNull('academic_year_id');
+                                });
+                            })
                             ->where('student_id', $student->id)
                             ->whereDate('period_month', $periodMonth)
                             ->exists();
@@ -364,6 +380,7 @@ class FinanceController extends Controller
 
                         $payment = Payment::create([
                             'school_id' => $schoolId,
+                            'academic_year_id' => $academicYearId,
                             'receipt_id' => $receipt->id,
                             'student_id' => $student->id,
                             'amount' => $monthlyAmount,
@@ -918,6 +935,17 @@ class FinanceController extends Controller
                         ->orWhereHas('receipt', fn ($receiptQuery) => $receiptQuery->where('receipt_number', 'like', "%{$q}%"));
                 });
             });
+    }
+
+    private function yearAwarePayments(Builder $query, int $schoolId, ?int $requestedAcademicYearId): Builder
+    {
+        return $this->academicYears->applyYearScope(
+            $query,
+            $schoolId,
+            $requestedAcademicYearId,
+            'payments',
+            true,
+        );
     }
 
     private function paymentsForParent(Builder $query, int $parentId, int $schoolId): Builder

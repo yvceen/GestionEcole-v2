@@ -10,6 +10,7 @@ class StudentFeePlan extends Model
     use BelongsToSchool;
     protected $fillable = [
         'school_id',
+        'academic_year_id',
         'student_id',
         'tuition_monthly',
         'transport_monthly',
@@ -27,5 +28,10 @@ class StudentFeePlan extends Model
     public function student()
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class);
     }
 }

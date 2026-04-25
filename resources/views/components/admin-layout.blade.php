@@ -5,10 +5,13 @@
 
 @php
     use Illuminate\Support\Facades\Route;
+    use App\Services\AcademicYearService;
 
     $nav = [
         ['label' => 'Tableau de bord', 'route' => 'admin.dashboard', 'icon' => 'home'],
         ['label' => 'Structure', 'route' => 'admin.structure.index', 'icon' => 'calendar'],
+        ['label' => 'Annees scolaires', 'route' => 'admin.academic-years.index', 'icon' => 'calendar'],
+        ['label' => 'Promotions', 'route' => 'admin.academic-promotions.index', 'icon' => 'users'],
         ['label' => 'Eleves', 'route' => 'admin.students.index', 'icon' => 'users'],
         ['label' => 'Utilisateurs', 'route' => 'admin.users.index', 'icon' => 'user'],
         ['label' => 'Finance', 'route' => 'admin.finance.index', 'icon' => 'wallet'],
@@ -35,6 +38,9 @@
         : (app()->bound('current_school') ? app('current_school') : null);
     $schoolLabel = $currentSchool?->name
         ?? (app()->bound('current_school_id') && app('current_school_id') ? 'Etablissement #'.app('current_school_id') : 'Espace administration');
+    $currentAcademicYear = app()->bound('current_school_id') && app('current_school_id')
+        ? app(AcademicYearService::class)->getCurrentYearForSchool((int) app('current_school_id'))
+        : null;
     $pageSubtitle = $subtitle ?: 'Pilotez les operations, les parcours administratifs et les interfaces de l etablissement dans un shell unifie.';
 
     $activeNav = array_values(array_filter(
@@ -79,6 +85,7 @@
                 :subtitle="$pageSubtitle"
                 :badges="[
                     $schoolLabel,
+                    $currentAcademicYear?->name ?? 'Annee en preparation',
                     auth()->user()?->name ?? 'Administrateur',
                     $currentModule['label'] ?? 'Vue generale',
                 ]"

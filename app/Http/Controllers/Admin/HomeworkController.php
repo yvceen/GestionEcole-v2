@@ -8,6 +8,7 @@ use App\Models\Homework;
 use App\Models\HomeworkAttachment;
 use App\Models\Subject;
 use App\Models\User;
+use App\Services\AcademicYearService;
 use App\Services\HomeworkAttachmentStorageService;
 use App\Services\NotificationService;
 use Carbon\Carbon;
@@ -17,6 +18,11 @@ use Illuminate\Support\Facades\Schema;
 
 class HomeworkController extends Controller
 {
+    public function __construct(
+        private readonly AcademicYearService $academicYears,
+    ) {
+    }
+
     public function index(Request $request)
     {
         $schoolId = $this->schoolId();
@@ -30,7 +36,9 @@ class HomeworkController extends Controller
         }
         $hasStatusColumn = $this->hasStatusColumn();
 
-        $homeworks = Homework::query()
+        $requestedAcademicYearId = $request->integer('academic_year_id') ?: null;
+
+        $homeworks = $this->academicYears->applyYearScope(Homework::query(), $schoolId, $requestedAcademicYearId)
             ->where('school_id', $schoolId)
             ->when($q !== '', function ($query) use ($q) {
                 $query->where(function ($w) use ($q) {
@@ -59,7 +67,8 @@ class HomeworkController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        $statsBase = Homework::query()->where('school_id', $schoolId);
+        $statsBase = $this->academicYears->applyYearScope(Homework::query(), $schoolId, $requestedAcademicYearId)
+            ->where('school_id', $schoolId);
         $stats = [
             'pending' => $hasStatusColumn ? (clone $statsBase)->pending()->count() : 0,
             'approved' => $hasStatusColumn ? (clone $statsBase)->approved()->count() : 0,
@@ -85,6 +94,7 @@ class HomeworkController extends Controller
             'routePrefix' => $this->routePrefix(),
             'canCreate' => $this->canCreate(),
             'portalTitle' => $this->portalTitle(),
+            'currentAcademicYear' => $this->academicYears->resolveYearForSchool($schoolId, $requestedAcademicYearId),
         ]);
     }
 
@@ -152,6 +162,7 @@ class HomeworkController extends Controller
 
         $payload = [
             'school_id' => $schoolId,
+            'academic_year_id' => $this->academicYears->requireCurrentYearForSchool($schoolId)->id,
             'classroom_id' => (int) $data['classroom_id'],
             'teacher_id' => auth()->id(),
             'subject_id' => $subjectId > 0 ? $subjectId : null,

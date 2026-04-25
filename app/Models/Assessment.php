@@ -16,6 +16,7 @@ class Assessment extends Model
 
     protected $fillable = [
         'school_id',
+        'academic_year_id',
         'teacher_id',
         'classroom_id',
         'subject_id',
@@ -36,6 +37,11 @@ class Assessment extends Model
     public function teacher(): BelongsTo
     {
         return $this->belongsTo(User::class, 'teacher_id');
+    }
+
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class);
     }
 
     public function classroom(): BelongsTo

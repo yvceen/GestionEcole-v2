@@ -39,6 +39,8 @@ use App\Http\Controllers\Admin\HomeworkController as AdminHomeworkController;
 use App\Http\Controllers\Admin\FinanceReminderController as AdminFinanceReminderController;
 use App\Http\Controllers\Admin\ActivityController as AdminActivityController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\AcademicYearController as AdminAcademicYearController;
+use App\Http\Controllers\Admin\StudentPromotionController as AdminStudentPromotionController;
 use App\Http\Controllers\Admin\TimetableController as AdminTimetableController;
 use App\Http\Controllers\Admin\TimetableSettingsController as AdminTimetableSettingsController;
 
@@ -206,6 +208,13 @@ Route::prefix('admin')
 
         // Students
         Route::resource('students', StudentController::class)->except(['show']);
+        Route::get('/academic-years', [AdminAcademicYearController::class, 'index'])->name('academic-years.index');
+        Route::get('/academic-years/create', [AdminAcademicYearController::class, 'create'])->name('academic-years.create');
+        Route::post('/academic-years', [AdminAcademicYearController::class, 'store'])->name('academic-years.store');
+        Route::post('/academic-years/{academicYear}/activate', [AdminAcademicYearController::class, 'activate'])->name('academic-years.activate');
+        Route::post('/academic-years/{academicYear}/archive', [AdminAcademicYearController::class, 'archive'])->name('academic-years.archive');
+        Route::get('/academic-promotions', [AdminStudentPromotionController::class, 'index'])->name('academic-promotions.index');
+        Route::post('/academic-promotions', [AdminStudentPromotionController::class, 'store'])->name('academic-promotions.store');
         Route::post('/students/{student}/archive', [StudentController::class, 'archive'])->name('students.archive');
         Route::post('/students/{student}/reactivate', [StudentController::class, 'reactivate'])->name('students.reactivate');
         Route::get('/students/suggest', [StudentController::class, 'suggest'])->name('students.suggest');

@@ -35,6 +35,11 @@ class School extends Model
         return $this->hasMany(Student::class);
     }
 
+    public function academicYears()
+    {
+        return $this->hasMany(AcademicYear::class);
+    }
+
     protected static function booted()
     {
         static::creating(function (School $school): void {
@@ -67,6 +72,8 @@ class School extends Model
                 }
 
                 $tablesInOrder = [
+                    'student_academic_years',
+                    'academic_years',
                     'activity_reports',
                     'activity_participants',
                     'activities',

@@ -11,6 +11,7 @@ class ParentStudentFee extends Model
 
     protected $fillable = [
         'school_id',
+        'academic_year_id',
         'parent_user_id',
         'student_id',
         'tuition_monthly',
@@ -33,6 +34,11 @@ class ParentStudentFee extends Model
     public function parentUser()
     {
         return $this->belongsTo(User::class, 'parent_user_id');
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class);
     }
 
     public function student()

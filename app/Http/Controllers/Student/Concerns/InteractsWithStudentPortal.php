@@ -6,6 +6,8 @@ use App\Models\AppNotification;
 use App\Models\Course;
 use App\Models\Homework;
 use App\Models\Student;
+use App\Services\AcademicYearService;
+use App\Services\StudentPlacementService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Schema;
 
@@ -32,24 +34,36 @@ trait InteractsWithStudentPortal
 
     private function visibleCoursesQuery(Student $student): Builder
     {
-        return Course::query()
+        $query = Course::query()
             ->where('school_id', $this->schoolIdOrFail())
-            ->where('classroom_id', $student->classroom_id)
+            ->where('classroom_id', $this->classroomIdForStudent($student))
             ->when(
                 Schema::hasTable('courses') && Schema::hasColumn('courses', 'status'),
                 fn (Builder $query) => $query->whereIn('status', ['approved', 'confirmed'])
             );
+
+        return app(AcademicYearService::class)->applyYearScope(
+            $query,
+            $this->schoolIdOrFail(),
+            $this->requestedAcademicYearId(),
+        );
     }
 
     private function visibleHomeworksQuery(Student $student): Builder
     {
-        return Homework::query()
+        $query = Homework::query()
             ->where('school_id', $this->schoolIdOrFail())
-            ->where('classroom_id', $student->classroom_id)
+            ->where('classroom_id', $this->classroomIdForStudent($student))
             ->when(
                 Schema::hasTable('homeworks') && Schema::hasColumn('homeworks', 'status'),
                 fn (Builder $query) => $query->whereIn('status', ['approved', 'confirmed'])
             );
+
+        return app(AcademicYearService::class)->applyYearScope(
+            $query,
+            $this->schoolIdOrFail(),
+            $this->requestedAcademicYearId(),
+        );
     }
 
     private function unreadNotificationsCount(): int
@@ -67,5 +81,42 @@ trait InteractsWithStudentPortal
             ->where($userColumn, $userId)
             ->whereNull('read_at')
             ->count();
+    }
+
+    private function requestedAcademicYearId(): ?int
+    {
+        $request = request();
+        if (!$request) {
+            return null;
+        }
+
+        $value = (int) $request->integer('academic_year_id');
+
+        return $value > 0 ? $value : null;
+    }
+
+    private function resolvedAcademicYearId(): ?int
+    {
+        return app(AcademicYearService::class)
+            ->resolveYearForSchool($this->schoolIdOrFail(), $this->requestedAcademicYearId())
+            ->id;
+    }
+
+    private function classroomIdForStudent(Student $student): ?int
+    {
+        return app(StudentPlacementService::class)->classroomIdForStudent(
+            $student,
+            $this->schoolIdOrFail(),
+            $this->resolvedAcademicYearId(),
+        );
+    }
+
+    private function classroomNameForStudent(Student $student): string
+    {
+        return app(StudentPlacementService::class)->classroomNameForStudent(
+            $student,
+            $this->schoolIdOrFail(),
+            $this->resolvedAcademicYearId(),
+        );
     }
 }

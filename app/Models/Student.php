@@ -74,6 +74,11 @@ class Student extends Model
         return $this->hasOne(\App\Models\StudentFeePlan::class);
     }
 
+    public function academicYears(): HasMany
+    {
+        return $this->hasMany(\App\Models\StudentAcademicYear::class);
+    }
+
     public function transportAssignment(): HasOne
     {
         return $this->hasOne(\App\Models\TransportAssignment::class)

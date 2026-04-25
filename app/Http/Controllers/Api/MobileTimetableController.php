@@ -8,6 +8,8 @@ use App\Http\Controllers\Student\Concerns\InteractsWithStudentPortal;
 use App\Models\Student;
 use App\Models\Timetable;
 use App\Models\User;
+use App\Services\AcademicYearService;
+use App\Services\StudentPlacementService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -20,6 +22,8 @@ class MobileTimetableController extends Controller
         InteractsWithParentPortal::visibleCoursesQuery insteadof InteractsWithStudentPortal;
         InteractsWithParentPortal::visibleHomeworksQuery insteadof InteractsWithStudentPortal;
         InteractsWithParentPortal::unreadNotificationsCount insteadof InteractsWithStudentPortal;
+        InteractsWithParentPortal::requestedAcademicYearId insteadof InteractsWithStudentPortal;
+        InteractsWithParentPortal::resolvedAcademicYearId insteadof InteractsWithStudentPortal;
     }
 
     private const DAYS = [
@@ -49,23 +53,26 @@ class MobileTimetableController extends Controller
         $children = $this->ownedChildren(['classroom:id,name']);
         $selectedChild = $this->resolveSelectedChild($children, $request->integer('child_id'));
         $schoolId = $this->schoolIdOrFail();
+        $academicYearId = $this->resolvedAcademicYearId();
+        $placements = app(StudentPlacementService::class)->placementsForStudents($children->pluck('id'), $schoolId, $academicYearId);
         $classroomIds = ($selectedChild ? collect([$selectedChild]) : $children)
-            ->pluck('classroom_id')
+            ->map(fn (Student $student) => (int) ($placements->get($student->id)?->classroom_id ?: $student->classroom_id))
             ->filter()
             ->unique()
             ->values();
 
         $slots = $this->slotsQuery($schoolId, $classroomIds)->get();
-        $childByClassroom = $children->keyBy(fn (Student $student) => (int) $student->classroom_id);
+        $childByClassroom = $children->keyBy(fn (Student $student) => (int) ($placements->get($student->id)?->classroom_id ?: $student->classroom_id));
 
         return response()->json([
             'items' => $slots->map(fn (Timetable $slot): array => $this->mapSlot($slot, $childByClassroom))->values()->all(),
             'children' => $children->map(fn (Student $student): array => [
                 'id' => (int) $student->id,
                 'name' => (string) $student->full_name,
-                'classroom' => (string) ($student->classroom?->name ?? ''),
+                'classroom' => app(StudentPlacementService::class)->classroomNameForStudent($student, $schoolId, $academicYearId),
             ])->values()->all(),
             'selected_child_id' => $selectedChild?->id,
+            'selected_academic_year_id' => $academicYearId,
         ]);
     }
 
@@ -73,21 +80,29 @@ class MobileTimetableController extends Controller
     {
         $student = $this->currentStudent(['classroom:id,name']);
         $schoolId = $this->schoolIdOrFail();
-        $classroomIds = collect([(int) $student->classroom_id])->filter()->values();
+        $academicYearId = $this->resolvedAcademicYearId();
+        $classroomIds = collect([(int) app(StudentPlacementService::class)->classroomIdForStudent($student, $schoolId, $academicYearId)])
+            ->filter()
+            ->values();
 
         $slots = $this->slotsQuery($schoolId, $classroomIds)->get();
-        $childByClassroom = collect([(int) $student->classroom_id => $student]);
+        $childByClassroom = collect([(int) app(StudentPlacementService::class)->classroomIdForStudent($student, $schoolId, $academicYearId) => $student]);
 
         return response()->json([
             'items' => $slots->map(fn (Timetable $slot): array => $this->mapSlot($slot, $childByClassroom))->values()->all(),
             'children' => [],
             'selected_child_id' => null,
+            'selected_academic_year_id' => $academicYearId,
         ]);
     }
 
     private function slotsQuery(int $schoolId, Collection $classroomIds)
     {
-        return Timetable::query()
+        return app(AcademicYearService::class)->applyYearScope(
+            Timetable::query(),
+            $schoolId,
+            $this->requestedAcademicYearId(),
+        )
             ->where('school_id', $schoolId)
             ->when($classroomIds->isNotEmpty(), fn ($query) => $query->whereIn('classroom_id', $classroomIds))
             ->with(['teacher:id,name', 'classroom:id,name'])
@@ -113,7 +128,7 @@ class MobileTimetableController extends Controller
             'student' => $student ? [
                 'id' => (int) $student->id,
                 'name' => (string) $student->full_name,
-                'classroom' => (string) ($student->classroom?->name ?? ''),
+                'classroom' => $student->classroom?->name ?? '',
             ] : null,
         ];
     }

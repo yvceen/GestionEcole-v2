@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\AcademicYearService;
+use App\Services\StudentPlacementService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,8 +27,13 @@ class MobileAttendanceController extends Controller
             $children = $this->parentChildren($user, $schoolId);
             $childId = (int) $request->integer('child_id');
             $selectedChild = $childId > 0 ? $children->firstWhere('id', $childId) : null;
+            $academicYearId = $this->resolvedAcademicYearId($schoolId, $request);
 
-            $query = Attendance::query()
+            $query = app(AcademicYearService::class)->applyYearScope(
+                Attendance::query(),
+                $schoolId,
+                $this->requestedAcademicYearId($request),
+            )
                 ->where('school_id', $schoolId)
                 ->whereIn('student_id', $children->pluck('id'))
                 ->with(['student:id,full_name,classroom_id', 'student.classroom:id,name', 'markedBy:id,name'])
@@ -39,16 +46,22 @@ class MobileAttendanceController extends Controller
 
             return response()->json([
                 'items' => $query->limit(100)->get()->map(fn (Attendance $attendance) => $this->attendancePayload($attendance))->values(),
-                'children' => $children->map(fn (Student $student) => $this->studentOptionPayload($student))->values(),
+                'children' => $children->map(fn (Student $student) => $this->studentOptionPayload($student, $schoolId, $academicYearId))->values(),
                 'summary' => $this->summaryPayload((clone $query)->get()),
                 'selected_child_id' => $selectedChild ? (int) $selectedChild->id : null,
+                'selected_academic_year_id' => $academicYearId,
             ]);
         }
 
         $student = $this->studentRecord($user, $schoolId);
         abort_unless($student, 404, 'Student profile not found.');
+        $academicYearId = $this->resolvedAcademicYearId($schoolId, $request);
 
-        $query = Attendance::query()
+        $query = app(AcademicYearService::class)->applyYearScope(
+            Attendance::query(),
+            $schoolId,
+            $this->requestedAcademicYearId($request),
+        )
             ->where('school_id', $schoolId)
             ->where('student_id', $student->id)
             ->with(['student:id,full_name,classroom_id', 'student.classroom:id,name', 'markedBy:id,name'])
@@ -63,6 +76,7 @@ class MobileAttendanceController extends Controller
             'children' => [],
             'summary' => $this->summaryPayload((clone $query)->get()),
             'selected_child_id' => null,
+            'selected_academic_year_id' => $academicYearId,
         ]);
     }
 
@@ -106,12 +120,12 @@ class MobileAttendanceController extends Controller
             ->first(['id', 'full_name', 'classroom_id']);
     }
 
-    private function studentOptionPayload(Student $student): array
+    private function studentOptionPayload(Student $student, int $schoolId, ?int $academicYearId): array
     {
         return [
             'id' => (int) $student->id,
             'name' => (string) $student->full_name,
-            'classroom' => (string) ($student->classroom?->name ?? ''),
+            'classroom' => app(StudentPlacementService::class)->classroomNameForStudent($student, $schoolId, $academicYearId),
         ];
     }
 
@@ -170,5 +184,19 @@ class MobileAttendanceController extends Controller
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    private function requestedAcademicYearId(Request $request): ?int
+    {
+        $value = (int) $request->integer('academic_year_id');
+
+        return $value > 0 ? $value : null;
+    }
+
+    private function resolvedAcademicYearId(int $schoolId, Request $request): int
+    {
+        return app(AcademicYearService::class)
+            ->resolveYearForSchool($schoolId, $this->requestedAcademicYearId($request))
+            ->id;
     }
 }

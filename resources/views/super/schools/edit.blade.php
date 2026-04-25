@@ -40,7 +40,7 @@
         <div class="super-form-stack">
             <x-super.panel
                 title="Informations de l'ecole"
-                subtitle="Modifiez l'identite, le slug et les informations exposees a l'ensemble de la plateforme."
+                subtitle="Modifiez l identite de l etablissement, son nom court et les informations visibles dans la plateforme."
             >
                 <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div class="app-field md:col-span-2">
@@ -52,9 +52,9 @@
                     </div>
 
                     <div class="app-field md:col-span-2">
-                        <label for="slug" class="app-label">Slug</label>
+                        <label for="slug" class="app-label">Nom court</label>
                         <input id="slug" name="slug" value="{{ old('slug', $school->slug) }}" class="app-input">
-                        <p class="app-hint">Laissez la valeur actuelle si vous ne souhaitez pas changer l identifiant technique.</p>
+                        <p class="app-hint">Laissez la valeur actuelle si vous ne souhaitez pas modifier ce libelle court.</p>
                         @error('slug')
                             <p class="app-error">{{ $message }}</p>
                         @enderror
@@ -141,11 +141,11 @@
             >
                 <dl class="super-detail-list">
                     <div class="super-detail-item">
-                        <dt>Slug actuel</dt>
+                        <dt>Nom court actuel</dt>
                         <dd>{{ $school->slug }}</dd>
                     </div>
                     <div class="super-detail-item">
-                        <dt>Sous-domaine</dt>
+                        <dt>Adresse d acces</dt>
                         <dd>{{ $school->subdomain }}</dd>
                     </div>
                     <div class="super-detail-item">

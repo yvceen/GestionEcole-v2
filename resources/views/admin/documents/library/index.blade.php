@@ -99,7 +99,7 @@
             <div>{{ $documents->links() }}</div>
         </div>
 
-        <x-ui.card title="Ajouter un document" subtitle="Chargement PDF, image ou fichier bureautique sur le disque public Laravel.">
+        <x-ui.card title="Ajouter un document" subtitle="Ajoutez un document a partager avec les utilisateurs concernes. Formats acceptes : PDF, image ou document bureautique.">
             <form method="POST" action="{{ route('admin.documents.library.store') }}" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 @include('admin.documents.library.partials.form', ['documentModel' => null])

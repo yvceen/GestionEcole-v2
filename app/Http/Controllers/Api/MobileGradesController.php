@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Grade;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\AcademicYearService;
+use App\Services\StudentPlacementService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -21,8 +23,13 @@ class MobileGradesController extends Controller
             $children = $this->parentChildren($user, $schoolId);
             $childId = (int) $request->integer('child_id');
             $selectedChild = $childId > 0 ? $children->firstWhere('id', $childId) : null;
+            $academicYearId = $this->resolvedAcademicYearId($schoolId, $request);
 
-            $query = Grade::query()
+            $query = app(AcademicYearService::class)->applyYearScope(
+                Grade::query(),
+                $schoolId,
+                $this->requestedAcademicYearId($request),
+            )
                 ->where('school_id', $schoolId)
                 ->whereIn('student_id', $children->pluck('id'))
                 ->with([
@@ -39,16 +46,22 @@ class MobileGradesController extends Controller
 
             return response()->json([
                 'items' => $rows->map(fn (Grade $grade) => $this->gradePayload($grade))->values(),
-                'children' => $children->map(fn (Student $student) => $this->studentOptionPayload($student))->values(),
+                'children' => $children->map(fn (Student $student) => $this->studentOptionPayload($student, $schoolId, $academicYearId))->values(),
                 'selected_child_id' => $selectedChild ? (int) $selectedChild->id : null,
                 'overall_average' => $this->overallAverage($rows),
+                'selected_academic_year_id' => $academicYearId,
             ]);
         }
 
         $student = $this->studentRecord($user, $schoolId);
         abort_unless($student, 404, 'Student profile not found.');
+        $academicYearId = $this->resolvedAcademicYearId($schoolId, $request);
 
-        $rows = Grade::query()
+        $rows = app(AcademicYearService::class)->applyYearScope(
+            Grade::query(),
+            $schoolId,
+            $this->requestedAcademicYearId($request),
+        )
             ->where('school_id', $schoolId)
             ->where('student_id', $student->id)
             ->with([
@@ -67,6 +80,7 @@ class MobileGradesController extends Controller
             'children' => [],
             'selected_child_id' => null,
             'overall_average' => $this->overallAverage($rows),
+            'selected_academic_year_id' => $academicYearId,
         ]);
     }
 
@@ -110,12 +124,12 @@ class MobileGradesController extends Controller
             ->first(['id', 'full_name', 'classroom_id']);
     }
 
-    private function studentOptionPayload(Student $student): array
+    private function studentOptionPayload(Student $student, int $schoolId, ?int $academicYearId): array
     {
         return [
             'id' => (int) $student->id,
             'name' => (string) $student->full_name,
-            'classroom' => (string) ($student->classroom?->name ?? ''),
+            'classroom' => app(StudentPlacementService::class)->classroomNameForStudent($student, $schoolId, $academicYearId),
         ];
     }
 
@@ -149,5 +163,19 @@ class MobileGradesController extends Controller
 
             return (((float) $grade->score) / $maxScore) * 100;
         }) ?? 0, 2);
+    }
+
+    private function requestedAcademicYearId(Request $request): ?int
+    {
+        $value = (int) $request->integer('academic_year_id');
+
+        return $value > 0 ? $value : null;
+    }
+
+    private function resolvedAcademicYearId(int $schoolId, Request $request): int
+    {
+        return app(AcademicYearService::class)
+            ->resolveYearForSchool($schoolId, $this->requestedAcademicYearId($request))
+            ->id;
     }
 }

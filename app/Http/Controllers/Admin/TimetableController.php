@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Classroom;
 use App\Models\Timetable;
 use App\Models\User;
+use App\Services\AcademicYearService;
+use App\Services\StudentPlacementService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -14,6 +16,12 @@ use Illuminate\Validation\ValidationException;
 class TimetableController extends Controller
 {
     use BuildsTimetableGrid;
+
+    public function __construct(
+        private readonly AcademicYearService $academicYears,
+        private readonly StudentPlacementService $placements,
+    ) {
+    }
 
     private const DAYS = [
         1 => 'Lundi',
@@ -31,12 +39,26 @@ class TimetableController extends Controller
             abort(403, 'Contexte ecole manquant.');
         }
 
+        $requestedAcademicYearId = $request->integer('academic_year_id') ?: null;
+        $academicYear = $this->academicYears->resolveYearForSchool($schoolId, $requestedAcademicYearId);
+
         $classrooms = Classroom::query()
             ->where('is_active', true)
             ->with('level')
             ->orderBy('level_id')
             ->orderBy('sort_order')
-            ->get();
+            ->get()
+            ->when($this->placements->supportsPlacements(), function ($collection) use ($schoolId, $academicYear) {
+                $classroomIds = \App\Models\StudentAcademicYear::query()
+                    ->where('school_id', $schoolId)
+                    ->where('academic_year_id', $academicYear->id)
+                    ->whereNotNull('classroom_id')
+                    ->distinct()
+                    ->pluck('classroom_id')
+                    ->all();
+
+                return empty($classroomIds) ? $collection : $collection->whereIn('id', $classroomIds)->values();
+            });
 
         $settings = $this->loadTimetableSetting($schoolId);
 
@@ -47,7 +69,7 @@ class TimetableController extends Controller
 
         $slots = collect();
         if ($selectedClassroomId > 0) {
-            $slots = Timetable::query()
+            $slots = $this->academicYears->applyYearScope(Timetable::query(), $schoolId, $requestedAcademicYearId)
                 ->where('school_id', $schoolId)
                 ->where('classroom_id', $selectedClassroomId)
                 ->with('teacher:id,name')
@@ -69,6 +91,7 @@ class TimetableController extends Controller
             'slotsByDay' => $grid['slotsByDay'],
             'lunchBlock' => $grid['lunchBlock'],
             'totalMinutes' => $grid['totalMinutes'],
+            'currentAcademicYear' => $academicYear,
         ]);
     }
 
@@ -116,6 +139,7 @@ class TimetableController extends Controller
 
         Timetable::create([
             'school_id' => $schoolId,
+            'academic_year_id' => $this->academicYears->requireCurrentYearForSchool($schoolId)->id,
             'classroom_id' => $data['classroom_id'],
             'day' => $data['day'],
             'start_time' => $data['start_time'],
