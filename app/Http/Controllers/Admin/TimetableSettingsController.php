@@ -17,7 +17,10 @@ class TimetableSettingsController extends Controller
 
         $settings = TimetableSetting::forSchool($schoolId);
 
-        return view('admin.timetable.settings', compact('settings'));
+        return view('admin.timetable.settings', compact('settings') + [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+        ]);
     }
 
     public function update(Request $request)
@@ -93,6 +96,16 @@ class TimetableSettingsController extends Controller
             ]
         );
 
-        return redirect()->route('admin.timetable.settings.edit')->with('success', 'Parametres de l emploi du temps mis a jour.');
+        return redirect()->route($this->routePrefix() . '.settings.edit')->with('success', 'Parametres de l emploi du temps mis a jour.');
+    }
+
+    protected function routePrefix(): string
+    {
+        return 'admin.timetable';
+    }
+
+    protected function layoutComponent(): string
+    {
+        return 'admin-layout';
     }
 }

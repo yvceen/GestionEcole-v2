@@ -87,12 +87,24 @@ class AppointmentController extends Controller
                 : 0,
         ];
 
-        return view('admin.appointments.index', compact('items', 'q', 'statusFilter', 'stats'));
+        return view('admin.appointments.index', compact('items', 'q', 'statusFilter', 'stats') + [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+            'canCreate' => $this->canCreate(),
+            'canEdit' => $this->canEdit(),
+            'canDelete' => $this->canDelete(),
+            'canApprove' => $this->canApprove(),
+        ]);
     }
 
     public function create()
     {
-        return view('admin.appointments.create', $this->formData());
+        abort_unless($this->canCreate(), 403);
+
+        return view('admin.appointments.create', $this->formData() + [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+        ]);
     }
 
     public function store(Request $request)
@@ -103,7 +115,7 @@ class AppointmentController extends Controller
         Appointment::create($this->buildPayload($data, $schoolId));
 
         return redirect()
-            ->route('admin.appointments.index')
+            ->route($this->routePrefix() . '.index')
             ->with('success', 'Rendez-vous cree avec succes.');
     }
 
@@ -111,8 +123,12 @@ class AppointmentController extends Controller
     {
         $this->ensureTenantOwnership($appointment);
 
+        abort_unless($this->canEdit(), 403);
+
         return view('admin.appointments.edit', array_merge($this->formData(), [
             'appointment' => $appointment->loadMissing(['student:id,full_name,classroom_id', 'student.classroom:id,name']),
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
         ]));
     }
 
@@ -128,7 +144,7 @@ class AppointmentController extends Controller
 
         $this->notifyParentAboutUpdate($appointment, $previousStatus);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Rendez-vous mis a jour.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Rendez-vous mis a jour.');
     }
 
     public function show(Appointment $appointment)
@@ -136,11 +152,18 @@ class AppointmentController extends Controller
         $this->ensureTenantOwnership($appointment);
         $appointment->loadMissing(['parentUser:id,name,email,phone', 'student:id,full_name,classroom_id', 'student.classroom:id,name']);
 
-        return view('admin.appointments.show', compact('appointment'));
+        return view('admin.appointments.show', compact('appointment') + [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+            'canEdit' => $this->canEdit(),
+            'canDelete' => $this->canDelete(),
+            'canApprove' => $this->canApprove(),
+        ]);
     }
 
     public function approve(Appointment $appointment)
     {
+        abort_unless($this->canApprove(), 403);
         $this->ensureTenantOwnership($appointment);
         $payload = [];
 
@@ -167,6 +190,7 @@ class AppointmentController extends Controller
 
     public function reject(Appointment $appointment)
     {
+        abort_unless($this->canApprove(), 403);
         $this->ensureTenantOwnership($appointment);
         $payload = [];
 
@@ -193,10 +217,41 @@ class AppointmentController extends Controller
 
     public function destroy(Appointment $appointment)
     {
+        abort_unless($this->canDelete(), 403);
         $this->ensureTenantOwnership($appointment);
         $appointment->delete();
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Rendez-vous supprime.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Rendez-vous supprime.');
+    }
+
+    protected function routePrefix(): string
+    {
+        return 'admin.appointments';
+    }
+
+    protected function layoutComponent(): string
+    {
+        return 'admin-layout';
+    }
+
+    protected function canCreate(): bool
+    {
+        return true;
+    }
+
+    protected function canEdit(): bool
+    {
+        return true;
+    }
+
+    protected function canDelete(): bool
+    {
+        return true;
+    }
+
+    protected function canApprove(): bool
+    {
+        return true;
     }
 
     private function formData(): array

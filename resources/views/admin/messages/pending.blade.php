@@ -1,10 +1,15 @@
-<x-admin-layout title="Messages en attente">
+@php
+    $routePrefix = $routePrefix ?? 'admin.messages';
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" title="Messages en attente">
     <x-ui.page-header
         title="Validation des messages"
         subtitle="Examinez les messages soumis à validation et traitez-les rapidement."
     >
         <x-slot name="actions">
-            <x-ui.button :href="route('admin.messages.index')" variant="secondary">
+            <x-ui.button :href="route($routePrefix . '.index')" variant="secondary">
                 Retour à la messagerie
             </x-ui.button>
         </x-slot>
@@ -31,18 +36,18 @@
                 </div>
 
                 <div class="mt-5 flex flex-wrap justify-end gap-2">
-                    <x-ui.button :href="route('admin.messages.show', $message)" variant="secondary" size="sm">
+                    <x-ui.button :href="route($routePrefix . '.show', $message)" variant="secondary" size="sm">
                         Voir le détail
                     </x-ui.button>
 
-                    <form method="POST" action="{{ route('admin.messages.approve', $message) }}" onsubmit="return confirm('Approuver ce message ?');">
+                    <form method="POST" action="{{ route($routePrefix . '.approve', $message) }}" onsubmit="return confirm('Approuver ce message ?');">
                         @csrf
                         <x-ui.button type="submit" variant="outline" size="sm">
                             Approuver
                         </x-ui.button>
                     </form>
 
-                    <form method="POST" action="{{ route('admin.messages.reject', $message) }}" onsubmit="return confirm('Refuser ce message ?');">
+                    <form method="POST" action="{{ route($routePrefix . '.reject', $message) }}" onsubmit="return confirm('Refuser ce message ?');">
                         @csrf
                         <input type="hidden" name="reason" value="Refusé par l'administration">
                         <x-ui.button type="submit" variant="danger" size="sm">
@@ -61,4 +66,4 @@
     <div class="mt-4">
         {{ $pending->links() }}
     </div>
-</x-admin-layout>
+</x-dynamic-component>

@@ -1,10 +1,18 @@
-<x-admin-layout title="Actualites">
+@php
+    $routePrefix = $routePrefix ?? 'admin.news';
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+    $canManage = $canManage ?? true;
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" title="Actualites">
     <x-ui.page-header
         title="Actualites"
         subtitle="Pilotez les publications de l etablissement avec une vue plus lisible sur le contenu, la cible et la date de diffusion."
     >
         <x-slot name="actions">
-            <x-ui.button :href="route('admin.news.create')" variant="primary">Nouvelle actualite</x-ui.button>
+            @if($canManage)
+                <x-ui.button :href="route($routePrefix . '.create')" variant="primary">Nouvelle actualite</x-ui.button>
+            @endif
         </x-slot>
     </x-ui.page-header>
 
@@ -51,7 +59,7 @@
 
             <div class="flex items-center gap-3">
                 <x-ui.button type="submit" variant="primary">Filtrer</x-ui.button>
-                <x-ui.button :href="route('admin.news.index')" variant="ghost">Reinitialiser</x-ui.button>
+                <x-ui.button :href="route($routePrefix . '.index')" variant="ghost">Reinitialiser</x-ui.button>
             </div>
         </form>
     </x-ui.card>
@@ -86,14 +94,16 @@
 
                     <p class="text-sm leading-6 text-slate-600">{{ $item->excerpt }}</p>
 
-                    <div class="flex justify-end gap-2">
-                        <x-ui.button :href="route('admin.news.edit', $item)" variant="secondary" size="sm">Modifier</x-ui.button>
-                        <form method="POST" action="{{ route('admin.news.destroy', $item) }}" onsubmit="return confirm('Supprimer cette actualite ?')">
-                            @csrf
-                            @method('DELETE')
-                            <x-ui.button type="submit" variant="danger" size="sm">Supprimer</x-ui.button>
-                        </form>
-                    </div>
+                    @if($canManage)
+                        <div class="flex justify-end gap-2">
+                            <x-ui.button :href="route($routePrefix . '.edit', $item)" variant="secondary" size="sm">Modifier</x-ui.button>
+                            <form method="POST" action="{{ route($routePrefix . '.destroy', $item) }}" onsubmit="return confirm('Supprimer cette actualite ?')">
+                                @csrf
+                                @method('DELETE')
+                                <x-ui.button type="submit" variant="danger" size="sm">Supprimer</x-ui.button>
+                            </form>
+                        </div>
+                    @endif
                 </div>
             </x-ui.card>
         @empty
@@ -106,4 +116,4 @@
     <div class="mt-4">
         {{ $items->links() }}
     </div>
-</x-admin-layout>
+</x-dynamic-component>

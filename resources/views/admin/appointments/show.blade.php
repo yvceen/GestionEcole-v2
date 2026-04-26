@@ -1,4 +1,12 @@
-<x-admin-layout title="Detail du rendez-vous">
+@php
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+    $routePrefix = $routePrefix ?? 'admin.appointments';
+    $canEdit = $canEdit ?? true;
+    $canDelete = $canDelete ?? true;
+    $canApprove = $canApprove ?? true;
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" title="Detail du rendez-vous">
     @php
         $status = $appointment->normalized_status ?? 'pending';
         $badgeVariant = match($status) {
@@ -14,14 +22,16 @@
         subtitle="Consultez la demande parent, l enfant concerne et le suivi administratif sans quitter le module."
     >
         <x-slot name="actions">
-            <x-ui.button :href="route('admin.appointments.edit', $appointment)" variant="secondary">Modifier</x-ui.button>
-            <x-ui.button :href="route('admin.appointments.index')" variant="ghost">Retour</x-ui.button>
-            @if($status === 'pending')
-                <form method="POST" action="{{ route('admin.appointments.approve', $appointment) }}">
+            @if($canEdit)
+                <x-ui.button :href="route($routePrefix . '.edit', $appointment)" variant="secondary">Modifier</x-ui.button>
+            @endif
+            <x-ui.button :href="route($routePrefix . '.index')" variant="ghost">Retour</x-ui.button>
+            @if($status === 'pending' && $canApprove)
+                <form method="POST" action="{{ route($routePrefix . '.approve', $appointment) }}">
                     @csrf
                     <x-ui.button type="submit" variant="outline">Approuver</x-ui.button>
                 </form>
-                <form method="POST" action="{{ route('admin.appointments.reject', $appointment) }}">
+                <form method="POST" action="{{ route($routePrefix . '.reject', $appointment) }}">
                     @csrf
                     <x-ui.button type="submit" variant="danger">Refuser</x-ui.button>
                 </form>
@@ -94,4 +104,4 @@
             </div>
         </x-ui.card>
     </div>
-</x-admin-layout>
+</x-dynamic-component>

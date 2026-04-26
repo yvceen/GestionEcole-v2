@@ -23,7 +23,7 @@
             <div class="flex items-center justify-between gap-3">
                 <div>
                     <h2 class="text-lg font-semibold text-slate-900">Notifications</h2>
-                    <p class="text-sm text-slate-600">All your recent updates.</p>
+                    <p class="text-sm text-slate-600">Retrouvez ici toutes vos mises a jour recentes.</p>
                 </div>
                 <div class="flex items-center gap-2">
                     @if(Route::has($routePrefix.'.notifications.read_all'))
@@ -58,7 +58,7 @@
                     </a>
                 @empty
                     <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
-                        No notifications yet
+                        Aucune notification pour le moment
                     </div>
                 @endforelse
             </div>

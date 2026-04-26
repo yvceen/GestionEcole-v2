@@ -1,4 +1,9 @@
-<x-admin-layout title="Parametres emploi du temps">
+@php
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+    $routePrefix = $routePrefix ?? 'admin.timetable';
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" title="Parametres emploi du temps">
     <x-ui.page-header
         title="Parametres emploi du temps et presences"
         subtitle="Definissez la journee type, les seances, les heures souples et les regles de retard/absence."
@@ -15,7 +20,7 @@
     @endif
 
     <x-ui.card title="Reglages generaux" subtitle="Ces parametres servent de base a l agenda, aux creneaux et aux regles de pointage.">
-        <form method="POST" action="{{ route('admin.timetable.settings.update') }}" class="space-y-6">
+        <form method="POST" action="{{ route($routePrefix . '.settings.update') }}" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -61,8 +66,8 @@
 
             <div class="flex items-center gap-3 border-t border-slate-200 pt-4">
                 <x-ui.button type="submit" variant="primary">Enregistrer</x-ui.button>
-                <x-ui.button :href="route('admin.timetable.index')" variant="secondary">Retour planning</x-ui.button>
+                <x-ui.button :href="route($routePrefix . '.index')" variant="secondary">Retour planning</x-ui.button>
             </div>
         </form>
     </x-ui.card>
-</x-admin-layout>
+</x-dynamic-component>

@@ -87,14 +87,14 @@
         <section class="relative">
             <div class="mx-auto grid max-w-7xl gap-20 px-4 pb-28 pt-20 sm:px-6 md:gap-24 md:pb-32 md:pt-24 lg:grid-cols-[1.02fr_0.98fr] lg:px-8 lg:gap-28 lg:pb-40 lg:pt-32">
                 <div class="max-w-3xl">
-                    <span class="fut-eyebrow">Vision numerique pour l etablissement</span>
+                    <span class="fut-eyebrow">Pilotage scolaire nouvelle generation</span>
 
                     <h1 class="mt-9 text-4xl font-semibold leading-[1.02] tracking-[-0.04em] text-white sm:text-5xl lg:text-7xl">
-                        La plateforme qui donne une nouvelle dimension a la gestion scolaire.
+                        Une experience scolaire premium pour piloter l etablissement avec clarte, rythme et confiance.
                     </h1>
 
                     <p class="mt-8 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
-                        {{ config('app.name', 'MyEdu') }} centralise la vie de l etablissement dans une experience contemporaine, claire et fluide pour l administration, les enseignants, les parents et les eleves.
+                        {{ config('app.name', 'MyEdu') }} rassemble l organisation, le suivi pedagogique, les echanges et les operations du quotidien dans un environnement plus lisible, plus elegant et mieux coordonne.
                     </p>
 
                     <div class="mt-12 flex flex-col gap-4 sm:flex-row">
@@ -300,13 +300,13 @@
         <section id="mobile" class="fut-section-wrap">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="fut-mobile-showcase">
-                    <div class="fut-mobile-copy">
+                        <div class="fut-mobile-copy">
                         <p class="fut-section-label">Application mobile</p>
                         <h2 class="mt-4 text-3xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">
-                            Une experience mobile premium pour les parents, les eleves et les equipes.
+                            Un prolongement mobile sobre, clair et rassurant pour toute la communaute scolaire.
                         </h2>
                         <p class="mt-5 max-w-2xl text-base leading-8 text-slate-300">
-                            Consultez les informations importantes, suivez les alertes, verifiez les devoirs et retrouvez les reperes du quotidien depuis une interface mobile plus claire et plus rassurante.
+                            Les familles, les eleves et les equipes retrouvent les reperes essentiels, les alertes utiles et les informations de la journee depuis une interface mobile harmonisee avec l etablissement.
                         </p>
 
                         <div class="mt-10 grid gap-4 sm:grid-cols-3">
@@ -315,9 +315,15 @@
                             <div class="fut-mini-panel"><p class="text-sm font-semibold text-white">Equipes</p><p class="mt-2 text-sm leading-6 text-slate-400">Consultation rapide pour agir avec plus de fluidite sur le terrain.</p></div>
                         </div>
 
-                        <div class="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
-                            <a href="{{ url('/download/myedu.apk') }}" class="fut-button fut-button-primary">Telecharger l application</a>
-                            <span class="text-sm font-medium text-slate-400">Disponible sur Android pour un acces simple et fluide.</span>
+                        <div class="mt-10 flex flex-wrap items-center gap-3">
+                            <span class="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100">Acces parent</span>
+                            <span class="rounded-full border border-violet-400/20 bg-violet-400/10 px-4 py-2 text-sm font-semibold text-violet-100">Acces eleve</span>
+                            <span class="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-100">Acces equipe</span>
+                        </div>
+
+                        <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+                            <a href="#demo" class="fut-button fut-button-primary">Demander une demonstration</a>
+                            <span class="text-sm font-medium text-slate-400">Presentation adaptee a votre organisation, vos usages et vos priorites.</span>
                         </div>
                     </div>
 
@@ -357,7 +363,7 @@
 
         <section id="organisation" class="fut-section-wrap">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="grid gap-8 lg:gap-10 lg:grid-cols-[0.95fr_1.05fr]">
+                    <div class="grid gap-8 lg:gap-10 lg:grid-cols-[0.95fr_1.05fr]">
                     <div class="fut-info-panel">
                         <p class="fut-section-label">Organisation et confiance</p>
                         <h2 class="mt-4 text-3xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">
@@ -366,6 +372,16 @@
                         <p class="mt-5 text-base leading-8 text-slate-300">
                             MyEdu aide les equipes a mieux s organiser, a partager les bonnes informations et a proposer une experience plus coherente a l ensemble de la communaute scolaire.
                         </p>
+                        <div class="mt-8 grid gap-3 sm:grid-cols-2">
+                            <div class="fut-mini-panel">
+                                <p class="text-sm font-semibold text-white">Lecture immediate</p>
+                                <p class="mt-2 text-sm leading-6 text-slate-400">Les informations utiles restent visibles, structurees et faciles a transmettre.</p>
+                            </div>
+                            <div class="fut-mini-panel">
+                                <p class="text-sm font-semibold text-white">Coordination apaisee</p>
+                                <p class="mt-2 text-sm leading-6 text-slate-400">Les services avancent avec des repères communs et une communication mieux synchronisee.</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="grid gap-5 md:gap-6 md:grid-cols-2">

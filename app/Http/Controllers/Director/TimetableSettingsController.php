@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Director;
 
-use App\Http\Controllers\Admin\MessageController as BaseMessageController;
+use App\Http\Controllers\Admin\TimetableSettingsController as BaseTimetableSettingsController;
 
-class MessageController extends BaseMessageController
+class TimetableSettingsController extends BaseTimetableSettingsController
 {
     protected function routePrefix(): string
     {
-        return 'director.messages';
+        return 'director.timetable';
     }
 
     protected function layoutComponent(): string

@@ -109,6 +109,13 @@ use App\Http\Controllers\Director\CouncilController as DirectorCouncilController
 use App\Http\Controllers\Director\ReportsController as DirectorReportsController;
 use App\Http\Controllers\Director\MessageController as DirectorMessageController;
 use App\Http\Controllers\Director\AttendanceController as DirectorAttendanceController;
+use App\Http\Controllers\Director\AppointmentController as DirectorAppointmentController;
+use App\Http\Controllers\Director\ActivityController as DirectorActivityController;
+use App\Http\Controllers\Director\NewsController as DirectorNewsController;
+use App\Http\Controllers\Director\HomeworkController as DirectorHomeworkController;
+use App\Http\Controllers\Director\SubjectController as DirectorSubjectController;
+use App\Http\Controllers\Director\TimetableController as DirectorTimetableController;
+use App\Http\Controllers\Director\TimetableSettingsController as DirectorTimetableSettingsController;
 use App\Http\Controllers\Documents\RegistrationRequirementController;
 use App\Http\Controllers\Parent\PickupRequestController as ParentPickupRequestController;
 use App\Http\Controllers\SchoolLife\AttendanceController as SchoolLifeAttendanceController;
@@ -118,8 +125,14 @@ use App\Http\Controllers\SchoolLife\BehaviorController as SchoolLifeBehaviorCont
 use App\Http\Controllers\SchoolLife\DashboardController as SchoolLifeDashboardController;
 use App\Http\Controllers\SchoolLife\GradesController as SchoolLifeGradesController;
 use App\Http\Controllers\SchoolLife\HomeworkController as SchoolLifeHomeworkController;
+use App\Http\Controllers\SchoolLife\MessageController as SchoolLifeMessageController;
+use App\Http\Controllers\SchoolLife\NewsController as SchoolLifeNewsController;
 use App\Http\Controllers\SchoolLife\PickupRequestController as SchoolLifePickupRequestController;
+use App\Http\Controllers\SchoolLife\AppointmentController as SchoolLifeAppointmentController;
+use App\Http\Controllers\SchoolLife\SubjectController as SchoolLifeSubjectController;
 use App\Http\Controllers\SchoolLife\StudentsController as SchoolLifeStudentsController;
+use App\Http\Controllers\SchoolLife\TimetableController as SchoolLifeTimetableController;
+use App\Http\Controllers\SchoolLife\TimetableSettingsController as SchoolLifeTimetableSettingsController;
 
 use App\Http\Middleware\DirectorOnly;
 
@@ -533,6 +546,12 @@ Route::prefix('school-life')
         Route::get('/attendance/scan-records/{attendance}/edit', [SchoolLifeAttendanceScanController::class, 'edit'])->name('qr-scan.records.edit');
         Route::put('/attendance/scan-records/{attendance}', [SchoolLifeAttendanceScanController::class, 'update'])->name('qr-scan.records.update');
         Route::get('/grades', [SchoolLifeGradesController::class, 'index'])->name('grades.index');
+        Route::get('/subjects', [SchoolLifeSubjectController::class, 'index'])->name('subjects.index');
+        Route::get('/subjects/create', [SchoolLifeSubjectController::class, 'create'])->name('subjects.create');
+        Route::post('/subjects', [SchoolLifeSubjectController::class, 'store'])->name('subjects.store');
+        Route::get('/subjects/{subject}/edit', [SchoolLifeSubjectController::class, 'edit'])->name('subjects.edit');
+        Route::put('/subjects/{subject}', [SchoolLifeSubjectController::class, 'update'])->name('subjects.update');
+        Route::delete('/subjects/{subject}', [SchoolLifeSubjectController::class, 'destroy'])->name('subjects.destroy');
         Route::get('/homeworks', [SchoolLifeHomeworkController::class, 'index'])->name('homeworks.index');
         Route::get('/homeworks/{homework}', [SchoolLifeHomeworkController::class, 'show'])->name('homeworks.show');
         Route::get('/homeworks/{homework}/edit', [SchoolLifeHomeworkController::class, 'edit'])->name('homeworks.edit');
@@ -541,12 +560,26 @@ Route::prefix('school-life')
         Route::post('/homeworks/{homework}/approve', [SchoolLifeHomeworkController::class, 'approve'])->name('homeworks.approve');
         Route::post('/homeworks/{homework}/reject', [SchoolLifeHomeworkController::class, 'reject'])->name('homeworks.reject');
         Route::get('/homeworks/attachments/{attachment}', [SchoolLifeHomeworkController::class, 'downloadAttachment'])->name('homeworks.attachments.download');
+        Route::resource('news', SchoolLifeNewsController::class)->except(['show']);
         Route::get('/activities', [SchoolLifeActivityController::class, 'index'])->name('activities.index');
         Route::get('/activities/{activity}', [SchoolLifeActivityController::class, 'show'])->name('activities.show');
         Route::post('/activities/{activity}/participants/{participant}', [SchoolLifeActivityController::class, 'updateParticipant'])->name('activities.participants.update');
         Route::post('/activities/{activity}/reports', [SchoolLifeActivityController::class, 'storeReport'])->name('activities.reports.store');
         Route::get('/calendar', [CalendarController::class, 'schoolLifeIndex'])->name('calendar.index');
         Route::get('/agenda', [EventController::class, 'schoolLifeIndex'])->name('events.index');
+        Route::get('/timetable', [SchoolLifeTimetableController::class, 'index'])->name('timetable.index');
+        Route::get('/timetable/create', [SchoolLifeTimetableController::class, 'create'])->name('timetable.create');
+        Route::post('/timetable', [SchoolLifeTimetableController::class, 'store'])->name('timetable.store');
+        Route::get('/timetable/settings', [SchoolLifeTimetableSettingsController::class, 'edit'])->name('timetable.settings.edit');
+        Route::put('/timetable/settings', [SchoolLifeTimetableSettingsController::class, 'update'])->name('timetable.settings.update');
+        Route::get('/timetable/{timetable}/edit', [SchoolLifeTimetableController::class, 'edit'])->name('timetable.edit');
+        Route::put('/timetable/{timetable}', [SchoolLifeTimetableController::class, 'update'])->name('timetable.update');
+        Route::delete('/timetable/{timetable}', [SchoolLifeTimetableController::class, 'destroy'])->name('timetable.destroy');
+        Route::put('/timetable/{timetable}/move', [SchoolLifeTimetableController::class, 'updateTimePosition'])->name('timetable.move');
+        Route::get('/appointments', [SchoolLifeAppointmentController::class, 'index'])->name('appointments.index');
+        Route::get('/appointments/{appointment}', [SchoolLifeAppointmentController::class, 'show'])->name('appointments.show');
+        Route::post('/appointments/{appointment}/approve', [SchoolLifeAppointmentController::class, 'approve'])->name('appointments.approve');
+        Route::post('/appointments/{appointment}/reject', [SchoolLifeAppointmentController::class, 'reject'])->name('appointments.reject');
         Route::get('/pickup-requests', [SchoolLifePickupRequestController::class, 'index'])->name('pickup-requests.index');
         Route::post('/pickup-requests/{pickupRequest}/approve', [SchoolLifePickupRequestController::class, 'approve'])->name('pickup-requests.approve');
         Route::post('/pickup-requests/{pickupRequest}/reject', [SchoolLifePickupRequestController::class, 'reject'])->name('pickup-requests.reject');
@@ -554,6 +587,15 @@ Route::prefix('school-life')
         Route::get('/notifications', [NotificationCenterController::class, 'index'])->name('notifications.index');
         Route::get('/notifications/{notification}/open', [NotificationCenterController::class, 'open'])->name('notifications.open');
         Route::post('/notifications/read-all', [NotificationCenterController::class, 'markAllRead'])->name('notifications.read_all');
+        Route::prefix('messages')->as('messages.')->group(function () {
+            Route::get('/', [SchoolLifeMessageController::class, 'index'])->name('index');
+            Route::get('/pending', [SchoolLifeMessageController::class, 'pending'])->name('pending');
+            Route::get('/create', [SchoolLifeMessageController::class, 'create'])->name('create');
+            Route::post('/', [SchoolLifeMessageController::class, 'store'])->name('store');
+            Route::get('/{message}', [SchoolLifeMessageController::class, 'show'])->whereNumber('message')->name('show');
+            Route::post('/{message}/approve', [SchoolLifeMessageController::class, 'approve'])->whereNumber('message')->name('approve');
+            Route::post('/{message}/reject', [SchoolLifeMessageController::class, 'reject'])->whereNumber('message')->name('reject');
+        });
         Route::prefix('documents/registration-requirements')->as('documents.registration-requirements.')->group(function () {
             Route::get('/', [RegistrationRequirementController::class, 'index'])->name('index');
             Route::post('/', [RegistrationRequirementController::class, 'store'])->name('store');
@@ -616,6 +658,35 @@ Route::prefix('director')
         Route::get('/attendance', [DirectorAttendanceController::class, 'index'])->name('attendance.index');
         Route::get('/calendar', [CalendarController::class, 'directorIndex'])->name('calendar.index');
         Route::get('/agenda', [EventController::class, 'directorIndex'])->name('events.index');
+        Route::get('/homeworks', [DirectorHomeworkController::class, 'index'])->name('homeworks.index');
+        Route::get('/homeworks/{homework}', [DirectorHomeworkController::class, 'show'])->name('homeworks.show');
+        Route::get('/homeworks/{homework}/edit', [DirectorHomeworkController::class, 'edit'])->name('homeworks.edit');
+        Route::put('/homeworks/{homework}', [DirectorHomeworkController::class, 'update'])->name('homeworks.update');
+        Route::delete('/homeworks/{homework}', [DirectorHomeworkController::class, 'destroy'])->name('homeworks.destroy');
+        Route::post('/homeworks/{homework}/approve', [DirectorHomeworkController::class, 'approve'])->name('homeworks.approve');
+        Route::post('/homeworks/{homework}/reject', [DirectorHomeworkController::class, 'reject'])->name('homeworks.reject');
+        Route::get('/homeworks/attachments/{attachment}', [DirectorHomeworkController::class, 'downloadAttachment'])->name('homeworks.attachments.download');
+        Route::resource('news', DirectorNewsController::class)->except(['show']);
+        Route::resource('activities', DirectorActivityController::class)->except(['show']);
+        Route::get('/subjects', [DirectorSubjectController::class, 'index'])->name('subjects.index');
+        Route::get('/subjects/create', [DirectorSubjectController::class, 'create'])->name('subjects.create');
+        Route::post('/subjects', [DirectorSubjectController::class, 'store'])->name('subjects.store');
+        Route::get('/subjects/{subject}/edit', [DirectorSubjectController::class, 'edit'])->name('subjects.edit');
+        Route::put('/subjects/{subject}', [DirectorSubjectController::class, 'update'])->name('subjects.update');
+        Route::delete('/subjects/{subject}', [DirectorSubjectController::class, 'destroy'])->name('subjects.destroy');
+        Route::get('/timetable', [DirectorTimetableController::class, 'index'])->name('timetable.index');
+        Route::get('/timetable/create', [DirectorTimetableController::class, 'create'])->name('timetable.create');
+        Route::post('/timetable', [DirectorTimetableController::class, 'store'])->name('timetable.store');
+        Route::get('/timetable/settings', [DirectorTimetableSettingsController::class, 'edit'])->name('timetable.settings.edit');
+        Route::put('/timetable/settings', [DirectorTimetableSettingsController::class, 'update'])->name('timetable.settings.update');
+        Route::get('/timetable/{timetable}/edit', [DirectorTimetableController::class, 'edit'])->name('timetable.edit');
+        Route::put('/timetable/{timetable}', [DirectorTimetableController::class, 'update'])->name('timetable.update');
+        Route::delete('/timetable/{timetable}', [DirectorTimetableController::class, 'destroy'])->name('timetable.destroy');
+        Route::put('/timetable/{timetable}/move', [DirectorTimetableController::class, 'updateTimePosition'])->name('timetable.move');
+        Route::get('/appointments', [DirectorAppointmentController::class, 'index'])->name('appointments.index');
+        Route::get('/appointments/{appointment}', [DirectorAppointmentController::class, 'show'])->name('appointments.show');
+        Route::post('/appointments/{appointment}/approve', [DirectorAppointmentController::class, 'approve'])->name('appointments.approve');
+        Route::post('/appointments/{appointment}/reject', [DirectorAppointmentController::class, 'reject'])->name('appointments.reject');
 
         Route::get('/parents', [DirectorParentsController::class, 'index'])->name('parents.index');
 
@@ -648,7 +719,14 @@ Route::prefix('director')
         // Director messages
         Route::prefix('messages')->as('messages.')->group(function () {
             Route::get('/', [DirectorMessageController::class, 'index'])->name('index');
+            Route::get('/pending', [DirectorMessageController::class, 'pending'])->name('pending');
+            Route::get('/create', [DirectorMessageController::class, 'create'])->name('create');
+            Route::post('/', [DirectorMessageController::class, 'store'])->name('store');
             Route::get('/{message}', [DirectorMessageController::class, 'show'])
                 ->whereNumber('message')->name('show');
+            Route::post('/{message}/approve', [DirectorMessageController::class, 'approve'])
+                ->whereNumber('message')->name('approve');
+            Route::post('/{message}/reject', [DirectorMessageController::class, 'reject'])
+                ->whereNumber('message')->name('reject');
         });
     });

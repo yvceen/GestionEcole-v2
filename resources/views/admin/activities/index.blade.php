@@ -1,8 +1,16 @@
-<x-admin-layout title="Activites" subtitle="Suivi des activites scolaires, planification et participation des eleves.">
+@php
+    $routePrefix = $routePrefix ?? 'admin.activities';
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+    $canManage = $canManage ?? true;
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" title="Activites" subtitle="Suivi des activites scolaires, planification et participation des eleves.">
     <x-ui.page-header title="Activites scolaires" subtitle="Créez et planifiez sports, sorties, ateliers et clubs avec suivi de participation.">
         <x-slot name="actions">
-            <x-ui.button :href="route('admin.activities.create')" variant="primary">Nouvelle activite</x-ui.button>
-            <x-ui.button :href="route('admin.events.index')" variant="secondary">Ouvrir agenda</x-ui.button>
+            @if($canManage)
+                <x-ui.button :href="route($routePrefix . '.create')" variant="primary">Nouvelle activite</x-ui.button>
+            @endif
+            <x-ui.button :href="route(str_replace('activities', 'events', $routePrefix) . '.index')" variant="secondary">Ouvrir agenda</x-ui.button>
         </x-slot>
     </x-ui.page-header>
 
@@ -27,7 +35,7 @@
                 @endforeach
             </select>
             <x-ui.button type="submit" variant="primary">Filtrer</x-ui.button>
-            <x-ui.button :href="route('admin.activities.index')" variant="secondary">Reinitialiser</x-ui.button>
+            <x-ui.button :href="route($routePrefix . '.index')" variant="secondary">Reinitialiser</x-ui.button>
         </form>
     </x-ui.card>
 
@@ -61,12 +69,14 @@
                             <td><x-ui.badge variant="warning">{{ (int) $activity->reports_count }}</x-ui.badge></td>
                             <td>
                                 <div class="flex flex-wrap gap-2">
-                                    <x-ui.button :href="route('admin.activities.edit', $activity)" variant="secondary" size="sm">Modifier</x-ui.button>
-                                    <form method="POST" action="{{ route('admin.activities.destroy', $activity) }}" onsubmit="return confirm('Supprimer cette activite ?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <x-ui.button type="submit" variant="danger" size="sm">Supprimer</x-ui.button>
-                                    </form>
+                                    @if($canManage)
+                                        <x-ui.button :href="route($routePrefix . '.edit', $activity)" variant="secondary" size="sm">Modifier</x-ui.button>
+                                        <form method="POST" action="{{ route($routePrefix . '.destroy', $activity) }}" onsubmit="return confirm('Supprimer cette activite ?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <x-ui.button type="submit" variant="danger" size="sm">Supprimer</x-ui.button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -78,4 +88,4 @@
         </div>
         <div class="mt-4">{{ $activities->links() }}</div>
     </x-ui.card>
-</x-admin-layout>
+</x-dynamic-component>

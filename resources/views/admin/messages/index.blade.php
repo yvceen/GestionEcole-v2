@@ -1,4 +1,11 @@
-<x-admin-layout title="Messagerie">
+@php
+    $routePrefix = $routePrefix ?? 'admin.messages';
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+    $canCompose = $canCompose ?? true;
+    $canModerate = $canModerate ?? true;
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" title="Messagerie">
     @php
         $mid = (int) request('mid', 0);
         $selected = $mid > 0 ? $messages->getCollection()->firstWhere('thread_id', $mid) : null;
@@ -31,9 +38,11 @@
                 </div>
             </form>
 
-            <x-ui.button :href="route('admin.messages.create')" variant="primary">
-                Nouveau message
-            </x-ui.button>
+            @if($canCompose)
+                <x-ui.button :href="route($routePrefix . '.create')" variant="primary">
+                    Nouveau message
+                </x-ui.button>
+            @endif
         </x-slot>
     </x-ui.page-header>
 
@@ -41,23 +50,25 @@
         <aside class="app-card p-4">
             <div class="space-y-2">
                 <a
-                    href="{{ route('admin.messages.index') }}"
+                    href="{{ route($routePrefix . '.index') }}"
                     class="flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-semibold transition {{ !$isSent ? 'border-sky-200 bg-sky-50 text-sky-800' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50' }}"
                 >
                     <span>Boite de reception</span>
                     <span class="text-xs">{{ $counts['inbox'] ?? 0 }}</span>
                 </a>
 
-                <a
-                    href="{{ route('admin.messages.pending') }}"
-                    class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-                >
-                    <span>En attente</span>
-                    <span class="text-xs">{{ $counts['pending'] ?? 0 }}</span>
-                </a>
+                @if($canModerate)
+                    <a
+                        href="{{ route($routePrefix . '.pending') }}"
+                        class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                    >
+                        <span>En attente</span>
+                        <span class="text-xs">{{ $counts['pending'] ?? 0 }}</span>
+                    </a>
+                @endif
 
                 <a
-                    href="{{ route('admin.messages.index', ['folder' => 'sent']) }}"
+                    href="{{ route($routePrefix . '.index', ['folder' => 'sent']) }}"
                     class="flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-semibold transition {{ $isSent ? 'border-sky-200 bg-sky-50 text-sky-800' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50' }}"
                 >
                     <span>Messages envoyes</span>
@@ -93,7 +104,7 @@
                     @endphp
 
                     <a
-                        href="{{ route('admin.messages.index', array_filter(['folder' => $isSent ? 'sent' : null, 'mid' => $threadId, 'q' => request('q')])) }}"
+                        href="{{ route($routePrefix . '.index', array_filter(['folder' => $isSent ? 'sent' : null, 'mid' => $threadId, 'q' => request('q')])) }}"
                         class="block border-l-4 border-b border-slate-200 px-5 py-4 transition {{ $active ? 'border-l-sky-500 bg-sky-50' : ($unreadCount > 0 ? 'border-l-sky-300 bg-sky-50/60 hover:bg-sky-50' : 'border-l-transparent hover:bg-slate-50') }}"
                     >
                         <div class="flex items-start justify-between gap-4">
@@ -161,7 +172,7 @@
                         <p class="mt-1 text-xs text-slate-500">{{ optional(data_get($selected, 'created_at'))->format('d/m/Y H:i') }}</p>
                     </div>
 
-                    <x-ui.button :href="route('admin.messages.show', $selectedMessage?->thread_key ?? data_get($selected, 'thread_id'))" variant="secondary" size="sm">
+                    <x-ui.button :href="route($routePrefix . '.show', $selectedMessage?->thread_key ?? data_get($selected, 'thread_id'))" variant="secondary" size="sm">
                         Ouvrir
                     </x-ui.button>
                 </div>
@@ -181,4 +192,4 @@
             @endif
         </section>
     </div>
-</x-admin-layout>
+</x-dynamic-component>

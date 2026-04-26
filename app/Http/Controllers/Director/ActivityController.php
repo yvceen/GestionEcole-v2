@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Director;
 
-use App\Http\Controllers\Admin\MessageController as BaseMessageController;
+use App\Http\Controllers\Admin\ActivityController as BaseActivityController;
 
-class MessageController extends BaseMessageController
+class ActivityController extends BaseActivityController
 {
     protected function routePrefix(): string
     {
-        return 'director.messages';
+        return 'director.activities';
     }
 
     protected function layoutComponent(): string

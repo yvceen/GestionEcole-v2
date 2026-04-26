@@ -5,7 +5,7 @@
     $user = Auth::user();
 
     $links = [
-        ['label' => 'Dashboard', 'route' => 'dashboard'],
+        ['label' => 'Tableau de bord', 'route' => 'dashboard'],
     ];
 
     if ($user) {
@@ -18,7 +18,7 @@
             'director' => [
                 ['label' => 'Eleves', 'route' => 'director.students.index'],
                 ['label' => 'Enseignants', 'route' => 'director.teachers.index'],
-                ['label' => 'Monitoring', 'route' => 'director.monitoring'],
+                ['label' => 'Suivi', 'route' => 'director.monitoring'],
             ],
             'teacher' => [
                 ['label' => 'Cours', 'route' => 'teacher.courses.index'],
@@ -85,14 +85,14 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            Profil
                         </x-dropdown-link>
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault(); this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                Deconnexion
                             </x-dropdown-link>
                         </form>
                     </x-slot>

@@ -1,13 +1,15 @@
-<x-admin-layout :title="$portalTitle ?? 'Detail du devoir'">
-    @php
-        $routePrefix = $routePrefix ?? 'admin.homeworks';
-        $normalized = $homework->normalized_status ?? 'pending';
-        $variant = match($normalized) {
-            'approved' => 'success',
-            'rejected' => 'danger',
-            default => 'warning',
-        };
-    @endphp
+@php
+    $routePrefix = $routePrefix ?? 'admin.homeworks';
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+    $normalized = $homework->normalized_status ?? 'pending';
+    $variant = match($normalized) {
+        'approved' => 'success',
+        'rejected' => 'danger',
+        default => 'warning',
+    };
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" :title="$portalTitle ?? 'Detail du devoir'">
 
     <x-ui.page-header
         title="Detail du devoir"
@@ -105,4 +107,4 @@
             @endif
         </x-ui.card>
     </div>
-</x-admin-layout>
+</x-dynamic-component>

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Director;
 
-use App\Http\Controllers\Admin\MessageController as BaseMessageController;
+use App\Http\Controllers\Admin\NewsController as BaseNewsController;
 
-class MessageController extends BaseMessageController
+class NewsController extends BaseNewsController
 {
     protected function routePrefix(): string
     {
-        return 'director.messages';
+        return 'director.news';
     }
 
     protected function layoutComponent(): string

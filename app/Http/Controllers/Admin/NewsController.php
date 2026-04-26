@@ -50,19 +50,30 @@ class NewsController extends Controller
                 : 0,
         ];
 
-        return view('admin.news.index', compact('items', 'q', 'status', 'scope', 'stats'));
+        return view('admin.news.index', compact('items', 'q', 'status', 'scope', 'stats') + [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+            'canManage' => $this->canManage(),
+        ]);
     }
 
     public function create()
     {
+        abort_unless($this->canManage(), 403);
+
         return view('admin.news.create', array_merge(
             $this->formData(),
-            ['news' => new News()]
+            [
+                'news' => new News(),
+                'routePrefix' => $this->routePrefix(),
+                'layoutComponent' => $this->layoutComponent(),
+            ]
         ));
     }
 
     public function store(Request $request)
     {
+        abort_unless($this->canManage(), 403);
         $schoolId = $this->hasSchoolColumn() ? $this->currentSchoolIdOrFail() : 0;
         $data = $this->validateNews($request, $schoolId);
         $scope = $data['scope'] ?? 'classroom';
@@ -72,21 +83,27 @@ class NewsController extends Controller
         $news = News::create($payload);
         $this->notifyOnPublish($news, $scope, $schoolId);
 
-        return redirect()->route('admin.news.index')->with('success', 'Actualite creee.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Actualite creee.');
     }
 
     public function edit(News $news)
     {
+        abort_unless($this->canManage(), 403);
         $this->ensureTenantOwnership($news);
 
         return view('admin.news.edit', array_merge(
             $this->formData(),
-            ['news' => $news->loadMissing('classroom:id,name')]
+            [
+                'news' => $news->loadMissing('classroom:id,name'),
+                'routePrefix' => $this->routePrefix(),
+                'layoutComponent' => $this->layoutComponent(),
+            ]
         ));
     }
 
     public function update(Request $request, News $news)
     {
+        abort_unless($this->canManage(), 403);
         $this->ensureTenantOwnership($news);
         $schoolId = $this->hasSchoolColumn() ? $this->currentSchoolIdOrFail() : 0;
         $data = $this->validateNews($request, $schoolId, $news);
@@ -96,11 +113,12 @@ class NewsController extends Controller
         $payload = $this->buildPayload($request, $data, $schoolId, $news);
         $news->update($payload);
 
-        return redirect()->route('admin.news.index')->with('success', 'Actualite mise a jour.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Actualite mise a jour.');
     }
 
     public function destroy(News $news)
     {
+        abort_unless($this->canManage(), 403);
         $this->ensureTenantOwnership($news);
 
         $coverPath = $news->cover_path;
@@ -110,7 +128,22 @@ class NewsController extends Controller
             Storage::disk('public')->delete($coverPath);
         }
 
-        return redirect()->route('admin.news.index')->with('success', 'Actualite supprimee.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Actualite supprimee.');
+    }
+
+    protected function routePrefix(): string
+    {
+        return 'admin.news';
+    }
+
+    protected function layoutComponent(): string
+    {
+        return 'admin-layout';
+    }
+
+    protected function canManage(): bool
+    {
+        return true;
     }
 
     private function formData(): array

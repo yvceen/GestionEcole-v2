@@ -167,6 +167,7 @@
             'active' => request()->routeIs($route)
                 || ($routePattern ? request()->routeIs($routePattern) : false)
                 || $activeRoutes->contains(fn ($pattern) => request()->routeIs($pattern)),
+            'section' => filled($item['section'] ?? null) ? (string) $item['section'] : null,
             'badge' => filled($badge) ? (string) $badge : null,
             'icon_svg' => $sidebarIcons[$icon] ?? $sidebarIcons['menu'],
         ];
@@ -232,7 +233,12 @@
                     </div>
 
                     <nav class="mt-4 space-y-1.5" aria-label="{{ $navigationTitle }}">
+                        @php($lastSection = null)
                         @forelse($renderableLinks as $item)
+                            @if($item['section'] && $item['section'] !== $lastSection)
+                                <p class="app-sidebar-section-label">{{ $item['section'] }}</p>
+                                @php($lastSection = $item['section'])
+                            @endif
                             <a href="{{ $item['url'] }}" class="app-sidebar-link {{ $item['active'] ? 'app-sidebar-link-active' : '' }}">
                                 <span class="app-sidebar-icon-wrap">
                                     <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -286,7 +292,12 @@
                 </div>
 
                 <nav class="flex-1 space-y-1.5 overflow-y-auto px-3 py-4" aria-label="{{ $navigationTitle }}">
+                    @php($lastSection = null)
                     @forelse($renderableLinks as $item)
+                        @if($item['section'] && $item['section'] !== $lastSection)
+                            <p class="app-sidebar-section-label px-2">{{ $item['section'] }}</p>
+                            @php($lastSection = $item['section'])
+                        @endif
                         <a href="{{ $item['url'] }}"
                            class="app-sidebar-link {{ $item['active'] ? 'app-sidebar-link-active' : '' }}"
                            @click="closeSidebar()">

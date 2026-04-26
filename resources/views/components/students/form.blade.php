@@ -219,9 +219,12 @@
         </div>
     </x-ui.card>
 
-    <div class="flex items-center justify-end gap-2 lg:justify-between">
-        <x-ui.button :href="route('admin.students.index')" variant="secondary">Annuler</x-ui.button>
-        <x-ui.button type="submit" variant="primary">{{ $isEdit ? 'Enregistrer les modifications' : 'Creer l\'eleve' }}</x-ui.button>
+    <div class="app-form-actions">
+        <p class="app-form-actions-copy">Verifiez les informations principales, le parent lie et les options de transport avant validation.</p>
+        <div class="flex items-center justify-end gap-2">
+            <x-ui.button :href="route('admin.students.index')" variant="secondary">Annuler</x-ui.button>
+            <x-ui.button type="submit" variant="primary">{{ $isEdit ? 'Enregistrer les modifications' : 'Creer l\'eleve' }}</x-ui.button>
+        </div>
     </div>
 
     <div class="pointer-events-none fixed bottom-6 right-6 z-40 hidden lg:block">

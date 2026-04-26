@@ -1,4 +1,9 @@
-<x-admin-layout
+@php
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+@endphp
+
+<x-dynamic-component
+    :component="$layoutComponent"
     :title="$portalTitle ?? 'Devoirs'"
     subtitle="Suivez les demandes des enseignants, validez les publications et gardez une vue claire sur le flux des devoirs."
 >
@@ -247,4 +252,4 @@
     </x-ui.card>
 
     <div class="mt-6">{{ $homeworks->links() }}</div>
-</x-admin-layout>
+</x-dynamic-component>

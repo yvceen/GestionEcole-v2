@@ -7,32 +7,38 @@
     use Illuminate\Support\Facades\Route;
 
     $nav = [
-        ['label' => 'Tableau de bord', 'route' => 'director.dashboard', 'icon' => 'home'],
-        ['label' => 'Suivi', 'route' => 'director.monitoring', 'icon' => 'chart'],
-        ['label' => 'Enseignants', 'route' => 'director.teachers.index', 'icon' => 'users'],
-        ['label' => 'Eleves', 'route' => 'director.students.index', 'icon' => 'user'],
-        ['label' => 'Presences', 'route' => 'director.attendance.index', 'icon' => 'shield'],
-        ['label' => 'Agenda', 'route' => 'director.events.index', 'icon' => 'calendar'],
-        ['label' => 'Parents', 'route' => 'director.parents.index', 'icon' => 'users'],
+        ['label' => 'Tableau de bord', 'route' => 'director.dashboard', 'icon' => 'home', 'section' => 'Vue generale'],
+        ['label' => 'Suivi', 'route' => 'director.monitoring', 'icon' => 'chart', 'section' => 'Suivi'],
+        ['label' => 'Presences', 'route' => 'director.attendance.index', 'icon' => 'shield', 'section' => 'Suivi'],
+        ['label' => 'Devoirs', 'route' => 'director.homeworks.index', 'icon' => 'clipboard', 'section' => 'Suivi'],
+        ['label' => 'Eleves', 'route' => 'director.students.index', 'icon' => 'user', 'section' => 'Gestion'],
+        ['label' => 'Parents', 'route' => 'director.parents.index', 'icon' => 'users', 'section' => 'Gestion'],
+        ['label' => 'Enseignants', 'route' => 'director.teachers.index', 'icon' => 'users', 'section' => 'Gestion'],
+        ['label' => 'Matieres', 'route' => 'director.subjects.index', 'icon' => 'book', 'section' => 'Organisation'],
+        ['label' => 'Emploi du temps', 'route' => 'director.timetable.index', 'icon' => 'calendar', 'section' => 'Organisation'],
+        ['label' => 'Agenda', 'route' => 'director.events.index', 'icon' => 'calendar', 'section' => 'Organisation'],
+        ['label' => 'Activites', 'route' => 'director.activities.index', 'icon' => 'calendar', 'section' => 'Organisation'],
+        ['label' => 'Rendez-vous', 'route' => 'director.appointments.index', 'icon' => 'calendar', 'section' => 'Communication'],
+        ['label' => 'Actualites', 'route' => 'director.news.index', 'icon' => 'message', 'section' => 'Communication'],
     ];
 
     if (Route::has('director.results.index')) {
-        $nav[] = ['label' => 'Resultats', 'route' => 'director.results.index', 'icon' => 'chart'];
+        $nav[] = ['label' => 'Resultats', 'route' => 'director.results.index', 'icon' => 'chart', 'section' => 'Suivi'];
     }
     if (Route::has('director.support.index')) {
-        $nav[] = ['label' => 'Soutien', 'route' => 'director.support.index', 'icon' => 'shield'];
+        $nav[] = ['label' => 'Soutien', 'route' => 'director.support.index', 'icon' => 'shield', 'section' => 'Suivi'];
     }
     if (Route::has('director.councils.index')) {
-        $nav[] = ['label' => 'Conseils', 'route' => 'director.councils.index', 'icon' => 'calendar'];
+        $nav[] = ['label' => 'Conseils', 'route' => 'director.councils.index', 'icon' => 'calendar', 'section' => 'Organisation'];
     }
     if (Route::has('director.reports.index')) {
-        $nav[] = ['label' => 'Rapports', 'route' => 'director.reports.index', 'icon' => 'clipboard'];
+        $nav[] = ['label' => 'Rapports', 'route' => 'director.reports.index', 'icon' => 'clipboard', 'section' => 'Suivi'];
     }
     if (Route::has('director.documents.registration-requirements.index')) {
-        $nav[] = ['label' => 'Documents', 'route' => 'director.documents.registration-requirements.index', 'icon' => 'clipboard'];
+        $nav[] = ['label' => 'Documents', 'route' => 'director.documents.registration-requirements.index', 'icon' => 'clipboard', 'section' => 'Communication'];
     }
     if (Route::has('director.messages.index')) {
-        $nav[] = ['label' => 'Messagerie', 'route' => 'director.messages.index', 'icon' => 'message'];
+        $nav[] = ['label' => 'Messagerie', 'route' => 'director.messages.index', 'icon' => 'message', 'section' => 'Communication'];
     }
 
     $currentSchool = app()->bound('currentSchool')

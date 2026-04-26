@@ -1,13 +1,18 @@
-<x-admin-layout title="Emploi du temps">
+@php
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+    $routePrefix = $routePrefix ?? 'admin.timetable';
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" title="Emploi du temps">
     <x-ui.page-header
         title="Planning hebdomadaire"
         subtitle="Consultez la grille par classe, ajustez les creneaux et gardez une lecture nette des horaires."
     >
         <x-slot name="actions">
-            <x-ui.button :href="route('admin.timetable.create', ['classroom_id' => $selectedClassroomId])" variant="primary">
+            <x-ui.button :href="route($routePrefix . '.create', ['classroom_id' => $selectedClassroomId])" variant="primary">
                 Ajouter un creneau
             </x-ui.button>
-            <x-ui.button :href="route('admin.timetable.settings.edit')" variant="secondary">
+            <x-ui.button :href="route($routePrefix . '.settings.edit')" variant="secondary">
                 Parametres
             </x-ui.button>
             <button type="button" onclick="window.print()" class="app-button-secondary">Imprimer</button>
@@ -15,7 +20,7 @@
     </x-ui.page-header>
 
     <section class="app-card mb-6 p-5">
-        <form method="GET" action="{{ route('admin.timetable.index') }}" class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+        <form method="GET" action="{{ route($routePrefix . '.index') }}" class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
             <div class="grid gap-4 md:grid-cols-[minmax(0,1fr)_240px]">
                 <div>
                     <label for="classroom_id" class="mb-2 block text-sm font-semibold text-slate-700">Classe</label>
@@ -67,9 +72,9 @@
             'lunchBlock' => $lunchBlock,
             'totalMinutes' => $totalMinutes,
             'editable' => true,
-            'editRouteName' => 'admin.timetable.edit',
-            'deleteRouteName' => 'admin.timetable.destroy',
-            'moveRouteName' => 'admin.timetable.move',
+            'editRouteName' => $routePrefix . '.edit',
+            'deleteRouteName' => $routePrefix . '.destroy',
+            'moveRouteName' => $routePrefix . '.move',
         ])
         {{-- ancien composant laissé pour compatibilité si besoin --}}
         {{-- <x-timetable.week-grid
@@ -80,4 +85,4 @@
             delete-route-name="admin.timetable.destroy"
         /> --}}
     @endif
-</x-admin-layout>
+</x-dynamic-component>

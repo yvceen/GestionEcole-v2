@@ -2,6 +2,7 @@
     $selectedTeacherIds = collect(old('teacher_ids', $assignedTeacherIds ?? []))
         ->map(fn ($id) => (int) $id)
         ->all();
+    $routePrefix = $routePrefix ?? 'admin.subjects';
 @endphp
 
 @if($errors->any())
@@ -44,11 +45,11 @@
                 <h2 class="text-lg font-semibold text-slate-900">Affectation enseignants</h2>
                 <p class="mt-1 text-sm text-slate-500">La meme table `teacher_subjects` continue d etre utilisee par les devoirs, notes et emplois du temps.</p>
             </div>
-            @if(Route::has('admin.teachers.pedagogy'))
-                <a href="{{ route('admin.teachers.pedagogy') }}" class="text-xs font-semibold text-slate-600 hover:underline">
-                    Affectations classes
-                </a>
-            @endif
+                    @if(Route::has('admin.teachers.pedagogy'))
+                        <a href="{{ route('admin.teachers.pedagogy') }}" class="text-xs font-semibold text-slate-600 hover:underline">
+                            Affectations classes
+                        </a>
+                    @endif
         </div>
 
         <div class="mt-5 space-y-3">
@@ -76,7 +77,7 @@
 </div>
 
 <div class="flex items-center justify-end gap-3">
-    <a href="{{ route('admin.subjects.index') }}"
+    <a href="{{ route($routePrefix . '.index') }}"
        class="rounded-2xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold hover:bg-slate-50">
         Annuler
     </a>

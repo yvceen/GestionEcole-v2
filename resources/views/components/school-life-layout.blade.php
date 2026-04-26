@@ -7,22 +7,29 @@
     use Illuminate\Support\Facades\Route;
 
     $nav = [
-        ['label' => 'Tableau de bord', 'route' => 'school-life.dashboard', 'icon' => 'home'],
-        ['label' => 'Eleves', 'route' => 'school-life.students.index', 'icon' => 'users', 'active_routes' => ['school-life.students.*']],
-        ['label' => 'Presences', 'route' => 'school-life.attendance.index', 'icon' => 'shield'],
-        ['label' => 'Devoirs', 'route' => 'school-life.homeworks.index', 'icon' => 'clipboard', 'active_routes' => ['school-life.homeworks.*']],
-        ['label' => 'Activites', 'route' => 'school-life.activities.index', 'icon' => 'calendar', 'active_routes' => ['school-life.activities.*']],
-        ['label' => 'Transport', 'route' => 'transport.ops.index', 'icon' => 'users', 'active_routes' => ['transport.ops.*']],
-        ['label' => 'Scan QR', 'route' => 'attendance.scan.page', 'icon' => 'shield', 'active_routes' => ['attendance.scan.page']],
-        ['label' => 'Agenda', 'route' => 'school-life.events.index', 'icon' => 'calendar'],
-        ['label' => 'Cartes', 'route' => 'school-life.cards.index', 'icon' => 'users'],
-        ['label' => 'Notes', 'route' => 'school-life.grades.index', 'icon' => 'chart'],
-        ['label' => 'Documents', 'route' => 'school-life.documents.registration-requirements.index', 'icon' => 'clipboard'],
-        ['label' => 'Recuperations', 'route' => 'school-life.pickup-requests.index', 'icon' => 'calendar'],
+        ['label' => 'Tableau de bord', 'route' => 'school-life.dashboard', 'icon' => 'home', 'section' => 'Vue generale'],
+        ['label' => 'Eleves', 'route' => 'school-life.students.index', 'icon' => 'users', 'active_routes' => ['school-life.students.*'], 'section' => 'Gestion'],
+        ['label' => 'Cartes', 'route' => 'school-life.cards.index', 'icon' => 'users', 'section' => 'Gestion'],
+        ['label' => 'Presences', 'route' => 'school-life.attendance.index', 'icon' => 'shield', 'section' => 'Suivi'],
+        ['label' => 'Scan QR', 'route' => 'attendance.scan.page', 'icon' => 'shield', 'active_routes' => ['attendance.scan.page'], 'section' => 'Suivi'],
+        ['label' => 'Notes', 'route' => 'school-life.grades.index', 'icon' => 'chart', 'section' => 'Suivi'],
+        ['label' => 'Devoirs', 'route' => 'school-life.homeworks.index', 'icon' => 'clipboard', 'active_routes' => ['school-life.homeworks.*'], 'section' => 'Suivi'],
+        ['label' => 'Recuperations', 'route' => 'school-life.pickup-requests.index', 'icon' => 'calendar', 'section' => 'Suivi'],
+        ['label' => 'Matieres', 'route' => 'school-life.subjects.index', 'icon' => 'book', 'section' => 'Organisation'],
+        ['label' => 'Emploi du temps', 'route' => 'school-life.timetable.index', 'icon' => 'calendar', 'section' => 'Organisation'],
+        ['label' => 'Agenda', 'route' => 'school-life.events.index', 'icon' => 'calendar', 'section' => 'Organisation'],
+        ['label' => 'Activites', 'route' => 'school-life.activities.index', 'icon' => 'calendar', 'active_routes' => ['school-life.activities.*'], 'section' => 'Organisation'],
+        ['label' => 'Transport', 'route' => 'transport.ops.index', 'icon' => 'users', 'active_routes' => ['transport.ops.*'], 'section' => 'Organisation'],
+        ['label' => 'Actualites', 'route' => 'school-life.news.index', 'icon' => 'message', 'active_routes' => ['school-life.news.*'], 'section' => 'Communication'],
+        ['label' => 'Rendez-vous', 'route' => 'school-life.appointments.index', 'icon' => 'calendar', 'section' => 'Communication'],
+        ['label' => 'Documents', 'route' => 'school-life.documents.registration-requirements.index', 'icon' => 'clipboard', 'section' => 'Communication'],
     ];
 
     if (Route::has('school-life.notifications.index')) {
-        $nav[] = ['label' => 'Notifications', 'route' => 'school-life.notifications.index', 'icon' => 'bell'];
+        $nav[] = ['label' => 'Notifications', 'route' => 'school-life.notifications.index', 'icon' => 'bell', 'section' => 'Communication'];
+    }
+    if (Route::has('school-life.messages.index')) {
+        $nav[] = ['label' => 'Messagerie', 'route' => 'school-life.messages.index', 'icon' => 'message', 'section' => 'Communication'];
     }
 
     $currentSchool = app()->bound('currentSchool')
@@ -66,7 +73,7 @@
                 ]"
                 summary-title="Module actif"
                 :summary-value="$activeNav['label'] ?? 'Vie scolaire'"
-                summary-copy="Acces operationnel limite: suivi des eleves, presences, contacts et demandes de recuperation."
+                summary-copy="Acces operationnel unifie pour le suivi des eleves, les presences, les devoirs, les rendez-vous et l emploi du temps."
                 :nav="$nav"
             />
 

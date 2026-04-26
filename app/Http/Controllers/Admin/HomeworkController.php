@@ -94,6 +94,7 @@ class HomeworkController extends Controller
             'routePrefix' => $this->routePrefix(),
             'canCreate' => $this->canCreate(),
             'portalTitle' => $this->portalTitle(),
+            'layoutComponent' => $this->layoutComponent(),
             'currentAcademicYear' => $this->academicYears->resolveYearForSchool($schoolId, $requestedAcademicYearId),
         ]);
     }
@@ -119,6 +120,7 @@ class HomeworkController extends Controller
             'subjects' => $subjects,
             'routePrefix' => $this->routePrefix(),
             'portalTitle' => $this->portalTitle(),
+            'layoutComponent' => $this->layoutComponent(),
         ]);
     }
 
@@ -201,6 +203,7 @@ class HomeworkController extends Controller
             'subjects' => $subjects,
             'routePrefix' => $this->routePrefix(),
             'portalTitle' => $this->portalTitle(),
+            'layoutComponent' => $this->layoutComponent(),
         ]);
     }
 
@@ -378,6 +381,7 @@ class HomeworkController extends Controller
             'routePrefix' => $this->routePrefix(),
             'canCreate' => $this->canCreate(),
             'portalTitle' => $this->portalTitle(),
+            'layoutComponent' => $this->layoutComponent(),
         ]);
     }
 
@@ -407,6 +411,11 @@ class HomeworkController extends Controller
     protected function canCreate(): bool
     {
         return true;
+    }
+
+    protected function layoutComponent(): string
+    {
+        return 'admin-layout';
     }
 
     protected function portalTitle(): string

@@ -1,6 +1,11 @@
-<x-admin-layout title="Nouvelle activite" subtitle="Ajout d une activite scolaire dans le calendrier operationnel.">
+@php
+    $routePrefix = $routePrefix ?? 'admin.activities';
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" title="Nouvelle activite" subtitle="Ajout d une activite scolaire dans le calendrier operationnel.">
     @include('partials.activities.form', [
-        'action' => route('admin.activities.store'),
+        'action' => route($routePrefix . '.store'),
         'submitLabel' => 'Creer activite',
     ])
-</x-admin-layout>
+</x-dynamic-component>

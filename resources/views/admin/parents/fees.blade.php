@@ -1,13 +1,13 @@
-<x-admin-layout title="Parent Fees">
+<x-admin-layout title="Frais parent">
     <div class="flex items-start justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Fees - {{ $parent->name }}</h1>
-            <p class="mt-1 text-sm text-slate-500">Set monthly and yearly fees per student.</p>
+            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Frais - {{ $parent->name }}</h1>
+            <p class="mt-1 text-sm text-slate-500">Renseignez les montants mensuels et annuels par eleve sans quitter ce module.</p>
         </div>
 
         <a href="{{ route('admin.parents.index') }}"
            class="rounded-2xl border border-slate-200 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-white transition">
-            Back
+            Retour
         </a>
     </div>
 
@@ -31,21 +31,21 @@
 
         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div class="border-b border-slate-200 p-4">
-                <div class="text-sm font-semibold text-slate-900">Students</div>
-                <div class="text-xs text-slate-500">Fill amounts then save.</div>
+                <div class="text-sm font-semibold text-slate-900">Eleves</div>
+                <div class="text-xs text-slate-500">Renseignez les montants puis enregistrez.</div>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm">
                     <thead class="bg-slate-50">
                         <tr class="text-left">
-                            <th class="p-4">Student</th>
-                            <th class="p-4">Class</th>
-                            <th class="p-4">Tuition /mo</th>
-                            <th class="p-4">Transport /mo</th>
-                            <th class="p-4">Canteen /mo</th>
-                            <th class="p-4">Insurance /yr</th>
-                            <th class="p-4">Start (month)</th>
+                            <th class="p-4">Eleve</th>
+                            <th class="p-4">Classe</th>
+                            <th class="p-4">Scolarite /mois</th>
+                            <th class="p-4">Transport /mois</th>
+                            <th class="p-4">Cantine /mois</th>
+                            <th class="p-4">Assurance /an</th>
+                            <th class="p-4">Debut (mois)</th>
                             <th class="p-4">Note</th>
                         </tr>
                     </thead>
@@ -104,7 +104,7 @@
                                     <input type="text"
                                            name="fees[{{ $s->id }}][notes]"
                                            value="{{ old("fees.$s->id.notes", $f->notes ?? '') }}"
-                                           placeholder="Optional"
+                                           placeholder="Optionnel"
                                            class="w-56 rounded-xl border-slate-200 bg-white/70 focus:border-slate-900 focus:ring-slate-900" />
                                 </td>
                             </tr>
@@ -112,7 +112,7 @@
 
                         @if($students->count() === 0)
                             <tr>
-                                <td colspan="8" class="p-8 text-center text-slate-500">No students for this parent.</td>
+                                <td colspan="8" class="p-8 text-center text-slate-500">Aucun eleve lie a ce parent.</td>
                             </tr>
                         @endif
                     </tbody>
@@ -122,10 +122,10 @@
             <div class="p-4 flex items-center justify-end gap-3">
                 <a href="{{ route('admin.parents.index') }}"
                    class="rounded-2xl border border-slate-200 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-white transition">
-                    Cancel
+                    Annuler
                 </a>
                 <button class="rounded-2xl bg-black px-5 py-2 text-sm font-semibold text-white hover:bg-slate-900 transition">
-                    Save
+                    Enregistrer
                 </button>
             </div>
         </div>

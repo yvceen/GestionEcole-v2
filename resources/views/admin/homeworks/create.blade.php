@@ -1,7 +1,9 @@
-<x-admin-layout title="Nouveau devoir">
-    @php
-        $routePrefix = $routePrefix ?? 'admin.homeworks';
-    @endphp
+@php
+    $routePrefix = $routePrefix ?? 'admin.homeworks';
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" title="Nouveau devoir">
 
     <x-ui.page-header
         title="Creer un devoir"
@@ -40,4 +42,4 @@
             </div>
         </form>
     </x-ui.card>
-</x-admin-layout>
+</x-dynamic-component>

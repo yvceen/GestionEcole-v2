@@ -92,6 +92,8 @@ class TimetableController extends Controller
             'lunchBlock' => $grid['lunchBlock'],
             'totalMinutes' => $grid['totalMinutes'],
             'currentAcademicYear' => $academicYear,
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
         ]);
     }
 
@@ -124,6 +126,8 @@ class TimetableController extends Controller
             'teachers' => $teachers,
             'selectedClassroomId' => (int) $request->integer('classroom_id'),
             'settings' => $settings,
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
         ]);
     }
 
@@ -150,7 +154,7 @@ class TimetableController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.timetable.index', ['classroom_id' => $data['classroom_id']])
+            ->route($this->routePrefix() . '.index', ['classroom_id' => $data['classroom_id']])
             ->with('success', 'Creneau ajoute avec succes.');
     }
 
@@ -184,6 +188,8 @@ class TimetableController extends Controller
             'classrooms' => $classrooms,
             'teachers' => $teachers,
             'settings' => $settings,
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
         ]);
     }
 
@@ -209,7 +215,7 @@ class TimetableController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.timetable.index', ['classroom_id' => $data['classroom_id']])
+            ->route($this->routePrefix() . '.index', ['classroom_id' => $data['classroom_id']])
             ->with('success', 'Creneau modifie avec succes.');
     }
 
@@ -221,7 +227,7 @@ class TimetableController extends Controller
         $timetable->delete();
 
         return redirect()
-            ->route('admin.timetable.index', ['classroom_id' => $classroomId])
+            ->route($this->routePrefix() . '.index', ['classroom_id' => $classroomId])
             ->with('success', 'Creneau supprime.');
     }
 
@@ -334,5 +340,15 @@ class TimetableController extends Controller
         if ($userSchoolId <= 0 || (int) $timetable->school_id !== $userSchoolId) {
             abort(403);
         }
+    }
+
+    protected function routePrefix(): string
+    {
+        return 'admin.timetable';
+    }
+
+    protected function layoutComponent(): string
+    {
+        return 'admin-layout';
     }
 }

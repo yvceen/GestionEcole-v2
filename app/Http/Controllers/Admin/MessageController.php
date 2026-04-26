@@ -91,11 +91,17 @@ class MessageController extends Controller
             15
         )->appends($request->query());
 
-        return view('admin.messages.index', compact('messages', 'counts', 'folder'));
+        return view('admin.messages.index', array_merge(compact('messages', 'counts', 'folder'), [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+            'canCompose' => $this->canCompose(),
+            'canModerate' => $this->canModerate(),
+        ]));
     }
 
     public function pending()
     {
+        abort_unless($this->canModerate(), 403);
         $schoolId = $this->schoolId();
 
         $pending = Message::query()
@@ -105,11 +111,16 @@ class MessageController extends Controller
             ->latest('created_at')
             ->paginate(15);
 
-        return view('admin.messages.pending', compact('pending'));
+        return view('admin.messages.pending', [
+            'pending' => $pending,
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+        ]);
     }
 
     public function create()
     {
+        abort_unless($this->canCompose(), 403);
         $schoolId = $this->schoolId();
 
         $classrooms = collect();
@@ -134,11 +145,18 @@ class MessageController extends Controller
             $teachers = (clone $base)->whereIn('role', ['teacher', 'director'])->get();
         }
 
-        return view('admin.messages.create', compact('classrooms', 'parents', 'teachers'));
+        return view('admin.messages.create', [
+            'classrooms' => $classrooms,
+            'parents' => $parents,
+            'teachers' => $teachers,
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+        ]);
     }
 
     public function store(StoreMessageRequest $request)
     {
+        abort_unless($this->canCompose(), 403);
         $schoolId = $this->schoolId();
         $admin = auth()->guard('web')->user();
         $data = $request->validated();
@@ -182,7 +200,7 @@ class MessageController extends Controller
                     ]
                 );
 
-                return redirect()->route('admin.messages.show', $message)->with('success', 'Reponse envoyee avec succes.');
+                return redirect()->route($this->routePrefix() . '.show', $message)->with('success', 'Reponse envoyee avec succes.');
             }
 
             $classroomId = (int) ($data['classroom_id'] ?? 0);
@@ -277,7 +295,7 @@ class MessageController extends Controller
             );
 
             return redirect()
-                ->route('admin.messages.show', $firstMessage)
+                ->route($this->routePrefix() . '.show', $firstMessage)
                 ->with('success', 'Message envoye avec succes.');
         } catch (\Throwable $e) {
             Log::error('Admin message send failed', [
@@ -305,11 +323,20 @@ class MessageController extends Controller
 
         $replyRecipient = $this->directReplyRecipient($message, auth()->guard('web')->user(), $schoolId);
 
-        return view('admin.messages.show', compact('message', 'threadMessages', 'replyRecipient'));
+        return view('admin.messages.show', [
+            'message' => $message,
+            'threadMessages' => $threadMessages,
+            'replyRecipient' => $replyRecipient,
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+            'canModerate' => $this->canModerate(),
+            'canCompose' => $this->canCompose(),
+        ]);
     }
 
     public function approve(Message $message)
     {
+        abort_unless($this->canModerate(), 403);
         $schoolId = $this->schoolId();
         abort_unless((int) $message->school_id === $schoolId, 404);
 
@@ -358,11 +385,12 @@ class MessageController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.messages.pending')->with('success', 'Message approuve.');
+        return redirect()->route($this->routePrefix() . '.pending')->with('success', 'Message approuve.');
     }
 
     public function reject(ApproveMessageRequest $request, Message $message)
     {
+        abort_unless($this->canModerate(), 403);
         $schoolId = $this->schoolId();
         abort_unless((int) $message->school_id === $schoolId, 404);
 
@@ -410,7 +438,27 @@ class MessageController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.messages.pending')->with('success', 'Message refuse.');
+        return redirect()->route($this->routePrefix() . '.pending')->with('success', 'Message refuse.');
+    }
+
+    protected function routePrefix(): string
+    {
+        return 'admin.messages';
+    }
+
+    protected function layoutComponent(): string
+    {
+        return 'admin-layout';
+    }
+
+    protected function canCompose(): bool
+    {
+        return true;
+    }
+
+    protected function canModerate(): bool
+    {
+        return true;
     }
 
     private function classroomExistsInSchool(int $classroomId, int $schoolId): bool

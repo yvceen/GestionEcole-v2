@@ -21,32 +21,38 @@ class StudentsController extends Controller
 
         $levelId = $request->integer('level_id') ?: null;
         $classroomId = $request->integer('classroom_id') ?: null;
-        $q = trim((string)$request->get('q',''));
+        $q = trim((string) $request->get('q', ''));
+        $parentName = trim((string) $request->get('parent_name', ''));
 
-        $levels = Level::where('school_id',$schoolId)->orderBy('name')->get(['id','name']);
-        $classrooms = Classroom::where('school_id',$schoolId)
-            ->when($levelId, fn($qq)=>$qq->where('level_id',$levelId))
-            ->orderBy('name')->get(['id','name','level_id']);
+        $levels = Level::where('school_id', $schoolId)->orderBy('name')->get(['id', 'name']);
+        $classrooms = Classroom::where('school_id', $schoolId)
+            ->when($levelId, fn ($qq) => $qq->where('level_id', $levelId))
+            ->orderBy('name')->get(['id', 'name', 'level_id']);
 
-        $students = Student::where('school_id',$schoolId)
+        $students = Student::where('school_id', $schoolId)
             ->active()
             ->with(['classroom.level', 'parentUser:id,name,email,phone'])
-            ->when($classroomId, fn($qq)=>$qq->where('classroom_id',$classroomId))
+            ->when($classroomId, fn ($qq) => $qq->where('classroom_id', $classroomId))
             ->when($q !== '', function ($qq) use ($q) {
                 $qq->where(function ($w) use ($q) {
-                    $w->where('full_name','like',"%{$q}%")
+                    $w->where('full_name', 'like', "%{$q}%")
                       ->orWhereHas('parentUser', function ($p) use ($q) {
-                          $p->where('name','like',"%{$q}%")
-                            ->orWhere('email','like',"%{$q}%")
-                            ->orWhere('phone','like',"%{$q}%");
+                          $p->where('name', 'like', "%{$q}%")
+                            ->orWhere('email', 'like', "%{$q}%")
+                            ->orWhere('phone', 'like', "%{$q}%");
                       });
+                });
+            })
+            ->when($parentName !== '', function ($qq) use ($parentName) {
+                $qq->whereHas('parentUser', function ($parentQuery) use ($parentName) {
+                    $parentQuery->where('name', 'like', "%{$parentName}%");
                 });
             })
             ->orderBy('full_name')
             ->paginate(20)
             ->withQueryString();
 
-        return view('director.students.index', compact('levels','classrooms','students','levelId','classroomId','q'));
+        return view('director.students.index', compact('levels', 'classrooms', 'students', 'levelId', 'classroomId', 'q', 'parentName'));
     }
 
     public function show(Request $request, Student $student)

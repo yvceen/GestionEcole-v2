@@ -10,22 +10,25 @@
 
 <div class="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.9fr)]">
     <x-ui.card title="Contenu de l actualite" subtitle="Renseignez un titre clair, un resume et un contenu complet pour le mobile et le web.">
-        <div class="space-y-5">
-            <x-ui.input label="Titre" name="title" :value="old('title', $news->title)" />
+        <div class="app-form-stack">
+            <x-ui.input label="Titre" name="title" :value="old('title', $news->title)" hint="Choisissez une formulation concise et facile a comprendre." />
 
             <div>
                 <label class="app-label" for="summary">Resume / accroche</label>
                 <textarea id="summary" name="summary" rows="3" class="app-input">{{ old('summary', $news->summary) }}</textarea>
+                <p class="app-hint">Ce texte apparait dans les listes et apercus de lecture.</p>
             </div>
 
             <div>
                 <label class="app-label" for="body">Contenu</label>
                 <textarea id="body" name="body" rows="10" class="app-input">{{ old('body', $news->body) }}</textarea>
+                <p class="app-hint">Ajoutez un message complet et structure pour les familles et les equipes.</p>
             </div>
 
             <div>
                 <label class="app-label" for="cover">Image de couverture (optionnelle)</label>
                 <input id="cover" type="file" name="cover" accept="image/*" class="app-input">
+                <p class="app-hint">Une image claire aide a mettre en valeur l information dans l application mobile.</p>
                 @if($news->cover_url)
                     <img src="{{ $news->cover_url }}" alt="Couverture actualite" class="mt-3 h-40 w-full rounded-2xl object-cover">
                 @endif
@@ -72,7 +75,10 @@
     </x-ui.card>
 </div>
 
-<div class="flex justify-end gap-3">
-    <x-ui.button :href="route('admin.news.index')" variant="secondary">Annuler</x-ui.button>
-    <x-ui.button type="submit" variant="primary">{{ $news->exists ? 'Mettre a jour' : 'Enregistrer' }}</x-ui.button>
+<div class="app-form-actions">
+    <p class="app-form-actions-copy">Verifiez la cible, le statut et la date avant de publier pour garantir une communication claire.</p>
+    <div class="flex justify-end gap-3">
+        <x-ui.button :href="url()->previous()" variant="secondary">Annuler</x-ui.button>
+        <x-ui.button type="submit" variant="primary">{{ $news->exists ? 'Mettre a jour' : 'Enregistrer' }}</x-ui.button>
+    </div>
 </div>

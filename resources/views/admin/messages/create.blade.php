@@ -58,12 +58,17 @@
     ];
 @endphp
 
-<x-admin-layout title="Nouveau message">
+@php
+    $routePrefix = $routePrefix ?? 'admin.messages';
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" title="Nouveau message">
     <x-messaging-composer
-        action="{{ route('admin.messages.store') }}"
-        back-url="{{ route('admin.messages.index') }}"
+        action="{{ route($routePrefix . '.store') }}"
+        back-url="{{ route($routePrefix . '.index') }}"
         title="Nouveau message"
         subtitle="Envoyez une information à une classe, à plusieurs parents ou à un membre du personnel."
         :tabs="$tabs"
     />
-</x-admin-layout>
+</x-dynamic-component>

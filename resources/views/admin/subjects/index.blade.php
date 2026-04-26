@@ -1,4 +1,9 @@
-<x-admin-layout title="Matieres">
+@php
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+    $routePrefix = $routePrefix ?? 'admin.subjects';
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" title="Matieres">
     <div class="mx-auto w-full max-w-7xl space-y-5">
         <section class="app-card px-5 py-5 md:px-6">
             <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
@@ -10,7 +15,7 @@
                     </p>
                 </div>
 
-                <a href="{{ route('admin.subjects.create') }}"
+                <a href="{{ route($routePrefix . '.create') }}"
                    class="inline-flex min-h-11 items-center justify-center rounded-2xl bg-black px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-900">
                     Nouvelle matiere
                 </a>
@@ -77,7 +82,7 @@
                     <button class="inline-flex min-h-11 items-center justify-center rounded-2xl bg-black px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-900">
                         Filtrer
                     </button>
-                    <a href="{{ route('admin.subjects.index') }}"
+                    <a href="{{ route($routePrefix . '.index') }}"
                        class="inline-flex min-h-11 items-center justify-center rounded-2xl border border-black/10 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50">
                         Reinitialiser
                     </a>
@@ -145,12 +150,12 @@
                                         </summary>
                                         <div class="absolute right-0 z-20 mt-2 w-44 rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_18px_48px_-24px_rgba(15,23,42,0.3)]">
                                             <div class="flex flex-col gap-2">
-                                                <a href="{{ route('admin.subjects.edit', $subject) }}"
+                                                <a href="{{ route($routePrefix . '.edit', $subject) }}"
                                                    class="inline-flex min-h-10 items-center justify-start rounded-xl border border-black/10 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
                                                     Gerer
                                                 </a>
 
-                                                <form method="POST" action="{{ route('admin.subjects.destroy', $subject) }}"
+                                                <form method="POST" action="{{ route($routePrefix . '.destroy', $subject) }}"
                                                       onsubmit="return confirm('Supprimer cette matiere ?')">
                                                     @csrf
                                                     @method('DELETE')
@@ -183,4 +188,4 @@
             </div>
         </section>
     </div>
-</x-admin-layout>
+</x-dynamic-component>

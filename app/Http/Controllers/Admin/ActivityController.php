@@ -48,16 +48,26 @@ class ActivityController extends Controller
 
         $currentAcademicYear = $this->academicYears->resolveYearForSchool($schoolId, $requestedAcademicYearId);
 
-        return view('admin.activities.index', compact('activities', 'classrooms', 'teachers', 'classroomId', 'teacherId', 'type', 'currentAcademicYear'));
+        return view('admin.activities.index', compact('activities', 'classrooms', 'teachers', 'classroomId', 'teacherId', 'type', 'currentAcademicYear') + [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+            'canManage' => $this->canManage(),
+        ]);
     }
 
     public function create()
     {
-        return view('admin.activities.create', $this->formData(new Activity()));
+        abort_unless($this->canManage(), 403);
+
+        return view('admin.activities.create', $this->formData(new Activity()) + [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+        ]);
     }
 
     public function store(Request $request)
     {
+        abort_unless($this->canManage(), 403);
         $data = $this->validatedData($request);
         $data['school_id'] = $this->schoolId();
         $data['academic_year_id'] = $this->academicYears->requireCurrentYearForSchool($data['school_id'])->id;
@@ -66,18 +76,23 @@ class ActivityController extends Controller
         $activity = Activity::create($data);
         $this->participants->ensureParticipants($activity);
 
-        return redirect()->route('admin.activities.index')->with('success', 'Activite creee avec succes.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Activite creee avec succes.');
     }
 
     public function edit(Activity $activity)
     {
+        abort_unless($this->canManage(), 403);
         $activity = $this->resolveActivity($activity);
 
-        return view('admin.activities.edit', $this->formData($activity));
+        return view('admin.activities.edit', $this->formData($activity) + [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+        ]);
     }
 
     public function update(Request $request, Activity $activity)
     {
+        abort_unless($this->canManage(), 403);
         $activity = $this->resolveActivity($activity);
         $data = $this->validatedData($request);
         $data['color'] = $data['color'] ?: Activity::defaultColorForType((string) $data['type']);
@@ -85,14 +100,30 @@ class ActivityController extends Controller
         $activity->update($data);
         $this->participants->ensureParticipants($activity->fresh());
 
-        return redirect()->route('admin.activities.index')->with('success', 'Activite mise a jour.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Activite mise a jour.');
     }
 
     public function destroy(Activity $activity)
     {
+        abort_unless($this->canManage(), 403);
         $this->resolveActivity($activity)->delete();
 
-        return redirect()->route('admin.activities.index')->with('success', 'Activite supprimee.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Activite supprimee.');
+    }
+
+    protected function routePrefix(): string
+    {
+        return 'admin.activities';
+    }
+
+    protected function layoutComponent(): string
+    {
+        return 'admin-layout';
+    }
+
+    protected function canManage(): bool
+    {
+        return true;
     }
 
     private function formData(Activity $activity): array

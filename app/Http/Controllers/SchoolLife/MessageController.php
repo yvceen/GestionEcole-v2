@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Director;
+namespace App\Http\Controllers\SchoolLife;
 
 use App\Http\Controllers\Admin\MessageController as BaseMessageController;
 
@@ -8,11 +8,11 @@ class MessageController extends BaseMessageController
 {
     protected function routePrefix(): string
     {
-        return 'director.messages';
+        return 'school-life.messages';
     }
 
     protected function layoutComponent(): string
     {
-        return 'director-layout';
+        return 'school-life-layout';
     }
 }

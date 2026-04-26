@@ -1,11 +1,22 @@
-<x-admin-layout title="Rendez-vous">
+@php
+    $layoutComponent = $layoutComponent ?? 'admin-layout';
+    $routePrefix = $routePrefix ?? 'admin.appointments';
+    $canCreate = $canCreate ?? true;
+    $canEdit = $canEdit ?? true;
+    $canDelete = $canDelete ?? true;
+    $canApprove = $canApprove ?? true;
+@endphp
+
+<x-dynamic-component :component="$layoutComponent" title="Rendez-vous">
     <x-ui.page-header
         title="Rendez-vous parents"
         subtitle="Filtrez les demandes, ouvrez le detail, puis traitez approbation, refus ou cloture depuis le module existant."
     >
-        <x-slot name="actions">
-            <x-ui.button :href="route('admin.appointments.create')" variant="primary">Nouveau rendez-vous</x-ui.button>
-        </x-slot>
+        @if($canCreate)
+            <x-slot name="actions">
+                <x-ui.button :href="route($routePrefix . '.create')" variant="primary">Nouveau rendez-vous</x-ui.button>
+            </x-slot>
+        @endif
     </x-ui.page-header>
 
     <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
@@ -58,7 +69,7 @@
 
             <div class="flex items-end gap-3">
                 <x-ui.button type="submit" variant="primary">Filtrer</x-ui.button>
-                <x-ui.button :href="route('admin.appointments.index')" variant="ghost">Reinitialiser</x-ui.button>
+                <x-ui.button :href="route($routePrefix . '.index')" variant="ghost">Reinitialiser</x-ui.button>
             </div>
         </form>
     </x-ui.card>
@@ -113,14 +124,16 @@
                                 <td><x-ui.badge :variant="$badgeVariant">{{ ucfirst($status) }}</x-ui.badge></td>
                                 <td class="text-right">
                                     <div class="flex flex-wrap justify-end gap-2">
-                                        <x-ui.button :href="route('admin.appointments.show', $item)" variant="ghost" size="sm">Voir</x-ui.button>
-                                        <x-ui.button :href="route('admin.appointments.edit', $item)" variant="secondary" size="sm">Modifier</x-ui.button>
-                                        @if($status === 'pending')
-                                            <form method="POST" action="{{ route('admin.appointments.approve', $item) }}">
+                                        <x-ui.button :href="route($routePrefix . '.show', $item)" variant="ghost" size="sm">Voir</x-ui.button>
+                                        @if($canEdit)
+                                            <x-ui.button :href="route($routePrefix . '.edit', $item)" variant="secondary" size="sm">Modifier</x-ui.button>
+                                        @endif
+                                        @if($status === 'pending' && $canApprove)
+                                            <form method="POST" action="{{ route($routePrefix . '.approve', $item) }}">
                                                 @csrf
                                                 <x-ui.button type="submit" variant="outline" size="sm">Approuver</x-ui.button>
                                             </form>
-                                            <form method="POST" action="{{ route('admin.appointments.reject', $item) }}">
+                                            <form method="POST" action="{{ route($routePrefix . '.reject', $item) }}">
                                                 @csrf
                                                 <x-ui.button type="submit" variant="danger" size="sm">Refuser</x-ui.button>
                                             </form>
@@ -144,4 +157,4 @@
             {{ $items->links() }}
         </div>
     </x-ui.card>
-</x-admin-layout>
+</x-dynamic-component>

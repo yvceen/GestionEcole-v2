@@ -40,12 +40,18 @@ class SubjectController extends Controller
             'assigned' => Subject::query()->where('school_id', $schoolId)->whereHas('teachers')->count(),
         ];
 
-        return view('admin.subjects.index', compact('subjects', 'q', 'status', 'stats'));
+        return view('admin.subjects.index', compact('subjects', 'q', 'status', 'stats') + [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+        ]);
     }
 
     public function create()
     {
-        return view('admin.subjects.create', $this->formData(new Subject()));
+        return view('admin.subjects.create', $this->formData(new Subject()) + [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+        ]);
     }
 
     public function store(StoreSubjectRequest $request)
@@ -65,14 +71,17 @@ class SubjectController extends Controller
             $this->syncTeachers($subject, $teacherIds, (int) $request->user()->id, $schoolId);
         });
 
-        return redirect()->route('admin.subjects.index')->with('success', 'Matiere creee avec succes.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Matiere creee avec succes.');
     }
 
     public function edit(Subject $subject)
     {
         $subject = $this->resolveSchoolSubject($subject);
 
-        return view('admin.subjects.edit', $this->formData($subject));
+        return view('admin.subjects.edit', $this->formData($subject) + [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+        ]);
     }
 
     public function update(StoreSubjectRequest $request, Subject $subject)
@@ -92,7 +101,7 @@ class SubjectController extends Controller
             $this->syncTeachers($subject, $teacherIds, (int) $request->user()->id, $schoolId);
         });
 
-        return redirect()->route('admin.subjects.index')->with('success', 'Matiere modifiee.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Matiere modifiee.');
     }
 
     public function destroy(Subject $subject)
@@ -101,13 +110,23 @@ class SubjectController extends Controller
 
         if ($subject->teachers()->exists() || $subject->assessments()->exists() || $subject->grades()->exists()) {
             return redirect()
-                ->route('admin.subjects.index')
+                ->route($this->routePrefix() . '.index')
                 ->with('error', 'Cette matiere est encore utilisee dans les affectations ou les notes.');
         }
 
         $subject->delete();
 
-        return redirect()->route('admin.subjects.index')->with('success', 'Matiere supprimee.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Matiere supprimee.');
+    }
+
+    protected function routePrefix(): string
+    {
+        return 'admin.subjects';
+    }
+
+    protected function layoutComponent(): string
+    {
+        return 'admin-layout';
     }
 
     private function schoolId(): int

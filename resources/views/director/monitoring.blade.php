@@ -1,34 +1,34 @@
-<x-director-layout title="Monitoring">
+<x-director-layout title="Suivi">
     <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <h1 class="text-2xl font-semibold tracking-tight">Monitoring</h1>
-            <p class="mt-1 text-sm text-slate-500">Filter by Level / Classroom / Teacher / Date.</p>
+            <h1 class="text-2xl font-semibold tracking-tight">Suivi pedagogique</h1>
+            <p class="mt-1 text-sm text-slate-500">Filtrez par niveau, classe, enseignant, periode ou recherche libre.</p>
         </div>
     </div>
 
     <form method="GET" class="mt-5 rounded-[28px] border border-black/5 bg-white/70 p-5 shadow-[0_18px_45px_-35px_rgba(0,0,0,.45)]">
         <div class="grid grid-cols-1 md:grid-cols-6 gap-3">
             <select name="type" class="rounded-2xl border border-black/10 bg-white/70 px-3 py-2 text-sm">
-                <option value="courses" @selected($type==='courses')>Courses</option>
-                <option value="homeworks" @selected($type==='homeworks')>Homeworks</option>
+                <option value="courses" @selected($type==='courses')>Cours</option>
+                <option value="homeworks" @selected($type==='homeworks')>Devoirs</option>
             </select>
 
             <select name="level_id" class="rounded-2xl border border-black/10 bg-white/70 px-3 py-2 text-sm">
-                <option value="">All levels</option>
+                <option value="">Tous les niveaux</option>
                 @foreach($levels as $l)
                     <option value="{{ $l->id }}" @selected((string)$levelId === (string)$l->id)>{{ $l->name }}</option>
                 @endforeach
             </select>
 
             <select name="classroom_id" class="rounded-2xl border border-black/10 bg-white/70 px-3 py-2 text-sm">
-                <option value="">All classrooms</option>
+                <option value="">Toutes les classes</option>
                 @foreach($classrooms as $c)
                     <option value="{{ $c->id }}" @selected((string)$classroomId === (string)$c->id)>{{ $c->name }}</option>
                 @endforeach
             </select>
 
             <select name="teacher_id" class="rounded-2xl border border-black/10 bg-white/70 px-3 py-2 text-sm">
-                <option value="">All teachers</option>
+                <option value="">Tous les enseignants</option>
                 @foreach($teachers as $t)
                     <option value="{{ $t->id }}" @selected((string)$teacherId === (string)$t->id)>{{ $t->name }}</option>
                 @endforeach
@@ -38,17 +38,17 @@
             <input type="date" name="to" value="{{ request('to') }}" class="rounded-2xl border border-black/10 bg-white/70 px-3 py-2 text-sm"/>
 
             <div class="md:col-span-4">
-                <input name="q" value="{{ $q }}" placeholder="Search title/description…"
+                <input name="q" value="{{ $q }}" placeholder="Rechercher dans le titre ou la description..."
                        class="w-full rounded-2xl border border-black/10 bg-white/70 px-4 py-2 text-sm"/>
             </div>
 
             <div class="md:col-span-2 flex gap-2">
                 <button class="w-full rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-black">
-                    Apply
+                    Appliquer
                 </button>
                 <a href="{{ route('director.monitoring') }}"
                    class="w-full text-center rounded-2xl border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-white/80">
-                    Reset
+                    Reinitialiser
                 </a>
             </div>
         </div>
@@ -62,10 +62,10 @@
                         <div class="flex flex-wrap gap-2 items-center">
                             <div class="text-lg font-semibold truncate">{{ $it->title }}</div>
                             <span class="rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-semibold">
-                                {{ $it->classroom?->name ?? 'Classroom' }}
+                                {{ $it->classroom?->name ?? 'Classe' }}
                             </span>
                             <span class="rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-semibold">
-                                {{ $it->classroom?->level?->name ?? 'Level' }}
+                                {{ $it->classroom?->level?->name ?? 'Niveau' }}
                             </span>
                         </div>
                         <div class="mt-1 text-xs text-slate-500">
@@ -81,13 +81,13 @@
                     <div class="shrink-0">
                         @if($type==='courses')
                             <div class="rounded-2xl border border-black/5 bg-white/60 px-4 py-3 text-xs text-slate-700">
-                                <div class="font-semibold text-slate-900">Attachments</div>
+                                <div class="font-semibold text-slate-900">Pieces jointes</div>
                                 <div class="mt-1">{{ $it->attachments?->count() ?? 0 }}</div>
                             </div>
                         @else
                             @if(!empty($it->due_at))
                                 <div class="rounded-2xl border border-black/5 bg-white/60 px-4 py-3 text-xs text-slate-700">
-                                    <div class="font-semibold text-slate-900">Due</div>
+                                    <div class="font-semibold text-slate-900">Echeance</div>
                                     <div class="mt-1">{{ $it->due_at }}</div>
                                 </div>
                             @endif
