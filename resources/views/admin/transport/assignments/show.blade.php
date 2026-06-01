@@ -50,7 +50,6 @@
                         </span>
                     </div>
                     <div class="flex justify-between gap-4"><span class="text-slate-500">Point de ramassage</span><span class="font-semibold text-slate-900">{{ $transportAssignment->pickup_point ?? '-' }}</span></div>
-                    <div class="flex justify-between gap-4"><span class="text-slate-500">Tarif mensuel</span><span class="font-semibold text-slate-900">{{ number_format($transportAssignment->route?->monthly_fee ?? 0, 2, ',', ' ') }} DH</span></div>
                 </div>
             </x-ui.card>
 

@@ -28,7 +28,7 @@ class StoreRouteRequest extends FormRequest
             'start_point' => ['required', 'string', 'max:255'],
             'end_point' => ['required', 'string', 'max:255'],
             'distance_km' => ['nullable', 'numeric', 'min:0'],
-            'monthly_fee' => ['required', 'numeric', 'min:0'],
+            'monthly_fee' => ['nullable', 'numeric', 'min:0'],
             'estimated_minutes' => ['nullable', 'integer', 'min:1'],
             'is_active' => ['nullable', 'boolean'],
             'stops' => ['required', 'json'],
@@ -41,8 +41,6 @@ class StoreRouteRequest extends FormRequest
             'route_name.required' => 'Le nom de la route est obligatoire.',
             'start_point.required' => 'Le point de depart est obligatoire.',
             'end_point.required' => 'Le point d arrivee est obligatoire.',
-            'monthly_fee.required' => 'Le tarif mensuel est obligatoire.',
-            'monthly_fee.numeric' => 'Le tarif mensuel doit etre un nombre.',
             'vehicle_id.exists' => 'Le vehicule selectionne est invalide pour cette ecole.',
             'distance_km.numeric' => 'La distance doit etre un nombre.',
         ];

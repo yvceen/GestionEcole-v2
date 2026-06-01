@@ -46,6 +46,7 @@ class RouteController extends Controller
         $data = $request->validated();
         $stopsJson = $data['stops'] ?? '[]';
         unset($data['stops']);
+        $data['monthly_fee'] = (float) ($data['monthly_fee'] ?? 0);
 
         $route = Route::create([
             'school_id' => app('current_school_id'),
@@ -113,6 +114,7 @@ class RouteController extends Controller
         $data = $request->validated();
         $stopsJson = $data['stops'] ?? '[]';
         unset($data['stops']);
+        $data['monthly_fee'] = (float) ($data['monthly_fee'] ?? 0);
 
         $route->update($data);
 

@@ -62,11 +62,7 @@
                 </div>
             </div>
 
-            <div class="app-field">
-                <label class="app-label">Tarif mensuel (DH)</label>
-                <input type="number" name="monthly_fee" value="{{ old('monthly_fee', $route->monthly_fee) }}" step="0.01" min="0" class="app-input @error('monthly_fee') border-rose-500 @enderror" required>
-                @error('monthly_fee')<p class="app-error">{{ $message }}</p>@enderror
-            </div>
+            <input type="hidden" name="monthly_fee" value="{{ old('monthly_fee', $route->monthly_fee ?? 0) }}">
 
             <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
                 <label class="flex items-center gap-2 text-sm font-semibold text-slate-700">
@@ -98,7 +94,7 @@
                         <div id="stopsList" class="space-y-2"></div>
                     </div>
                 </div>
-                <input type="hidden" name="stops" id="stopsInput" value="{{ old('stops', json_encode($route->stops->map(fn($s)=>['name'=>$s->name,'lat'=>$s->lat,'lng'=>$s->lng,'scheduled_time'=>$s->scheduled_time,'notes'=>$s->notes])->values())) }}">
+                <input type="hidden" name="stops" id="stopsInput" value="{{ old('stops', json_encode(($route->stops ?? collect())->map(fn($s)=>['name'=>$s->name,'lat'=>$s->lat,'lng'=>$s->lng,'scheduled_time'=>$s->scheduled_time,'notes'=>$s->notes])->values())) }}">
             </div>
 
             <div class="flex items-center gap-3">

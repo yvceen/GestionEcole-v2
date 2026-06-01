@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TransportAssignment;
+use App\Models\Classroom;
 use App\Models\Student;
 use App\Models\Route;
 use App\Models\Vehicle;
@@ -27,6 +28,7 @@ class TransportAssignmentController extends Controller
         $schoolId = app('current_school_id');
 
         $students = Student::where('school_id', $schoolId)->active()->orderBy('full_name')->get();
+        $classrooms = Classroom::where('school_id', $schoolId)->orderBy('name')->get(['id', 'name']);
 
         $vehicles = Vehicle::where('school_id', $schoolId)
             ->where('is_active', true)
@@ -37,7 +39,7 @@ class TransportAssignmentController extends Controller
             ->where('is_active', true)
             ->get();
 
-        return view('admin.transport.assignments.create', compact('students', 'vehicles', 'routes'));
+        return view('admin.transport.assignments.create', compact('students', 'classrooms', 'vehicles', 'routes'));
     }
 
     public function store(StoreTransportAssignmentRequest $request)
@@ -62,13 +64,49 @@ class TransportAssignmentController extends Controller
             }
         }
 
-        TransportAssignment::create([
-            'school_id' => $schoolId,
-            ...$data,
-        ]);
+        $studentIds = collect($data['student_ids'] ?? [])
+            ->push($data['student_id'] ?? null)
+            ->filter()
+            ->map(fn ($id) => (int) $id);
+
+        if (!empty($data['classroom_id'])) {
+            $studentIds = $studentIds->merge(
+                Student::query()
+                    ->where('school_id', $schoolId)
+                    ->active()
+                    ->where('classroom_id', (int) $data['classroom_id'])
+                    ->pluck('id')
+                    ->map(fn ($id) => (int) $id)
+            );
+        }
+
+        $studentIds = $studentIds->unique()->values();
+        if ($studentIds->isEmpty()) {
+            return back()
+                ->withErrors(['student_id' => 'Choisissez au moins un eleve ou une classe.'])
+                ->withInput();
+        }
+
+        $payload = collect($data)->except(['student_id', 'student_ids', 'classroom_id'])->all();
+
+        foreach ($studentIds as $studentId) {
+            TransportAssignment::updateOrCreate(
+                [
+                    'school_id' => $schoolId,
+                    'student_id' => (int) $studentId,
+                ],
+                [
+                    ...$payload,
+                    'student_id' => (int) $studentId,
+                    'school_id' => $schoolId,
+                    'ended_date' => null,
+                    'is_active' => true,
+                ]
+            );
+        }
 
         return redirect()->route('admin.transport.assignments.index')
-            ->with('success', 'Affectation de transport creee avec succes.');
+            ->with('success', $studentIds->count().' affectation(s) de transport mise(s) a jour.');
     }
 
     public function show(TransportAssignment $transportAssignment)
@@ -87,6 +125,7 @@ class TransportAssignmentController extends Controller
         $schoolId = app('current_school_id');
 
         $students = Student::where('school_id', $schoolId)->active()->orderBy('full_name')->get();
+        $classrooms = Classroom::where('school_id', $schoolId)->orderBy('name')->get(['id', 'name']);
 
         $vehicles = Vehicle::where('school_id', $schoolId)
             ->where('is_active', true)
@@ -97,7 +136,7 @@ class TransportAssignmentController extends Controller
             ->where('is_active', true)
             ->get();
 
-        return view('admin.transport.assignments.edit', compact('transportAssignment', 'students', 'vehicles', 'routes'));
+        return view('admin.transport.assignments.edit', compact('transportAssignment', 'students', 'classrooms', 'vehicles', 'routes'));
     }
 
     public function update(StoreTransportAssignmentRequest $request, TransportAssignment $transportAssignment)
@@ -121,7 +160,7 @@ class TransportAssignmentController extends Controller
             }
         }
 
-        $transportAssignment->update($data);
+        $transportAssignment->update(collect($data)->except(['student_ids', 'classroom_id'])->all());
 
         return redirect()->route('admin.transport.assignments.show', $transportAssignment)
             ->with('success', 'Affectation de transport mise a jour avec succes.');

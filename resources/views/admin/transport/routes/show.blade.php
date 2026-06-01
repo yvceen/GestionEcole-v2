@@ -27,17 +27,17 @@
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
                         <p class="text-slate-500">Vehicule</p>
                         <p class="font-semibold text-slate-900">{{ $route->vehicle?->name ?: ($route->vehicle?->registration_number ?? 'Non assigne') }}</p>
-                        <p class="mt-1 text-xs text-slate-500">Conducteur : {{ $route->vehicle?->driver?->name ?? 'Non renseigne' }}{{ $route->vehicle?->driver?->phone ? ' • '.$route->vehicle->driver->phone : '' }}</p>
+                        <p class="mt-1 text-xs text-slate-500">Conducteur : {{ $route->vehicle?->driver?->name ?? 'Non renseigne' }}{{ $route->vehicle?->driver?->phone ? ' - '.$route->vehicle->driver->phone : '' }}</p>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
                         <p class="text-slate-500">Volume</p>
-                        <p class="font-semibold text-slate-900">{{ $route->assignments->where('is_active', true)->count() }} eleve(s) actifs</p>
-                        <p class="mt-1 text-xs text-slate-500">{{ $route->stops->count() }} arret(s) • {{ $route->estimated_minutes ?? '-' }} min</p>
+                        <p class="font-semibold text-slate-900">{{ ($route->assignments ?? collect())->where('is_active', true)->count() }} eleve(s) actifs</p>
+                        <p class="mt-1 text-xs text-slate-500">{{ ($route->stops ?? collect())->count() }} arret(s) - {{ $route->estimated_minutes ?? '-' }} min</p>
                     </div>
                 </div>
 
                 <div class="mt-4 space-y-2">
-                    @forelse($route->stops->sortBy('stop_order') as $stop)
+                    @forelse(($route->stops ?? collect())->sortBy('stop_order') as $stop)
                         <div class="rounded-2xl border border-slate-200 px-4 py-3 text-sm">
                             <div class="flex items-center justify-between gap-3">
                                 <p class="font-semibold text-slate-900">{{ $stop->stop_order }}. {{ $stop->name }}</p>
@@ -55,12 +55,12 @@
 
             <x-ui.card title="Eleves affectes" subtitle="Liste active des eleves relies a cette route.">
                 <div class="space-y-3">
-                    @forelse($route->assignments->where('is_active', true) as $assignment)
+                    @forelse(($route->assignments ?? collect())->where('is_active', true) as $assignment)
                         <article class="rounded-2xl border border-slate-200 bg-white px-4 py-3">
                             <div class="flex items-center justify-between gap-3">
                                 <div>
                                     <p class="font-semibold text-slate-900">{{ $assignment->student?->full_name ?? '-' }}</p>
-                                    <p class="mt-1 text-xs text-slate-500">{{ $assignment->student?->classroom?->name ?? '-' }} • {{ ucfirst((string) ($assignment->period ?? 'both')) }}</p>
+                                    <p class="mt-1 text-xs text-slate-500">{{ $assignment->student?->classroom?->name ?? '-' }} - {{ ucfirst((string) ($assignment->period ?? 'both')) }}</p>
                                 </div>
                                 <span class="text-xs text-slate-500">{{ $assignment->pickup_point ?: 'Point non precise' }}</span>
                             </div>

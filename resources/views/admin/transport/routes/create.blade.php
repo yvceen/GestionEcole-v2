@@ -1,7 +1,7 @@
 ﻿<x-admin-layout title="Ajouter une route">
     <x-ui.page-header
         title="Ajouter une route"
-        subtitle="Creez un circuit de transport avec des arrets, un vehicule et un tarif clairement definis."
+        subtitle="Creez un circuit de transport avec des arrets, un vehicule et un parcours clair."
     >
         <x-slot name="actions">
             <x-ui.button :href="route('admin.transport.routes.index')" variant="secondary">
@@ -61,11 +61,7 @@
                 </div>
             </div>
 
-            <div class="app-field">
-                <label class="app-label">Tarif mensuel (DH)</label>
-                <input type="number" name="monthly_fee" value="{{ old('monthly_fee') }}" step="0.01" min="0" class="app-input @error('monthly_fee') border-rose-500 @enderror" placeholder="500" required>
-                @error('monthly_fee')<p class="app-error">{{ $message }}</p>@enderror
-            </div>
+            <input type="hidden" name="monthly_fee" value="{{ old('monthly_fee', 0) }}">
 
             <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
                 <label class="flex items-center gap-2 text-sm font-semibold text-slate-700">

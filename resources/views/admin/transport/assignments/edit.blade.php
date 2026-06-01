@@ -1,4 +1,4 @@
-﻿<x-admin-layout title="Modifier l'affectation">
+<x-admin-layout title="Modifier l'affectation">
     <x-ui.page-header
         title="Modifier l'affectation"
         :subtitle="$transportAssignment->student?->full_name"
@@ -28,7 +28,7 @@
                     <option value="">Selectionner une route</option>
                     @foreach(($routes ?? collect()) as $route)
                         <option value="{{ $route->id }}" @selected(old('route_id', $transportAssignment->route_id) == $route->id)>
-                            {{ $route->route_name }} ({{ $route->start_point }} → {{ $route->end_point }})
+                            {{ $route->route_name }} ({{ $route->start_point }} -> {{ $route->end_point }})
                         </option>
                     @endforeach
                 </select>

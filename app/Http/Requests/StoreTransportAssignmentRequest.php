@@ -17,17 +17,22 @@ class StoreTransportAssignmentRequest extends FormRequest
     {
         $schoolId = $this->currentSchoolId();
         $studentRule = Rule::exists('students', 'id');
+        $classroomRule = Rule::exists('classrooms', 'id');
         $routeRule = Rule::exists('routes', 'id');
         $vehicleRule = Rule::exists('vehicles', 'id');
 
         if ($schoolId !== null) {
             $studentRule = $studentRule->where(fn ($query) => $query->where('school_id', $schoolId));
+            $classroomRule = $classroomRule->where(fn ($query) => $query->where('school_id', $schoolId));
             $routeRule = $routeRule->where(fn ($query) => $query->where('school_id', $schoolId));
             $vehicleRule = $vehicleRule->where(fn ($query) => $query->where('school_id', $schoolId));
         }
 
         return [
-            'student_id' => ['required', 'integer', $studentRule],
+            'student_id' => ['nullable', 'integer', $studentRule],
+            'student_ids' => ['nullable', 'array'],
+            'student_ids.*' => ['integer', $studentRule],
+            'classroom_id' => ['nullable', 'integer', $classroomRule],
             'vehicle_id' => ['nullable', 'integer', $vehicleRule],
             'route_id' => ['required', 'integer', $routeRule],
             'period' => ['nullable', 'in:morning,evening,both'],

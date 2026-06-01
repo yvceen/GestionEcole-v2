@@ -69,7 +69,7 @@
                         @foreach($vehicle->routes as $route)
                             <a href="{{ route('admin.transport.routes.show', $route) }}" class="block rounded-xl border border-slate-200 px-3 py-3 hover:bg-slate-50">
                                 <div class="font-semibold text-slate-900">{{ $route->route_name }}</div>
-                                <div class="text-xs text-slate-500">{{ $route->start_point }} → {{ $route->end_point }}</div>
+                                <div class="text-xs text-slate-500">{{ $route->start_point }} -> {{ $route->end_point }}</div>
                             </a>
                         @endforeach
                     </div>
