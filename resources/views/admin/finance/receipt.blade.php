@@ -12,6 +12,12 @@
         Retour a la finance
     </a>
     <a
+        href="{{ route('admin.finance.payments.create') }}"
+        class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-800 transition hover:bg-emerald-100"
+    >
+        Nouveau paiement
+    </a>
+    <a
         href="{{ route('admin.finance.receipts.export', $receipt) }}"
         target="_blank"
         class="inline-flex items-center rounded-full border border-slate-200 bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"

@@ -264,6 +264,8 @@ class FinanceController extends Controller
     public function createPayment()
     {
         $schoolId = $this->schoolId();
+        $academicYear = $this->academicYears->requireCurrentYearForSchool($schoolId);
+        $academicYearId = (int) $academicYear->id;
 
         $parents = User::query()
             ->where('school_id', $schoolId)
@@ -271,7 +273,7 @@ class FinanceController extends Controller
             ->orderBy('name')
             ->get(['id', 'name', 'email']);
 
-        return view('admin.finance.create-payment', compact('parents'));
+        return view('admin.finance.create-payment', compact('parents', 'academicYear', 'academicYearId'));
     }
 
     public function storePayment(StorePaymentRequest $request)
@@ -306,7 +308,7 @@ class FinanceController extends Controller
         $academicYearId = $this->academicYears->requireCurrentYearForSchool($schoolId)->id;
 
         try {
-            $result = DB::transaction(function () use ($data, $paidAt, $schoolId, $parent) {
+            $result = DB::transaction(function () use ($data, $paidAt, $schoolId, $parent, $academicYearId) {
                 $year = $paidAt->format('Y');
 
                 $last = Receipt::query()

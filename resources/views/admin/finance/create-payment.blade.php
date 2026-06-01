@@ -17,6 +17,30 @@
         </x-slot>
     </x-ui.page-header>
 
+    <section class="rounded-[32px] border border-sky-100 bg-gradient-to-br from-sky-50 via-white to-emerald-50 p-6 shadow-sm">
+        <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-[0.2em] text-sky-700">Paiement rapide</p>
+                <h2 class="mt-3 text-2xl font-bold tracking-tight text-slate-950">Parent, eleves, mois, recu. Tout se fait dans le meme ecran.</h2>
+                <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Les montants sont calcules automatiquement depuis les frais configures. L admin controle le resume avant de generer le recu.</p>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-center">
+                <div class="rounded-2xl border border-white bg-white/80 px-3 py-4 shadow-sm">
+                    <p class="text-lg font-bold text-sky-700">1</p>
+                    <p class="mt-1 text-xs font-semibold text-slate-600">Parent</p>
+                </div>
+                <div class="rounded-2xl border border-white bg-white/80 px-3 py-4 shadow-sm">
+                    <p class="text-lg font-bold text-emerald-700">2</p>
+                    <p class="mt-1 text-xs font-semibold text-slate-600">Mois</p>
+                </div>
+                <div class="rounded-2xl border border-white bg-white/80 px-3 py-4 shadow-sm">
+                    <p class="text-lg font-bold text-indigo-700">3</p>
+                    <p class="mt-1 text-xs font-semibold text-slate-600">Recu</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     @if(session('warning'))
         <x-ui.alert variant="warning">{!! session('warning') !!}</x-ui.alert>
     @endif
@@ -37,6 +61,10 @@
         <div class="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_380px]">
             <div class="space-y-6">
                 <x-ui.card title="1. Parent et eleves" subtitle="Le chargement des eleves et des frais se fait automatiquement depuis l'ecole active.">
+                    <div class="mb-5 rounded-3xl border border-sky-100 bg-sky-50/70 px-4 py-3">
+                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Selection</p>
+                        <p class="mt-1 text-sm text-slate-600">Recherchez un parent, puis cochez uniquement les eleves concernes par ce paiement.</p>
+                    </div>
                     <div class="grid gap-4 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
                         <x-ui.input
                             id="parent_search"
@@ -115,6 +143,10 @@
                 </x-ui.card>
 
                 <x-ui.card title="2. Periode a regler" subtitle="Generez les mois, puis ajustez la selection avant validation.">
+                    <div class="mb-5 rounded-3xl border border-emerald-100 bg-emerald-50/70 px-4 py-3">
+                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">Periode</p>
+                        <p class="mt-1 text-sm text-slate-600">Choisissez un intervalle, puis gardez seulement les mois a encaisser.</p>
+                    </div>
                     <div class="grid gap-4 md:grid-cols-2">
                         <x-ui.input id="month_start" type="month" label="Du mois" :value="old('month_start', $oldMonths->first())" />
                         <x-ui.input id="month_end" type="month" label="Au mois" :value="old('month_end', $oldMonths->last())" />
@@ -142,6 +174,10 @@
                 </x-ui.card>
 
                 <x-ui.card title="3. Informations de paiement" subtitle="Ces informations seront reprises sur le recu.">
+                    <div class="mb-5 rounded-3xl border border-indigo-100 bg-indigo-50/70 px-4 py-3">
+                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-indigo-700">Reglement</p>
+                        <p class="mt-1 text-sm text-slate-600">La methode, la date et la note seront reprises sur le recu final.</p>
+                    </div>
                     <div class="grid gap-4 md:grid-cols-2">
                         <x-ui.select name="method" label="Methode">
                             <option value="cash" @selected(old('method', 'cash') === 'cash')>Especes</option>

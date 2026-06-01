@@ -38,20 +38,40 @@
         </x-slot>
     </x-ui.page-header>
 
+    <section class="rounded-[32px] border border-sky-100 bg-gradient-to-br from-sky-50 via-white to-emerald-50 p-6 shadow-sm">
+        <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-[0.2em] text-sky-700">Centre paiement</p>
+                <h2 class="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-slate-950">Encaissements, recus et suivi des impayes dans un espace plus lisible.</h2>
+                <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600">Utilisez les filtres pour retrouver un parent, ouvrir un recu ou imprimer un releve sans chercher dans plusieurs menus.</p>
+            </div>
+            <div class="grid gap-3 sm:grid-cols-2">
+                <a href="{{ route('admin.finance.payments.create') }}" class="rounded-3xl border border-white bg-white/85 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                    <span class="text-xs font-bold uppercase tracking-[0.16em] text-sky-700">Action</span>
+                    <strong class="mt-2 block text-slate-950">Ajouter un paiement</strong>
+                </a>
+                <a href="{{ route('admin.finance.reminders.edit') }}" class="rounded-3xl border border-white bg-white/85 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                    <span class="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Suivi</span>
+                    <strong class="mt-2 block text-slate-950">Rappels parents</strong>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <section class="grid gap-4 md:grid-cols-3">
-        <div class="app-stat-card">
+        <div class="app-stat-card border-sky-100 bg-sky-50/60">
             <p class="app-stat-label">Revenu du mois</p>
             <p class="app-stat-value">{{ number_format((float) $thisMonthRevenue, 2) }}</p>
             <p class="app-stat-meta">MAD pour {{ $monthLabel }}</p>
         </div>
 
-        <div class="app-stat-card">
+        <div class="app-stat-card border-amber-100 bg-amber-50/60">
             <p class="app-stat-label">Impayes du mois</p>
             <p class="app-stat-value">{{ count($unpaidThisMonth) }}</p>
             <p class="app-stat-meta">Eleves sans reglement sur la periode courante</p>
         </div>
 
-        <div class="app-stat-card">
+        <div class="app-stat-card border-rose-100 bg-rose-50/60">
             <p class="app-stat-label">Arrieres</p>
             <p class="app-stat-value">{{ count($arrears) }}</p>
             <p class="app-stat-meta">Eleves avec des mois precedents non soldes</p>
