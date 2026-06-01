@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AttendanceScanController;
 use App\Http\Controllers\Api\DeviceTokenController;
+use App\Http\Controllers\Api\DesktopAdminController;
 use App\Http\Controllers\Api\MobileAttendanceScanController;
 use App\Http\Controllers\Api\MobileAgendaController;
 use App\Http\Controllers\Api\MobileAttendanceController;
@@ -38,6 +39,7 @@ Route::middleware([IdentifySchoolFromSubdomain::class])->group(function (): void
         Route::post('/password', [MobilePasswordController::class, 'update'])->name('api.password.update');
         Route::get('/me', [MobileAuthController::class, 'me'])->name('api.me');
         Route::get('/dashboard', [MobileDashboardController::class, 'show'])->name('api.dashboard.show');
+        Route::get('/desktop/admin/workspace', [DesktopAdminController::class, 'workspace'])->name('api.desktop.admin.workspace');
         Route::get('/agenda', [MobileAgendaController::class, 'index'])->name('api.agenda.index');
         Route::get('/attendance', [MobileAttendanceController::class, 'index'])->name('api.attendance.index');
         Route::get('/grades', [MobileGradesController::class, 'index'])->name('api.grades.index');

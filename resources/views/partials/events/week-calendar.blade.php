@@ -1,5 +1,68 @@
 @push('head')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css">
+    <style>
+        .myedu-agenda-shell .fc {
+            --fc-border-color: #e2e8f0;
+            --fc-page-bg-color: transparent;
+            --fc-today-bg-color: rgba(14, 165, 233, 0.08);
+            color: #0f172a;
+        }
+        .myedu-agenda-shell .fc .fc-toolbar {
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        .myedu-agenda-shell .fc .fc-toolbar-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+        }
+        .myedu-agenda-shell .fc .fc-button {
+            border: 1px solid #dbeafe;
+            border-radius: 999px;
+            background: #ffffff;
+            color: #075985;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+            font-weight: 700;
+            padding: 0.45rem 0.8rem;
+        }
+        .myedu-agenda-shell .fc .fc-button-primary:not(:disabled).fc-button-active,
+        .myedu-agenda-shell .fc .fc-button-primary:not(:disabled):active {
+            background: #0284c7;
+            border-color: #0284c7;
+            color: #ffffff;
+        }
+        .myedu-agenda-shell .fc .fc-col-header-cell {
+            background: #f8fafc;
+            padding: 0.55rem 0;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .myedu-agenda-shell .fc .fc-timegrid-slot {
+            height: 3rem;
+        }
+        .myedu-agenda-shell .fc .fc-event {
+            border: 0;
+            border-radius: 14px;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+            overflow: hidden;
+        }
+        .myedu-agenda-shell .fc .fc-timegrid-event {
+            padding: 0.15rem;
+        }
+        @media (max-width: 767px) {
+            .myedu-agenda-shell .fc .fc-toolbar {
+                align-items: stretch;
+                flex-direction: column;
+            }
+            .myedu-agenda-shell .fc .fc-toolbar-chunk {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    </style>
 @endpush
 
 @php
@@ -7,31 +70,31 @@
     $teacherFilter = $teacherId ?? 0;
 @endphp
 
-<section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-    <article class="app-stat-card">
+<section class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <article class="app-stat-card border-sky-100 bg-sky-50/80">
         <p class="app-stat-label">Evenements</p>
         <p class="app-stat-value">{{ $summary['total'] ?? 0 }}</p>
         <p class="app-stat-meta">Tous les blocs agenda de l ecole active.</p>
     </article>
-    <article class="app-stat-card">
+    <article class="app-stat-card border-teal-100 bg-teal-50/80">
         <p class="app-stat-label">Cours</p>
         <p class="app-stat-value text-teal-700">{{ $summary['course'] ?? 0 }}</p>
         <p class="app-stat-meta">Seances affichees sur la semaine.</p>
     </article>
-    <article class="app-stat-card">
+    <article class="app-stat-card border-rose-100 bg-rose-50/80">
         <p class="app-stat-label">Examens</p>
         <p class="app-stat-value text-rose-700">{{ $summary['exam'] ?? 0 }}</p>
         <p class="app-stat-meta">Evaluations et controles.</p>
     </article>
-    <article class="app-stat-card">
+    <article class="app-stat-card border-indigo-100 bg-indigo-50/80">
         <p class="app-stat-label">Activites</p>
         <p class="app-stat-value text-sky-700">{{ $summary['activity'] ?? 0 }}</p>
         <p class="app-stat-meta">Sorties, clubs et temps forts.</p>
     </article>
 </section>
 
-<x-ui.card title="Filtres agenda" subtitle="Affinez la semaine affichee par classe ou enseignant, sans recharger la page.">
-    <div class="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+<x-ui.card title="Filtres agenda" subtitle="Affinez la semaine affichee par classe ou enseignant, sans recharger la page." class="mt-5">
+    <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-end">
         <div>
             <label class="app-label" for="agendaClassroom">Classe</label>
             <select id="agendaClassroom" class="app-input">
@@ -58,23 +121,28 @@
 
         <div class="flex flex-wrap items-end gap-3">
             @if($canManage)
-                <x-ui.button :href="route('admin.events.create')" variant="primary">Ajouter un bloc</x-ui.button>
+                <x-ui.button :href="route('admin.events.create')" variant="primary" class="w-full sm:w-auto">Ajouter un bloc</x-ui.button>
             @endif
-            <x-ui.button type="button" variant="secondary" id="agendaResetFilters">Reinitialiser</x-ui.button>
+            <x-ui.button type="button" variant="secondary" id="agendaResetFilters" class="w-full sm:w-auto">Reinitialiser</x-ui.button>
         </div>
     </div>
-</x-ui.card>
-
-<x-ui.card title="Vue semaine" subtitle="Agenda hebdomadaire moderne avec blocs colores, optimise pour desktop et mobile.">
-    <div class="rounded-[28px] border border-slate-200 bg-slate-50 p-3 sm:p-4">
-        <div id="weeklyAgendaCalendar" class="min-h-[720px] rounded-[24px] bg-white p-2 sm:p-4"></div>
+    <div class="mt-5 flex flex-wrap gap-3 text-xs font-semibold text-slate-600">
+        <span class="inline-flex items-center gap-2 rounded-full bg-teal-50 px-3 py-1.5 text-teal-700 ring-1 ring-teal-100"><span class="h-2 w-2 rounded-full bg-teal-500"></span>Cours</span>
+        <span class="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-1.5 text-rose-700 ring-1 ring-rose-100"><span class="h-2 w-2 rounded-full bg-rose-500"></span>Examens</span>
+        <span class="inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1.5 text-sky-700 ring-1 ring-sky-100"><span class="h-2 w-2 rounded-full bg-sky-500"></span>Activites</span>
     </div>
 </x-ui.card>
 
-<x-ui.card title="Prochains blocs" subtitle="Vue de gestion rapide pour ouvrir, modifier ou supprimer les evenements a venir.">
-    <div class="grid gap-4 lg:grid-cols-2">
+<x-ui.card title="Vue semaine" subtitle="Agenda hebdomadaire moderne avec blocs colores, optimise pour desktop et mobile." class="mt-5">
+    <div class="myedu-agenda-shell rounded-[30px] border border-slate-200 bg-gradient-to-br from-slate-50 to-sky-50/70 p-3 sm:p-5">
+        <div id="weeklyAgendaCalendar" class="min-h-[720px] rounded-[26px] bg-white p-3 shadow-sm ring-1 ring-slate-200/80 sm:p-5"></div>
+    </div>
+</x-ui.card>
+
+<x-ui.card title="Prochains blocs" subtitle="Vue de gestion rapide pour ouvrir, modifier ou supprimer les evenements a venir." class="mt-5">
+    <div class="grid gap-4 xl:grid-cols-2">
         @forelse($upcomingEvents as $agendaEvent)
-            <article class="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+            <article class="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-lg">
                 <div class="flex items-start justify-between gap-4">
                     <div>
                         <div class="flex items-center gap-3">
@@ -90,7 +158,7 @@
                     </div>
 
                     @if($canManage)
-                        <div class="flex gap-2">
+                        <div class="flex flex-wrap justify-end gap-2">
                             <x-ui.button :href="route('admin.events.edit', $agendaEvent)" variant="secondary" size="sm">Modifier</x-ui.button>
                             <form method="POST" action="{{ route('admin.events.destroy', $agendaEvent) }}" onsubmit="return confirm('Supprimer cet evenement ?')">
                                 @csrf

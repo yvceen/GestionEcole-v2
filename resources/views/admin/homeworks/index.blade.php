@@ -133,16 +133,16 @@
     <x-ui.card
         title="Demandes a valider"
         subtitle="Consultez rapidement chaque devoir, son contexte de publication et les actions disponibles."
-        class="mt-5"
+        class="mt-6"
     >
-        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="mb-6 flex flex-col gap-4 rounded-[24px] border border-slate-200 bg-slate-50/80 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex flex-wrap items-center gap-2">
                 <x-ui.badge variant="info">{{ $homeworks->total() }} resultat(s)</x-ui.badge>
                 @if(($statusFilter ?? 'all') !== 'all')
                     <x-ui.badge variant="warning">Filtre actif</x-ui.badge>
                 @endif
             </div>
-            <p class="text-sm text-slate-500">
+            <p class="max-w-xl text-sm leading-6 text-slate-500">
                 Vue type rendez-vous, plus lisible sur mobile comme sur desktop.
             </p>
         </div>
@@ -164,7 +164,7 @@
             </div>
         @else
             <div class="overflow-hidden rounded-[28px] border border-slate-200 bg-white">
-                <div class="hidden border-b border-slate-200 bg-slate-50/80 px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 xl:grid xl:grid-cols-[minmax(220px,1.2fr)_minmax(260px,1.5fr)_minmax(160px,0.8fr)_minmax(150px,0.75fr)_minmax(130px,0.7fr)_minmax(210px,0.9fr)] xl:gap-6">
+                <div class="hidden border-b border-slate-200 bg-slate-50/80 px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 xl:grid xl:grid-cols-[minmax(220px,1.05fr)_minmax(240px,1.3fr)_minmax(150px,0.75fr)_minmax(145px,0.7fr)_minmax(130px,0.65fr)_minmax(300px,1.2fr)] xl:gap-7">
                     <div>Devoir</div>
                     <div>Details</div>
                     <div>Classe</div>
@@ -179,7 +179,7 @@
                         $statusMeta = $desktopStatusTone($normalized);
                         $summary = trim((string) ($hw->description ?? ''));
                     @endphp
-                    <article class="border-b border-slate-100 px-5 py-5 last:border-b-0 transition hover:bg-sky-50/35 xl:grid xl:grid-cols-[minmax(220px,1.2fr)_minmax(260px,1.5fr)_minmax(160px,0.8fr)_minmax(150px,0.75fr)_minmax(130px,0.7fr)_minmax(210px,0.9fr)] xl:items-center xl:gap-6 xl:px-6">
+                    <article class="border-b border-slate-100 px-5 py-6 last:border-b-0 transition hover:bg-sky-50/35 xl:grid xl:grid-cols-[minmax(220px,1.05fr)_minmax(240px,1.3fr)_minmax(150px,0.75fr)_minmax(145px,0.7fr)_minmax(130px,0.65fr)_minmax(300px,1.2fr)] xl:items-center xl:gap-7 xl:px-6">
                         <div class="min-w-0">
                             <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Devoir</p>
                             <h3 class="mt-1 line-clamp-2 text-base font-semibold tracking-tight text-slate-950 xl:mt-0">{{ $hw->title }}</h3>
@@ -221,24 +221,24 @@
 
                         <div class="mt-4 xl:mt-0">
                             <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Actions</p>
-                            <div class="mt-2 flex flex-wrap gap-2 xl:mt-0">
-                                <x-ui.button :href="route($routePrefix . '.show', $hw)" variant="ghost" size="sm">
+                            <div class="mt-2 grid gap-2 sm:grid-cols-2 xl:mt-0 xl:grid-cols-2">
+                                <x-ui.button :href="route($routePrefix . '.show', $hw)" variant="ghost" size="sm" class="justify-center">
                                     Voir
                                 </x-ui.button>
-                                <x-ui.button :href="route($routePrefix . '.edit', $hw)" variant="secondary" size="sm">
+                                <x-ui.button :href="route($routePrefix . '.edit', $hw)" variant="secondary" size="sm" class="justify-center">
                                     Modifier
                                 </x-ui.button>
 
                                 @if($normalized === 'pending')
                                     <form method="POST" action="{{ route($routePrefix . '.approve', $hw) }}">
                                         @csrf
-                                        <x-ui.button type="submit" variant="outline" size="sm">
+                                        <x-ui.button type="submit" variant="outline" size="sm" class="w-full justify-center">
                                             Approuver
                                         </x-ui.button>
                                     </form>
                                     <form method="POST" action="{{ route($routePrefix . '.reject', $hw) }}">
                                         @csrf
-                                        <x-ui.button type="submit" variant="danger" size="sm">
+                                        <x-ui.button type="submit" variant="danger" size="sm" class="w-full justify-center">
                                             Rejeter
                                         </x-ui.button>
                                     </form>
@@ -247,7 +247,7 @@
                                 <form method="POST" action="{{ route($routePrefix . '.destroy', $hw) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <x-ui.button type="submit" variant="danger" size="sm" onclick="return confirm('Supprimer ce devoir ?');">
+                                    <x-ui.button type="submit" variant="danger" size="sm" class="w-full justify-center" onclick="return confirm('Supprimer ce devoir ?');">
                                         Supprimer
                                     </x-ui.button>
                                 </form>
