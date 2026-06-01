@@ -25,16 +25,10 @@
                 @php($participant = $activity->participants->first())
                 @php
                     $confirmation = (string) ($participant?->confirmation_status ?? \App\Models\ActivityParticipant::CONFIRMATION_PENDING);
-                    $variantInput = $confirmationVariant ?? match ($confirmation) {
+                    $confirmationVariant = match ($confirmation) {
                         \App\Models\ActivityParticipant::CONFIRMATION_CONFIRMED => 'success',
                         \App\Models\ActivityParticipant::CONFIRMATION_DECLINED => 'danger',
                         default => 'warning',
-                    };
-                    $confirmationVariant = match ($variantInput) {
-                        'success' => 'success',
-                        'warning' => 'warning',
-                        'danger' => 'danger',
-                        default => 'danger',
                     };
                     $attendance = (string) ($participant?->attendance_status ?? '');
                     $attendanceVariant = $attendance === \App\Models\ActivityParticipant::ATTENDANCE_PRESENT ? 'success' : ($attendance === \App\Models\ActivityParticipant::ATTENDANCE_ABSENT ? 'danger' : 'info');

@@ -1,0 +1,389 @@
+==================================================
+PROJECT OVERVIEW
+==================================================
+
+Project: GestionEcole-v2
+Type: Laravel school management platform
+Local path: C:\xampp\htdocs\GestionEcole-v2
+Production path noted by owner: /var/www/gestionecole
+Repository noted by owner: https://github.com/yvceen/GestionEcole-v2
+
+GestionEcole-v2 is a multi-school school management system with web portals for Super Admin, School Admin, Director, Teacher, Parent, Student, and School Life staff. It also includes a mobile/API surface and an Android Capacitor wrapper.
+
+Observed stack from code:
+- Laravel 12 / PHP 8.2.
+- MySQL-oriented migrations.
+- Blade views.
+- TailwindCSS, AlpineJS, Vite.
+- Laravel Breeze authentication scaffolding.
+- DomPDF via barryvdh/laravel-dompdf.
+- Simple QR Code via simplesoftwareio/simple-qrcode.
+- Capacitor Android mobile wrapper.
+
+Important stack mismatch:
+- The project context says Spatie Laravel Permission is used, but composer.json does not include spatie/laravel-permission and code search did not find Spatie HasRoles/permissions usage. Current authorization appears to be custom role strings plus custom middleware.
+
+==================================================
+ARCHITECTURE
+==================================================
+
+Top-level structure:
+- app/: Laravel application code.
+- app/Http/Controllers/: role-based MVC controllers.
+- app/Http/Middleware/: custom role, school, API token, locale, and active-account middleware.
+- app/Models/: Eloquent models for school, users, students, academics, finance, attendance, messages, documents, mobile config, transport, activities, notifications, etc.
+- app/Services/: domain services for attendance, school domains, notifications, homework, finance reminders, card tokens, academic years, and mobile API tokens.
+- database/migrations/: schema evolution.
+- database/seeders/: demo/bootstrap seeders.
+- resources/views/: Blade UI grouped by role/module.
+- resources/js and resources/css: Vite frontend entry points.
+- routes/web.php: web portal routes.
+- routes/api.php: mobile/API routes.
+- android/ and www/: Capacitor Android project and built web assets.
+- docs/: existing project documentation and security notes.
+- tests/: feature and unit tests.
+
+Route architecture:
+- routes/web.php contains the primary role portals.
+- routes/auth.php is required from routes/web.php and contains Breeze auth routes.
+- routes/api.php contains mobile/API routes under IdentifySchoolFromSubdomain plus token and school access middleware.
+- php artisan route:list succeeded and reported 505 routes.
+
+Major web route groups:
+- Public: /, /contact, /school-inactive.
+- Common authenticated: /dashboard, /profile, /attendance/scan, /documents/{document}/download, /agenda/feed, /transport-ops.
+- Admin: /admin with auth, admin, school.active middleware.
+- Super Admin: /super with auth, super_admin middleware.
+- Teacher: /teacher with auth, teacher, school.active middleware.
+- Parent: /parent with auth, parent, school.active middleware.
+- School Life: /school-life with auth, school_life, school.active middleware.
+- Student: /student with auth, student, school.active middleware.
+- Director: /director with auth, DirectorOnly::class, school.active middleware.
+
+API architecture:
+- /api/login is inside IdentifySchoolFromSubdomain.
+- Authenticated API routes require AuthenticateMobileApiToken, SetCurrentSchool, and EnsureApiSchoolAccess.
+- API modules include dashboard, agenda, attendance, grades, courses, timetable, finance, activities, news, transport, documents, behavior notes, appointments, pickup requests, QR attendance scan, device tokens, notifications, mobile messages, mobile homeworks, teacher attendance, teacher homework, and school-life overview.
+
+Authorization architecture:
+- bootstrap/app.php aliases custom middleware:
+  - director => App\Http\Middleware\DirectorOnly
+  - super_admin => App\Http\Middleware\SuperAdmin
+  - parent => App\Http\Middleware\ParentOnly
+  - admin => App\Http\Middleware\AdminOnly
+  - teacher => App\Http\Middleware\TeacherOnly
+  - student => App\Http\Middleware\StudentOnly
+  - school_life => App\Http\Middleware\SchoolLifeOnly
+  - school.active => App\Http\Middleware\CheckSchoolActive
+- Web middleware appends SetLocale, IdentifySchoolFromSubdomain, and SetCurrentSchool.
+- Role checks use users.role constants in App\Models\User.
+
+Multi-school architecture:
+- schools table/model stores name, slug, subdomain, logo_path, is_active.
+- SchoolDomainService resolves and generates subdomains.
+- IdentifySchoolFromSubdomain resolves the request host to a School, shares current_school/current_school_id, and aborts 404 for unknown subdomains.
+- SetCurrentSchool prefers host school, otherwise user school, and aborts on non-super-admin school mismatch.
+- BelongsToSchool global scope filters models by current_school_id when the model table has a school_id column.
+- Many controllers also explicitly filter by school_id and abort on cross-school resource access.
+
+==================================================
+CURRENT STATUS
+==================================================
+
+Initial audit performed on 2026-05-31 18:48:21 +01:00.
+
+Current observed state:
+- Application route table loads successfully.
+- Project has many implemented modules and a substantial feature test suite.
+- No resume.txt existed before this audit; this file is the first permanent memory entry.
+- Git worktree had an existing modified package-lock.json before audit. It was not touched.
+- No destructive commands were run.
+- No migrations were run.
+- No project behavior was changed.
+
+==================================================
+FEATURES IMPLEMENTED
+==================================================
+
+Observed implemented modules:
+- Authentication: login, logout, password reset, email verification, password confirmation, profile.
+- Public landing/contact form.
+- Super Admin school management: create/edit/toggle/delete schools, create school admin, subdomain generation.
+- Admin dashboard.
+- Admin structure: levels and classrooms.
+- Admin students: create/edit/archive/reactivate, profile linkage, student fees.
+- Admin users: create/edit/delete users for school-scoped roles.
+- Finance: fee plans, parent fees, payments, receipts, export/print, reminders, unpaid/suggest endpoints.
+- Academic years and promotions.
+- Subjects, assessments, grades.
+- Teacher portal: dashboard, courses, homework, assessments, grades, attendance register, timetable, calendar, agenda, messages, notifications.
+- Parent portal: dashboard, children, courses, homeworks, grades, attendance, activities, transport, pickup requests, cards, agenda/calendar, finance, receipts, appointments, notifications, messages.
+- Student portal: dashboard, courses, homeworks, card, activities, agenda/calendar, timetable, grades, attendance, transport, finance, receipts, notifications.
+- Director portal: dashboard, monitoring, teachers, students, notes, attendance, calendar/agenda, homeworks, news, activities, subjects, timetable, appointments, parents, exports, results, student fiche, support, councils, reports, messages, registration requirement docs.
+- School Life portal: dashboard, students, behavior notes, cards, attendance/manual/QR scan/export, grades, subjects, homeworks approval, news, activities, calendar/agenda, timetable, appointments approval, pickup request workflow, notifications, messages, registration requirement docs.
+- Messaging workflow with approval/pending concepts.
+- Documents library and registration requirements PDF/preview.
+- School calendar/events/agenda.
+- QR/card support for students and parents.
+- Attendance QR scan and teacher attendance register.
+- Transport: vehicles, routes, route stops, assignments, operations logs.
+- Mobile/API endpoints for parent/student/teacher/director/admin/school-life dashboards and workflows.
+- Push notification support and device tokens.
+- Capacitor Android wrapper and downloadable APK artifact.
+
+==================================================
+DATABASE STRUCTURE
+==================================================
+
+Important observed tables/modules from migrations and models:
+- Core Laravel: users, cache, jobs.
+- School tenancy: schools, school_id columns across school-owned tables, subdomain support.
+- Users/auth: users.role, users.phone, users.is_active, personal_access_tokens, device_tokens.
+- Students: students, parent_profiles, student_academic_years, archive fields, user_id linkage, parent_user_id linkage.
+- Academic structure: levels, classrooms, classroom_teacher, subjects, teacher_subject/teacher_subjects, classroom_subject.
+- Academic work: courses, course_attachments/files, homeworks, homework attachments/files/submissions/user views, assessments, grades, attendances.
+- Finance: fee_items, classroom_fees, student_fee_plans, parent_student_fees, receipts, payments, payment_items, payment_reminder_settings.
+- Director/academic follow-up: student_notes, support_plans, class_councils, class_council_decisions, monthly pedagogic reports, teacher pedagogical resources.
+- Transport: vehicles, routes, route_stops, transport_assignments, transport_logs.
+- Communications: messages, app notifications, news.
+- School life/operations: school_lives, appointments, pickup_requests, school_calendar_events, events, activities, activity_participants, activity_reports, student_behaviors.
+- Documents/mobile: school_documents, registration_requirement_items, mobile_app_configs.
+
+Relationship patterns:
+- User belongs to School and has role constants.
+- Student belongs to School, classroom, parent user, optional student user, and has fee/attendance/grade/activity/transport/support relations.
+- School has many users, students, academic years and deletes many school-scoped rows during School model deletion.
+- BelongsToSchool trait adds current_school_id global scope and auto-fills school_id on creating when current_school_id is bound.
+
+Potential schema/technical-debt notes:
+- There are repeated/patch migrations around subjects, teacher_subject tables, assessments, and school_id additions. This suggests iterative schema stabilization and should be consolidated only if doing a future clean install refactor.
+- database/migrations.zip exists alongside migration files. Purpose should be clarified.
+
+==================================================
+AUTHENTICATION & AUTHORIZATION
+==================================================
+
+Authentication:
+- Laravel Breeze-style auth controllers exist under app/Http/Controllers/Auth.
+- routes/auth.php defines guest routes for register, login, forgot/reset password.
+- Authenticated routes include email verification, password confirmation/update, logout.
+
+Roles:
+- User model constants:
+  - super_admin
+  - admin
+  - director
+  - teacher
+  - parent
+  - student
+  - chauffeur
+  - school_life
+
+Role handling:
+- Users have a single role string on users.role.
+- Role labels and badge variants are defined on App\Models\User.
+- Admin UserController can create roles: admin, director, teacher, parent, student, chauffeur, school_life.
+- Super Admin SchoolController creates school admin users when creating a school.
+- Middleware gates role areas.
+
+Important authorization observations:
+- AdminOnly allows both admin and super_admin. Because admin routes also require school.active and school context, super_admin access to admin routes may still fail without a school context.
+- SuperAdmin middleware only checks role == super_admin.
+- Director/teacher/parent/school_life/student middleware check exact roles and active account status.
+- StudentOnly logs out inactive student accounts.
+- EnsureApiSchoolAccess blocks inactive users and school mismatch for API users.
+- CheckSchoolActive redirects non-super-admin users from inactive schools.
+
+Spatie Permission status:
+- Not observed in active code/dependencies. There are no Spatie role/permission tables or HasRoles usage in the files inspected by search.
+
+==================================================
+SECURITY FINDINGS
+==================================================
+
+Finding 1: Public registration is enabled.
+Risk level: HIGH
+Business rule violated: Public visitors must never create accounts. Super Admin should create Admins, and Admin should create Teachers, Students, and Parents.
+
+Evidence:
+- routes/auth.php:14 places auth routes inside guest middleware.
+- routes/auth.php:15 defines GET /register using RegisteredUserController::create.
+- routes/auth.php:18 defines POST /register using RegisteredUserController::store.
+- app/Http/Controllers/Auth/RegisteredUserController.php:22 returns resources/views/auth/register.blade.php.
+- app/Http/Controllers/Auth/RegisteredUserController.php:30 handles registration POST.
+- app/Http/Controllers/Auth/RegisteredUserController.php:38 creates a User with only name/email/password.
+- app/Http/Controllers/Auth/RegisteredUserController.php:46 logs the new user in immediately.
+- resources/views/auth/register.blade.php exists and posts to route('register').
+- tests/Feature/Auth/RegistrationTest.php expects GET /register status 200 and expects new users can register.
+
+Impact:
+- Anyone who can reach /register can create a user account.
+- The created user has no explicit role, school_id, or is_active assignment in RegisteredUserController, so behavior depends on database defaults/nullability.
+- Even if the account has no useful dashboard role, public account creation pollutes the users table and may interact badly with future authorization defaults or accidental role assignment.
+
+Recommended safest fix, not applied:
+- Disable public registration routes by removing or commenting GET/POST register in routes/auth.php, or gate them behind an internal/admin-only flow.
+- Remove or hide register links from views if present.
+- Replace RegistrationTest expectations with tests asserting /register is unavailable/404/redirected.
+- Keep account creation only in SuperAdmin\SchoolController and Admin\UserController/StudentController flows.
+
+Finding 2: Debugbar package/routes are present.
+Risk level: MEDIUM in production, LOW in local.
+Evidence:
+- composer.json includes barryvdh/laravel-debugbar as a dev dependency.
+- php artisan route:list shows _debugbar routes.
+- config/app.php uses APP_DEBUG false by default, but .env.example has APP_ENV=local and APP_DEBUG=true.
+Recommendation:
+- Ensure production uses APP_ENV=production, APP_DEBUG=false, and composer install --no-dev.
+
+Finding 3: Tracked test secrets/config concerns already documented in docs/SECURITY.md.
+Risk level: MEDIUM if reused outside testing.
+Evidence:
+- docs/SECURITY.md reports hardcoded DB credentials in .env.testing/phpunit.xml and committed APP_KEY in .env.testing.
+Recommendation:
+- Rotate any reused secrets, avoid real credentials in tracked files, prefer placeholders or local-only env files.
+
+Finding 4: School deletion performs broad cascaded manual deletes in model event.
+Risk level: HIGH operational risk if invoked accidentally.
+Evidence:
+- app/Models/School.php deleting event manually deletes many school-scoped tables and storage directory.
+- SuperAdmin\SchoolController destroy deletes a School.
+Recommendation:
+- For production, consider soft-delete/archive/deactivate instead of hard delete, add confirmation/audit logging, and restrict access tightly.
+
+Finding 5: Custom role model rather than centralized permission system.
+Risk level: MEDIUM maintainability/authorization drift.
+Evidence:
+- No Spatie package found; many controllers and middleware use direct role string checks.
+Recommendation:
+- Either document that custom role strings are the official authorization system, or add Spatie deliberately and migrate permissions in a planned task.
+
+==================================================
+KNOWN ISSUES
+==================================================
+
+- Public registration is enabled and tested as allowed. This conflicts with the stated business rule.
+- Project context says Spatie Laravel Permission, but active code/dependencies do not show it.
+- README.md is still the default Laravel README and does not describe GestionEcole-v2.
+- Route file is large and monolithic; routes/web.php contains hundreds of role routes.
+- Some source comments show character encoding corruption in Arabic/French comments, e.g. mojibake in User.php and Student.php comments.
+- There is an empty root file named academic_year_id.
+- package-lock.json was already modified before this audit.
+- Migration history includes repeated patch/fix migrations, which may complicate fresh install reasoning.
+- Debugbar routes are visible in local route list; production must ensure no dev dependencies/debug mode.
+
+==================================================
+COMPLETED TASKS
+==================================================
+
+- Created initial resume.txt permanent memory file.
+- Inspected project root and confirmed no prior resume.txt existed.
+- Checked git status and noted pre-existing package-lock.json modification.
+- Inspected composer.json and package.json dependencies.
+- Inspected route files: routes/web.php, routes/auth.php, routes/api.php.
+- Ran php artisan route:list successfully; observed 505 routes.
+- Inspected bootstrap/app.php middleware registration.
+- Inspected key auth, role, school context, and API access middleware.
+- Inspected User, School, Student, Classroom, BelongsToSchool, SchoolDomainService.
+- Inspected Admin\UserController and SuperAdmin\SchoolController account/school creation behavior.
+- Searched for Spatie permission usage.
+- Verified public registration issue with exact files and line numbers.
+- Reviewed tests related to registration, multi-school isolation, and school subdomain management.
+- Reviewed existing docs/ARCHITECTURE.md and docs/SECURITY.md.
+
+==================================================
+RECOMMENDED NEXT STEPS
+==================================================
+
+Priority 1:
+- Disable public registration routes and update tests to enforce the business rule.
+- Confirm production APP_ENV/APP_DEBUG/composer --no-dev state.
+- Decide whether authorization is custom role-based or Spatie-based; update project docs accordingly.
+
+Priority 2:
+- Add/expand tests for public registration disabled behavior.
+- Add route/resource tests around Super Admin, Admin, and school context mismatch.
+- Review hard delete paths for schools/users/students and consider soft-delete/archive workflows.
+- Replace default README with project-specific operational documentation.
+
+Priority 3:
+- Split routes/web.php into role-specific route files for maintainability.
+- Consolidate or document migration history for fresh installs.
+- Fix mojibake comments and standardize encoding.
+- Clarify purpose of academic_year_id and database/migrations.zip.
+
+==================================================
+CHANGE LOG
+==================================================
+
+[2026-05-31 18:48:21 +01:00]
+
+Initial full audit performed in read-only mode except creation of resume.txt.
+
+Files inspected:
+- C:\xampp\htdocs\GestionEcole-v2\composer.json
+- C:\xampp\htdocs\GestionEcole-v2\package.json
+- C:\xampp\htdocs\GestionEcole-v2\routes\web.php
+- C:\xampp\htdocs\GestionEcole-v2\routes\auth.php
+- C:\xampp\htdocs\GestionEcole-v2\routes\api.php
+- C:\xampp\htdocs\GestionEcole-v2\bootstrap\app.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Controllers\Auth\RegisteredUserController.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Controllers\Admin\UserController.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Controllers\SuperAdmin\SchoolController.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Middleware\AdminOnly.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Middleware\SuperAdmin.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Middleware\DirectorOnly.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Middleware\TeacherOnly.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Middleware\ParentOnly.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Middleware\StudentOnly.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Middleware\SchoolLifeOnly.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Middleware\CheckSchoolActive.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Middleware\IdentifySchoolFromSubdomain.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Middleware\SetCurrentSchool.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Middleware\EnsureApiSchoolAccess.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Http\Middleware\Concerns\EnsuresActiveUser.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Models\User.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Models\School.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Models\Student.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Models\Classroom.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Models\Concerns\BelongsToSchool.php
+- C:\xampp\htdocs\GestionEcole-v2\app\Services\SchoolDomainService.php
+- C:\xampp\htdocs\GestionEcole-v2\database\migrations\
+- C:\xampp\htdocs\GestionEcole-v2\tests\Feature\Auth\RegistrationTest.php
+- C:\xampp\htdocs\GestionEcole-v2\tests\Feature\MultiSchoolIsolationTest.php
+- C:\xampp\htdocs\GestionEcole-v2\tests\Feature\SuperAdmin\SchoolSubdomainManagementTest.php
+- C:\xampp\htdocs\GestionEcole-v2\docs\ARCHITECTURE.md
+- C:\xampp\htdocs\GestionEcole-v2\docs\SECURITY.md
+
+Commands/audits performed:
+- Checked for existing resume.txt: none existed.
+- Listed project root and files.
+- Checked git status: package-lock.json was already modified.
+- Searched files with rg.
+- Ran php artisan route:list; route table loaded successfully and reported 505 routes.
+- Searched for public registration routes and controller behavior.
+- Searched for Spatie permission usage.
+- Reviewed route groups, middleware aliases, school context middleware, role model, and database migrations.
+
+Bugs/security observations:
+- HIGH: Public GET /register and POST /register are enabled for guest users. See routes/auth.php:14-18 and app/Http/Controllers/Auth/RegisteredUserController.php:20-46. Do not apply fix until explicitly requested.
+- MEDIUM: Spatie Laravel Permission expected by project context but not present in composer.json or code usage.
+- MEDIUM: Debugbar routes exist in local route list; production must keep debug/dev dependencies disabled.
+- MEDIUM: Existing docs/SECURITY.md notes tracked test secrets/config issues.
+- HIGH operational risk: Super Admin school deletion invokes broad school data deletion via School model deleting event.
+
+Fixes applied:
+- None to application behavior.
+- Created C:\xampp\htdocs\GestionEcole-v2\resume.txt as the permanent project memory file.
+
+Features added:
+- Permanent project memory/audit file only.
+
+Technical details:
+- Account creation currently exists in public RegisteredUserController, SuperAdmin\SchoolController, Admin\UserController, and Admin\StudentController paths.
+- Super Admin creates school admins through SuperAdmin\SchoolController.
+- Admin creates school users through Admin\UserController with school-scoped role validation.
+- Multi-school isolation is implemented via subdomain resolution, current_school_id app binding, BelongsToSchool global scope, and explicit school_id filters/aborts.
+- Tests exist for registration enabled behavior, multi-school isolation, subdomain generation, admin workflows, attendance, messaging, parent/student portals, and database constraints.
+
+2026-05-31: Fixed admin dashboard Blade parse error by changing the malformed single-quoted string containing l'etablissement to a double-quoted string.

@@ -32,7 +32,7 @@
             [
                 'title' => 'Enseignants',
                 'value' => $teachersCount,
-                'meta' => 'Corps enseignant de l'etablissement.',
+                'meta' => "Corps enseignant de l'etablissement.",
                 'badge' => 'Pedagogie',
                 'tone' => 'violet',
                 'icon' => 'teachers',
