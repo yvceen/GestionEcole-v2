@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'My Edu') }} | L'education connectee, simplement</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <x-school-favicons />
     <style>
         .fut-logo-marquee{position:relative;z-index:1;width:100%;overflow:hidden;margin-top:3rem;padding:1.25rem 0 2rem;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
         .fut-logo-marquee:hover .fut-logo-track{animation-play-state:paused}
