@@ -21,7 +21,7 @@
 
         @if($levels->isEmpty())
             <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-900 text-sm">
-                ⚠️ ما كاين حتى Niveau. تقدر تزيد “level_name” هنا مباشرة.
+                Aucun niveau n est encore disponible. Vous pouvez creer un niveau ici directement.
             </div>
         @endif
 
@@ -36,7 +36,7 @@
                         </option>
                     @endforeach
                 </select>
-                <div class="mt-2 text-xs text-slate-500">إذا ما تختارش مستوى، تقدر تكتب واحد جديد فالخانة اللي تحت.</div>
+                <div class="mt-2 text-xs text-slate-500">Si aucun niveau n est selectionne, vous pouvez en creer un dans le champ suivant.</div>
             </div>
 
             <div>

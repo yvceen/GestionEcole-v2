@@ -76,16 +76,6 @@
                     rows="8"
                 >{{ old('message_template', $setting?->message_template ?: $defaultTemplate) }}</x-ui.textarea>
 
-                <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-4 text-sm text-slate-600">
-                    Variables disponibles :
-                    <span class="font-semibold">{parent_name}</span>,
-                    <span class="font-semibold">{school_name}</span>,
-                    <span class="font-semibold">{total_due}</span>,
-                    <span class="font-semibold">{overdue_total}</span>,
-                    <span class="font-semibold">{unpaid_months}</span>,
-                    <span class="font-semibold">{overdue_months}</span>.
-                </div>
-
                 <div class="flex justify-end gap-3">
                     <x-ui.button :href="route('admin.finance.reminders.edit')" variant="secondary">
                         Recharger l apercu

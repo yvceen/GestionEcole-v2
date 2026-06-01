@@ -39,7 +39,6 @@
         $roles = [
             '' => 'Tous',
             'admin' => 'Admins',
-            'super_admin' => 'Super admins',
             'director' => 'Directeurs',
             'teacher' => 'Enseignants',
             'parent' => 'Parents',

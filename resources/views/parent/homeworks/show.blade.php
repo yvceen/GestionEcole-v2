@@ -18,7 +18,7 @@
         <div class="flex gap-2">
             <a href="{{ route('parent.homeworks.index') }}"
                class="inline-flex items-center justify-center rounded-2xl border border-black/5 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-white transition">
-                ← رجوع
+                Retour
             </a>
         </div>
     </div>
@@ -108,7 +108,7 @@
                 @csrf
 
                 <div class="text-sm font-semibold text-slate-900">Envoyer une submission</div>
-                <p class="mt-1 text-xs text-slate-500">اختار ولدك، كتب description، وحطّ fichiers/images.</p>
+                <p class="mt-1 text-xs text-slate-500">Selectionnez l eleve, ajoutez une description et joignez les fichiers.</p>
 
                 <div class="mt-4">
                     <label class="text-xs font-semibold text-slate-700">Élève</label>
@@ -126,7 +126,7 @@
                     <label class="text-xs font-semibold text-slate-700">Description</label>
                     <textarea name="description" rows="5"
                               class="mt-1 w-full rounded-2xl border border-slate-200 bg-white/70 px-3 py-2 text-sm"
-                              placeholder="ملاحظات / شرح..."></textarea>
+                              placeholder="Notes / explications..."></textarea>
                     @error('description')
                         <div class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</div>
                     @enderror

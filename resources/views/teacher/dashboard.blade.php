@@ -2,7 +2,7 @@
     <x-slot name="header">Tableau de bord</x-slot>
 
     @php
-        // ✅ Defaults باش ما يطيحش view
+        // Default values for missing dashboard data.
         $startOfWeek = $startOfWeek ?? now()->startOfWeek();
         $endOfWeek   = $endOfWeek ?? now()->endOfWeek();
 

@@ -45,11 +45,18 @@ class UserController extends Controller
         ];
     }
 
+    private function normalizedRole(mixed $role): ?string
+    {
+        $role = trim((string) $role);
+
+        return in_array($role, $this->allowedRoles(), true) ? $role : null;
+    }
+
     public function index(Request $request)
     {
         $schoolId = $this->schoolIdOrFail();
 
-        $role = $request->get('role');
+        $role = $this->normalizedRole($request->get('role'));
         $q = trim((string) $request->get('q'));
 
         $users = User::query()
@@ -74,7 +81,7 @@ class UserController extends Controller
         $schoolId = $this->schoolIdOrFail();
 
         $q = trim((string) $request->get('q'));
-        $role = $request->get('role');
+        $role = $this->normalizedRole($request->get('role'));
 
         if (mb_strlen($q) < 2) {
             return response()->json([]);

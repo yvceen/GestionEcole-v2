@@ -88,7 +88,7 @@
 
         <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div class="text-xs text-slate-500">
-                Conseil : filtre par mois (Du/Au) باش تشوف الإحصائيات بوضوح.
+                Conseil : filtrez par mois (Du/Au) pour une lecture plus claire des statistiques.
             </div>
 
             <div class="flex gap-2">

@@ -3,7 +3,7 @@
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Structure scolaire</h1>
             <p class="mt-1 text-sm text-slate-500">
-                Ajouter des niveaux et des classes بسهولة، ومن هنا غادي يتعمّر dropdown ديال classes فـ élèves.
+                Ajoutez les niveaux et les classes pour organiser les eleves.
             </p>
         </div>
     </div>

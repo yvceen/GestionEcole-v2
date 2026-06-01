@@ -49,7 +49,7 @@
         </div>
 
         <div class="mt-4 text-xs text-slate-500">
-            Astuce : filtre par classe باش يشوف المدير فين خاص الدعم أكثر.
+            Astuce : filtrez par classe pour identifier les besoins de soutien.
         </div>
     </form>
 

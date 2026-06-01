@@ -75,7 +75,7 @@
                 </div>
             @elseif($students->isEmpty())
                 <div class="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-900">
-                    Aucun élève trouvé pour cette classe (ou classroom_id غير موجود فـ l’évaluation).
+                    Aucun eleve trouve pour cette classe ou cette evaluation.
                 </div>
             @else
                 <form method="POST" action="{{ route('teacher.grades.store') }}" class="mt-4">

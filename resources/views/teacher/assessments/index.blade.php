@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-semibold text-slate-900">Évaluations</h1>
-            <p class="text-sm text-slate-500 mt-1">جدولة الفروض والامتحانات</p>
+            <p class="text-sm text-slate-500 mt-1">Planifiez les devoirs et les examens.</p>
         </div>
 
         <a href="{{ route('teacher.assessments.create') }}"
