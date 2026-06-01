@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AttendanceScanController;
-use App\Http\Controllers\DocumentDownloadController;
 use App\Http\Controllers\Api\DeviceTokenController;
 use App\Http\Controllers\Api\MobileAttendanceScanController;
 use App\Http\Controllers\Api\MobileAgendaController;
@@ -11,7 +10,6 @@ use App\Http\Controllers\Api\MobileActivityController;
 use App\Http\Controllers\Api\MobileAuthController;
 use App\Http\Controllers\Api\MobileCourseController;
 use App\Http\Controllers\Api\MobileDashboardController;
-use App\Http\Controllers\Api\MobileDocumentController;
 use App\Http\Controllers\Api\MobileBehaviorFeedController;
 use App\Http\Controllers\Api\MobileFinanceController;
 use App\Http\Controllers\Api\MobileGradesController;
@@ -59,10 +57,6 @@ Route::middleware([IdentifySchoolFromSubdomain::class])->group(function (): void
         Route::get('/news', [MobileNewsController::class, 'index'])->name('api.news.index');
         Route::get('/news/{news}', [MobileNewsController::class, 'show'])->whereNumber('news')->name('api.news.show');
         Route::get('/transport', [MobileTransportController::class, 'show'])->name('api.transport.show');
-        Route::get('/documents', [MobileDocumentController::class, 'index'])->name('api.documents.index');
-        Route::get('/documents/{document}/download', DocumentDownloadController::class)
-            ->whereNumber('document')
-            ->name('api.documents.download');
         Route::get('/behavior-notes', [MobileBehaviorFeedController::class, 'index'])->name('api.behavior-notes.index');
         Route::get('/appointments', [MobileAppointmentController::class, 'index'])->name('api.appointments.index');
         Route::post('/appointments', [MobileAppointmentController::class, 'store'])->name('api.appointments.store');

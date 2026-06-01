@@ -372,7 +372,11 @@
                 const start = academicYearStart?.value || new Date().toISOString().slice(0, 7);
                 const end = academicYearEnd?.value || start;
 
-                return monthsBetween(start, end);
+                return monthsBetween(start, end).filter((month) => {
+                    const monthNumber = Number(String(month).slice(5, 7));
+
+                    return monthNumber !== 7 && monthNumber !== 8;
+                });
             }
 
             function monthLabel(month) {

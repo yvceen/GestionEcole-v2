@@ -22,7 +22,6 @@
         ['label' => 'Transport', 'route' => 'transport.ops.index', 'icon' => 'users', 'active_routes' => ['transport.ops.*'], 'section' => 'Organisation'],
         ['label' => 'Actualites', 'route' => 'school-life.news.index', 'icon' => 'message', 'active_routes' => ['school-life.news.*'], 'section' => 'Communication'],
         ['label' => 'Rendez-vous', 'route' => 'school-life.appointments.index', 'icon' => 'calendar', 'section' => 'Communication'],
-        ['label' => 'Documents', 'route' => 'school-life.documents.registration-requirements.index', 'icon' => 'clipboard', 'section' => 'Communication'],
     ];
 
     if (Route::has('school-life.notifications.index')) {

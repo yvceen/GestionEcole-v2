@@ -34,9 +34,6 @@
     if (Route::has('director.reports.index')) {
         $nav[] = ['label' => 'Rapports', 'route' => 'director.reports.index', 'icon' => 'clipboard', 'section' => 'Suivi'];
     }
-    if (Route::has('director.documents.registration-requirements.index')) {
-        $nav[] = ['label' => 'Documents', 'route' => 'director.documents.registration-requirements.index', 'icon' => 'clipboard', 'section' => 'Communication'];
-    }
     if (Route::has('director.messages.index')) {
         $nav[] = ['label' => 'Messagerie', 'route' => 'director.messages.index', 'icon' => 'message', 'section' => 'Communication'];
     }

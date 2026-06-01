@@ -6,7 +6,6 @@ use App\Http\Controllers\AttendanceScanController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\DocumentDownloadController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\NotificationCenterController;
 use App\Http\Controllers\ProfileController;
@@ -16,7 +15,6 @@ use App\Http\Controllers\TransportOpsController;
 // Admin
 // ======================
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\DocumentLibraryController;
 use App\Http\Controllers\Admin\StructureController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\StudentFeePlanController;
@@ -116,7 +114,6 @@ use App\Http\Controllers\Director\HomeworkController as DirectorHomeworkControll
 use App\Http\Controllers\Director\SubjectController as DirectorSubjectController;
 use App\Http\Controllers\Director\TimetableController as DirectorTimetableController;
 use App\Http\Controllers\Director\TimetableSettingsController as DirectorTimetableSettingsController;
-use App\Http\Controllers\Documents\RegistrationRequirementController;
 use App\Http\Controllers\Parent\PickupRequestController as ParentPickupRequestController;
 use App\Http\Controllers\SchoolLife\AttendanceController as SchoolLifeAttendanceController;
 use App\Http\Controllers\SchoolLife\AttendanceScanController as SchoolLifeAttendanceScanController;
@@ -187,9 +184,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::middleware('school.active')->group(function () {
         Route::get('/attendance/scan', [AttendanceScanController::class, 'index'])->name('attendance.scan.page');
-        Route::get('/documents/{document}/download', DocumentDownloadController::class)
-            ->whereNumber('document')
-            ->name('documents.download');
         Route::get('/agenda/feed', [EventController::class, 'feed'])->name('agenda.feed');
         Route::get('/transport-ops', [TransportOpsController::class, 'index'])->name('transport.ops.index');
         Route::post('/transport-ops/logs', [TransportOpsController::class, 'store'])->name('transport.ops.store');
@@ -316,20 +310,6 @@ Route::prefix('admin')
         Route::get('/notifications/{notification}/open', [NotificationCenterController::class, 'open'])->name('notifications.open');
         Route::post('/notifications/read-all', [NotificationCenterController::class, 'markAllRead'])->name('notifications.read_all');
         Route::post('/notifications/push-test', [AdminPushTestController::class, 'store'])->name('notifications.push_test');
-        Route::prefix('documents/registration-requirements')->as('documents.registration-requirements.')->group(function () {
-            Route::get('/', [RegistrationRequirementController::class, 'index'])->name('index');
-            Route::post('/', [RegistrationRequirementController::class, 'store'])->name('store');
-            Route::put('/{item}', [RegistrationRequirementController::class, 'update'])->name('update');
-            Route::delete('/{item}', [RegistrationRequirementController::class, 'destroy'])->name('destroy');
-            Route::post('/{item}/move/{direction}', [RegistrationRequirementController::class, 'move'])->name('move');
-            Route::get('/preview', [RegistrationRequirementController::class, 'preview'])->name('preview');
-            Route::get('/pdf', [RegistrationRequirementController::class, 'pdf'])->name('pdf');
-        });
-        Route::get('/documents/library', [DocumentLibraryController::class, 'index'])->name('documents.library.index');
-        Route::post('/documents/library', [DocumentLibraryController::class, 'store'])->name('documents.library.store');
-        Route::put('/documents/library/{document}', [DocumentLibraryController::class, 'update'])->name('documents.library.update');
-        Route::delete('/documents/library/{document}', [DocumentLibraryController::class, 'destroy'])->name('documents.library.destroy');
-
         // News / Appointments / School Life
         Route::resource('news', AdminNewsController::class)->except(['show']);
         Route::resource('appointments', AdminAppointmentController::class)->except(['show']);
@@ -596,15 +576,6 @@ Route::prefix('school-life')
             Route::post('/{message}/approve', [SchoolLifeMessageController::class, 'approve'])->whereNumber('message')->name('approve');
             Route::post('/{message}/reject', [SchoolLifeMessageController::class, 'reject'])->whereNumber('message')->name('reject');
         });
-        Route::prefix('documents/registration-requirements')->as('documents.registration-requirements.')->group(function () {
-            Route::get('/', [RegistrationRequirementController::class, 'index'])->name('index');
-            Route::post('/', [RegistrationRequirementController::class, 'store'])->name('store');
-            Route::put('/{item}', [RegistrationRequirementController::class, 'update'])->name('update');
-            Route::delete('/{item}', [RegistrationRequirementController::class, 'destroy'])->name('destroy');
-            Route::post('/{item}/move/{direction}', [RegistrationRequirementController::class, 'move'])->name('move');
-            Route::get('/preview', [RegistrationRequirementController::class, 'preview'])->name('preview');
-            Route::get('/pdf', [RegistrationRequirementController::class, 'pdf'])->name('pdf');
-        });
     });
 
 // =====================================================================
@@ -706,16 +677,6 @@ Route::prefix('director')
         Route::get('/reports', [DirectorReportsController::class, 'index'])->name('reports.index');
         Route::get('/reports/create', [DirectorReportsController::class, 'create'])->name('reports.create');
         Route::post('/reports', [DirectorReportsController::class, 'store'])->name('reports.store');
-        Route::prefix('documents/registration-requirements')->as('documents.registration-requirements.')->group(function () {
-            Route::get('/', [RegistrationRequirementController::class, 'index'])->name('index');
-            Route::post('/', [RegistrationRequirementController::class, 'store'])->name('store');
-            Route::put('/{item}', [RegistrationRequirementController::class, 'update'])->name('update');
-            Route::delete('/{item}', [RegistrationRequirementController::class, 'destroy'])->name('destroy');
-            Route::post('/{item}/move/{direction}', [RegistrationRequirementController::class, 'move'])->name('move');
-            Route::get('/preview', [RegistrationRequirementController::class, 'preview'])->name('preview');
-            Route::get('/pdf', [RegistrationRequirementController::class, 'pdf'])->name('pdf');
-        });
-
         // Director messages
         Route::prefix('messages')->as('messages.')->group(function () {
             Route::get('/', [DirectorMessageController::class, 'index'])->name('index');

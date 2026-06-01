@@ -30,7 +30,6 @@
         ['label' => 'Rendez-vous', 'route' => 'admin.appointments.index', 'icon' => 'calendar', 'section' => 'Communication'],
         ['label' => 'Messagerie', 'route' => 'admin.messages.index', 'icon' => 'message', 'section' => 'Communication'],
         ['label' => 'Notifications', 'route' => 'admin.notifications.index', 'icon' => 'bell', 'section' => 'Communication'],
-        ['label' => 'Documents', 'route' => 'admin.documents.library.index', 'icon' => 'clipboard', 'section' => 'Communication'],
     ];
 
     $currentSchool = app()->bound('currentSchool')
