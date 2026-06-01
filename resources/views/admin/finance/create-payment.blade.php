@@ -4,6 +4,8 @@
         $oldMonths = collect(old('months', []))->map(fn ($month) => (string) $month)->values();
         $oldParentId = (int) old('parent_id', 0);
         $oldParent = $oldParentId > 0 ? $parents->firstWhere('id', $oldParentId) : null;
+        $academicYearStart = optional($academicYear->starts_at ?? null)->format('Y-m') ?: now()->startOfYear()->format('Y-m');
+        $academicYearEnd = optional($academicYear->ends_at ?? null)->format('Y-m') ?: now()->endOfYear()->format('Y-m');
     @endphp
 
     <x-ui.page-header
@@ -147,15 +149,28 @@
                         <p class="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">Periode</p>
                         <p class="mt-1 text-sm text-slate-600">Choisissez un intervalle, puis gardez seulement les mois a encaisser.</p>
                     </div>
-                    <div class="grid gap-4 md:grid-cols-2">
-                        <x-ui.input id="month_start" type="month" label="Du mois" :value="old('month_start', $oldMonths->first())" />
-                        <x-ui.input id="month_end" type="month" label="Au mois" :value="old('month_end', $oldMonths->last())" />
+                    <input type="hidden" id="academic_year_start" value="{{ $academicYearStart }}">
+                    <input type="hidden" id="academic_year_end" value="{{ $academicYearEnd }}">
+
+                    <div class="grid gap-4 md:grid-cols-3">
+                        <div class="rounded-3xl border border-slate-200 bg-white px-4 py-4">
+                            <p class="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Annee scolaire</p>
+                            <p class="mt-2 text-sm font-semibold text-slate-900">{{ $academicYear->name ?? 'Annee active' }}</p>
+                            <p class="mt-1 text-xs text-slate-500">{{ $academicYearStart }} -> {{ $academicYearEnd }}</p>
+                        </div>
+                        <button type="button" id="showUnpaidMonthsBtn" class="rounded-3xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-left transition hover:bg-emerald-100">
+                            <span class="block text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Recommande</span>
+                            <span class="mt-2 block text-sm font-semibold text-slate-900">Afficher mois non payes</span>
+                            <span class="mt-1 block text-xs text-slate-600">Selon les eleves selectionnes.</span>
+                        </button>
+                        <button type="button" id="showAllMonthsBtn" class="rounded-3xl border border-sky-200 bg-sky-50 px-4 py-4 text-left transition hover:bg-sky-100">
+                            <span class="block text-xs font-bold uppercase tracking-[0.16em] text-sky-700">Tous</span>
+                            <span class="mt-2 block text-sm font-semibold text-slate-900">Afficher tous les mois</span>
+                            <span class="mt-1 block text-xs text-slate-600">Utile pour corriger une selection.</span>
+                        </button>
                     </div>
 
                     <div class="mt-4 flex flex-wrap gap-2">
-                        <x-ui.button type="button" id="genMonthsBtn" variant="primary" size="sm">
-                            Generer les mois
-                        </x-ui.button>
                         <x-ui.button type="button" id="selectAllMonthsBtn" variant="secondary" size="sm">
                             Tout selectionner
                         </x-ui.button>
@@ -164,8 +179,8 @@
                         </x-ui.button>
                     </div>
 
-                    <div id="monthsBox" class="mt-4 flex min-h-[60px] flex-wrap gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                        <div class="text-sm text-slate-500">Generez d'abord les mois a regler.</div>
+                    <div id="monthsBox" class="mt-4 grid min-h-[120px] gap-3 rounded-3xl border border-slate-200 bg-slate-50 p-3 sm:grid-cols-2 xl:grid-cols-3">
+                        <div class="text-sm text-slate-500 sm:col-span-2 xl:col-span-3">Selectionnez d'abord un parent et un eleve pour voir les mois non payes.</div>
                     </div>
 
                     <div id="monthsHint" class="mt-3 hidden text-xs font-medium text-rose-600">
@@ -267,9 +282,10 @@
             const clearStudentsBtn = document.getElementById('clearStudentsBtn');
             const studentsBox = document.getElementById('studentsBox');
             const studentsHint = document.getElementById('studentsHint');
-            const monthStart = document.getElementById('month_start');
-            const monthEnd = document.getElementById('month_end');
-            const genMonthsBtn = document.getElementById('genMonthsBtn');
+            const academicYearStart = document.getElementById('academic_year_start');
+            const academicYearEnd = document.getElementById('academic_year_end');
+            const showUnpaidMonthsBtn = document.getElementById('showUnpaidMonthsBtn');
+            const showAllMonthsBtn = document.getElementById('showAllMonthsBtn');
             const selectAllMonthsBtn = document.getElementById('selectAllMonthsBtn');
             const clearMonthsBtn = document.getElementById('clearMonthsBtn');
             const monthsBox = document.getElementById('monthsBox');
@@ -298,6 +314,8 @@
                 requestId: 0,
                 selectedStudentIds: new Set(serverSelectedStudentIds),
                 studentsById: new Map(),
+                monthMode: 'unpaid',
+                oldMonthsRestored: false,
             };
 
             function escapeHtml(value) {
@@ -348,6 +366,39 @@
                 }
 
                 return output;
+            }
+
+            function academicYearMonths() {
+                const start = academicYearStart?.value || new Date().toISOString().slice(0, 7);
+                const end = academicYearEnd?.value || start;
+
+                return monthsBetween(start, end);
+            }
+
+            function monthLabel(month) {
+                const [year, rawMonth] = String(month).split('-').map(Number);
+                const names = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aout', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+                return `${names[(rawMonth || 1) - 1]} ${year}`;
+            }
+
+            function monthStatus(month, selectedStudents) {
+                if (!selectedStudents.length) {
+                    return { paid: false, unpaid: false, partial: false, label: 'Choisir eleve', count: 0, total: 0 };
+                }
+
+                const total = selectedStudents.length;
+                const paidCount = selectedStudents.filter((student) => Array.isArray(student.paid_months) && student.paid_months.includes(month)).length;
+                const unpaidCount = total - paidCount;
+
+                return {
+                    paid: paidCount === total,
+                    unpaid: unpaidCount === total,
+                    partial: paidCount > 0 && unpaidCount > 0,
+                    label: unpaidCount === 0 ? 'Deja paye' : (paidCount === 0 ? 'Non paye' : `${unpaidCount}/${total} non paye`),
+                    count: unpaidCount,
+                    total,
+                };
             }
 
             function getParentOption(parentId) {
@@ -525,31 +576,68 @@
                     `;
                 }).join('');
 
-                updateSummary();
+                if (!state.oldMonthsRestored && oldMonths.length > 0) {
+                    state.oldMonthsRestored = true;
+                    state.monthMode = 'all';
+                    refreshMonthChoices(oldMonths);
+                } else {
+                    refreshMonthChoices(getSelectedMonths());
+                }
             }
 
-            function renderMonths(months, preferredSelection = []) {
+            function renderMonths(months, preferredSelection = [], options = {}) {
                 if (!Array.isArray(months) || months.length === 0) {
-                    monthsBox.innerHTML = '<div class="text-sm text-slate-500">Generez d abord les mois a regler.</div>';
+                    monthsBox.innerHTML = '<div class="text-sm text-slate-500 sm:col-span-2 xl:col-span-3">Aucun mois a afficher pour cette selection.</div>';
                     updateSummary();
                     return;
                 }
 
                 const preferred = new Set(preferredSelection);
+                const selectedStudents = getSelectedStudentEntries();
+                const autoSelectUnpaid = Boolean(options.autoSelectUnpaid);
                 monthsBox.innerHTML = months.map((month) => `
-                    <label class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">
+                    ${(() => {
+                        const status = monthStatus(month, selectedStudents);
+                        const disabled = status.paid;
+                        const checked = preferred.size > 0 ? preferred.has(month) : (autoSelectUnpaid && !disabled);
+                        const tone = status.paid
+                            ? 'border-slate-200 bg-slate-100 text-slate-400'
+                            : (status.partial ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-emerald-200 bg-emerald-50 text-emerald-800');
+
+                        return `
+                    <label class="block cursor-pointer rounded-2xl border px-4 py-3 transition hover:-translate-y-0.5 hover:shadow-sm ${tone} ${disabled ? 'cursor-not-allowed opacity-75' : ''}">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="block text-sm font-bold text-slate-950">${monthLabel(month)}</span>
+                                <span class="mt-1 block text-xs font-semibold">${escapeHtml(status.label)}</span>
+                            </div>
                         <input
                             type="checkbox"
                             class="month-check"
                             name="months[]"
                             value="${month}"
-                            ${preferred.size === 0 || preferred.has(month) ? 'checked' : ''}
+                            ${checked ? 'checked' : ''}
+                            ${disabled ? 'disabled' : ''}
                         >
-                        <span>${month}</span>
+                        </div>
+                        <span class="mt-2 block text-[11px] text-slate-500">${escapeHtml(month)}</span>
                     </label>
+                        `;
+                    })()}
                 `).join('');
 
                 updateSummary();
+            }
+
+            function refreshMonthChoices(preferredSelection = getSelectedMonths()) {
+                const selectedStudents = getSelectedStudentEntries();
+                let months = academicYearMonths();
+
+                if (state.monthMode === 'unpaid') {
+                    months = months.filter((month) => monthStatus(month, selectedStudents).count > 0);
+                }
+
+                renderMonths(months, preferredSelection, { autoSelectUnpaid: state.monthMode === 'unpaid' });
             }
 
             async function loadStudents(parentId) {
@@ -638,28 +726,20 @@
                 studentsHint.classList.add('hidden');
             }
 
-            genMonthsBtn?.addEventListener('click', () => {
-                const start = monthStart.value;
-                const end = monthEnd.value;
+            showUnpaidMonthsBtn?.addEventListener('click', () => {
+                state.monthMode = 'unpaid';
+                refreshMonthChoices([]);
+                monthsHint.classList.add('hidden');
+            });
 
-                if (!start || !end) {
-                    monthsBox.innerHTML = '<div class="text-sm font-medium text-rose-600">Choisissez un mois de debut et un mois de fin.</div>';
-                    updateSummary();
-                    return;
-                }
-
-                if (start > end) {
-                    monthsBox.innerHTML = '<div class="text-sm font-medium text-rose-600">Le mois de debut doit etre inferieur ou egal au mois de fin.</div>';
-                    updateSummary();
-                    return;
-                }
-
-                renderMonths(monthsBetween(start, end), getSelectedMonths());
+            showAllMonthsBtn?.addEventListener('click', () => {
+                state.monthMode = 'all';
+                refreshMonthChoices(getSelectedMonths());
                 monthsHint.classList.add('hidden');
             });
 
             selectAllMonthsBtn?.addEventListener('click', () => {
-                monthsBox.querySelectorAll('.month-check').forEach((checkbox) => {
+                monthsBox.querySelectorAll('.month-check:not(:disabled)').forEach((checkbox) => {
                     checkbox.checked = true;
                 });
                 monthsHint.classList.add('hidden');
@@ -679,7 +759,7 @@
                     state.selectedStudentIds.add(Number(checkbox.value));
                 });
                 studentsHint.classList.add('hidden');
-                updateSummary();
+                refreshMonthChoices([]);
             });
 
             clearStudentsBtn?.addEventListener('click', () => {
@@ -687,7 +767,7 @@
                     checkbox.checked = false;
                 });
                 resetStudentSelection();
-                updateSummary();
+                refreshMonthChoices([]);
             });
 
             studentsBox.addEventListener('change', (event) => {
@@ -704,7 +784,7 @@
                 }
 
                 studentsHint.classList.toggle('hidden', getSelectedStudentEntries().length > 0);
-                updateSummary();
+                refreshMonthChoices([]);
             });
 
             monthsBox.addEventListener('change', (event) => {
@@ -726,6 +806,7 @@
                     kidsCount.textContent = '0';
                     hideDebug();
                     setStudentsPlaceholder('Choisissez d abord un parent.');
+                    monthsBox.innerHTML = '<div class="text-sm text-slate-500 sm:col-span-2 xl:col-span-3">Selectionnez d abord un parent et un eleve pour voir les mois non payes.</div>';
                     updateSummary();
                     return;
                 }
@@ -758,11 +839,7 @@
 
             updateParentSummary();
 
-            if (oldMonths.length > 0) {
-                renderMonths(oldMonths, oldMonths);
-            } else {
-                updateSummary();
-            }
+            updateSummary();
 
             if (parentSelect.value) {
                 loadStudents(parentSelect.value);

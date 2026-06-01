@@ -476,8 +476,10 @@ class FinanceController extends Controller
 
         $schoolId = $this->schoolId();
         abort_unless((int) $parent->school_id === $schoolId, 404);
+        $academicYear = $this->academicYears->requireCurrentYearForSchool($schoolId);
+        $academicYearId = (int) $academicYear->id;
 
-        $students = $this->linkedStudentsQuery($parent, $schoolId)
+        $studentModels = $this->linkedStudentsQuery($parent, $schoolId)
             ->with([
                 'classroom:id,name',
                 'classroom.fee',
@@ -488,7 +490,28 @@ class FinanceController extends Controller
                 },
             ])
             ->orderBy('full_name')
-            ->get(['students.id', 'students.full_name', 'students.classroom_id'])
+            ->get(['students.id', 'students.full_name', 'students.classroom_id']);
+
+        $paidMonthsByStudent = Payment::query()
+            ->where('school_id', $schoolId)
+            ->whereIn('student_id', $studentModels->pluck('id')->map(fn ($id) => (int) $id)->all())
+            ->when(Schema::hasColumn('payments', 'academic_year_id'), function ($query) use ($academicYearId) {
+                $query->where(function ($inner) use ($academicYearId) {
+                    $inner->where('academic_year_id', $academicYearId)
+                        ->orWhereNull('academic_year_id');
+                });
+            })
+            ->whereNotNull('period_month')
+            ->get(['student_id', 'period_month'])
+            ->groupBy(fn (Payment $payment) => (int) $payment->student_id)
+            ->map(fn ($payments) => $payments
+                ->map(fn (Payment $payment) => $payment->period_month?->format('Y-m'))
+                ->filter()
+                ->unique()
+                ->values()
+                ->all());
+
+        $students = $studentModels
             ->map(function (Student $student) {
                 $pricing = $this->studentMonthlyPricing($student);
 
@@ -501,13 +524,25 @@ class FinanceController extends Controller
                     'monthly_total' => $pricing['monthly_total'],
                     'has_monthly_fees' => (float) $pricing['monthly_total'] > 0,
                     'details' => $pricing['details'],
+                    'paid_months' => [],
                 ];
+            })
+            ->map(function (array $student) use ($paidMonthsByStudent) {
+                $student['paid_months'] = $paidMonthsByStudent->get((int) $student['id'], []);
+
+                return $student;
             })
             ->values();
 
         return response()->json([
             'count' => $students->count(),
             'students' => $students,
+            'academic_year' => [
+                'id' => $academicYearId,
+                'name' => $academicYear->name,
+                'starts_at' => $academicYear->starts_at?->format('Y-m-d'),
+                'ends_at' => $academicYear->ends_at?->format('Y-m-d'),
+            ],
         ]);
     }
 
