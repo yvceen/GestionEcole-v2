@@ -163,98 +163,86 @@
                 </div>
             </div>
         @else
-            <div class="overflow-hidden rounded-[28px] border border-slate-200 bg-white">
-                <div class="hidden border-b border-slate-200 bg-slate-50/80 px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 xl:grid xl:grid-cols-[minmax(220px,1.05fr)_minmax(240px,1.3fr)_minmax(150px,0.75fr)_minmax(145px,0.7fr)_minmax(130px,0.65fr)_minmax(300px,1.2fr)] xl:gap-7">
-                    <div>Devoir</div>
-                    <div>Details</div>
-                    <div>Classe</div>
-                    <div>Echeance</div>
-                    <div>Statut</div>
-                    <div>Actions</div>
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+                <div class="overflow-x-auto">
+                    <table class="app-table min-w-[1180px]">
+                        <thead>
+                            <tr>
+                                <th>Devoir</th>
+                                <th>Details</th>
+                                <th>Classe</th>
+                                <th>Echeance</th>
+                                <th>Statut</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($homeworks as $hw)
+                                @php
+                                    $normalized = $hw->normalized_status ?? 'pending';
+                                    $statusMeta = $desktopStatusTone($normalized);
+                                    $summary = trim((string) ($hw->description ?? ''));
+                                @endphp
+                                <tr class="align-top">
+                                    <td class="min-w-[230px]">
+                                        <p class="font-semibold text-slate-900">{{ $hw->title }}</p>
+                                        <p class="mt-1 text-xs text-slate-500">
+                                            Cree le {{ optional($hw->created_at)->format('d/m/Y H:i') ?? '-' }}
+                                        </p>
+                                    </td>
+                                    <td class="min-w-[330px]">
+                                        <p class="max-w-md text-sm leading-6 text-slate-600">
+                                            {{ $summary !== '' ? \Illuminate\Support\Str::limit($summary, 150) : 'Aucun resume ajoute pour cette demande.' }}
+                                        </p>
+                                        <p class="mt-1 text-xs text-slate-500">
+                                            Enseignant : <span class="font-semibold text-slate-700">{{ $hw->teacher?->name ?? '-' }}</span>
+                                            <span class="mx-2 text-slate-300">|</span>
+                                            Pieces : <span class="font-semibold text-slate-700">{{ (int) ($hw->attachments_count ?? 0) }}</span>
+                                        </p>
+                                    </td>
+                                    <td class="min-w-[150px]">
+                                        <p class="font-medium text-slate-900">{{ $hw->classroom?->name ?? '-' }}</p>
+                                        <p class="mt-1 text-xs text-slate-500">{{ $hw->classroom?->level?->name ?? '' }}</p>
+                                    </td>
+                                    <td class="min-w-[140px]">
+                                        <p class="font-medium text-slate-900">{{ optional($hw->due_at)->format('d/m/Y') ?? '-' }}</p>
+                                        <p class="mt-1 text-xs text-slate-500">{{ optional($hw->due_at)->format('H:i') ?? 'Sans heure' }}</p>
+                                    </td>
+                                    <td class="min-w-[130px]">
+                                        <x-ui.badge :variant="$statusMeta['badge']" class="uppercase tracking-[0.12em]">
+                                            {{ $statusMeta['label'] }}
+                                        </x-ui.badge>
+                                    </td>
+                                    <td class="min-w-[330px] text-right">
+                                        <div class="flex flex-wrap justify-end gap-2">
+                                            <x-ui.button :href="route($routePrefix . '.show', $hw)" variant="ghost" size="sm">Voir</x-ui.button>
+                                            <x-ui.button :href="route($routePrefix . '.edit', $hw)" variant="secondary" size="sm">Modifier</x-ui.button>
+
+                                            @if($normalized === 'pending')
+                                                <form method="POST" action="{{ route($routePrefix . '.approve', $hw) }}">
+                                                    @csrf
+                                                    <x-ui.button type="submit" variant="outline" size="sm">Approuver</x-ui.button>
+                                                </form>
+                                                <form method="POST" action="{{ route($routePrefix . '.reject', $hw) }}">
+                                                    @csrf
+                                                    <x-ui.button type="submit" variant="danger" size="sm">Rejeter</x-ui.button>
+                                                </form>
+                                            @endif
+
+                                            <form method="POST" action="{{ route($routePrefix . '.destroy', $hw) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <x-ui.button type="submit" variant="danger" size="sm" onclick="return confirm('Supprimer ce devoir ?');">
+                                                    Supprimer
+                                                </x-ui.button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-
-                @foreach($homeworks as $hw)
-                    @php
-                        $normalized = $hw->normalized_status ?? 'pending';
-                        $statusMeta = $desktopStatusTone($normalized);
-                        $summary = trim((string) ($hw->description ?? ''));
-                    @endphp
-                    <article class="border-b border-slate-100 px-5 py-6 last:border-b-0 transition hover:bg-sky-50/35 xl:grid xl:grid-cols-[minmax(220px,1.05fr)_minmax(240px,1.3fr)_minmax(150px,0.75fr)_minmax(145px,0.7fr)_minmax(130px,0.65fr)_minmax(300px,1.2fr)] xl:items-center xl:gap-7 xl:px-6">
-                        <div class="min-w-0">
-                            <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Devoir</p>
-                            <h3 class="mt-1 line-clamp-2 text-base font-semibold tracking-tight text-slate-950 xl:mt-0">{{ $hw->title }}</h3>
-                            <p class="mt-1 text-xs text-slate-500">
-                                Cree le {{ optional($hw->created_at)->format('d/m/Y H:i') ?? '-' }}
-                            </p>
-                        </div>
-
-                        <div class="mt-4 min-w-0 xl:mt-0">
-                            <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Details</p>
-                            <p class="mt-1 line-clamp-2 text-sm leading-6 text-slate-600 xl:mt-0">
-                                {{ $summary !== '' ? \Illuminate\Support\Str::limit($summary, 120) : 'Aucun resume ajoute pour cette demande.' }}
-                            </p>
-                            <p class="mt-1 text-xs text-slate-500">
-                                Enseignant : <span class="font-semibold text-slate-700">{{ $hw->teacher?->name ?? '-' }}</span>
-                                <span class="mx-2 text-slate-300">|</span>
-                                Pieces : <span class="font-semibold text-slate-700">{{ (int) ($hw->attachments_count ?? 0) }}</span>
-                            </p>
-                        </div>
-
-                        <div class="mt-4 xl:mt-0">
-                            <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Classe</p>
-                            <p class="mt-1 text-sm font-semibold text-slate-900 xl:mt-0">{{ $hw->classroom?->name ?? '-' }}</p>
-                            <p class="mt-1 text-xs text-slate-500">{{ $hw->classroom?->level?->name ?? '' }}</p>
-                        </div>
-
-                        <div class="mt-4 xl:mt-0">
-                            <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Echeance</p>
-                            <p class="mt-1 text-sm font-semibold text-slate-900 xl:mt-0">{{ optional($hw->due_at)->format('d/m/Y') ?? '-' }}</p>
-                            <p class="mt-1 text-xs text-slate-500">{{ optional($hw->due_at)->format('H:i') ?? 'Sans heure' }}</p>
-                        </div>
-
-                        <div class="mt-4 xl:mt-0">
-                            <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Statut</p>
-                            <x-ui.badge :variant="$statusMeta['badge']" class="mt-1 uppercase tracking-[0.12em] xl:mt-0">
-                                {{ $statusMeta['label'] }}
-                            </x-ui.badge>
-                        </div>
-
-                        <div class="mt-4 xl:mt-0">
-                            <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Actions</p>
-                            <div class="mt-2 grid gap-2 sm:grid-cols-2 xl:mt-0 xl:grid-cols-2">
-                                <x-ui.button :href="route($routePrefix . '.show', $hw)" variant="ghost" size="sm" class="justify-center">
-                                    Voir
-                                </x-ui.button>
-                                <x-ui.button :href="route($routePrefix . '.edit', $hw)" variant="secondary" size="sm" class="justify-center">
-                                    Modifier
-                                </x-ui.button>
-
-                                @if($normalized === 'pending')
-                                    <form method="POST" action="{{ route($routePrefix . '.approve', $hw) }}">
-                                        @csrf
-                                        <x-ui.button type="submit" variant="outline" size="sm" class="w-full justify-center">
-                                            Approuver
-                                        </x-ui.button>
-                                    </form>
-                                    <form method="POST" action="{{ route($routePrefix . '.reject', $hw) }}">
-                                        @csrf
-                                        <x-ui.button type="submit" variant="danger" size="sm" class="w-full justify-center">
-                                            Rejeter
-                                        </x-ui.button>
-                                    </form>
-                                @endif
-
-                                <form method="POST" action="{{ route($routePrefix . '.destroy', $hw) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <x-ui.button type="submit" variant="danger" size="sm" class="w-full justify-center" onclick="return confirm('Supprimer ce devoir ?');">
-                                        Supprimer
-                                    </x-ui.button>
-                                </form>
-                            </div>
-                        </div>
-                    </article>
-                @endforeach
             </div>
         @endif
     </x-ui.card>
