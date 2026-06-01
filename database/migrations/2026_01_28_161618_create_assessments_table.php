@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('teacher_id')->index();
             $table->unsignedBigInteger('subject_id')->index();
 
-            $table->string('title'); // Contrôle 1, Examen...
+            $table->string('title'); // Controle 1, Examen...
             $table->date('date');
             $table->unsignedTinyInteger('max_score')->default(20);
 

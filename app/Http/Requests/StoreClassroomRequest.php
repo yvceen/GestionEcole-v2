@@ -27,11 +27,11 @@ class StoreClassroomRequest extends FormRequest
     {
         return [
             'name.required' => 'Le nom de la classe est obligatoire.',
-            'name.unique' => 'Cette classe existe déjà.',
+            'name.unique' => 'Cette classe existe deja.',
             'level_id.required' => 'Le niveau est obligatoire.',
-            'level_id.exists' => 'Le niveau sélectionné est invalide.',
-            'capacity.required' => 'La capacité est obligatoire.',
-            'capacity.min' => 'La capacité doit être au moins 1.',
+            'level_id.exists' => 'Le niveau selectionne est invalide.',
+            'capacity.required' => 'La capacite est obligatoire.',
+            'capacity.min' => 'La capacite doit etre au moins 1.',
         ];
     }
 }

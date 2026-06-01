@@ -1,4 +1,4 @@
-<x-admin-layout title="Gestion des Véhicules">
+<x-admin-layout title="Gestion des Vehicules">
     <div class="max-w-7xl mx-auto">
         @if(session('success'))
             <div class="mb-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
@@ -8,12 +8,12 @@
 
         <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-                <h1 class="text-3xl font-semibold text-slate-900">🚌 Véhicules de Transport</h1>
-                <p class="mt-1 text-sm text-slate-600">Gérez les véhicules, conducteurs et affectations.</p>
+                <h1 class="text-3xl font-semibold text-slate-900">🚌 Vehicules de Transport</h1>
+                <p class="mt-1 text-sm text-slate-600">Gerez les vehicules, conducteurs et affectations.</p>
             </div>
             <a href="{{ route('admin.transport.vehicles.create') }}"
                class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-black">
-                + Ajouter Véhicule
+                + Ajouter Vehicule
             </a>
         </div>
 
@@ -25,7 +25,7 @@
                             <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Vehicle</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Immatriculation</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Conducteur</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Capacité</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Capacite</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Statut</th>
                             <th class="px-6 py-3 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">Actions</th>
                         </tr>
@@ -39,11 +39,11 @@
                                 </td>
                                 <td class="px-6 py-4 font-mono text-slate-900">{{ $vehicle->registration_number }}</td>
                                 <td class="px-6 py-4">
-                                    {{ $vehicle->driver?->name ?? '—' }}
+                                    {{ $vehicle->driver?->name ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
-                                        {{ $vehicle->capacity }} sièges
+                                        {{ $vehicle->capacity }} sieges
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
@@ -65,10 +65,10 @@
                                         </a>
                                         <a href="{{ route('admin.transport.vehicles.edit', $vehicle) }}"
                                            class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
-                                            Éditer
+                                            Editer
                                         </a>
                                         <form method="POST" action="{{ route('admin.transport.vehicles.destroy', $vehicle) }}"
-                                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?');"
+                                              onsubmit="return confirm('Etes-vous sur de vouloir supprimer ce vehicule ?');"
                                               class="inline">
                                             @csrf
                                             @method('DELETE')
@@ -83,7 +83,7 @@
                         @empty
                             <tr>
                                 <td colspan="6" class="py-12 px-6 text-center text-slate-600">
-                                    Aucun véhicule enregistré.
+                                    Aucun vehicule enregistre.
                                 </td>
                             </tr>
                         @endforelse

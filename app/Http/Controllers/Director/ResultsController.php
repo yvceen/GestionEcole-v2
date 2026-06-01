@@ -83,8 +83,8 @@ class ResultsController extends Controller
                     'subject'   => $r->subject,
                     'teacher'   => $r->teacher,
                     'avg'       => number_format((float)$r->avg_score, 2),
-                    'min'       => $r->min_score !== null ? number_format((float)$r->min_score, 2) : '—',
-                    'max'       => $r->max_score !== null ? number_format((float)$r->max_score, 2) : '—',
+                    'min'       => $r->min_score !== null ? number_format((float)$r->min_score, 2) : '-',
+                    'max'       => $r->max_score !== null ? number_format((float)$r->max_score, 2) : '-',
                     'count'     => (int)$r->notes_count,
                 ];
             })
@@ -92,7 +92,7 @@ class ResultsController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | 2) KPIs (total notes, moyenne globale, élèves en difficulté)
+        | 2) KPIs (total notes, moyenne globale, eleves en difficulte)
         |--------------------------------------------------------------------------
         */
         $totalNotes = (clone $base)->count();
@@ -101,7 +101,7 @@ class ResultsController extends Controller
             ->selectRaw('ROUND(AVG(grades.score), 2) as avg_score')
             ->value('avg_score');
 
-        // élèves en difficulté: moyenne < 10 (يمكن تبدل threshold)
+        // eleves en difficulte: moyenne < 10 (يمكن تبدل threshold)
         $difficultyThreshold = 10;
 
         $studentsDifficultyCount = (clone $base)

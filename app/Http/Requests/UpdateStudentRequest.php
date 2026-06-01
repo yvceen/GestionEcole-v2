@@ -51,12 +51,12 @@ class UpdateStudentRequest extends FormRequest
         return [
             'full_name.required' => 'Le nom complet est obligatoire.',
             'classroom_id.required' => 'La classe est obligatoire.',
-            'classroom_id.exists' => 'La classe sélectionnée est invalide.',
-            'parent_user_id.exists' => 'Le parent sélectionné est invalide.',
-            'birth_date.date' => 'La date de naissance doit être une date valide.',
-            'birth_date.before' => 'La date de naissance doit être antérieure à aujourd\'hui.',
-            'tuition_monthly.required' => 'Les frais de scolarité sont obligatoires.',
-            'tuition_monthly.numeric' => 'Les frais de scolarité doivent être un nombre.',
+            'classroom_id.exists' => 'La classe selectionnee est invalide.',
+            'parent_user_id.exists' => 'Le parent selectionne est invalide.',
+            'birth_date.date' => 'La date de naissance doit etre une date valide.',
+            'birth_date.before' => 'La date de naissance doit etre anterieure a aujourd\'hui.',
+            'tuition_monthly.required' => 'Les frais de scolarite sont obligatoires.',
+            'tuition_monthly.numeric' => 'Les frais de scolarite doivent etre un nombre.',
         ];
     }
 

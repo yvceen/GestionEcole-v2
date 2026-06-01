@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'Students' => 'Élèves',
-    'New Student' => 'Nouvel élève',
+    'Students' => 'Eleves',
+    'New Student' => 'Nouvel eleve',
     'Fees' => 'Frais',
     'Edit Fees' => 'Modifier les frais',
     'Parent' => 'Parent',

@@ -13,10 +13,10 @@ return [
     |
     */
 
-    "reset" => "Votre mot de passe a été réinitialisé !",
-    "sent" => "Nous vous avons envoyé par mail le lien de réinitialisation du mot de passe !",
-    'throttled' => 'Veuillez patienter avant de réessayer.',
-    "token" => "Le lien de réinitialisation du mot de passe n'est plus valide.",
-    "user" => "Aucun utilisateur n'a été trouvé avec cette adresse e-mail.",
+    "reset" => "Votre mot de passe a ete reinitialise !",
+    "sent" => "Nous vous avons envoye par mail le lien de reinitialisation du mot de passe !",
+    'throttled' => 'Veuillez patienter avant de reessayer.',
+    "token" => "Le lien de reinitialisation du mot de passe n'est plus valide.",
+    "user" => "Aucun utilisateur n'a ete trouve avec cette adresse e-mail.",
 
 ];

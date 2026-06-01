@@ -17,7 +17,7 @@
         $alerts = $alerts ?? [
             'classrooms_no_courses' => collect(),
             'classrooms_no_grades'  => collect(),
-            'hint' => "Publiez au moins 1 cours + 1 évaluation par classe chaque semaine.",
+            'hint' => "Publiez au moins 1 cours + 1 evaluation par classe chaque semaine.",
         ];
 
         $ranking = $ranking ?? [
@@ -36,10 +36,10 @@
             'min' => null,
             'max' => null,
             'distribution' => [
-                ['label'=>'0–5','value'=>0],
-                ['label'=>'5–10','value'=>0],
-                ['label'=>'10–15','value'=>0],
-                ['label'=>'15–20','value'=>0],
+                ['label'=>'0-5','value'=>0],
+                ['label'=>'5-10','value'=>0],
+                ['label'=>'10-15','value'=>0],
+                ['label'=>'15-20','value'=>0],
             ],
         ];
 
@@ -57,12 +57,12 @@
             <div>
                 <div class="text-2xl md:text-3xl font-semibold text-slate-900">Bienvenue 👋</div>
                 <div class="mt-1 text-sm text-slate-500">
-                    Vue rapide : cours, évaluations, notes, absences — tout est visible par la direction automatiquement.
+                    Vue rapide : cours, evaluations, notes, absences - tout est visible par la direction automatiquement.
                 </div>
 
                 <div class="mt-4 flex flex-wrap gap-2">
                     <span class="{{ $chip }}">Semaine : {{ $startOfWeek->format('d/m/Y') }} → {{ $endOfWeek->format('d/m/Y') }}</span>
-                    <span class="{{ $chip }}">Objectif : régularité + suivi clair</span>
+                    <span class="{{ $chip }}">Objectif : regularite + suivi clair</span>
                 </div>
             </div>
 
@@ -74,7 +74,7 @@
 
                 <a href="{{ route('teacher.assessments.create') }}"
                    class="rounded-2xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold hover:bg-slate-50">
-                    + Nouvelle évaluation
+                    + Nouvelle evaluation
                 </a>
 
                 <a href="{{ route('teacher.grades.index') }}"
@@ -95,7 +95,7 @@
         <div class="{{ $card }} p-5">
             <div class="text-xs uppercase tracking-wider text-slate-500">Cours (total)</div>
             <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $kpis['courses_total'] }}</div>
-            <div class="mt-2 text-xs text-slate-500">Depuis le début</div>
+            <div class="mt-2 text-xs text-slate-500">Depuis le debut</div>
         </div>
 
         <div class="{{ $card }} p-5">
@@ -105,21 +105,21 @@
         </div>
 
         <div class="{{ $card }} p-5">
-            <div class="text-xs uppercase tracking-wider text-slate-500">Évaluations (semaine)</div>
+            <div class="text-xs uppercase tracking-wider text-slate-500">Evaluations (semaine)</div>
             <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $kpis['assessments_week'] }}</div>
-            <div class="mt-2 text-xs text-slate-500">Contrôles / examens</div>
+            <div class="mt-2 text-xs text-slate-500">Controles / examens</div>
         </div>
 
         <div class="{{ $card }} p-5">
             <div class="text-xs uppercase tracking-wider text-slate-500">Notes saisies (semaine)</div>
             <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $kpis['grades_week'] }}</div>
-            <div class="mt-2 text-xs text-slate-500">Toutes matières</div>
+            <div class="mt-2 text-xs text-slate-500">Toutes matieres</div>
         </div>
 
         <div class="{{ $card }} p-5">
             <div class="text-xs uppercase tracking-wider text-slate-500">Absences (semaine)</div>
             <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $kpis['attendance_week'] }}</div>
-            <div class="mt-2 text-xs text-slate-500">Présent / absent / retard</div>
+            <div class="mt-2 text-xs text-slate-500">Present / absent / retard</div>
         </div>
     </div>
 
@@ -129,7 +129,7 @@
         {{-- ALERTES --}}
         <div class="{{ $card }} p-6">
             <div class="text-sm font-semibold text-slate-900">Smart Alerts</div>
-            <div class="mt-1 text-xs text-slate-500">Détection automatique (hebdo)</div>
+            <div class="mt-1 text-xs text-slate-500">Detection automatique (hebdo)</div>
 
             <div class="mt-4 space-y-3">
                 <div class="{{ $mini }}">
@@ -161,7 +161,7 @@
                 <div class="{{ $mini }}">
                     <div class="text-xs font-semibold text-slate-500">Conseil</div>
                     <div class="mt-2 text-sm text-slate-700">
-                        {{ $alerts['hint'] ?? "Publiez au moins 1 cours + 1 évaluation par classe chaque semaine." }}
+                        {{ $alerts['hint'] ?? "Publiez au moins 1 cours + 1 evaluation par classe chaque semaine." }}
                     </div>
                 </div>
             </div>
@@ -178,19 +178,19 @@
                 <div class="{{ $mini }}">
                     <div class="text-xs font-semibold text-slate-500">Moyenne</div>
                     <div class="mt-1 text-2xl font-semibold text-slate-900">
-                        {{ $analysis['avg'] !== null ? number_format($analysis['avg'],2) : '—' }}
+                        {{ $analysis['avg'] !== null ? number_format($analysis['avg'],2) : '-' }}
                     </div>
                 </div>
                 <div class="{{ $mini }}">
                     <div class="text-xs font-semibold text-slate-500">Min</div>
                     <div class="mt-1 text-2xl font-semibold text-slate-900">
-                        {{ $analysis['min'] !== null ? number_format($analysis['min'],2) : '—' }}
+                        {{ $analysis['min'] !== null ? number_format($analysis['min'],2) : '-' }}
                     </div>
                 </div>
                 <div class="{{ $mini }}">
                     <div class="text-xs font-semibold text-slate-500">Max</div>
                     <div class="mt-1 text-2xl font-semibold text-slate-900">
-                        {{ $analysis['max'] !== null ? number_format($analysis['max'],2) : '—' }}
+                        {{ $analysis['max'] !== null ? number_format($analysis['max'],2) : '-' }}
                     </div>
                 </div>
             </div>
@@ -220,7 +220,7 @@
         {{-- RANKING CLASSES --}}
         <div class="{{ $card }} p-6">
             <div class="flex items-center justify-between">
-                <div class="text-sm font-semibold text-slate-900">Classes — activité</div>
+                <div class="text-sm font-semibold text-slate-900">Classes - activite</div>
                 <div class="text-xs text-slate-500">Semaine</div>
             </div>
 
@@ -238,13 +238,13 @@
                             </span>
                         </div>
                     @empty
-                        <div class="text-sm text-slate-600">Aucune donnée.</div>
+                        <div class="text-sm text-slate-600">Aucune donnee.</div>
                     @endforelse
                 </div>
             </div>
 
             <div class="mt-4">
-                <div class="text-xs font-semibold text-slate-500">Low (à booster)</div>
+                <div class="text-xs font-semibold text-slate-500">Low (a booster)</div>
                 <div class="mt-2 space-y-2">
                     @forelse($ranking['low'] as $c)
                         <div class="flex items-center justify-between rounded-2xl border border-black/5 bg-white/60 px-4 py-3">
@@ -257,7 +257,7 @@
                             </span>
                         </div>
                     @empty
-                        <div class="text-sm text-slate-600">Aucune donnée.</div>
+                        <div class="text-sm text-slate-600">Aucune donnee.</div>
                     @endforelse
                 </div>
             </div>
@@ -340,27 +340,27 @@
                         </div>
                     </div>
                 @empty
-                    <div class="text-sm text-slate-600">Aucun cours récent.</div>
+                    <div class="text-sm text-slate-600">Aucun cours recent.</div>
                 @endforelse
             </div>
         </div>
 
-        {{-- Dernières saisies --}}
+        {{-- Dernieres saisies --}}
         <div class="{{ $card }} overflow-hidden">
             <div class="flex items-center justify-between border-b border-black/5 bg-white/60 px-6 py-4">
-                <div class="text-sm font-semibold text-slate-900">Dernières saisies</div>
+                <div class="text-sm font-semibold text-slate-900">Dernieres saisies</div>
                 <div class="text-xs text-slate-500">Notes / absences</div>
             </div>
 
             <div class="p-6 space-y-4">
                 <div class="rounded-2xl border border-black/5 bg-white/60 p-4">
-                    <div class="text-xs font-semibold text-slate-500">Notes (récentes)</div>
+                    <div class="text-xs font-semibold text-slate-500">Notes (recentes)</div>
                     <div class="mt-3 space-y-2">
                         @forelse($latest['grades'] as $g)
                             <div class="flex items-center justify-between gap-3">
                                 <div class="min-w-0">
                                     <div class="truncate text-sm font-semibold text-slate-900">
-                                        {{ $g['student'] ?? 'Élève' }}
+                                        {{ $g['student'] ?? 'Eleve' }}
                                         @if(!empty($g['subject'])) • {{ $g['subject'] }} @endif
                                     </div>
                                     <div class="text-xs text-slate-500">
@@ -369,22 +369,22 @@
                                     </div>
                                 </div>
                                 <span class="rounded-full bg-slate-900 text-white px-3 py-1 text-xs font-semibold">
-                                    {{ $g['score'] ?? '—' }}
+                                    {{ $g['score'] ?? '-' }}
                                 </span>
                             </div>
                         @empty
-                            <div class="text-sm text-slate-600">Aucune note récente.</div>
+                            <div class="text-sm text-slate-600">Aucune note recente.</div>
                         @endforelse
                     </div>
                 </div>
 
                 <div class="rounded-2xl border border-black/5 bg-white/60 p-4">
-                    <div class="text-xs font-semibold text-slate-500">Absences (récentes)</div>
+                    <div class="text-xs font-semibold text-slate-500">Absences (recentes)</div>
                     <div class="mt-3 space-y-2">
                         @forelse($latest['attendances'] as $a)
                             <div class="flex items-center justify-between gap-3">
                                 <div class="min-w-0">
-                                    <div class="truncate text-sm font-semibold text-slate-900">{{ $a['student'] ?? 'Élève' }}</div>
+                                    <div class="truncate text-sm font-semibold text-slate-900">{{ $a['student'] ?? 'Eleve' }}</div>
                                     <div class="text-xs text-slate-500">
                                         {{ $a['date'] ?? '' }}
                                         @if(!empty($a['classroom'])) • {{ $a['classroom'] }} @endif
@@ -397,11 +397,11 @@
                                 @elseif($st === 'late' || $st === 'retard')
                                     <span class="rounded-full bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 text-xs font-semibold">En retard</span>
                                 @else
-                                    <span class="rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 text-xs font-semibold">Présent</span>
+                                    <span class="rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 text-xs font-semibold">Present</span>
                                 @endif
                             </div>
                         @empty
-                            <div class="text-sm text-slate-600">Aucune absence récente.</div>
+                            <div class="text-sm text-slate-600">Aucune absence recente.</div>
                         @endforelse
                     </div>
                 </div>

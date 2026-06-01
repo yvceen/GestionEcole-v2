@@ -1,5 +1,5 @@
-@props([
-    'title' => 'Actualités',
+﻿@props([
+    'title' => 'Actualites',
     'lead' => null,
     'announcements' => [],
     'badge' => null,
@@ -47,7 +47,7 @@
             </div>
         @empty
             <div class="rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-3 text-sm text-slate-500">
-                Aucune actualité disponible pour le moment.
+                Aucune actualite disponible pour le moment.
             </div>
         @endforelse
     </div>

@@ -3,7 +3,7 @@
         <div>
             <div class="inline-flex items-center gap-2 rounded-full border border-black/5 bg-white/70 px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm">
                 <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-                {{ $homework->classroom?->name ?? '—' }} • {{ $homework->classroom?->level?->name ?? '—' }}
+                {{ $homework->classroom?->name ?? '-' }} • {{ $homework->classroom?->level?->name ?? '-' }}
             </div>
 
             <h1 class="mt-4 text-2xl font-semibold tracking-tight text-slate-900">
@@ -11,7 +11,7 @@
             </h1>
 
             <div class="mt-2 text-sm text-slate-600">
-                Deadline: <span class="font-semibold text-slate-900">{{ $homework->due_at?->format('d/m/Y H:i') ?? '—' }}</span>
+                Deadline: <span class="font-semibold text-slate-900">{{ $homework->due_at?->format('d/m/Y H:i') ?? '-' }}</span>
             </div>
         </div>
 
@@ -35,7 +35,7 @@
             <div class="rounded-[30px] border border-black/5 bg-white/70 p-6 shadow-[0_22px_60px_-40px_rgba(0,0,0,.50)]">
                 <div class="text-sm font-semibold text-slate-900">Description</div>
                 <p class="mt-2 text-sm text-slate-600 whitespace-pre-line">
-                    {{ $homework->description ?? '—' }}
+                    {{ $homework->description ?? '-' }}
                 </p>
             </div>
 
@@ -51,7 +51,7 @@
                             <a href="{{ asset('storage/'.$f->path) }}" target="_blank"
                                class="flex items-center justify-between rounded-2xl border border-slate-200/70 bg-white/60 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-white transition">
                                 <span class="truncate">{{ $f->original_name }}</span>
-                                <span class="text-xs text-slate-500">Télécharger</span>
+                                <span class="text-xs text-slate-500">Telecharger</span>
                             </a>
                         @endforeach
                     </div>
@@ -64,7 +64,7 @@
                 <div class="text-sm font-semibold text-slate-900">Mes submissions</div>
 
                 @if($submissions->isEmpty())
-                    <div class="mt-3 text-sm text-slate-600">Aucune submission envoyée pour le moment.</div>
+                    <div class="mt-3 text-sm text-slate-600">Aucune submission envoyee pour le moment.</div>
                 @else
                     <div class="mt-4 space-y-3">
                         @foreach($submissions as $s)
@@ -72,10 +72,10 @@
                                 <div class="flex items-start justify-between gap-3">
                                     <div>
                                         <div class="text-sm font-semibold text-slate-900">
-                                            {{ $s->student?->full_name ?? 'Élève' }}
+                                            {{ $s->student?->full_name ?? 'Eleve' }}
                                         </div>
                                         <div class="mt-1 text-xs text-slate-500">
-                                            Envoyé: {{ $s->submitted_at?->format('d/m/Y H:i') ?? $s->created_at->format('d/m/Y H:i') }}
+                                            Envoye: {{ $s->submitted_at?->format('d/m/Y H:i') ?? $s->created_at->format('d/m/Y H:i') }}
                                         </div>
                                     </div>
                                 </div>
@@ -111,10 +111,10 @@
                 <p class="mt-1 text-xs text-slate-500">Selectionnez l eleve, ajoutez une description et joignez les fichiers.</p>
 
                 <div class="mt-4">
-                    <label class="text-xs font-semibold text-slate-700">Élève</label>
+                    <label class="text-xs font-semibold text-slate-700">Eleve</label>
                     <select name="student_id" class="mt-1 w-full rounded-2xl border border-slate-200 bg-white/70 px-3 py-2 text-sm">
                         @foreach($children as $c)
-                            <option value="{{ $c->id }}">{{ $c->full_name }} — {{ $c->classroom?->name ?? '—' }}</option>
+                            <option value="{{ $c->id }}">{{ $c->full_name }} - {{ $c->classroom?->name ?? '-' }}</option>
                         @endforeach
                     </select>
                     @error('student_id')

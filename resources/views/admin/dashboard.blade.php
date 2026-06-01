@@ -72,36 +72,32 @@
             ],
         ];
 
-        $overviewBadges = [
-            ['label' => 'Structure', 'value' => $classroomsCount . ' classes'],
-            ['label' => 'Communaute', 'value' => $usersCount . ' utilisateurs'],
-            ['label' => 'Suivi', 'value' => (int) ($attendanceSummary['today_absent'] ?? 0) . ' absences du jour'],
+        $quickLinks = [
+            ['label' => 'Nouvel eleve', 'href' => route('admin.students.create'), 'variant' => 'primary'],
+            ['label' => 'Paiement', 'href' => route('admin.finance.payments.create'), 'variant' => 'secondary'],
+            ['label' => 'Structure', 'href' => route('admin.structure.index'), 'variant' => 'secondary'],
+            ['label' => 'Utilisateurs', 'href' => route('admin.users.index'), 'variant' => 'secondary'],
         ];
+
+        $chartMax = collect($chartValues)->max() ?: 0;
+        $chartBestIndex = collect($chartValues)->search($chartMax);
+        $chartBestLabel = $chartBestIndex !== false ? ($chartLabels[$chartBestIndex] ?? '-') : '-';
+        $chartAverage = count($chartValues) ? array_sum($chartValues) / count($chartValues) : 0;
+        $selectedIndex = $selected ? array_search($selected, $chartKeys, true) : false;
+        $selectedChartTotal = $selectedIndex !== false ? (float) ($chartValues[$selectedIndex] ?? 0) : $revenueThisMonth;
+        $selectedChartCount = $selectedIndex !== false ? (int) ($chartCounts[$selectedIndex] ?? 0) : $financeCount;
     @endphp
 
     <x-ui.page-header
         title="Vue d'ensemble"
-        subtitle="Suivez les indicateurs cles de l'etablissement et accedez rapidement aux actions les plus utilisees."
+        subtitle="Les chiffres essentiels de l'etablissement, sans surcharge."
     >
         <x-slot name="actions">
-            <x-ui.button :href="route('admin.students.create')" variant="primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/>
-                </svg>
-                Nouvel eleve
-            </x-ui.button>
-
-            <x-ui.button :href="route('admin.finance.payments.create')" variant="secondary">
-                Ajouter un paiement
-            </x-ui.button>
-
-            <x-ui.button :href="route('admin.structure.index')" variant="ghost">
-                Structure
-            </x-ui.button>
-
-            <x-ui.button :href="route('admin.users.index')" variant="ghost">
-                Utilisateurs
-            </x-ui.button>
+            @foreach($quickLinks as $link)
+                <x-ui.button :href="$link['href']" :variant="$link['variant']" size="sm">
+                    {{ $link['label'] }}
+                </x-ui.button>
+            @endforeach
         </x-slot>
     </x-ui.page-header>
 
@@ -120,214 +116,84 @@
         </x-ui.alert>
     @endif
 
-    <section class="relative overflow-hidden rounded-[32px] border border-slate-200/80 bg-gradient-to-br from-slate-50 via-white to-indigo-50/60 p-5 shadow-sm shadow-slate-200/70 sm:p-7">
-        <div class="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-r from-sky-200/20 via-indigo-200/25 to-amber-200/15"></div>
-        <div class="relative space-y-8">
-            <div class="grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.85fr)]">
-                <div class="rounded-[28px] border border-white/80 bg-white/90 p-6 shadow-[0_18px_50px_-32px_rgba(15,23,42,0.35)] backdrop-blur">
-                    <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-                        <div class="max-w-2xl">
-                            <span class="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-sky-700">
-                                Pilotage quotidien
-                            </span>
-                            <h2 class="mt-4 text-2xl font-semibold tracking-tight text-slate-950 sm:text-[2rem]">
-                                Un tableau de bord plus lisible pour suivre la structure, la finance et les presences.
-                            </h2>
-                            <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-[15px]">
-                                Retrouvez les indicateurs essentiels de l etablissement dans une composition plus claire, avec des reperes visuels rapides pour les priorites du jour.
-                            </p>
-                        </div>
-
-                        <div class="grid gap-2 sm:grid-cols-3 lg:w-[320px] lg:grid-cols-1">
-                            @foreach($overviewBadges as $badge)
-                                <div class="rounded-2xl border border-slate-200/80 bg-slate-50/80 px-4 py-3">
-                                    <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">{{ $badge['label'] }}</p>
-                                    <p class="mt-1 text-sm font-semibold text-slate-900">{{ $badge['value'] }}</p>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-
-                <div class="group relative overflow-hidden rounded-[30px] border border-amber-200/70 bg-gradient-to-br from-amber-50 via-white to-orange-50 p-6 shadow-[0_22px_60px_-34px_rgba(180,83,9,0.45)] transition duration-300 hover:-translate-y-1">
-                    <div class="absolute right-0 top-0 h-36 w-36 rounded-full bg-amber-200/25 blur-3xl"></div>
-                    <div class="relative flex h-full flex-col justify-between gap-6">
-                        <div class="flex items-start justify-between gap-4">
-                            <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/12 text-amber-700 ring-1 ring-inset ring-amber-200/80">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6" stroke-width="1.8">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18M7 7.5c0-1.38 2.24-2.5 5-2.5s5 1.12 5 2.5-2.24 2.5-5 2.5-5 1.12-5 2.5 2.24 2.5 5 2.5 5 1.12 5 2.5-2.24 2.5-5 2.5-5-1.12-5-2.5" />
-                                </svg>
-                            </div>
-                            <div class="flex flex-wrap gap-2">
-                                <x-ui.badge variant="warning">Finance</x-ui.badge>
-                                <x-ui.badge variant="warning">MAD</x-ui.badge>
-                            </div>
-                        </div>
-
-                        <div>
-                            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-amber-700/80">Revenus du mois</p>
-                            <p class="mt-3 text-4xl font-semibold tracking-tight text-slate-950">{{ number_format($revenueThisMonth, 2) }}</p>
-                            <p class="mt-3 max-w-sm text-sm leading-6 text-slate-600">
-                                Cliquez sur un mois dans le graphique pour afficher le detail des paiements et comparer rapidement les encaissements.
-                            </p>
-                        </div>
-
-                        <div class="flex flex-wrap items-center gap-3">
-                            <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-200">
-                                Focus financier
-                            </span>
-                            <span class="text-xs font-medium uppercase tracking-[0.16em] text-slate-500">Mise a jour dynamique via le graphique</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="space-y-4">
-                <div class="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
+    <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        @foreach($structureStats as $stat)
+            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="flex items-start justify-between gap-3">
                     <div>
-                        <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Indicateurs essentiels</p>
-                        <h3 class="mt-1 text-xl font-semibold tracking-tight text-slate-950">Structure et activite de l etablissement</h3>
+                        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{{ $stat['title'] }}</p>
+                        <p class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{{ $stat['value'] }}</p>
                     </div>
-                    <p class="max-w-2xl text-sm leading-6 text-slate-500">
-                        Une lecture rapide des volumes cles pour l organisation, les equipes et la base utilisateurs.
-                    </p>
+                    <span class="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600">
+                        {{ $stat['badge'] }}
+                    </span>
                 </div>
 
-                <div class="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
-                    @foreach($structureStats as $stat)
-                        <article class="group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_45px_-34px_rgba(15,23,42,0.45)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_26px_60px_-36px_rgba(37,99,235,0.35)]">
-                            <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r {{ $stat['tone'] === 'blue' ? 'from-sky-500 via-blue-500 to-indigo-500' : ($stat['tone'] === 'indigo' ? 'from-indigo-500 via-violet-500 to-sky-500' : ($stat['tone'] === 'violet' ? 'from-violet-500 via-fuchsia-500 to-indigo-500' : 'from-slate-400 via-slate-500 to-slate-600')) }}"></div>
-                            <div class="flex items-start justify-between gap-4">
-                                <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl ring-1 ring-inset {{ $stat['tone'] === 'blue' ? 'bg-sky-50 text-sky-700 ring-sky-200' : ($stat['tone'] === 'indigo' ? 'bg-indigo-50 text-indigo-700 ring-indigo-200' : ($stat['tone'] === 'violet' ? 'bg-violet-50 text-violet-700 ring-violet-200' : 'bg-slate-100 text-slate-700 ring-slate-200')) }}">
-                                    @switch($stat['icon'])
-                                        @case('students')
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6" stroke-width="1.8">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 19a4 4 0 0 0-8 0" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3Z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 19a3 3 0 0 0-3-2.8M17 10.5a2.5 2.5 0 1 0-1.1-4.8M5 19a3 3 0 0 1 3-2.8M7 10.5A2.5 2.5 0 1 1 8.1 5.7" />
-                                            </svg>
-                                            @break
-                                        @case('classrooms')
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6" stroke-width="1.8">
-                                                <rect x="3.5" y="5" width="17" height="13" rx="2" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 9h10M7 13h6M9 18v2m6-2v2" />
-                                            </svg>
-                                            @break
-                                        @case('teachers')
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6" stroke-width="1.8">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4 4 8l8 4 8-4-8-4Z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 11.5V15c0 1.66 1.79 3 4 3s4-1.34 4-3v-3.5" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 10v6" />
-                                            </svg>
-                                            @break
-                                        @default
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6" stroke-width="1.8">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 19a4 4 0 0 0-8 0" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3Z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 19a3 3 0 0 0-3-2.8M17 10.5a2.5 2.5 0 1 0-1.1-4.8M5 19a3 3 0 0 1 3-2.8M7 10.5A2.5 2.5 0 1 1 8.1 5.7" />
-                                            </svg>
-                                    @endswitch
-                                </div>
-                                <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-600">
-                                    {{ $stat['badge'] }}
-                                </span>
-                            </div>
+                <p class="mt-3 text-sm text-slate-500">{{ $stat['meta'] }}</p>
 
-                            <div class="mt-6">
-                                <p class="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">{{ $stat['title'] }}</p>
-                                <p class="mt-3 text-4xl font-semibold tracking-tight text-slate-950">{{ $stat['value'] }}</p>
-                                <p class="mt-3 text-sm leading-6 text-slate-500">{{ $stat['meta'] }}</p>
-                            </div>
+                @if(!empty($stat['chips']))
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        @foreach($stat['chips'] as $chip)
+                            <x-ui.badge :variant="$chip['variant']">{{ $chip['label'] }} : {{ $chip['value'] }}</x-ui.badge>
+                        @endforeach
+                    </div>
+                @endif
+            </article>
+        @endforeach
+    </section>
 
-                            @if(!empty($stat['chips']))
-                                <div class="mt-5 flex flex-wrap gap-2">
-                                    @foreach($stat['chips'] as $chip)
-                                        <x-ui.badge :variant="$chip['variant']">{{ $chip['label'] }} : {{ $chip['value'] }}</x-ui.badge>
-                                    @endforeach
-                                </div>
-                            @endif
-                        </article>
-                    @endforeach
+    <section class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Presences</p>
+                    <h2 class="mt-1 text-lg font-semibold text-slate-950">Aujourd'hui</h2>
                 </div>
+                <x-ui.button :href="route('admin.attendance.index')" variant="secondary" size="sm">
+                    Suivi des presences
+                </x-ui.button>
             </div>
 
-            <div class="rounded-[30px] border border-slate-200/80 bg-white/90 p-5 shadow-[0_18px_50px_-34px_rgba(15,23,42,0.35)] sm:p-6">
-                <div class="flex flex-col gap-2 border-b border-slate-200/80 pb-5 lg:flex-row lg:items-end lg:justify-between">
-                    <div>
-                        <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Presences</p>
-                        <h3 class="mt-1 text-xl font-semibold tracking-tight text-slate-950">Synthese du jour</h3>
-                    </div>
-                    <p class="max-w-2xl text-sm leading-6 text-slate-500">
-                        Les valeurs ci-dessous mettent en avant les presences, absences et retards deja consolides pour la journee.
-                    </p>
-                </div>
-
-                <div class="mt-5 grid gap-4 lg:grid-cols-3">
-                    @foreach($attendanceCards as $card)
-                        <article class="group relative overflow-hidden rounded-[26px] border border-slate-200/70 bg-gradient-to-br {{ $card['ring'] }} p-5 shadow-[0_14px_40px_-34px_rgba(15,23,42,0.45)] transition duration-300 hover:-translate-y-1">
-                            <div class="flex items-start justify-between gap-4">
-                                <div class="inline-flex h-11 w-11 items-center justify-center rounded-2xl ring-1 ring-inset ring-current/10 {{ $card['iconBg'] }}">
-                                    @switch($card['icon'])
-                                        @case('check')
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="m5 12 4.2 4.2L19 6.5" />
-                                            </svg>
-                                            @break
-                                        @case('close')
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6 6 18" />
-                                            </svg>
-                                            @break
-                                        @default
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2">
-                                                <circle cx="12" cy="12" r="8" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l2.5 2.5" />
-                                            </svg>
-                                    @endswitch
-                                </div>
-                                <span class="inline-flex items-center rounded-full bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-600 ring-1 ring-inset ring-slate-200/80">
-                                    {{ $card['badge'] }}
-                                </span>
-                            </div>
-
-                            <div class="mt-5">
-                                <p class="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">{{ $card['title'] }}</p>
-                                <p class="mt-3 text-4xl font-semibold tracking-tight {{ $card['valueClass'] }}">{{ $card['value'] }}</p>
-                                <p class="mt-3 text-sm leading-6 text-slate-500">{{ $card['meta'] }}</p>
-                            </div>
-                        </article>
-                    @endforeach
-                </div>
+            <div class="mt-4 grid gap-3 md:grid-cols-3">
+                @foreach($attendanceCards as $card)
+                    <article class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+                        <div class="flex items-center justify-between gap-3">
+                            <p class="text-sm font-semibold text-slate-700">{{ $card['title'] }}</p>
+                            <span class="text-xs font-medium text-slate-500">{{ $card['badge'] }}</span>
+                        </div>
+                        <p class="mt-2 text-3xl font-semibold tracking-tight {{ $card['valueClass'] }}">{{ $card['value'] }}</p>
+                    </article>
+                @endforeach
             </div>
+        </div>
+
+        <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-[0.14em] text-amber-700">Finance</p>
+            <h2 class="mt-1 text-lg font-semibold text-slate-950">Revenus du mois</h2>
+            <p class="mt-4 text-3xl font-semibold tracking-tight text-slate-950">{{ number_format($revenueThisMonth, 2) }} MAD</p>
+            <x-ui.button :href="route('admin.finance.index')" variant="secondary" size="sm" class="mt-4">
+                Ouvrir la finance
+            </x-ui.button>
         </div>
     </section>
 
     <x-ui.card
         title="Vue hebdomadaire des presences"
-        subtitle="Lecture rapide des absences et retards deja remontes cette semaine."
-        class="border border-slate-200/80 bg-white/90 shadow-[0_18px_50px_-34px_rgba(15,23,42,0.35)]"
+        subtitle="Absences et retards de la semaine."
+        class="border border-slate-200 bg-white shadow-sm"
     >
-        <div class="mb-5 flex flex-wrap items-center gap-2">
-            <x-ui.badge variant="info">Absences</x-ui.badge>
-            <x-ui.badge variant="warning">Retards</x-ui.badge>
-            <span class="text-sm text-slate-500">Consultez les tendances de la semaine avant d ouvrir le suivi detaille.</span>
-        </div>
-
         <div class="grid gap-3 md:grid-cols-7">
             @forelse(($attendanceSummary['weekly_overview'] ?? collect()) as $day)
-                <div class="rounded-[24px] border border-slate-200/80 bg-gradient-to-br from-slate-50 to-white px-4 py-4 shadow-sm shadow-slate-200/60 transition duration-300 hover:-translate-y-1">
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
                     <div class="flex items-center justify-between gap-3">
-                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">{{ $day['label'] ?? 'Jour' }}</p>
-                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-xs font-semibold text-white">
-                            {{ \Illuminate\Support\Str::substr((string) ($day['label'] ?? 'J'), 0, 1) }}
-                        </span>
+                        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">{{ $day['label'] ?? 'Jour' }}</p>
                     </div>
                     <div class="mt-3 space-y-2">
-                        <div class="flex items-center justify-between rounded-2xl bg-rose-50 px-3 py-2 text-sm">
+                        <div class="flex items-center justify-between text-sm">
                             <span class="text-slate-600">Absences</span>
                             <span class="font-semibold text-rose-700">{{ $day['absent'] ?? 0 }}</span>
                         </div>
-                        <div class="flex items-center justify-between rounded-2xl bg-amber-50 px-3 py-2 text-sm">
+                        <div class="flex items-center justify-between text-sm">
                             <span class="text-slate-600">Retards</span>
                             <span class="font-semibold text-amber-700">{{ $day['late'] ?? 0 }}</span>
                         </div>
@@ -340,27 +206,45 @@
             @endforelse
         </div>
 
-        <div class="mt-4">
-            <x-ui.button :href="route('admin.attendance.index')" variant="secondary" size="sm">
-                Ouvrir le suivi des presences
-            </x-ui.button>
-        </div>
     </x-ui.card>
 
-    <section class="grid gap-6 xl:grid-cols-[minmax(0,2fr)_380px]">
+    <section class="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(520px,0.85fr)]">
         <x-ui.card
             title="Revenus sur 12 mois"
-            subtitle="Selectionnez un point pour consulter les paiements du mois correspondant."
-            class="border border-slate-200/80 bg-white/90 shadow-[0_18px_50px_-34px_rgba(15,23,42,0.35)]"
+            subtitle="Vue coloree des encaissements, avec details au survol et selection par mois."
+            class="border border-slate-200 bg-white shadow-sm"
         >
-            <div class="rounded-2xl border border-slate-200 bg-white p-4">
+            <div class="grid gap-3 sm:grid-cols-3">
+                <div class="rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3">
+                    <p class="text-xs font-semibold uppercase tracking-[0.12em] text-sky-700">Selection</p>
+                    <p class="mt-1 text-xl font-semibold text-slate-950">{{ number_format($selectedChartTotal, 2) }} MAD</p>
+                    <p class="mt-1 text-xs text-slate-500">{{ $selectedChartCount }} paiement(s)</p>
+                </div>
+                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+                    <p class="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">Meilleur mois</p>
+                    <p class="mt-1 text-xl font-semibold text-slate-950">{{ number_format($chartMax, 2) }} MAD</p>
+                    <p class="mt-1 text-xs text-slate-500">{{ $chartBestLabel }}</p>
+                </div>
+                <div class="rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3">
+                    <p class="text-xs font-semibold uppercase tracking-[0.12em] text-violet-700">Moyenne</p>
+                    <p class="mt-1 text-xl font-semibold text-slate-950">{{ number_format($chartAverage, 2) }} MAD</p>
+                    <p class="mt-1 text-xs text-slate-500">Sur 12 mois</p>
+                </div>
+            </div>
+
+            <div class="mt-4 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-sky-50 p-4">
                 <div class="h-[340px]">
                     <canvas id="revChart"></canvas>
                 </div>
             </div>
 
-            <div class="mt-4 flex flex-wrap gap-2">
-                <x-ui.badge variant="info">Revenus mensuels</x-ui.badge>
+            <div class="mt-4 flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700 ring-1 ring-sky-200">
+                    <span class="h-2 w-2 rounded-full bg-sky-500"></span>Revenus
+                </span>
+                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">
+                    <span class="h-2 w-2 rounded-full bg-emerald-500"></span>Paiements
+                </span>
                 @if(!empty($selected))
                     <x-ui.badge variant="success">Mois selectionne : {{ $selected }}</x-ui.badge>
                 @else
@@ -370,16 +254,74 @@
         </x-ui.card>
 
         <x-ui.card
-            title="Detail du mois"
-            :subtitle="!empty($selected) ? 'Mois : '.$selected : 'Selectionnez un mois dans le graphique.'"
-            class="border border-slate-200/80 bg-white/90 shadow-[0_18px_50px_-34px_rgba(15,23,42,0.35)]"
+            title="Paiements detailles"
+            subtitle="Filtrez par mois, date, methode ou recherche."
+            class="border border-slate-200 bg-white shadow-sm"
         >
-            <div class="overflow-hidden rounded-2xl border border-slate-200">
-                <div class="max-h-[360px] overflow-auto">
+            <form method="GET" action="{{ route('admin.dashboard') }}" class="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2">
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Mois</label>
+                    <select name="month" class="mt-1 w-full rounded-xl border-slate-200 bg-white text-sm">
+                        <option value="">Mois actuel</option>
+                        @foreach($chartKeys as $index => $key)
+                            <option value="{{ $key }}" @selected($selected === $key)>{{ $chartLabels[$index] ?? $key }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Methode</label>
+                    <select name="finance_method" class="mt-1 w-full rounded-xl border-slate-200 bg-white text-sm">
+                        <option value="">Toutes</option>
+                        @foreach($financeMethods as $method => $label)
+                            <option value="{{ $method }}" @selected($financeMethod === $method)>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Du</label>
+                    <input type="date" name="finance_from" value="{{ $financeFrom }}" class="mt-1 w-full rounded-xl border-slate-200 bg-white text-sm">
+                </div>
+
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Au</label>
+                    <input type="date" name="finance_to" value="{{ $financeTo }}" class="mt-1 w-full rounded-xl border-slate-200 bg-white text-sm">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Recherche</label>
+                    <input name="finance_search" value="{{ $financeSearch }}" class="mt-1 w-full rounded-xl border-slate-200 bg-white text-sm" placeholder="Eleve, parent, recu ou note...">
+                </div>
+
+                <div class="flex flex-wrap gap-2 sm:col-span-2">
+                    <x-ui.button type="submit" variant="primary" size="sm">Filtrer</x-ui.button>
+                    <x-ui.button :href="route('admin.dashboard')" variant="secondary" size="sm">Reinitialiser</x-ui.button>
+                    <x-ui.button :href="route('admin.finance.index')" variant="secondary" size="sm">Finance complete</x-ui.button>
+                </div>
+            </form>
+
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                    <p class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Total filtre</p>
+                    <p class="mt-1 text-2xl font-semibold text-slate-950">{{ number_format($financeTotal, 2) }} MAD</p>
+                </div>
+                <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                    <p class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Paiements</p>
+                    <p class="mt-1 text-2xl font-semibold text-slate-950">{{ $financeCount }}</p>
+                </div>
+            </div>
+
+            <div class="mt-4 overflow-hidden rounded-2xl border border-slate-200">
+                <div class="max-h-[460px] overflow-auto">
                     <table class="app-table">
                         <thead>
                             <tr>
                                 <th>Date</th>
+                                <th>Eleve</th>
+                                <th>Parent</th>
+                                <th>Recu</th>
+                                <th>Methode</th>
                                 <th class="text-right">Montant</th>
                             </tr>
                         </thead>
@@ -387,16 +329,16 @@
                             @forelse($monthPayments as $payment)
                                 <tr>
                                     <td>{{ \Carbon\Carbon::parse($payment->paid_at)->format('d/m/Y') }}</td>
+                                    <td class="font-semibold text-slate-900">{{ $payment->student_name ?? '-' }}</td>
+                                    <td>{{ $payment->parent_name ?? '-' }}</td>
+                                    <td>{{ $payment->receipt_number ?? '-' }}</td>
+                                    <td>{{ $financeMethods[$payment->method] ?? ucfirst((string) $payment->method) }}</td>
                                     <td class="text-right font-semibold text-slate-900">{{ number_format((float) $payment->amount, 2) }} MAD</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="2" class="px-5 py-6 text-center text-sm text-slate-500">
-                                        @if(!empty($selected))
-                                            Aucun paiement enregistre pour ce mois.
-                                        @else
-                                            Selectionnez un mois pour afficher le detail.
-                                        @endif
+                                    <td colspan="6" class="px-5 py-6 text-center text-sm text-slate-500">
+                                        Aucun paiement ne correspond aux filtres.
                                     </td>
                                 </tr>
                             @endforelse
@@ -406,13 +348,7 @@
             </div>
 
             <div class="mt-4 flex items-center justify-between gap-3">
-                <p class="app-hint">Le tableau se met a jour automatiquement apres selection d'un mois.</p>
-
-                @if(!empty($selected))
-                    <x-ui.button :href="route('admin.dashboard')" variant="secondary" size="sm">
-                        Reinitialiser
-                    </x-ui.button>
-                @endif
+                <p class="app-hint">Affichage limite aux 300 derniers paiements correspondant aux filtres.</p>
             </div>
         </x-ui.card>
     </section>
@@ -423,41 +359,94 @@
         (function () {
             const labels = @json($chartLabels);
             const values = @json($chartValues);
+            const counts = @json($chartCounts);
             const monthKey = @json($chartKeys);
 
             const canvas = document.getElementById('revChart');
             const ctx = canvas.getContext('2d');
 
+            const selectedMonth = @json($selected);
+            const formatMoney = (value) => new Intl.NumberFormat('fr-FR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            }).format(Number(value || 0)) + ' MAD';
+
             function makeGradient() {
                 const h = canvas.clientHeight || 340;
                 const g = ctx.createLinearGradient(0, 0, 0, h);
-                g.addColorStop(0, 'rgba(14, 116, 144, 0.22)');
-                g.addColorStop(1, 'rgba(14, 116, 144, 0)');
+                g.addColorStop(0, 'rgba(14, 165, 233, 0.34)');
+                g.addColorStop(0.55, 'rgba(16, 185, 129, 0.18)');
+                g.addColorStop(1, 'rgba(255, 255, 255, 0)');
                 return g;
             }
 
-            const selectedMonth = @json($selected);
+            function barColors() {
+                const max = Math.max(...values.map(Number), 1);
+                return values.map((value, index) => {
+                    if (selectedMonth && monthKey[index] === selectedMonth) {
+                        return 'rgba(2, 132, 199, 0.88)';
+                    }
+
+                    const ratio = Number(value || 0) / max;
+                    if (ratio >= 0.75) {
+                        return 'rgba(16, 185, 129, 0.62)';
+                    }
+                    if (ratio >= 0.35) {
+                        return 'rgba(14, 165, 233, 0.48)';
+                    }
+                    return 'rgba(148, 163, 184, 0.28)';
+                });
+            }
 
             const chart = new Chart(ctx, {
-                type: 'line',
                 data: {
                     labels,
-                    datasets: [{
-                        data: values,
-                        fill: true,
-                        backgroundColor: makeGradient(),
-                        borderColor: '#0f172a',
-                        borderWidth: 3,
-                        tension: 0.35,
-                        pointRadius: (context) => {
-                            const index = context.dataIndex;
-                            return selectedMonth && monthKey[index] === selectedMonth ? 6 : 4;
+                    datasets: [
+                        {
+                            type: 'bar',
+                            label: 'Revenus',
+                            data: values,
+                            backgroundColor: barColors(),
+                            borderColor: 'rgba(15, 23, 42, 0.08)',
+                            borderWidth: 1,
+                            borderRadius: 12,
+                            borderSkipped: false,
+                            maxBarThickness: 34,
+                            yAxisID: 'y',
                         },
-                        pointHoverRadius: 8,
-                        pointBorderWidth: 2,
-                        pointBorderColor: '#0f172a',
-                        pointBackgroundColor: '#ffffff',
-                    }]
+                        {
+                            type: 'line',
+                            label: 'Tendance',
+                            data: values,
+                            fill: true,
+                            backgroundColor: makeGradient(),
+                            borderColor: '#0f172a',
+                            borderWidth: 3,
+                            tension: 0.38,
+                            pointRadius: (context) => {
+                                const index = context.dataIndex;
+                                return selectedMonth && monthKey[index] === selectedMonth ? 7 : 4;
+                            },
+                            pointHoverRadius: 8,
+                            pointBorderWidth: 2,
+                            pointBorderColor: '#0f172a',
+                            pointBackgroundColor: '#ffffff',
+                            yAxisID: 'y',
+                        },
+                        {
+                            type: 'line',
+                            label: 'Paiements',
+                            data: counts,
+                            borderColor: '#10b981',
+                            backgroundColor: '#10b981',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.35,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            yAxisID: 'payments',
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -466,16 +455,25 @@
                         legend: { display: false },
                         tooltip: {
                             displayColors: false,
-                            padding: 12,
+                            padding: 14,
+                            cornerRadius: 14,
                             backgroundColor: 'rgba(15, 23, 42, 0.95)',
                             titleColor: '#fff',
                             bodyColor: '#fff',
                             callbacks: {
                                 title: (items) => items?.[0]?.label ?? '',
                                 label: (tooltipItem) => {
-                                    const value = tooltipItem.parsed.y ?? 0;
-                                    return value.toFixed(2) + ' MAD';
-                                }
+                                    const index = tooltipItem.dataIndex;
+                                    if (tooltipItem.dataset.yAxisID === 'payments') {
+                                        return 'Paiements : ' + (counts[index] ?? 0);
+                                    }
+
+                                    return 'Revenus : ' + formatMoney(values[index] ?? 0);
+                                },
+                                afterBody: (items) => {
+                                    const index = items?.[0]?.dataIndex ?? 0;
+                                    return ['Cliquez pour filtrer ce mois', 'Cle : ' + (monthKey[index] ?? '')];
+                                },
                             }
                         }
                     },
@@ -483,12 +481,27 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: { color: 'rgba(15, 23, 42, 0.08)' },
-                            ticks: { callback: (value) => value + ' MAD' }
+                            grid: { color: 'rgba(15, 23, 42, 0.06)' },
+                            border: { display: false },
+                            ticks: {
+                                color: '#64748b',
+                                callback: (value) => formatMoney(value)
+                            }
+                        },
+                        payments: {
+                            beginAtZero: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            border: { display: false },
+                            ticks: {
+                                color: '#059669',
+                                precision: 0,
+                            },
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { maxRotation: 35, minRotation: 35 }
+                            border: { display: false },
+                            ticks: { maxRotation: 35, minRotation: 35, color: '#64748b' }
                         }
                     },
                     onHover: (_, elements) => {
@@ -504,6 +517,10 @@
                         const ym = monthKey[index];
                         const url = new URL(window.location.href);
                         url.searchParams.set('month', ym);
+                        url.searchParams.delete('finance_from');
+                        url.searchParams.delete('finance_to');
+                        url.searchParams.delete('finance_method');
+                        url.searchParams.delete('finance_search');
                         window.location.href = url.toString();
                     }
                 }

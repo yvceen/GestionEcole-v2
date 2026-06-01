@@ -28,7 +28,7 @@ class LevelController extends Controller
 
         Level::create($data);
 
-        return redirect()->route('admin.levels.index')->with('success', 'Niveau ajouté.');
+        return redirect()->route('admin.levels.index')->with('success', 'Niveau ajoute.');
     }
 
     public function edit(Level $level)
@@ -50,7 +50,7 @@ class LevelController extends Controller
 
         $level->update($data);
 
-        return redirect()->route('admin.levels.index')->with('success', 'Niveau modifié.');
+        return redirect()->route('admin.levels.index')->with('success', 'Niveau modifie.');
     }
 
     public function destroy(Level $level)
@@ -61,6 +61,6 @@ class LevelController extends Controller
         }
 
         $level->delete();
-        return redirect()->route('admin.levels.index')->with('success', 'Niveau supprimé.');
+        return redirect()->route('admin.levels.index')->with('success', 'Niveau supprime.');
     }
 }

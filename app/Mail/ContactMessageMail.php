@@ -21,7 +21,7 @@ class ContactMessageMail extends Mailable
     public function build()
     {
         $subjectText = $this->data['subject'] ?: 'Sans objet';
-        $subject = sprintf('Message de contact — %s', $subjectText);
+        $subject = sprintf('Message de contact - %s', $subjectText);
 
         return $this->subject($subject)
             ->view('emails.contact-message')

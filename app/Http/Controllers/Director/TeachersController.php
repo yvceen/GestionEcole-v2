@@ -105,7 +105,7 @@ class TeachersController extends Controller
         $teacher->is_active = !((bool) $teacher->is_active);
         $teacher->save();
 
-        return back()->with('success', 'Statut mis à jour ✅');
+        return back()->with('success', 'Statut mis a jour ✅');
     }
 
     public function assignClassrooms(Request $request, User $teacher)
@@ -139,6 +139,6 @@ class TeachersController extends Controller
 
         $teacher->teacherClassrooms()->sync($syncData);
 
-        return back()->with('success', 'Affectations mises à jour ✅');
+        return back()->with('success', 'Affectations mises a jour ✅');
     }
 }

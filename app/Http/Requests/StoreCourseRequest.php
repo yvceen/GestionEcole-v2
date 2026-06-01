@@ -32,17 +32,17 @@ class StoreCourseRequest extends FormRequest
         return [
             'name.required' => 'Le nom du cours est obligatoire.',
             'code.required' => 'Le code du cours est obligatoire.',
-            'code.unique' => 'Ce code de cours existe déjà.',
+            'code.unique' => 'Ce code de cours existe deja.',
             'classroom_id.required' => 'La classe est obligatoire.',
-            'classroom_id.exists' => 'La classe sélectionnée est invalide.',
-            'subject_id.required' => 'La matière est obligatoire.',
-            'subject_id.exists' => 'La matière sélectionnée est invalide.',
+            'classroom_id.exists' => 'La classe selectionnee est invalide.',
+            'subject_id.required' => 'La matiere est obligatoire.',
+            'subject_id.exists' => 'La matiere selectionnee est invalide.',
             'teacher_id.required' => 'L\'enseignant est obligatoire.',
-            'teacher_id.exists' => 'L\'enseignant sélectionné est invalide.',
-            'start_date.required' => 'La date de début est obligatoire.',
-            'start_date.after' => 'La date de début doit être dans le futur.',
+            'teacher_id.exists' => 'L\'enseignant selectionne est invalide.',
+            'start_date.required' => 'La date de debut est obligatoire.',
+            'start_date.after' => 'La date de debut doit etre dans le futur.',
             'end_date.required' => 'La date de fin est obligatoire.',
-            'end_date.after' => 'La date de fin doit être après la date de début.',
+            'end_date.after' => 'La date de fin doit etre apres la date de debut.',
         ];
     }
 }

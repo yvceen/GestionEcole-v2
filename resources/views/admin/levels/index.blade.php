@@ -2,7 +2,7 @@
     <div class="flex items-start justify-between gap-4">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Niveaux</h1>
-            <p class="mt-1 text-sm text-slate-500">Gérez Maternel / Primaire / Collège / Lycée…</p>
+            <p class="mt-1 text-sm text-slate-500">Gerez Maternel / Primaire / College / Lycee...</p>
         </div>
     </div>
 

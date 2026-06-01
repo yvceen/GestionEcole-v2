@@ -1,9 +1,9 @@
 <x-admin-layout title="Tarifs Parent">
     <div class="flex items-start justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Tarifs — {{ $parent->name }}</h1>
+            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Tarifs - {{ $parent->name }}</h1>
             <p class="mt-1 text-sm text-slate-500">
-                Définissez les montants par enfant (Scolarité/Transport/Cantine mensuels + Assurance annuelle).
+                Definissez les montants par enfant (Scolarite/Transport/Cantine mensuels + Assurance annuelle).
             </p>
         </div>
 
@@ -34,20 +34,20 @@
         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div class="border-b border-slate-200 p-4">
                 <div class="text-sm font-semibold text-slate-900">Enfants</div>
-                <div class="text-xs text-slate-500">Remplissez les montants puis “Enregistrer”.</div>
+                <div class="text-xs text-slate-500">Remplissez les montants puis "Enregistrer".</div>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm">
                     <thead class="bg-slate-50">
                         <tr class="text-left">
-                            <th class="p-4">Élève</th>
+                            <th class="p-4">Eleve</th>
                             <th class="p-4">Classe</th>
-                            <th class="p-4">Scolarité /mois</th>
+                            <th class="p-4">Scolarite /mois</th>
                             <th class="p-4">Transport /mois</th>
                             <th class="p-4">Cantine /mois</th>
                             <th class="p-4">Assurance /an</th>
-                            <th class="p-4">Début (mois)</th>
+                            <th class="p-4">Debut (mois)</th>
                             <th class="p-4">Note</th>
                         </tr>
                     </thead>
@@ -64,7 +64,7 @@
                                 </td>
 
                                 <td class="p-4 text-slate-700">
-                                    {{ $s->classroom?->name ?? '—' }}
+                                    {{ $s->classroom?->name ?? '-' }}
                                 </td>
 
                                 <td class="p-4">
@@ -115,7 +115,7 @@
                         @if($students->count() === 0)
                             <tr>
                                 <td colspan="8" class="p-8 text-center text-slate-500">
-                                    Aucun élève pour ce parent.
+                                    Aucun eleve pour ce parent.
                                 </td>
                             </tr>
                         @endif

@@ -1,7 +1,7 @@
-<x-admin-layout title="Modifier le véhicule">
+﻿<x-admin-layout title="Modifier le vehicule">
     <x-ui.page-header
-        title="Modifier le véhicule"
-        subtitle="Mettez à jour les caractéristiques du véhicule sans changer le fonctionnement du module."
+        title="Modifier le vehicule"
+        subtitle="Mettez a jour les caracteristiques du vehicule sans changer le fonctionnement du module."
     >
         <x-slot name="actions">
             <x-ui.button :href="route('admin.transport.vehicles.index')" variant="secondary">
@@ -10,7 +10,7 @@
         </x-slot>
     </x-ui.page-header>
 
-    <x-ui.card title="Fiche véhicule" :subtitle="$vehicle->registration_number">
+    <x-ui.card title="Fiche vehicule" :subtitle="$vehicle->registration_number">
         <form method="POST" action="{{ route('admin.transport.vehicles.update', $vehicle) }}" class="space-y-5">
             @csrf
             @method('PUT')
@@ -23,19 +23,19 @@
                 </div>
 
                 <div class="app-field">
-                    <label class="app-label">Numéro d'immatriculation</label>
+                    <label class="app-label">Numero d'immatriculation</label>
                     <input type="text" name="registration_number" value="{{ old('registration_number', $vehicle->registration_number) }}" class="app-input @error('registration_number') border-rose-500 @enderror" required>
                     @error('registration_number')<p class="app-error">{{ $message }}</p>@enderror
                 </div>
 
                 <div class="app-field">
-                    <label class="app-label">Plaque minéralogique</label>
+                    <label class="app-label">Plaque mineralogique</label>
                     <input type="text" name="plate_number" value="{{ old('plate_number', $vehicle->plate_number) }}" class="app-input @error('plate_number') border-rose-500 @enderror">
                     @error('plate_number')<p class="app-error">{{ $message }}</p>@enderror
                 </div>
 
                 <div class="app-field">
-                    <label class="app-label">Type de véhicule</label>
+                    <label class="app-label">Type de vehicule</label>
                     <select name="vehicle_type" class="app-input @error('vehicle_type') border-rose-500 @enderror" required>
                         <option value="bus" @selected(old('vehicle_type', $vehicle->vehicle_type) === 'bus')>Bus</option>
                         <option value="van" @selected(old('vehicle_type', $vehicle->vehicle_type) === 'van')>Minibus</option>
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="app-field">
-                    <label class="app-label">Capacité (places)</label>
+                    <label class="app-label">Capacite (places)</label>
                     <input type="number" name="capacity" value="{{ old('capacity', $vehicle->capacity) }}" min="1" max="500" class="app-input @error('capacity') border-rose-500 @enderror" required>
                     @error('capacity')<p class="app-error">{{ $message }}</p>@enderror
                 </div>
@@ -77,7 +77,7 @@
                 </div>
 
                 <div class="app-field">
-                    <label class="app-label">Année du modèle</label>
+                    <label class="app-label">Annee du modele</label>
                     <input type="number" name="model_year" value="{{ old('model_year', $vehicle->model_year) }}" min="1990" max="{{ date('Y') + 1 }}" class="app-input @error('model_year') border-rose-500 @enderror">
                     @error('model_year')<p class="app-error">{{ $message }}</p>@enderror
                 </div>
@@ -93,12 +93,12 @@
                 <label class="flex items-center gap-2 text-sm font-semibold text-slate-700">
                     <input type="hidden" name="is_active" value="0">
                     <input type="checkbox" name="is_active" value="1" class="rounded border-slate-300 text-sky-700" {{ old('is_active', $vehicle->is_active) ? 'checked' : '' }}>
-                    Véhicule actif
+                    Vehicule actif
                 </label>
             </div>
 
             <div class="flex items-center gap-3">
-                <x-ui.button type="submit" variant="primary">Mettre à jour</x-ui.button>
+                <x-ui.button type="submit" variant="primary">Mettre a jour</x-ui.button>
                 <x-ui.button :href="route('admin.transport.vehicles.index')" variant="secondary">Annuler</x-ui.button>
             </div>
         </form>

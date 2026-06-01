@@ -31,10 +31,10 @@ class UpdateUserRequest extends FormRequest
         return [
             'name.required'        => 'Le nom est obligatoire.',
             'email.required'       => 'L\'email est obligatoire.',
-            'email.email'          => 'L\'email doit être une adresse valide.',
-            'email.unique'         => 'Cet email est déjà utilisé.',
-            'role.required'        => 'Le rôle est obligatoire.',
-            'role.in'              => 'Le rôle sélectionné est invalide.',
+            'email.email'          => 'L\'email doit etre une adresse valide.',
+            'email.unique'         => 'Cet email est deja utilise.',
+            'role.required'        => 'Le role est obligatoire.',
+            'role.in'              => 'Le role selectionne est invalide.',
         ];
     }
 }

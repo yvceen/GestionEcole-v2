@@ -1,4 +1,4 @@
-@php
+﻿@php
     $classroomsCollection = collect($classrooms ?? []);
     $parentsCollection = collect($parents ?? []);
     $teachersCollection = collect($teachers ?? []);
@@ -7,7 +7,7 @@
         [
             'key' => 'classes',
             'label' => 'Classes',
-            'description' => 'Envoyez un message à toute une classe.',
+            'description' => 'Envoyez un message a toute une classe.',
             'items' => $classroomsCollection->map(function ($class) {
                 $label = $class->name ?? $class->label ?? 'Classe #' . $class->id;
                 $meta = $class->level ?? $class->grade ?? '';
@@ -68,7 +68,7 @@
         action="{{ route($routePrefix . '.store') }}"
         back-url="{{ route($routePrefix . '.index') }}"
         title="Nouveau message"
-        subtitle="Envoyez une information à une classe, à plusieurs parents ou à un membre du personnel."
+        subtitle="Envoyez une information a une classe, a plusieurs parents ou a un membre du personnel."
         :tabs="$tabs"
     />
 </x-dynamic-component>

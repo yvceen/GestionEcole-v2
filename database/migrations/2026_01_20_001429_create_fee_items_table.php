@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('fee_items', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Scolarité, Transport, Cantine, Assurance...
+            $table->string('name'); // Scolarite, Transport, Cantine, Assurance...
             $table->enum('billing_type', ['monthly','yearly','one_time']);
             $table->decimal('default_amount', 10, 2)->nullable();
             $table->unsignedTinyInteger('due_month')->nullable(); // e.g. 9 for September (annual/assurance)

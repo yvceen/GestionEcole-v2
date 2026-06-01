@@ -163,57 +163,65 @@
                 </div>
             </div>
         @else
-            <div class="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+            <div class="overflow-hidden rounded-[28px] border border-slate-200 bg-white">
+                <div class="hidden border-b border-slate-200 bg-slate-50/80 px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 xl:grid xl:grid-cols-[minmax(220px,1.2fr)_minmax(260px,1.5fr)_minmax(160px,0.8fr)_minmax(150px,0.75fr)_minmax(130px,0.7fr)_minmax(210px,0.9fr)] xl:gap-6">
+                    <div>Devoir</div>
+                    <div>Details</div>
+                    <div>Classe</div>
+                    <div>Echeance</div>
+                    <div>Statut</div>
+                    <div>Actions</div>
+                </div>
+
                 @foreach($homeworks as $hw)
                     @php
                         $normalized = $hw->normalized_status ?? 'pending';
                         $statusMeta = $desktopStatusTone($normalized);
                         $summary = trim((string) ($hw->description ?? ''));
                     @endphp
-                    <article class="group flex h-full flex-col rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_18px_40px_-26px_rgba(15,23,42,0.28)]">
-                        <div class="flex items-start justify-between gap-3">
-                            <div class="min-w-0">
-                                <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Demande de devoir</p>
-                                <h3 class="mt-2 line-clamp-2 text-lg font-semibold tracking-tight text-slate-950">{{ $hw->title }}</h3>
-                            </div>
-                            <x-ui.badge :variant="$statusMeta['badge']" class="shrink-0 uppercase tracking-[0.12em]">
+                    <article class="border-b border-slate-100 px-5 py-5 last:border-b-0 transition hover:bg-sky-50/35 xl:grid xl:grid-cols-[minmax(220px,1.2fr)_minmax(260px,1.5fr)_minmax(160px,0.8fr)_minmax(150px,0.75fr)_minmax(130px,0.7fr)_minmax(210px,0.9fr)] xl:items-center xl:gap-6 xl:px-6">
+                        <div class="min-w-0">
+                            <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Devoir</p>
+                            <h3 class="mt-1 line-clamp-2 text-base font-semibold tracking-tight text-slate-950 xl:mt-0">{{ $hw->title }}</h3>
+                            <p class="mt-1 text-xs text-slate-500">
+                                Cree le {{ optional($hw->created_at)->format('d/m/Y H:i') ?? '-' }}
+                            </p>
+                        </div>
+
+                        <div class="mt-4 min-w-0 xl:mt-0">
+                            <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Details</p>
+                            <p class="mt-1 line-clamp-2 text-sm leading-6 text-slate-600 xl:mt-0">
+                                {{ $summary !== '' ? \Illuminate\Support\Str::limit($summary, 120) : 'Aucun resume ajoute pour cette demande.' }}
+                            </p>
+                            <p class="mt-1 text-xs text-slate-500">
+                                Enseignant : <span class="font-semibold text-slate-700">{{ $hw->teacher?->name ?? '-' }}</span>
+                                <span class="mx-2 text-slate-300">|</span>
+                                Pieces : <span class="font-semibold text-slate-700">{{ (int) ($hw->attachments_count ?? 0) }}</span>
+                            </p>
+                        </div>
+
+                        <div class="mt-4 xl:mt-0">
+                            <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Classe</p>
+                            <p class="mt-1 text-sm font-semibold text-slate-900 xl:mt-0">{{ $hw->classroom?->name ?? '-' }}</p>
+                            <p class="mt-1 text-xs text-slate-500">{{ $hw->classroom?->level?->name ?? '' }}</p>
+                        </div>
+
+                        <div class="mt-4 xl:mt-0">
+                            <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Echeance</p>
+                            <p class="mt-1 text-sm font-semibold text-slate-900 xl:mt-0">{{ optional($hw->due_at)->format('d/m/Y') ?? '-' }}</p>
+                            <p class="mt-1 text-xs text-slate-500">{{ optional($hw->due_at)->format('H:i') ?? 'Sans heure' }}</p>
+                        </div>
+
+                        <div class="mt-4 xl:mt-0">
+                            <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Statut</p>
+                            <x-ui.badge :variant="$statusMeta['badge']" class="mt-1 uppercase tracking-[0.12em] xl:mt-0">
                                 {{ $statusMeta['label'] }}
                             </x-ui.badge>
                         </div>
 
-                        <p class="mt-3 line-clamp-3 text-sm leading-6 text-slate-500">
-                            {{ $summary !== '' ? \Illuminate\Support\Str::limit($summary, 150) : 'Aucun resume ajoute pour cette demande.' }}
-                        </p>
-
-                        <div class="mt-5 grid gap-3 sm:grid-cols-2">
-                            <div class="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3">
-                                <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Classe</p>
-                                <p class="mt-1 text-sm font-semibold text-slate-900">{{ $hw->classroom?->name ?? '-' }}</p>
-                            </div>
-                            <div class="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3">
-                                <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Enseignant</p>
-                                <p class="mt-1 text-sm font-semibold text-slate-900">{{ $hw->teacher?->name ?? '-' }}</p>
-                            </div>
-                            <div class="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3">
-                                <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Echeance</p>
-                                <p class="mt-1 text-sm font-semibold text-slate-900">{{ optional($hw->due_at)->format('d/m/Y') ?? '-' }}</p>
-                                <p class="mt-1 text-xs text-slate-500">{{ optional($hw->due_at)->format('H:i') ?? 'Sans heure' }}</p>
-                            </div>
-                            <div class="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3">
-                                <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Pieces jointes</p>
-                                <p class="mt-1 text-sm font-semibold text-slate-900">{{ (int) ($hw->attachments_count ?? 0) }}</p>
-                                <p class="mt-1 text-xs text-slate-500">Documents ajoutes a la demande</p>
-                            </div>
-                        </div>
-
-                        <div class="mt-4 rounded-2xl border border-slate-200 bg-white/70 px-4 py-3">
-                            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Cree le</p>
-                            <p class="mt-1 text-sm font-semibold text-slate-900">{{ optional($hw->created_at)->format('d/m/Y') ?? '-' }}</p>
-                            <p class="mt-1 text-xs text-slate-500">{{ optional($hw->created_at)->format('H:i') ?? 'Heure non renseignee' }}</p>
-                        </div>
-
-                        <div class="mt-5 border-t border-slate-200 pt-4">
-                            <div class="flex flex-wrap gap-2">
+                        <div class="mt-4 xl:mt-0">
+                            <p class="xl:hidden text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Actions</p>
+                            <div class="mt-2 flex flex-wrap gap-2 xl:mt-0">
                                 <x-ui.button :href="route($routePrefix . '.show', $hw)" variant="ghost" size="sm">
                                     Voir
                                 </x-ui.button>

@@ -27,19 +27,19 @@
                                 {{ $hw->title }}
                             </div>
                             <div class="mt-1 text-xs text-slate-500">
-                                {{ $hw->classroom?->name ?? '—' }} • {{ $hw->classroom?->level?->name ?? '—' }}
+                                {{ $hw->classroom?->name ?? '-' }} • {{ $hw->classroom?->level?->name ?? '-' }}
                             </div>
                         </div>
                         <div class="text-right">
                             <div class="text-[11px] uppercase tracking-wider text-slate-500">Echeance</div>
                             <div class="text-sm font-semibold text-slate-900">
-                                {{ $hw->due_at?->format('d/m/Y') ?? '—' }}
+                                {{ $hw->due_at?->format('d/m/Y') ?? '-' }}
                             </div>
                         </div>
                     </div>
 
                     <p class="mt-3 text-sm text-slate-600 line-clamp-3">
-                        {{ $hw->description ?? '—' }}
+                        {{ $hw->description ?? '-' }}
                     </p>
 
                     <div class="mt-4 flex items-center justify-between text-xs text-slate-500">

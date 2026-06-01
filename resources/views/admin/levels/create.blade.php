@@ -1,5 +1,5 @@
-<x-admin-layout title="Niveaux">
-    <h1 class="text-2xl font-semibold text-slate-900">Créer un niveau</h1>
+﻿<x-admin-layout title="Niveaux">
+    <h1 class="text-2xl font-semibold text-slate-900">Creer un niveau</h1>
 
     @if($errors->any())
         <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-red-900">

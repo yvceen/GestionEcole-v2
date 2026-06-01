@@ -1,5 +1,5 @@
-@props([
-    'title' => 'Gestion des élèves',
+﻿@props([
+    'title' => 'Gestion des eleves',
     'subtitle' => '',
     'createRoute' => null,
 ])
@@ -7,7 +7,7 @@
 <x-page-header
     :title="$title"
     :subtitle="$subtitle"
-    eyebrow="Élèves"
+    eyebrow="Eleves"
 >
     {{ $slot }}
 
@@ -16,7 +16,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" />
             </svg>
-            Nouvel élève
+            Nouvel eleve
         </x-ui.button>
     @endif
 </x-page-header>

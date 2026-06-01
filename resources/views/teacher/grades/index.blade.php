@@ -2,7 +2,7 @@
     <div class="rounded-[28px] border border-black/5 bg-white/70 backdrop-blur-2xl p-6 shadow-[0_22px_60px_-40px_rgba(0,0,0,.50)]">
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-slate-900">Saisie des notes</h1>
-            <p class="text-sm text-slate-600 mt-1">Choisissez une évaluation, puis saisissez les notes des élèves.</p>
+            <p class="text-sm text-slate-600 mt-1">Choisissez une evaluation, puis saisissez les notes des eleves.</p>
         </div>
 
         {{-- Filters --}}
@@ -18,9 +18,9 @@
             </div>
 
             <div>
-                <label class="text-xs font-semibold text-slate-600">Matière</label>
+                <label class="text-xs font-semibold text-slate-600">Matiere</label>
                 <select name="subject_id" class="mt-1 w-full rounded-2xl border border-black/10 bg-white px-3 py-2 text-sm">
-                    <option value="">Toutes les matières</option>
+                    <option value="">Toutes les matieres</option>
                     @foreach($subjects as $s)
                         <option value="{{ $s->id }}" @selected((string)$subjectId === (string)$s->id)>{{ $s->name }}</option>
                     @endforeach
@@ -28,12 +28,12 @@
             </div>
 
             <div>
-                <label class="text-xs font-semibold text-slate-600">Évaluation</label>
+                <label class="text-xs font-semibold text-slate-600">Evaluation</label>
                 <select name="assessment_id" class="mt-1 w-full rounded-2xl border border-black/10 bg-white px-3 py-2 text-sm">
                     <option value="">Choisir...</option>
                     @foreach($assessments as $a)
                         <option value="{{ $a->id }}" @selected((string)$assessmentId === (string)$a->id)>
-                            {{ $a->title ?? ('Évaluation #'.$a->id) }} — {{ optional($a->date)->format('d/m/Y') ?? '' }}
+                            {{ $a->title ?? ('Evaluation #'.$a->id) }} - {{ optional($a->date)->format('d/m/Y') ?? '' }}
                         </option>
                     @endforeach
                 </select>
@@ -51,17 +51,17 @@
         </form>
 
         <div class="mt-4 text-xs text-slate-500">
-            Astuce : sélectionnez une évaluation pour activer la saisie.
+            Astuce : selectionnez une evaluation pour activer la saisie.
         </div>
 
         {{-- Students list --}}
         <div class="mt-6 rounded-3xl border border-black/5 bg-white p-5">
             <div class="flex items-center justify-between">
-                <h2 class="text-sm font-bold text-slate-900">Liste des élèves</h2>
+                <h2 class="text-sm font-bold text-slate-900">Liste des eleves</h2>
 
                 @if($selectedAssessment)
                     <div class="text-xs text-slate-500">
-                        Évaluation: <span class="font-semibold text-slate-800">{{ $selectedAssessment->title ?? ('#'.$selectedAssessment->id) }}</span>
+                        Evaluation: <span class="font-semibold text-slate-800">{{ $selectedAssessment->title ?? ('#'.$selectedAssessment->id) }}</span>
                         @if($selectedAssessment->date)
                             • <span>{{ $selectedAssessment->date->format('d/m/Y') }}</span>
                         @endif
@@ -71,7 +71,7 @@
 
             @if(!$selectedAssessment)
                 <div class="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-900">
-                    Veuillez choisir une <b>évaluation</b> pour saisir les notes.
+                    Veuillez choisir une <b>evaluation</b> pour saisir les notes.
                 </div>
             @elseif($students->isEmpty())
                 <div class="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-900">
@@ -86,7 +86,7 @@
                         <table class="w-full text-sm">
                             <thead>
                                 <tr class="text-left text-slate-600">
-                                    <th class="py-2">Élève</th>
+                                    <th class="py-2">Eleve</th>
                                     <th class="py-2 w-40">Note / {{ $selectedAssessment->max_score ?? 20 }}</th>
                                 </tr>
                             </thead>

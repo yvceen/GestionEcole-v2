@@ -26,7 +26,7 @@ class SupportController extends Controller
             default     => now()->startOfMonth(),
         };
 
-        $threshold = 10; // moyenne < 10 => difficulté
+        $threshold = 10; // moyenne < 10 => difficulte
 
         // Dropdown classrooms
         $classrooms = Classroom::where('school_id', $schoolId)
@@ -72,7 +72,7 @@ class SupportController extends Controller
             ->limit(50) // take more to compute weak subjects later
             ->get();
 
-        // Keep only "en difficulté" (avg < threshold) + take top 20
+        // Keep only "en difficulte" (avg < threshold) + take top 20
         $rows = $rows
             ->filter(fn($r) => $r->avg_score !== null && (float)$r->avg_score < $threshold)
             ->take(20)
@@ -121,12 +121,12 @@ class SupportController extends Controller
             // simple action text
             $action = $avg < 7
                 ? 'Soutien intensif + contact parent'
-                : 'Soutien ciblé + suivi hebdomadaire';
+                : 'Soutien cible + suivi hebdomadaire';
 
             return [
                 'student_id'    => (int)$r->student_id,
-                'student_name'  => $r->student_name ?? ('Élève #' . $r->student_id),
-                'classroom'     => $r->classroom_name ?? '—',
+                'student_name'  => $r->student_name ?? ('Eleve #' . $r->student_id),
+                'classroom'     => $r->classroom_name ?? '-',
                 'avg'           => number_format($avg, 2) . ' /20',
                 'notes_count'   => (int)$r->notes_count,
                 'weak_subjects' => $weakSubjectsMap[$r->student_id] ?? [],

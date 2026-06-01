@@ -1,4 +1,4 @@
-<x-admin-layout title="Modifier la route">
+﻿<x-admin-layout title="Modifier la route">
     <x-ui.page-header
         title="Modifier la route"
         :subtitle="$route->route_name"
@@ -10,7 +10,7 @@
         </x-slot>
     </x-ui.page-header>
 
-    <x-ui.card title="Circuit de transport" subtitle="Mettez à jour l'itinéraire, le véhicule et les arrêts.">
+    <x-ui.card title="Circuit de transport" subtitle="Mettez a jour l'itineraire, le vehicule et les arrets.">
         <form method="POST" action="{{ route('admin.transport.routes.update', $route) }}" class="space-y-5">
             @csrf
             @method('PUT')
@@ -22,9 +22,9 @@
             </div>
 
             <div class="app-field">
-                <label class="app-label">Véhicule</label>
+                <label class="app-label">Vehicule</label>
                 <select name="vehicle_id" class="app-input @error('vehicle_id') border-rose-500 @enderror">
-                    <option value="">Aucun véhicule</option>
+                    <option value="">Aucun vehicule</option>
                     @foreach(($vehicles ?? collect()) as $vehicle)
                         <option value="{{ $vehicle->id }}" @selected(old('vehicle_id', $route->vehicle_id) == $vehicle->id)>
                             {{ $vehicle->registration_number }} ({{ $vehicle->vehicle_type }} - Cap. {{ $vehicle->capacity }})
@@ -36,13 +36,13 @@
 
             <div class="grid gap-4 md:grid-cols-2">
                 <div class="app-field">
-                    <label class="app-label">Point de départ</label>
+                    <label class="app-label">Point de depart</label>
                     <input type="text" name="start_point" value="{{ old('start_point', $route->start_point) }}" class="app-input @error('start_point') border-rose-500 @enderror" required>
                     @error('start_point')<p class="app-error">{{ $message }}</p>@enderror
                 </div>
 
                 <div class="app-field">
-                    <label class="app-label">Point d'arrivée</label>
+                    <label class="app-label">Point d'arrivee</label>
                     <input type="text" name="end_point" value="{{ old('end_point', $route->end_point) }}" class="app-input @error('end_point') border-rose-500 @enderror" required>
                     @error('end_point')<p class="app-error">{{ $message }}</p>@enderror
                 </div>
@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="app-field">
-                    <label class="app-label">Temps estimé (minutes)</label>
+                    <label class="app-label">Temps estime (minutes)</label>
                     <input type="number" name="estimated_minutes" value="{{ old('estimated_minutes', $route->estimated_minutes) }}" min="1" class="app-input @error('estimated_minutes') border-rose-500 @enderror">
                     @error('estimated_minutes')<p class="app-error">{{ $message }}</p>@enderror
                 </div>
@@ -79,8 +79,8 @@
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                 <div class="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                        <p class="text-sm font-semibold text-slate-900">Arrêts de la route</p>
-                        <p class="mt-1 text-xs text-slate-500">Cliquez sur la carte pour ajouter un arrêt, glissez pour réordonner ou déplacer.</p>
+                        <p class="text-sm font-semibold text-slate-900">Arrets de la route</p>
+                        <p class="mt-1 text-xs text-slate-500">Cliquez sur la carte pour ajouter un arret, glissez pour reordonner ou deplacer.</p>
                     </div>
                 </div>
 
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="rounded-xl border border-slate-200 bg-white p-3">
-                        <div class="mb-2 text-xs font-semibold text-slate-500">Liste des arrêts</div>
+                        <div class="mb-2 text-xs font-semibold text-slate-500">Liste des arrets</div>
                         <div id="stopsList" class="space-y-2"></div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
             </div>
 
             <div class="flex items-center gap-3">
-                <x-ui.button type="submit" variant="primary">Mettre à jour</x-ui.button>
+                <x-ui.button type="submit" variant="primary">Mettre a jour</x-ui.button>
                 <x-ui.button :href="route('admin.transport.routes.index')" variant="secondary">Annuler</x-ui.button>
             </div>
         </form>

@@ -34,7 +34,7 @@ class VehicleController extends Controller
         ]);
 
         return redirect()->route('admin.transport.vehicles.index')
-            ->with('success', 'Véhicule créé avec succès.');
+            ->with('success', 'Vehicule cree avec succes.');
     }
 
     public function show(Vehicle $vehicle)
@@ -62,7 +62,7 @@ class VehicleController extends Controller
         $vehicle->update($request->validated());
 
         return redirect()->route('admin.transport.vehicles.show', $vehicle)
-            ->with('success', 'Véhicule mis à jour avec succès.');
+            ->with('success', 'Vehicule mis a jour avec succes.');
     }
 
     public function destroy(Vehicle $vehicle)
@@ -72,6 +72,6 @@ class VehicleController extends Controller
         $vehicle->delete();
 
         return redirect()->route('admin.transport.vehicles.index')
-            ->with('success', 'Véhicule supprimé avec succès.');
+            ->with('success', 'Vehicule supprime avec succes.');
     }
 }

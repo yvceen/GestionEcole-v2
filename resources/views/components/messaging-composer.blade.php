@@ -1,6 +1,6 @@
-@props([
+﻿@props([
     'title' => 'Nouveau message',
-    'subtitle' => 'Envoyez un message clair et bien ciblé.',
+    'subtitle' => 'Envoyez un message clair et bien cible.',
     'action',
     'method' => 'POST',
     'backUrl' => null,
@@ -22,7 +22,7 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
         'label' => $tab['label'] ?? 'Onglet',
         'description' => $tab['description'] ?? '',
         'items' => collect($tab['items'])->map(function ($item) {
-            $label = $item['label'] ?? data_get($item, 'name') ?? 'Entrée';
+            $label = $item['label'] ?? data_get($item, 'name') ?? 'Entree';
             return [
                 'id' => (string) ($item['id'] ?? $item['value'] ?? ''),
                 'label' => $label,
@@ -162,10 +162,10 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
             @method($method)
         @endif
 
-        <x-ui.card title="Contenu du message" subtitle="Renseignez un sujet clair et un texte facile à comprendre.">
+        <x-ui.card title="Contenu du message" subtitle="Renseignez un sujet clair et un texte facile a comprendre.">
             @if($errors->any())
                 <x-ui.alert variant="error" class="mb-4">
-                    <div class="font-semibold">Erreurs détectées</div>
+                    <div class="font-semibold">Erreurs detectees</div>
                     <ul class="mt-2 list-disc pl-4 text-xs">
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -179,7 +179,7 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                     label="Sujet"
                     name="subject"
                     :value="old('subject', $subjectValue ?? '')"
-                    placeholder="Résumé bref du message"
+                    placeholder="Resume bref du message"
                 />
                 @error('subject')
                     <p class="app-error">{{ $message }}</p>
@@ -189,7 +189,7 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                     label="Message"
                     name="body"
                     rows="10"
-                    placeholder="Détaillez votre message..."
+                    placeholder="Detaillez votre message..."
                 >{{ old('body', $bodyValue ?? '') }}</x-ui.textarea>
                 @error('body')
                     <p class="app-error">{{ $message }}</p>
@@ -203,17 +203,17 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
             </div>
         </x-ui.card>
 
-        <x-ui.card title="Destinataires" subtitle="Sélectionnez une classe ou plusieurs personnes.">
+        <x-ui.card title="Destinataires" subtitle="Selectionnez une classe ou plusieurs personnes.">
             <div class="space-y-4">
                 <div class="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                        <p class="text-sm font-semibold text-slate-900" x-text="selectedCount + ' sélectionné(s)'"></p>
+                        <p class="text-sm font-semibold text-slate-900" x-text="selectedCount + ' selectionne(s)'"></p>
                         <p class="mt-1 text-xs text-slate-500" x-text="currentTab?.description || ''"></p>
                     </div>
 
                     <div class="flex flex-wrap gap-2">
                         <button type="button" class="app-button-ghost min-h-9 px-3 py-2 text-xs" @click="selectAll(activeTab)">
-                            Tout sélectionner
+                            Tout selectionner
                         </button>
                         <button type="button" class="app-button-ghost min-h-9 px-3 py-2 text-xs" @click="clearSelection(activeTab)">
                             Effacer
@@ -230,7 +230,7 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                             </button>
                         </span>
                     </template>
-                    <p class="text-xs text-slate-400" x-show="selectedCount === 0">Aucun destinataire sélectionné.</p>
+                    <p class="text-xs text-slate-400" x-show="selectedCount === 0">Aucun destinataire selectionne.</p>
                 </div>
 
                 <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">

@@ -1,7 +1,7 @@
-<x-admin-layout title="Modifier un élève">
+﻿<x-admin-layout title="Modifier un eleve">
     <x-students.header
-        title="Modifier un élève"
-        subtitle="Mettez à jour les informations de l'élève sans modifier la logique métier."
+        title="Modifier un eleve"
+        subtitle="Mettez a jour les informations de l'eleve sans modifier la logique metier."
     >
         <x-ui.button :href="route('admin.students.index')" variant="ghost">
             Retour

@@ -22,7 +22,7 @@ class ApproveMessageRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'reason.max' => 'La raison ne doit pas dépasser 500 caractères.',
+            'reason.max' => 'La raison ne doit pas depasser 500 caracteres.',
         ];
     }
 }

@@ -97,6 +97,6 @@ class StudentsController extends Controller
             'note' => $data['note'],
         ]);
 
-        return back()->with('success', 'Note ajoutée ✅');
+        return back()->with('success', 'Note ajoutee ✅');
     }
 }

@@ -1,7 +1,7 @@
-<x-admin-layout title="Utilisateurs">
+﻿<x-admin-layout title="Utilisateurs">
     <x-page-header
         title="Utilisateurs"
-        subtitle="Recherchez, filtrez par rôle et gérez les comptes depuis une interface unifiée."
+        subtitle="Recherchez, filtrez par role et gerez les comptes depuis une interface unifiee."
         eyebrow="Administration"
     >
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
@@ -15,7 +15,7 @@
                     name="q"
                     value="{{ $q ?? '' }}"
                     autocomplete="off"
-                    placeholder="Rechercher par nom, email ou téléphone..."
+                    placeholder="Rechercher par nom, email ou telephone..."
                     class="app-input pr-10"
                 />
 
@@ -62,7 +62,7 @@
         </div>
     </section>
 
-    <x-ui.card title="Liste des utilisateurs" subtitle="Résultats : {{ $users->total() }}">
+    <x-ui.card title="Liste des utilisateurs" subtitle="Resultats : {{ $users->total() }}">
         <div class="overflow-hidden rounded-2xl border border-slate-200">
             <div class="overflow-x-auto">
                 <table class="app-table">
@@ -71,7 +71,7 @@
                             <th>#</th>
                             <th>Nom</th>
                             <th>E-mail</th>
-                            <th>Rôle</th>
+                            <th>Role</th>
                             <th class="text-right">Actions</th>
                         </tr>
                     </thead>
@@ -108,7 +108,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-5 py-10 text-center text-sm text-slate-500">Aucun résultat trouvé.</td>
+                                <td colspan="5" class="px-5 py-10 text-center text-sm text-slate-500">Aucun resultat trouve.</td>
                             </tr>
                         @endforelse
                     </tbody>

@@ -1,4 +1,4 @@
-@php
+﻿@php
     $recipientsCollection = collect($recipients ?? [])->values();
 
     $tabs = [
@@ -33,7 +33,7 @@
         action="{{ route('parent.messages.store') }}"
         back-url="{{ route('parent.messages.index') }}"
         title="Nouveau message"
-        subtitle="Envoyez un message à un admin ou un enseignant."
+        subtitle="Envoyez un message a un admin ou un enseignant."
         :tabs="$tabs"
     />
 </x-parent-layout>

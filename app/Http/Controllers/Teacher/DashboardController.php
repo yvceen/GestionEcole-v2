@@ -28,7 +28,7 @@ class DashboardController extends Controller
         $startOfWeek = $now->copy()->startOfWeek(Carbon::MONDAY);
         $endOfWeek   = $now->copy()->endOfWeek(Carbon::SUNDAY);
 
-        // ✅ IDs des classes assignées au prof (safe)
+        // ✅ IDs des classes assignees au prof (safe)
         $classroomIds = $this->getTeacherClassroomIds((int)$schoolId);
 
         // =========================
@@ -104,7 +104,7 @@ class DashboardController extends Controller
         $alerts = [
             'classrooms_no_courses' => collect(),
             'classrooms_no_grades'  => collect(),
-            'hint' => "Objectif : au moins 1 cours + 1 évaluation/notes par classe chaque semaine.",
+            'hint' => "Objectif : au moins 1 cours + 1 evaluation/notes par classe chaque semaine.",
         ];
 
         $classrooms = collect();
@@ -286,10 +286,10 @@ class DashboardController extends Controller
 
             $latest['grades'] = $rows->map(function ($g) {
                 return [
-                    'student'   => $g->student_name ?? 'Élève',
+                    'student'   => $g->student_name ?? 'Eleve',
                     'subject'   => $g->subject_name ?? null,
                     'classroom' => $g->classroom_name ?? null,
-                    'score'     => isset($g->score) ? (string) $g->score : '—',
+                    'score'     => isset($g->score) ? (string) $g->score : '-',
                     'date'      => !empty($g->created_at) ? Carbon::parse($g->created_at)->format('d/m/Y H:i') : null,
                 ];
             });
@@ -325,7 +325,7 @@ class DashboardController extends Controller
 
             $latest['attendances'] = $rows->map(function ($a) {
                 return [
-                    'student'   => $a->student_name ?? 'Élève',
+                    'student'   => $a->student_name ?? 'Eleve',
                     'classroom' => $a->classroom_name ?? null,
                     'status'    => $a->status ?? null,
                     'date'      => !empty($a->date)
@@ -343,10 +343,10 @@ class DashboardController extends Controller
             'min' => null,
             'max' => null,
             'distribution' => [
-                ['label' => '0–5',   'value' => 0],
-                ['label' => '5–10',  'value' => 0],
-                ['label' => '10–15', 'value' => 0],
-                ['label' => '15–20', 'value' => 0],
+                ['label' => '0-5',   'value' => 0],
+                ['label' => '5-10',  'value' => 0],
+                ['label' => '10-15', 'value' => 0],
+                ['label' => '15-20', 'value' => 0],
             ],
         ];
 
@@ -368,10 +368,10 @@ class DashboardController extends Controller
             $scores = (clone $q)->pluck('grades.score')->map(fn($v) => (float)$v);
 
             $analysis['distribution'] = [
-                ['label' => '0–5',   'value' => $scores->filter(fn($s) => $s >= 0  && $s < 5)->count()],
-                ['label' => '5–10',  'value' => $scores->filter(fn($s) => $s >= 5  && $s < 10)->count()],
-                ['label' => '10–15', 'value' => $scores->filter(fn($s) => $s >= 10 && $s < 15)->count()],
-                ['label' => '15–20', 'value' => $scores->filter(fn($s) => $s >= 15 && $s <= 20)->count()],
+                ['label' => '0-5',   'value' => $scores->filter(fn($s) => $s >= 0  && $s < 5)->count()],
+                ['label' => '5-10',  'value' => $scores->filter(fn($s) => $s >= 5  && $s < 10)->count()],
+                ['label' => '10-15', 'value' => $scores->filter(fn($s) => $s >= 10 && $s < 15)->count()],
+                ['label' => '15-20', 'value' => $scores->filter(fn($s) => $s >= 15 && $s <= 20)->count()],
             ];
         }
 

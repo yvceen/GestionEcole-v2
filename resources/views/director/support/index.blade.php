@@ -1,14 +1,14 @@
-<x-director-layout title="Élèves en difficulté">
+<x-director-layout title="Eleves en difficulte">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Élèves en difficulté</h1>
+            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Eleves en difficulte</h1>
             <p class="mt-1 text-sm text-slate-500">
-                Top 20 des élèves avec une moyenne &lt; {{ $threshold ?? 10 }}/20 (selon la période choisie).
+                Top 20 des eleves avec une moyenne &lt; {{ $threshold ?? 10 }}/20 (selon la periode choisie).
             </p>
         </div>
 
         <div class="rounded-2xl border border-black/10 bg-white/80 px-4 py-3 text-xs text-slate-600 shadow-sm">
-            Période analysée depuis :
+            Periode analysee depuis :
             <span class="font-semibold text-slate-900">{{ optional($from)->format('Y-m-d') }}</span>
         </div>
     </div>
@@ -29,11 +29,11 @@
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Période</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Periode</label>
                 <select name="period" class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5 text-sm">
                     <option value="month" @selected(($period ?? 'month')==='month')>Ce mois</option>
                     <option value="trimester" @selected(($period ?? '')==='trimester')>Trimestre</option>
-                    <option value="year" @selected(($period ?? '')==='year')>Année</option>
+                    <option value="year" @selected(($period ?? '')==='year')>Annee</option>
                 </select>
             </div>
 
@@ -43,7 +43,7 @@
                 </button>
 
                 <a href="{{ url()->current() }}" class="rounded-2xl border border-black/10 bg-white px-6 py-2.5 text-sm font-semibold hover:bg-slate-50">
-                    Réinitialiser
+                    Reinitialiser
                 </a>
             </div>
         </div>
@@ -58,7 +58,7 @@
         <div class="flex items-center justify-between border-b border-black/10 bg-white/60 px-5 py-4">
             <div class="text-sm font-semibold text-slate-900">Liste (Top 20)</div>
             <div class="text-xs text-slate-500">
-                Élèves : <span class="font-semibold text-slate-900">{{ count($items ?? []) }}</span>
+                Eleves : <span class="font-semibold text-slate-900">{{ count($items ?? []) }}</span>
             </div>
         </div>
 
@@ -66,12 +66,12 @@
             <table class="min-w-full text-sm">
                 <thead class="bg-slate-50/80">
                     <tr class="text-left border-b border-black/5">
-                        <th class="p-4 text-xs font-semibold text-slate-500">Élève</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500">Eleve</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Classe</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Moyenne</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Notes</th>
-                        <th class="p-4 text-xs font-semibold text-slate-500">Matières faibles</th>
-                        <th class="p-4 text-xs font-semibold text-slate-500">Action proposée</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500">Matieres faibles</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500">Action proposee</th>
                         <th class="p-4 text-xs font-semibold text-slate-500"></th>
                     </tr>
                 </thead>
@@ -84,16 +84,16 @@
 
                         <tr class="hover:bg-slate-50/70 transition">
                             <td class="p-4">
-                                <div class="font-semibold text-slate-900">{{ $it['student_name'] ?? '—' }}</div>
-                                <div class="text-xs text-slate-500">ID: {{ $it['student_id'] ?? '—' }}</div>
+                                <div class="font-semibold text-slate-900">{{ $it['student_name'] ?? '-' }}</div>
+                                <div class="text-xs text-slate-500">ID: {{ $it['student_id'] ?? '-' }}</div>
                             </td>
 
-                            <td class="p-4 text-slate-700">{{ $it['classroom'] ?? '—' }}</td>
+                            <td class="p-4 text-slate-700">{{ $it['classroom'] ?? '-' }}</td>
 
                             <td class="p-4">
                                 <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold border
                                     {{ $critical ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-amber-50 text-amber-700 border-amber-200' }}">
-                                    {{ $it['avg'] ?? '—' }}
+                                    {{ $it['avg'] ?? '-' }}
                                 </span>
                             </td>
 
@@ -113,13 +113,13 @@
                                         @endforeach
                                     </div>
                                 @else
-                                    —
+                                    -
                                 @endif
                             </td>
 
                             <td class="p-4 text-slate-700">
                                 <span class="inline-flex items-center rounded-2xl border border-black/10 bg-white px-3 py-2 text-xs font-semibold">
-                                    {{ $it['action'] ?? 'Soutien ciblé + suivi hebdomadaire' }}
+                                    {{ $it['action'] ?? 'Soutien cible + suivi hebdomadaire' }}
                                 </span>
                             </td>
 
@@ -135,7 +135,7 @@
                     @empty
                         <tr>
                             <td colspan="7" class="p-10 text-center text-slate-500">
-                                Aucun élève en difficulté pour les filtres choisis.
+                                Aucun eleve en difficulte pour les filtres choisis.
                             </td>
                         </tr>
                     @endforelse
@@ -144,7 +144,7 @@
         </div>
 
         <div class="border-t border-black/10 bg-white/60 px-5 py-4 text-xs text-slate-500">
-            Définition : “en difficulté” = moyenne &lt; {{ $threshold ?? 10 }}/20 sur la période (basé sur les notes enregistrées).
+            Definition : "en difficulte" = moyenne &lt; {{ $threshold ?? 10 }}/20 sur la periode (base sur les notes enregistrees).
         </div>
     </div>
 </x-director-layout>

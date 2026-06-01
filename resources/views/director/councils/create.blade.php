@@ -1,8 +1,8 @@
-<x-director-layout title="Nouvelle décision – Conseil de classe">
+<x-director-layout title="Nouvelle decision - Conseil de classe">
     <div class="flex items-center justify-between gap-3">
         <div>
-            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Nouvelle décision</h1>
-            <p class="mt-1 text-sm text-slate-500">Ajoutez une décision de conseil de classe.</p>
+            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Nouvelle decision</h1>
+            <p class="mt-1 text-sm text-slate-500">Ajoutez une decision de conseil de classe.</p>
         </div>
         <a href="{{ route('director.councils.index') }}" class="text-sm font-semibold text-slate-700 hover:underline">← Retour</a>
     </div>
@@ -23,7 +23,7 @@
             <div class="md:col-span-2">
                 <label class="block text-sm font-semibold mb-1">Classe</label>
                 <select name="classroom_id" class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5" required>
-                    <option value="">Choisir…</option>
+                    <option value="">Choisir...</option>
                     @foreach(($classrooms ?? []) as $c)
                         <option value="{{ $c->id }}" @selected(old('classroom_id')==(string)$c->id)>
                             {{ $c->name ?? ('Classe #' . $c->id) }}
@@ -40,17 +40,17 @@
         </div>
 
         <div>
-            <label class="block text-sm font-semibold mb-1">Période</label>
+            <label class="block text-sm font-semibold mb-1">Periode</label>
             <input name="period" value="{{ old('period') }}"
                    class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5"
                    placeholder="Ex: 1er trimestre 2025/2026" required />
         </div>
 
         <div>
-            <label class="block text-sm font-semibold mb-1">Décision / Recommandation</label>
+            <label class="block text-sm font-semibold mb-1">Decision / Recommandation</label>
             <textarea name="decision" rows="5"
                       class="w-full rounded-2xl border border-black/10 bg-white px-4 py-3"
-                      placeholder="Écrivez ici les décisions (soutien, orientation, suivi…)" required>{{ old('decision') }}</textarea>
+                      placeholder="Ecrivez ici les decisions (soutien, orientation, suivi...)" required>{{ old('decision') }}</textarea>
         </div>
 
         <div class="flex items-center justify-end gap-3 pt-2">

@@ -54,7 +54,7 @@
                             </div>
                             <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
                                 @php
-                                    $orderedStops = $route->stops->sortBy('stop_order');
+                                    $orderedStops = ($route->stops ?? collect())->sortBy('stop_order');
                                     $firstStop = $orderedStops->first();
                                     $lastStop = $orderedStops->last();
                                 @endphp

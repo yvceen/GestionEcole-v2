@@ -43,7 +43,7 @@
         ['name' => 'Ibn Sina', 'initials' => 'IS', 'tone' => 'amber'],
         ['name' => 'Atlas School', 'initials' => 'AS', 'tone' => 'slate'],
         ['name' => 'Horizon', 'initials' => 'HZ', 'tone' => 'sky'],
-        ['name' => 'Les Étoiles', 'initials' => 'LE', 'tone' => 'violet'],
+        ['name' => 'Les Etoiles', 'initials' => 'LE', 'tone' => 'violet'],
         ['name' => 'Al Massira', 'initials' => 'AM', 'tone' => 'emerald'],
         ['name' => 'Future Kids', 'initials' => 'FK', 'tone' => 'amber'],
         ['name' => 'Smart School', 'initials' => 'SS', 'tone' => 'slate'],
@@ -156,13 +156,13 @@
         <section id="partners" class="fut-section fut-reveal">
             <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
                 <div class="fut-section-heading">
-                    <p class="fut-section-label">Écoles partenaires</p>
-                    <h2>Des écoles qui avancent avec My Edu.</h2>
-                    <p>Une communauté éducative connectée, moderne et tournée vers l’avenir.</p>
+                    <p class="fut-section-label">Ecoles partenaires</p>
+                    <h2>Des ecoles qui avancent avec My Edu.</h2>
+                    <p>Une communaute educative connectee, moderne et tournee vers l avenir.</p>
                 </div>
             </div>
 
-            <div class="fut-logo-marquee" aria-label="Écoles partenaires">
+            <div class="fut-logo-marquee" aria-label="Ecoles partenaires">
                 <div class="fut-logo-track">
                     @foreach($partnerSchools as $school)
                         <div class="fut-logo-card">
@@ -185,7 +185,7 @@
                 <div class="fut-about-panel">
                     <div>
                         <p class="fut-section-label">About My Edu</p>
-                        <h2>Une nouvelle facon de vivre l'ecole.</h2>
+                        <h2>Une nouvelle maniere de vivre l'ecole.</h2>
                     </div>
                     <p>
                         My Edu rassemble tous les acteurs de la communaute educative autour d'un espace unique, moderne et accessible, pense pour renforcer la confiance, la communication et l'experience scolaire.

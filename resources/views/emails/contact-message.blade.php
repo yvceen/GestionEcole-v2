@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="utf-8">
@@ -8,7 +8,7 @@
     <h2>Nouveau message de contact</h2>
     <p><strong>Nom :</strong> {{ $data['name'] }}</p>
     <p><strong>Email :</strong> {{ $data['email'] }}</p>
-    <p><strong>Téléphone :</strong> {{ $data['phone'] ?? 'N/A' }}</p>
+    <p><strong>Telephone :</strong> {{ $data['phone'] ?? 'N/A' }}</p>
     <p><strong>Objet :</strong> {{ $data['subject'] ?: 'Sans objet' }}</p>
     <p><strong>Message :</strong></p>
     <p style="white-space: pre-line; line-height: 1.6;">{{ $data['message'] }}</p>

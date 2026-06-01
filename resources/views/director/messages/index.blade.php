@@ -16,19 +16,19 @@
                 <div class="space-y-2">
                     <a href="{{ route('director.messages.index') }}"
                        class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold hover:bg-slate-50 transition {{ !$isSent ? 'bg-slate-50 border-slate-900/20' : 'bg-white' }}">
-                        <span>Boîte de réception</span>
+                        <span>Boite de reception</span>
                         <span class="text-xs text-slate-600">{{ $counts['inbox'] ?? 0 }}</span>
                     </a>
 
                     <a href="{{ route('director.messages.index', ['folder' => 'sent']) }}"
                        class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold hover:bg-slate-50 transition {{ $isSent ? 'bg-slate-50 border-slate-900/20' : 'bg-white' }}">
-                        <span>Envoyés</span>
+                        <span>Envoyes</span>
                         <span class="text-xs text-slate-600">{{ $counts['sent'] ?? 0 }}</span>
                     </a>
                 </div>
 
                 <div class="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-600">
-                    Consultez vos messages reçus des enseignants, parents et administrateurs.
+                    Consultez vos messages recus des enseignants, parents et administrateurs.
                 </div>
             </aside>
 
@@ -37,7 +37,7 @@
                 <div class="p-4 border-b border-slate-200 flex items-center justify-between gap-3">
                     <div>
                         <div class="text-sm font-semibold text-slate-900">
-                            {{ $isSent ? 'Messages envoyés' : 'Boîte de réception' }}
+                            {{ $isSent ? 'Messages envoyes' : 'Boite de reception' }}
                         </div>
                         <div class="text-xs text-slate-500">{{ count($messages ?? []) }} message(s)</div>
                     </div>
@@ -72,7 +72,7 @@
                                     </div>
                                 </div>
                                 <div class="text-xs text-slate-500 whitespace-nowrap">
-                                    {{ $m->created_at?->format('d/m/Y H:i') ?? '—' }}
+                                    {{ $m->created_at?->format('d/m/Y H:i') ?? '-' }}
                                 </div>
                             </div>
                         </a>

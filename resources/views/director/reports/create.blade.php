@@ -1,8 +1,8 @@
-<x-director-layout title="Nouveau rapport pédagogique">
+<x-director-layout title="Nouveau rapport pedagogique">
     <div class="flex items-center justify-between gap-3">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Nouveau rapport</h1>
-            <p class="mt-1 text-sm text-slate-500">Rédigez un rapport mensuel clair et exploitable.</p>
+            <p class="mt-1 text-sm text-slate-500">Redigez un rapport mensuel clair et exploitable.</p>
         </div>
         <a href="{{ route('director.reports.index') }}" class="text-sm font-semibold text-slate-700 hover:underline">← Retour</a>
     </div>
@@ -27,17 +27,17 @@
         </div>
 
         <div>
-            <label class="block text-sm font-semibold mb-1">Résumé</label>
+            <label class="block text-sm font-semibold mb-1">Resume</label>
             <textarea name="summary" rows="4"
                       class="w-full rounded-2xl border border-black/10 bg-white px-4 py-3"
-                      placeholder="Synthèse globale : évolution, points positifs, difficultés…" required>{{ old('summary') }}</textarea>
+                      placeholder="Synthese globale : evolution, points positifs, difficultes..." required>{{ old('summary') }}</textarea>
         </div>
 
         <div>
             <label class="block text-sm font-semibold mb-1">Recommandations</label>
             <textarea name="recommendations" rows="5"
                       class="w-full rounded-2xl border border-black/10 bg-white px-4 py-3"
-                      placeholder="Actions proposées : soutien, réunions, suivi, planification…">{{ old('recommendations') }}</textarea>
+                      placeholder="Actions proposees : soutien, reunions, suivi, planification...">{{ old('recommendations') }}</textarea>
         </div>
 
         <div class="flex items-center justify-end gap-3 pt-2">

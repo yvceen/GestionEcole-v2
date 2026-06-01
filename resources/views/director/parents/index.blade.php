@@ -46,7 +46,7 @@
                         <div class="rounded-2xl border border-black/5 bg-white/60 p-4">
                             <div class="text-sm font-semibold text-slate-900">{{ $c->full_name }}</div>
                             <div class="mt-1 text-xs text-slate-500">
-                                {{ $c->classroom?->name ?? '—' }} • {{ $c->classroom?->level?->name ?? '—' }}
+                                {{ $c->classroom?->name ?? '-' }} • {{ $c->classroom?->level?->name ?? '-' }}
                             </div>
                         </div>
                     @empty

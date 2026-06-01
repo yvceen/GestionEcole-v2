@@ -1,13 +1,13 @@
-<x-teacher-layout title="Évaluations">
+﻿<x-teacher-layout title="Evaluations">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-semibold text-slate-900">Évaluations</h1>
+            <h1 class="text-2xl font-semibold text-slate-900">Evaluations</h1>
             <p class="text-sm text-slate-500 mt-1">Planifiez les devoirs et les examens.</p>
         </div>
 
         <a href="{{ route('teacher.assessments.create') }}"
            class="rounded-2xl bg-black text-white px-5 py-2.5 text-sm font-semibold hover:bg-slate-900">
-            + Nouvelle évaluation
+            + Nouvelle evaluation
         </a>
     </div>
 

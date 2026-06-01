@@ -103,7 +103,7 @@ class CourseController extends Controller
             ->exists();
 
         if (!$classroomExists) {
-            abort(403, "Classe invalide (hors de votre école).");
+            abort(403, "Classe invalide (hors de votre ecole).");
         }
 
         // ✅ 2) تأكد الأستاذ فعلاً معيين لهاد القسم (باش ما يحقنش classroom_id)
@@ -116,7 +116,7 @@ class CourseController extends Controller
         }
 
         if (!$allowed) {
-            abort(403, "Vous n'êtes pas affecté à cette classe.");
+            abort(403, "Vous n'etes pas affecte a cette classe.");
         }
 
         // ✅ payload مرن حسب columns اللي كاينين ف DB
@@ -192,6 +192,6 @@ class CourseController extends Controller
 
         return redirect()
             ->route('teacher.courses.index')
-            ->with('success', 'Cours ajouté ✅');
+            ->with('success', 'Cours ajoute ✅');
     }
 }

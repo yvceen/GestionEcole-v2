@@ -1,9 +1,9 @@
-<x-director-layout title="Résultats & Analyses">
+<x-director-layout title="Resultats & Analyses">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Résultats & Analyses</h1>
+            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Resultats & Analyses</h1>
             <p class="mt-1 text-sm text-slate-500">
-                Suivi des notes par classe, matière et enseignant + détection des élèves en difficulté.
+                Suivi des notes par classe, matiere et enseignant + detection des eleves en difficulte.
             </p>
         </div>
     </div>
@@ -13,20 +13,20 @@
         <div class="rounded-[28px] border border-black/10 bg-white/80 p-5 shadow-sm">
             <div class="text-xs font-semibold text-slate-500">Total des notes (filtres inclus)</div>
             <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $totalNotes ?? 0 }}</div>
-            <div class="mt-1 text-xs text-slate-500">Basé sur les notes saisies par les enseignants.</div>
+            <div class="mt-1 text-xs text-slate-500">Base sur les notes saisies par les enseignants.</div>
         </div>
 
         <div class="rounded-[28px] border border-black/10 bg-white/80 p-5 shadow-sm">
             <div class="text-xs font-semibold text-slate-500">Moyenne globale</div>
             <div class="mt-2 text-3xl font-semibold text-slate-900">
-                {{ $globalAvg !== null ? number_format((float)$globalAvg, 2) : '—' }}
+                {{ $globalAvg !== null ? number_format((float)$globalAvg, 2) : '-' }}
                 <span class="text-sm font-semibold text-slate-500">/20</span>
             </div>
-            <div class="mt-1 text-xs text-slate-500">Moyenne calculée sur les notes filtrées.</div>
+            <div class="mt-1 text-xs text-slate-500">Moyenne calculee sur les notes filtrees.</div>
         </div>
 
         <div class="rounded-[28px] border border-black/10 bg-white/80 p-5 shadow-sm">
-            <div class="text-xs font-semibold text-slate-500">Élèves en difficulté</div>
+            <div class="text-xs font-semibold text-slate-500">Eleves en difficulte</div>
             <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $studentsDifficultyCount ?? 0 }}</div>
             <div class="mt-1 text-xs text-slate-500">
                 Seuil actuel : moyenne &lt; {{ $difficultyThreshold ?? 10 }} /20 (modifiable).
@@ -50,12 +50,12 @@
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Matière</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Matiere</label>
                 <select name="subject_id" class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5 text-sm">
                     <option value="">Toutes</option>
                     @foreach(($subjects ?? []) as $s)
                         <option value="{{ $s->id }}" @selected((string)$subjectId === (string)$s->id)>
-                            {{ $s->name ?? ('Matière #' . $s->id) }}
+                            {{ $s->name ?? ('Matiere #' . $s->id) }}
                         </option>
                     @endforeach
                 </select>
@@ -96,7 +96,7 @@
                     Filtrer
                 </button>
                 <a href="{{ url()->current() }}" class="rounded-2xl border border-black/10 bg-white px-6 py-2.5 text-sm font-semibold hover:bg-slate-50">
-                    Réinitialiser
+                    Reinitialiser
                 </a>
             </div>
         </div>
@@ -105,7 +105,7 @@
     {{-- SUMMARY TABLE --}}
     <div class="mt-6 overflow-hidden rounded-[28px] border border-black/10 bg-white/80 shadow-sm">
         <div class="flex items-center justify-between border-b border-black/10 bg-white/60 px-5 py-4">
-            <div class="text-sm font-semibold text-slate-900">Synthèse (moyennes)</div>
+            <div class="text-sm font-semibold text-slate-900">Synthese (moyennes)</div>
             <div class="text-xs text-slate-500">
                 Lignes : <span class="font-semibold text-slate-900">{{ count($rows ?? []) }}</span>
             </div>
@@ -116,7 +116,7 @@
                 <thead class="bg-slate-50/80">
                     <tr class="text-left border-b border-black/5">
                         <th class="p-4 text-xs font-semibold text-slate-500">Classe</th>
-                        <th class="p-4 text-xs font-semibold text-slate-500">Matière</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500">Matiere</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Enseignant</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Moyenne</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Min</th>
@@ -128,22 +128,22 @@
                 <tbody class="divide-y divide-black/5">
                     @forelse(($rows ?? []) as $r)
                         <tr class="hover:bg-slate-50/70 transition">
-                            <td class="p-4 font-semibold text-slate-900">{{ $r['classroom'] ?? '—' }}</td>
-                            <td class="p-4 text-slate-700">{{ $r['subject'] ?? '—' }}</td>
-                            <td class="p-4 text-slate-700">{{ $r['teacher'] ?? '—' }}</td>
+                            <td class="p-4 font-semibold text-slate-900">{{ $r['classroom'] ?? '-' }}</td>
+                            <td class="p-4 text-slate-700">{{ $r['subject'] ?? '-' }}</td>
+                            <td class="p-4 text-slate-700">{{ $r['teacher'] ?? '-' }}</td>
                             <td class="p-4">
                                 <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                                    {{ $r['avg'] ?? '—' }} /20
+                                    {{ $r['avg'] ?? '-' }} /20
                                 </span>
                             </td>
-                            <td class="p-4 text-slate-700">{{ $r['min'] ?? '—' }}</td>
-                            <td class="p-4 text-slate-700">{{ $r['max'] ?? '—' }}</td>
-                            <td class="p-4 text-slate-700">{{ $r['count'] ?? '—' }}</td>
+                            <td class="p-4 text-slate-700">{{ $r['min'] ?? '-' }}</td>
+                            <td class="p-4 text-slate-700">{{ $r['max'] ?? '-' }}</td>
+                            <td class="p-4 text-slate-700">{{ $r['count'] ?? '-' }}</td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="7" class="p-10 text-center text-slate-500">
-                                Aucune donnée pour les filtres choisis.
+                                Aucune donnee pour les filtres choisis.
                             </td>
                         </tr>
                     @endforelse
@@ -155,7 +155,7 @@
     {{-- DETAILED GRADES LIST --}}
     <div class="mt-6 overflow-hidden rounded-[28px] border border-black/10 bg-white/80 shadow-sm">
         <div class="flex items-center justify-between border-b border-black/10 bg-white/60 px-5 py-4">
-            <div class="text-sm font-semibold text-slate-900">Dernières notes</div>
+            <div class="text-sm font-semibold text-slate-900">Dernieres notes</div>
             <div class="text-xs text-slate-500">
                 Total : <span class="font-semibold text-slate-900">{{ $grades?->total() ?? 0 }}</span>
             </div>
@@ -165,12 +165,12 @@
             <table class="min-w-full text-sm">
                 <thead class="bg-slate-50/80">
                     <tr class="text-left border-b border-black/5">
-                        <th class="p-4 text-xs font-semibold text-slate-500">Élève</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500">Eleve</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Classe</th>
-                        <th class="p-4 text-xs font-semibold text-slate-500">Matière</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500">Matiere</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Enseignant</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Note</th>
-                        <th class="p-4 text-xs font-semibold text-slate-500">Évaluation</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500">Evaluation</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Date</th>
                         <th class="p-4 text-xs font-semibold text-slate-500"></th>
                     </tr>
@@ -186,10 +186,10 @@
 
                         <tr class="hover:bg-slate-50/70 transition">
                             <td class="p-4 font-semibold text-slate-900">
-                                {{ $g->student?->full_name ?? ('Élève #' . $g->student_id) }}
+                                {{ $g->student?->full_name ?? ('Eleve #' . $g->student_id) }}
                             </td>
                             <td class="p-4 text-slate-700">{{ $g->classroom?->name ?? ('Classe #' . $g->classroom_id) }}</td>
-                            <td class="p-4 text-slate-700">{{ $g->subject?->name ?? ('Matière #' . $g->subject_id) }}</td>
+                            <td class="p-4 text-slate-700">{{ $g->subject?->name ?? ('Matiere #' . $g->subject_id) }}</td>
                             <td class="p-4 text-slate-700">{{ $g->teacher?->name ?? ('Prof #' . $g->teacher_id) }}</td>
 
                             <td class="p-4">
@@ -199,12 +199,12 @@
                                         {{ number_format($score, 2) }} / {{ (int)$max }}
                                     </span>
                                 @else
-                                    —
+                                    -
                                 @endif
                             </td>
 
                             <td class="p-4 text-slate-700">
-                                {{ $g->assessment?->title ?? ('Éval #' . ($g->assessment_id ?? '—')) }}
+                                {{ $g->assessment?->title ?? ('Eval #' . ($g->assessment_id ?? '-')) }}
                             </td>
 
                             <td class="p-4 text-slate-500">
@@ -223,7 +223,7 @@
                     @empty
                         <tr>
                             <td colspan="8" class="p-10 text-center text-slate-500">
-                                Aucune note enregistrée pour le moment.
+                                Aucune note enregistree pour le moment.
                             </td>
                         </tr>
                     @endforelse

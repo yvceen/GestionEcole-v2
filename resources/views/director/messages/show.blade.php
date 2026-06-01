@@ -9,11 +9,11 @@
         <div class="flex items-center justify-between mb-6">
             <a href="{{ route('director.messages.index') }}"
                class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
-                ← Retour à la messagerie
+                ← Retour a la messagerie
             </a>
 
             <div class="text-xs text-slate-500">
-                {{ $message->created_at?->format('d/m/Y H:i') ?? '—' }}
+                {{ $message->created_at?->format('d/m/Y H:i') ?? '-' }}
             </div>
         </div>
 
@@ -24,7 +24,7 @@
 
             <div class="text-sm text-slate-600 mb-6 pb-6 border-b border-slate-200">
                 <span class="font-semibold">De :</span> {{ $message->sender?->name ?? 'Utilisateur inconnu' }}
-                <span class="text-xs text-slate-500 ml-2">({{ $message->sender?->email ?? '—' }})</span>
+                <span class="text-xs text-slate-500 ml-2">({{ $message->sender?->email ?? '-' }})</span>
             </div>
 
             <div class="prose prose-sm max-w-none text-slate-700">
@@ -33,7 +33,7 @@
 
             @if($message->attachments && count($message->attachments) > 0)
                 <div class="mt-6 pt-6 border-t border-slate-200">
-                    <div class="text-sm font-semibold text-slate-900 mb-3">Pièces jointes</div>
+                    <div class="text-sm font-semibold text-slate-900 mb-3">Pieces jointes</div>
                     <div class="space-y-2">
                         @foreach($message->attachments as $file)
                             <a href=".../download/{{ $file }}"

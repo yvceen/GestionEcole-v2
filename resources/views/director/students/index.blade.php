@@ -54,8 +54,8 @@
                     @forelse($students as $s)
                         <tr>
                             <td class="px-4 py-3 font-semibold text-slate-900">{{ $s->full_name }}</td>
-                            <td class="px-4 py-3">{{ $s->classroom?->name ?? '—' }}</td>
-                            <td class="px-4 py-3">{{ $s->classroom?->level?->name ?? '—' }}</td>
+                            <td class="px-4 py-3">{{ $s->classroom?->name ?? '-' }}</td>
+                            <td class="px-4 py-3">{{ $s->classroom?->level?->name ?? '-' }}</td>
                             <td class="px-4 py-3">
                                 <div class="font-medium text-slate-900">{{ $s->parentUser?->name ?? 'Parent non renseigne' }}</div>
                                 @if($s->parentUser?->phone)

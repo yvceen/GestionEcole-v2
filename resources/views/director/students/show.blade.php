@@ -3,7 +3,7 @@
         <div>
             <h1 class="text-2xl font-semibold tracking-tight">{{ $student->full_name }}</h1>
             <p class="mt-1 text-sm text-slate-500">
-                {{ $student->classroom?->name ?? '—' }} • {{ $student->classroom?->level?->name ?? '—' }}
+                {{ $student->classroom?->name ?? '-' }} • {{ $student->classroom?->level?->name ?? '-' }}
             </p>
         </div>
 
@@ -33,7 +33,7 @@
                     <div class="rounded-2xl border border-black/5 bg-white/60 p-4">
                         <div class="text-xs text-slate-500">
                             {{ optional($n->created_at)->format('Y-m-d H:i') }}
-                            • {{ $n->author?->name ?? '—' }}
+                            • {{ $n->author?->name ?? '-' }}
                         </div>
                         <div class="mt-2 text-sm text-slate-800 whitespace-pre-line">{{ $n->note }}</div>
                     </div>

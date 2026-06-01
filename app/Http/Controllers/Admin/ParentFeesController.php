@@ -92,6 +92,6 @@ class ParentFeesController extends Controller
 
         return redirect()
             ->route('admin.parents.fees.edit', $parent)
-            ->with('success', 'Tarifs enregistrés avec succès.');
+            ->with('success', 'Tarifs enregistres avec succes.');
     }
 }

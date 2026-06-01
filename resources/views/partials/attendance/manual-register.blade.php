@@ -1,4 +1,4 @@
-@php
+﻿@php
     $layoutRoutePrefix = $routePrefix ?? 'teacher.attendance';
     $scanRoute = $scanRoute ?? route('attendance.scan.page');
     $manualRoute = $manualRoute ?? route($layoutRoutePrefix . '.index');
@@ -83,7 +83,7 @@
                     <div class="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 lg:flex-row lg:items-center lg:justify-between">
                         <div>
                             <p class="text-sm font-semibold text-slate-900">{{ $modeBadge }}</p>
-                            <p class="mt-1 text-sm text-slate-500">Utilisez “Tout le monde present” puis ne corrigez que les exceptions.</p>
+                            <p class="mt-1 text-sm text-slate-500">Utilisez "Tout le monde present" puis ne corrigez que les exceptions.</p>
                         </div>
                         <div class="flex flex-col gap-3 sm:flex-row">
                             <button type="button" class="app-button-outline" data-mark-all-present>

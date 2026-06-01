@@ -1,9 +1,9 @@
-<x-mail::message>
+﻿<x-mail::message>
 # Nouveau message de contact
 
 **De:** {{ $senderName }}
 **Email:** {{ $senderEmail }}
-**Téléphone:** {{ $senderPhone }}
+**Telephone:** {{ $senderPhone }}
 **Sujet:** {{ $subject_text }}
 
 ---

@@ -80,7 +80,7 @@
                     <select name="level_id"
                             class="w-full rounded-2xl border-slate-200/70 bg-white/70 focus:border-slate-900 focus:ring-slate-900"
                             required>
-                        <option value="">— Choisir niveau —</option>
+                        <option value="">- Choisir niveau -</option>
                         @foreach($levels as $lvl)
                             <option value="{{ $lvl->id }}" @selected(old('level_id') == $lvl->id)>
                                 {{ $lvl->name }} ({{ $lvl->code }})
@@ -133,7 +133,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="text-sm text-slate-500">Ajoute un niveau d’abord.</div>
+                    <div class="text-sm text-slate-500">Ajoute un niveau d abord.</div>
                 @endforelse
             </div>
         </div>

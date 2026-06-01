@@ -57,7 +57,7 @@ class TransportAssignmentController extends Controller
             // إذا route مربوط بvehicle خاصهم يتطابقو
             if ($route->vehicle_id && (int) $route->vehicle_id !== (int) $data['vehicle_id']) {
                 return back()
-                    ->withErrors(['vehicle_id' => 'هذا véhicule لا يطابق الـ route المختارة.'])
+                    ->withErrors(['vehicle_id' => 'هذا vehicule لا يطابق الـ route المختارة.'])
                     ->withInput();
             }
         }
@@ -68,7 +68,7 @@ class TransportAssignmentController extends Controller
         ]);
 
         return redirect()->route('admin.transport.assignments.index')
-            ->with('success', 'Affectation de transport créée avec succès.');
+            ->with('success', 'Affectation de transport creee avec succes.');
     }
 
     public function show(TransportAssignment $transportAssignment)
@@ -116,7 +116,7 @@ class TransportAssignmentController extends Controller
         } else {
             if ($route->vehicle_id && (int) $route->vehicle_id !== (int) $data['vehicle_id']) {
                 return back()
-                    ->withErrors(['vehicle_id' => 'هذا véhicule لا يطابق الـ route المختارة.'])
+                    ->withErrors(['vehicle_id' => 'هذا vehicule لا يطابق الـ route المختارة.'])
                     ->withInput();
             }
         }
@@ -124,7 +124,7 @@ class TransportAssignmentController extends Controller
         $transportAssignment->update($data);
 
         return redirect()->route('admin.transport.assignments.show', $transportAssignment)
-            ->with('success', 'Affectation de transport mise à jour avec succès.');
+            ->with('success', 'Affectation de transport mise a jour avec succes.');
     }
 
     public function destroy(TransportAssignment $transportAssignment)
@@ -134,6 +134,6 @@ class TransportAssignmentController extends Controller
         $transportAssignment->delete();
 
         return redirect()->route('admin.transport.assignments.index')
-            ->with('success', 'Affectation de transport supprimée avec succès.');
+            ->with('success', 'Affectation de transport supprimee avec succes.');
     }
 }

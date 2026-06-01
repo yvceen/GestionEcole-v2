@@ -60,6 +60,6 @@ class CouncilController extends Controller
 
         return redirect()
             ->route('director.councils.index')
-            ->with('success', 'Conseil enregistré.');
+            ->with('success', 'Conseil enregistre.');
     }
 }

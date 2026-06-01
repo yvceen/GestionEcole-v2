@@ -85,7 +85,7 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    // ✅ teacher ↔ subjects (matières)
+    // ✅ teacher ↔ subjects (matieres)
     public function subjects(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Subject::class, 'teacher_subjects', 'teacher_id', 'subject_id')
@@ -93,7 +93,7 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    // ✅ Notes données par l’enseignant
+    // ✅ Notes donnees par l enseignant
     public function gradesGiven(): HasMany
     {
         return $this->hasMany(\App\Models\Grade::class, 'teacher_id');

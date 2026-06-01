@@ -1,10 +1,10 @@
-@php
+﻿@php
     $timetable = $timetable ?? null;
 @endphp
 
 <div class="grid gap-4 md:grid-cols-2">
     <x-ui.select label="Classe" name="classroom_id" id="classroom_id" required>
-        <option value="">Sélectionner une classe</option>
+        <option value="">Selectionner une classe</option>
         @foreach($classrooms as $classroom)
             <option
                 value="{{ $classroom->id }}"
@@ -16,7 +16,7 @@
     </x-ui.select>
 
     <x-ui.select label="Jour" name="day" id="day" required>
-        <option value="">Sélectionner un jour</option>
+        <option value="">Selectionner un jour</option>
         @foreach($days as $dayNumber => $dayLabel)
             <option value="{{ $dayNumber }}" @selected((int) old('day', $timetable->day ?? 0) === (int) $dayNumber)>
                 {{ $dayLabel }}
@@ -24,11 +24,11 @@
         @endforeach
     </x-ui.select>
 
-    <x-ui.input id="start_time" type="time" name="start_time" label="Heure de début" min="{{ substr((string) $settings->day_start_time, 0, 5) }}" max="{{ substr((string) $settings->day_end_time, 0, 5) }}" step="60" :value="old('start_time', isset($timetable->start_time) ? substr((string) $timetable->start_time, 0, 5) : '')" required />
+    <x-ui.input id="start_time" type="time" name="start_time" label="Heure de debut" min="{{ substr((string) $settings->day_start_time, 0, 5) }}" max="{{ substr((string) $settings->day_end_time, 0, 5) }}" step="60" :value="old('start_time', isset($timetable->start_time) ? substr((string) $timetable->start_time, 0, 5) : '')" required />
 
     <x-ui.input id="end_time" type="time" name="end_time" label="Heure de fin" min="{{ substr((string) $settings->day_start_time, 0, 5) }}" max="{{ substr((string) $settings->day_end_time, 0, 5) }}" step="60" :value="old('end_time', isset($timetable->end_time) ? substr((string) $timetable->end_time, 0, 5) : '')" required />
 
-    <x-ui.input id="subject" type="text" name="subject" label="Matière" :value="old('subject', $timetable->subject ?? '')" placeholder="Ex. : Mathématiques" required />
+    <x-ui.input id="subject" type="text" name="subject" label="Matiere" :value="old('subject', $timetable->subject ?? '')" placeholder="Ex. : Mathematiques" required />
 
     <x-ui.select id="teacher_id" name="teacher_id" label="Enseignant (optionnel)">
         <option value="">Aucun</option>

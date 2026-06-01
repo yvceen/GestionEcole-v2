@@ -64,7 +64,7 @@ class ClassroomController extends Controller
 
         Classroom::create($data);
 
-        return redirect()->route('admin.classrooms.index')->with('success', 'Classe ajoutée.');
+        return redirect()->route('admin.classrooms.index')->with('success', 'Classe ajoutee.');
     }
 
     public function show(Classroom $classroom)
@@ -101,7 +101,7 @@ class ClassroomController extends Controller
 
         $classroom->update($data);
 
-        return redirect()->route('admin.classrooms.show', $classroom)->with('success', 'Classe modifiée.');
+        return redirect()->route('admin.classrooms.show', $classroom)->with('success', 'Classe modifiee.');
     }
 
     public function destroy(Classroom $classroom)
@@ -113,6 +113,6 @@ class ClassroomController extends Controller
 
         $classroom->delete();
 
-        return redirect()->route('admin.classrooms.index')->with('success', 'Classe supprimée.');
+        return redirect()->route('admin.classrooms.index')->with('success', 'Classe supprimee.');
     }
 }

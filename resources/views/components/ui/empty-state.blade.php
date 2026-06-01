@@ -1,5 +1,5 @@
 ﻿@props([
-    'title' => 'Aucun résultat',
+    'title' => 'Aucun resultat',
     'description' => null,
 ])
 

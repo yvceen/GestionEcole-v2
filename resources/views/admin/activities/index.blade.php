@@ -1,11 +1,11 @@
-@php
+﻿@php
     $routePrefix = $routePrefix ?? 'admin.activities';
     $layoutComponent = $layoutComponent ?? 'admin-layout';
     $canManage = $canManage ?? true;
 @endphp
 
 <x-dynamic-component :component="$layoutComponent" title="Activites" subtitle="Suivi des activites scolaires, planification et participation des eleves.">
-    <x-ui.page-header title="Activites scolaires" subtitle="Créez et planifiez sports, sorties, ateliers et clubs avec suivi de participation.">
+    <x-ui.page-header title="Activites scolaires" subtitle="Creez et planifiez sports, sorties, ateliers et clubs avec suivi de participation.">
         <x-slot name="actions">
             @if($canManage)
                 <x-ui.button :href="route($routePrefix . '.create')" variant="primary">Nouvelle activite</x-ui.button>

@@ -3,7 +3,7 @@
 return [
     'dashboard' => 'Tableau de bord',
     'users' => 'Utilisateurs',
-    'students' => 'Élèves',
+    'students' => 'Eleves',
     'finance' => 'Finance',
     'messages' => 'Messages',
     'add_payment' => 'Ajouter un paiement',

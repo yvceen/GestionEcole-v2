@@ -52,6 +52,6 @@ class ReportsController extends Controller
             'created_by_user_id' => auth()->id(),
         ]);
 
-        return redirect()->route('director.reports.index')->with('success','Rapport enregistré.');
+        return redirect()->route('director.reports.index')->with('success','Rapport enregistre.');
     }
 }

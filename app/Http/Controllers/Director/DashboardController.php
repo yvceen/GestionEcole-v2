@@ -111,7 +111,7 @@ class DashboardController extends Controller
         $teachersWithHomeworksCount = max(0, $teachersCount - $teachersNoHomeworks->count());
         $coverageHomeworksPct = $teachersCount > 0 ? round(($teachersWithHomeworksCount / $teachersCount) * 100) : 0;
 
-        // “État global” بسيط للمُدير
+        // "Etat global" بسيط للمُدير
         $globalStatus = 'OK';
         if ($coverageCoursesPct < 60 || $coverageHomeworksPct < 60) $globalStatus = 'CRITIQUE';
         elseif ($coverageCoursesPct < 85 || $coverageHomeworksPct < 85) $globalStatus = 'ATTENTION';

@@ -1,7 +1,7 @@
-<x-admin-layout title="Nouveau cours">
+﻿<x-admin-layout title="Nouveau cours">
     <x-ui.page-header
-        title="Créer un cours"
-        subtitle="Ajoutez un nouveau contenu pédagogique avec une structure de formulaire cohérente."
+        title="Creer un cours"
+        subtitle="Ajoutez un nouveau contenu pedagogique avec une structure de formulaire coherente."
     />
 
     <x-ui.card title="Informations du cours" subtitle="Renseignez la classe, le titre et la description.">

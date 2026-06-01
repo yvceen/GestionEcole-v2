@@ -33,7 +33,7 @@ class ContactFormMail extends Mailable
     public function envelope()
     {
         return new \Illuminate\Mail\Envelope(
-            subject: 'Nouveau message de contact — ' . $this->subject_text
+            subject: 'Nouveau message de contact - ' . $this->subject_text
         );
     }
 

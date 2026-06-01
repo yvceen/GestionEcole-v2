@@ -24,7 +24,7 @@
             <div>
                 <label class="block text-sm font-semibold mb-1">Niveau</label>
                 <select name="level_id" class="w-full rounded-2xl border-slate-200/70 bg-white/70">
-                    <option value="">— (optionnel) —</option>
+                    <option value="">- (optionnel) -</option>
                     @foreach($levels as $lvl)
                         <option value="{{ $lvl->id }}" @selected(old('level_id', $classroom->level_id) == $lvl->id)>
                             {{ $lvl->name }} {{ $lvl->code ? "({$lvl->code})" : '' }}

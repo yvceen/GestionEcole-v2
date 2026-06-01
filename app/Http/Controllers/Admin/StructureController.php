@@ -47,7 +47,7 @@ class StructureController extends Controller
             'is_active' => 1,
         ]);
 
-        return back()->with('success', 'Niveau ajouté.');
+        return back()->with('success', 'Niveau ajoute.');
     }
 
     public function updateLevel(Request $request, Level $level)
@@ -69,7 +69,7 @@ class StructureController extends Controller
             'name' => trim($data['name']),
         ]);
 
-        return back()->with('success', 'Niveau modifié.');
+        return back()->with('success', 'Niveau modifie.');
     }
 
     public function destroyLevel(Level $level)
@@ -82,7 +82,7 @@ class StructureController extends Controller
 
         $level->delete();
 
-        return back()->with('success', 'Niveau supprimé.');
+        return back()->with('success', 'Niveau supprime.');
     }
 
     public function storeClassroom(Request $request)
@@ -109,7 +109,7 @@ class StructureController extends Controller
 
         if ($exists) {
             return back()->withErrors([
-                'section' => "Cette classe existe déjà dans ce niveau (section : {$section}).",
+                'section' => "Cette classe existe deja dans ce niveau (section : {$section}).",
             ])->withInput();
         }
 
@@ -121,7 +121,7 @@ class StructureController extends Controller
             'is_active' => 1,
         ]);
 
-        return back()->with('success', 'Classe ajoutée.');
+        return back()->with('success', 'Classe ajoutee.');
     }
 
     public function updateClassroom(Request $request, Classroom $classroom)
@@ -145,7 +145,7 @@ class StructureController extends Controller
 
         if ($exists) {
             return back()->withErrors([
-                'section' => "Cette section existe déjà dans ce niveau : {$section}",
+                'section' => "Cette section existe deja dans ce niveau : {$section}",
             ]);
         }
 
@@ -154,32 +154,32 @@ class StructureController extends Controller
             'section' => $section,
         ]);
 
-        return back()->with('success', 'Classe modifiée.');
+        return back()->with('success', 'Classe modifiee.');
     }
 
     public function destroyClassroom(Classroom $classroom)
     {
         if ($classroom->students()->exists()) {
             return back()->withErrors([
-                'delete_classroom' => 'Impossible : cette classe contient encore des élèves.',
+                'delete_classroom' => 'Impossible : cette classe contient encore des eleves.',
             ]);
         }
 
         if (Assessment::where('classroom_id', $classroom->id)->exists()) {
             return back()->withErrors([
-                'delete_classroom' => 'Impossible : cette classe est encore utilisée par des évaluations.',
+                'delete_classroom' => 'Impossible : cette classe est encore utilisee par des evaluations.',
             ]);
         }
 
         if (Grade::where('classroom_id', $classroom->id)->exists()) {
             return back()->withErrors([
-                'delete_classroom' => 'Impossible : cette classe est encore utilisée par des notes.',
+                'delete_classroom' => 'Impossible : cette classe est encore utilisee par des notes.',
             ]);
         }
 
         $classroom->delete();
 
-        return back()->with('success', 'Classe supprimée.');
+        return back()->with('success', 'Classe supprimee.');
     }
 
     public function showClassroom(Classroom $classroom)

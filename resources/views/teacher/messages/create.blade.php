@@ -1,4 +1,4 @@
-@php
+﻿@php
     $classroomsCollection = collect($classrooms ?? []);
     $parentsCollection = collect($parents ?? []);
 
@@ -6,7 +6,7 @@
         [
             'key' => 'classes',
             'label' => 'Classes',
-            'description' => 'Partagez un message à un groupe entier.',
+            'description' => 'Partagez un message a un groupe entier.',
             'items' => $classroomsCollection->map(function ($class) {
                 $label = $class->name ?? $class->label ?? 'Classe #' . $class->id;
                 $meta = $class->level ?? $class->grade ?? '';
@@ -23,7 +23,7 @@
         [
             'key' => 'parents',
             'label' => 'Parents',
-            'description' => 'Sélectionnez des parents ou plusieurs.',
+            'description' => 'Selectionnez des parents ou plusieurs.',
             'items' => $parentsCollection->map(function ($parent) {
                 $label = $parent->name ?? 'Parent #' . $parent->id;
                 $meta = $parent->email ?? ($parent->phone ?? '');

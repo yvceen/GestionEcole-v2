@@ -10,7 +10,7 @@ class FeeItemsSeeder extends Seeder
     public function run(): void
     {
         $items = [
-            ['name' => 'Scolarité', 'billing_type' => 'monthly', 'default_amount' => null, 'due_month' => null],
+            ['name' => 'Scolarite', 'billing_type' => 'monthly', 'default_amount' => null, 'due_month' => null],
             ['name' => 'Transport', 'billing_type' => 'monthly', 'default_amount' => null, 'due_month' => null],
             ['name' => 'Cantine', 'billing_type' => 'monthly', 'default_amount' => null, 'due_month' => null],
             ['name' => 'Frais annuels', 'billing_type' => 'yearly', 'default_amount' => null, 'due_month' => 9],

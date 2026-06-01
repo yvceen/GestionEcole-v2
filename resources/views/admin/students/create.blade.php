@@ -1,7 +1,7 @@
-<x-admin-layout title="Ajouter un élève">
+﻿<x-admin-layout title="Ajouter un eleve">
     <x-students.header
-        title="Ajouter un élève"
-        subtitle="Création complète : informations, parent, compte élève et paramètres."
+        title="Ajouter un eleve"
+        subtitle="Creation complete : informations, parent, compte eleve et parametres."
     >
         <x-ui.button :href="route('admin.students.index')" variant="ghost">
             Retour

@@ -1,4 +1,4 @@
-<x-parent-layout title="Nouvelle recuperation" subtitle="Indiquez l'enfant concerne, l'heure prevue et une note optionnelle.">
+﻿<x-parent-layout title="Nouvelle recuperation" subtitle="Indiquez l'enfant concerne, l'heure prevue et une note optionnelle.">
     <x-ui.card title="Demande de recuperation" subtitle="La vie scolaire recevra votre demande et pourra l'approuver, la rejeter ou la marquer comme traitee.">
         @if($children->isEmpty())
             <div class="student-empty">Aucun enfant n'est rattache a votre compte.</div>
@@ -29,9 +29,9 @@
                     <div class="mb-2 flex flex-wrap gap-2">
                         @foreach([
                             'Je suis en route',
-                            'Je serai à l’école dans 5 minutes',
-                            'Préparez mon enfant, s’il vous plaît',
-                            'Je suis arrivé devant l’école',
+                            'Je serai a l ecole dans 5 minutes',
+                            'Preparez mon enfant, s il vous plait',
+                            'Je suis arrive devant l ecole',
                             'Je passerai plus tard',
                         ] as $suggestion)
                             <button

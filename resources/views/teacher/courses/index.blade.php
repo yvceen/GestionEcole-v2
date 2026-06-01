@@ -8,7 +8,7 @@
             <div>
                 <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">Mes cours</h1>
                 <p class="mt-1 text-sm text-slate-500">
-                    Publiez des supports (PDF, images, docs…) pour vos classes.
+                    Publiez des supports (PDF, images, docs...) pour vos classes.
                 </p>
             </div>
 
@@ -50,11 +50,11 @@
             <div class="rounded-[28px] border border-black/5 bg-white/70 backdrop-blur-xl p-5 shadow-[0_18px_45px_-35px_rgba(0,0,0,.45)]">
                 <div class="text-xs uppercase tracking-wider text-slate-500">Cours (cette page)</div>
                 <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $pageCount }}</div>
-                <div class="mt-1 text-xs text-slate-500">Résultats affichés</div>
+                <div class="mt-1 text-xs text-slate-500">Resultats affiches</div>
             </div>
 
             <div class="rounded-[28px] border border-black/5 bg-white/70 backdrop-blur-xl p-5 shadow-[0_18px_45px_-35px_rgba(0,0,0,.45)]">
-                <div class="text-xs uppercase tracking-wider text-slate-500">Pièces jointes (page)</div>
+                <div class="text-xs uppercase tracking-wider text-slate-500">Pieces jointes (page)</div>
                 <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $attachmentsOnPage }}</div>
                 <div class="mt-1 text-xs text-slate-500">Total des fichiers visibles</div>
             </div>
@@ -69,7 +69,7 @@
                         type="text"
                         name="q"
                         value="{{ request('q') }}"
-                        placeholder="Titre, description…"
+                        placeholder="Titre, description..."
                         class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5 text-sm"
                     />
                 </div>
@@ -80,20 +80,20 @@
                         <option value="">Toutes mes classes</option>
                         @foreach(($classrooms ?? []) as $cl)
                             <option value="{{ $cl->id }}" @selected((string)request('classroom_id') === (string)$cl->id)>
-                                {{ $cl->name }} @if($cl->level?->name) — {{ $cl->level->name }} @endif
+                                {{ $cl->name }} @if($cl->level?->name) - {{ $cl->level->name }} @endif
                             </option>
                         @endforeach
                     </select>
                 </div>
 
                 <div class="md:col-span-3">
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Période</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Periode</label>
                     @php $p = request('period','all'); @endphp
                     <select name="period" class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5 text-sm">
                         <option value="all" @selected($p==='all')>Tout</option>
                         <option value="week" @selected($p==='week')>Cette semaine</option>
                         <option value="month" @selected($p==='month')>Ce mois</option>
-                        <option value="year" @selected($p==='year')>Cette année</option>
+                        <option value="year" @selected($p==='year')>Cette annee</option>
                     </select>
                 </div>
             </div>
@@ -109,7 +109,7 @@
                     </button>
                     <a href="{{ url()->current() }}"
                        class="rounded-2xl border border-black/10 bg-white px-6 py-2.5 text-sm font-semibold hover:bg-slate-50">
-                        Réinitialiser
+                        Reinitialiser
                     </a>
                 </div>
             </div>
@@ -119,8 +119,8 @@
         <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             @forelse($courses as $c)
                 @php
-                    $className = $c->classroom?->name ?? '—';
-                    $levelName = $c->classroom?->level?->name ?? '—';
+                    $className = $c->classroom?->name ?? '-';
+                    $levelName = $c->classroom?->level?->name ?? '-';
                     $filesCount = $c->attachments?->count() ?? 0;
 
                     $dateLabel = $c->created_at ? $c->created_at->format('d/m/Y') : null;
@@ -186,7 +186,7 @@
                     {{-- Attachments preview (safe) --}}
                     @if($filesCount > 0)
                         <div class="mt-4">
-                            <div class="text-xs font-semibold text-slate-600">Pièces jointes</div>
+                            <div class="text-xs font-semibold text-slate-600">Pieces jointes</div>
 
                             <div class="mt-2 flex flex-wrap gap-2">
                                 @foreach($c->attachments->take(6) as $a)

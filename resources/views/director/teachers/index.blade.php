@@ -42,7 +42,7 @@
                             <div class="rounded-2xl border border-black/5 bg-white/60 p-3">
                                 <div class="text-[11px] uppercase tracking-wider text-slate-500">Derniere activite</div>
                                 <div class="mt-1 text-xs font-semibold text-slate-900">
-                                    {{ $t->last_activity ? \Carbon\Carbon::parse($t->last_activity)->format('Y-m-d') : '—' }}
+                                    {{ $t->last_activity ? \Carbon\Carbon::parse($t->last_activity)->format('Y-m-d') : '-' }}
                                 </div>
                             </div>
                         </div>
@@ -68,7 +68,7 @@
                                        @checked($t->teacherClassrooms->contains('id',$c->id))
                                        class="rounded border-black/20" />
                                 <span class="min-w-0 truncate">
-                                    {{ $c->name }} <span class="text-xs text-slate-500">— {{ $c->level?->name }}</span>
+                                    {{ $c->name }} <span class="text-xs text-slate-500">- {{ $c->level?->name }}</span>
                                 </span>
                             </label>
                         @endforeach

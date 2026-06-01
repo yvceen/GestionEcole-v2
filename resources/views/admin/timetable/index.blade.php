@@ -1,4 +1,4 @@
-@php
+﻿@php
     $layoutComponent = $layoutComponent ?? 'admin-layout';
     $routePrefix = $routePrefix ?? 'admin.timetable';
 @endphp
@@ -76,7 +76,7 @@
             'deleteRouteName' => $routePrefix . '.destroy',
             'moveRouteName' => $routePrefix . '.move',
         ])
-        {{-- ancien composant laissé pour compatibilité si besoin --}}
+        {{-- ancien composant laisse pour compatibilite si besoin --}}
         {{-- <x-timetable.week-grid
             :days="$days"
             :slots-by-day="$slotsByDay"

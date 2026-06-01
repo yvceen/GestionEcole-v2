@@ -1,4 +1,4 @@
-<x-admin-layout title="Détail du véhicule">
+<x-admin-layout title="Detail du vehicule">
     <x-ui.page-header
         :title="ucfirst($vehicle->vehicle_type)"
         :subtitle="$vehicle->registration_number"
@@ -15,15 +15,15 @@
 
     <div class="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_320px]">
         <div class="space-y-6">
-            <x-ui.card title="Informations générales">
+            <x-ui.card title="Informations generales">
                 <div class="space-y-3 text-sm">
-                    <div class="flex justify-between gap-4"><span class="text-slate-500">Nom</span><span class="font-semibold text-slate-900">{{ $vehicle->name ?? '—' }}</span></div>
+                    <div class="flex justify-between gap-4"><span class="text-slate-500">Nom</span><span class="font-semibold text-slate-900">{{ $vehicle->name ?? '-' }}</span></div>
                     <div class="flex justify-between gap-4"><span class="text-slate-500">Type</span><span class="font-semibold text-slate-900">{{ ucfirst($vehicle->vehicle_type) }}</span></div>
                     <div class="flex justify-between gap-4"><span class="text-slate-500">Immatriculation</span><span class="font-mono font-semibold text-slate-900">{{ $vehicle->registration_number }}</span></div>
-                    <div class="flex justify-between gap-4"><span class="text-slate-500">Plaque minéralogique</span><span class="font-mono text-slate-900">{{ $vehicle->plate_number ?? '—' }}</span></div>
-                    <div class="flex justify-between gap-4"><span class="text-slate-500">Capacité</span><span class="font-semibold text-slate-900">{{ $vehicle->capacity }} places</span></div>
-                    <div class="flex justify-between gap-4"><span class="text-slate-500">Couleur</span><span class="text-slate-900">{{ $vehicle->color ?? '—' }}</span></div>
-                    <div class="flex justify-between gap-4"><span class="text-slate-500">Année</span><span class="text-slate-900">{{ $vehicle->model_year ?? '—' }}</span></div>
+                    <div class="flex justify-between gap-4"><span class="text-slate-500">Plaque mineralogique</span><span class="font-mono text-slate-900">{{ $vehicle->plate_number ?? '-' }}</span></div>
+                    <div class="flex justify-between gap-4"><span class="text-slate-500">Capacite</span><span class="font-semibold text-slate-900">{{ $vehicle->capacity }} places</span></div>
+                    <div class="flex justify-between gap-4"><span class="text-slate-500">Couleur</span><span class="text-slate-900">{{ $vehicle->color ?? '-' }}</span></div>
+                    <div class="flex justify-between gap-4"><span class="text-slate-500">Annee</span><span class="text-slate-900">{{ $vehicle->model_year ?? '-' }}</span></div>
                 </div>
             </x-ui.card>
 
@@ -37,7 +37,7 @@
                                 <p class="mt-1 text-sm text-slate-500">Assistant: {{ $vehicle->assistant_name }}</p>
                             @endif
                         </div>
-                        <x-ui.badge variant="success">Assigné</x-ui.badge>
+                        <x-ui.badge variant="success">Assigne</x-ui.badge>
                     </div>
                 @else
                     <p class="text-sm text-slate-500">
@@ -63,7 +63,7 @@
                 </x-ui.badge>
             </x-ui.card>
 
-            <x-ui.card title="Routes assignées">
+            <x-ui.card title="Routes assignees">
                 @if($vehicle->routes->count() > 0)
                     <div class="space-y-2">
                         @foreach($vehicle->routes as $route)
@@ -74,14 +74,14 @@
                         @endforeach
                     </div>
                 @else
-                    <p class="text-sm text-slate-500">Aucune route assignée.</p>
+                    <p class="text-sm text-slate-500">Aucune route assignee.</p>
                 @endif
             </x-ui.card>
 
             <x-ui.card title="Dates">
                 <div class="space-y-3 text-sm">
-                    <div><span class="text-slate-500">Créé</span><div class="text-slate-900">{{ optional($vehicle->created_at)->format('d/m/Y H:i') }}</div></div>
-                    <div><span class="text-slate-500">Modifié</span><div class="text-slate-900">{{ optional($vehicle->updated_at)->format('d/m/Y H:i') }}</div></div>
+                    <div><span class="text-slate-500">Cree</span><div class="text-slate-900">{{ optional($vehicle->created_at)->format('d/m/Y H:i') }}</div></div>
+                    <div><span class="text-slate-500">Modifie</span><div class="text-slate-900">{{ optional($vehicle->updated_at)->format('d/m/Y H:i') }}</div></div>
                 </div>
             </x-ui.card>
         </div>

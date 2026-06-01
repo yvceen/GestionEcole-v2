@@ -1,7 +1,7 @@
 <x-admin-layout title="Classes">
     <div class="flex items-start justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Créer une classe</h1>
+            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Creer une classe</h1>
             <p class="mt-1 text-sm text-slate-500">Ajoutez une classe (et niveau si besoin).</p>
         </div>
         <a href="{{ route('admin.classrooms.index') }}" class="text-sm font-semibold text-slate-700 hover:underline">← Retour</a>
@@ -29,7 +29,7 @@
             <div>
                 <label class="block text-sm font-semibold mb-1">Niveau</label>
                 <select name="level_id" class="w-full rounded-2xl border-slate-200/70 bg-white/70">
-                    <option value="">— (optionnel) —</option>
+                    <option value="">- (optionnel) -</option>
                     @foreach($levels as $lvl)
                         <option value="{{ $lvl->id }}" @selected(old('level_id') == $lvl->id)>
                             {{ $lvl->name }} {{ $lvl->code ? "({$lvl->code})" : '' }}
@@ -40,7 +40,7 @@
             </div>
 
             <div>
-                <label class="block text-sm font-semibold mb-1">Ou créer niveau (level_name)</label>
+                <label class="block text-sm font-semibold mb-1">Ou creer niveau (level_name)</label>
                 <input name="level_name" class="w-full rounded-2xl border-slate-200/70 bg-white/70"
                        value="{{ old('level_name') }}" placeholder="Ex: Primaire">
             </div>
@@ -81,7 +81,7 @@
                 Annuler
             </a>
             <button class="rounded-2xl bg-black px-5 py-2 text-sm font-semibold text-white">
-                Créer
+                Creer
             </button>
         </div>
     </form>
