@@ -293,7 +293,6 @@ async function initNativeAndroidPushRegistration() {
 
     plugin.addListener('registration', async (token) => {
         const value = token?.value || '';
-        console.log('[Push][Android] FCM token:', value);
         await persistToken(value);
     });
 
@@ -302,11 +301,9 @@ async function initNativeAndroidPushRegistration() {
     });
 
     plugin.addListener('pushNotificationReceived', (notification) => {
-        console.log('[Push] Notification received:', notification);
     });
 
     plugin.addListener('pushNotificationActionPerformed', (action) => {
-        console.log('[Push] Notification action:', action);
     });
 
     try {

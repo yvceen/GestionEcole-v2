@@ -63,7 +63,7 @@
         <div class="super-mini-stat">
             <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Moyenne eleves/ecole</p>
             <p class="mt-2 text-2xl font-semibold text-slate-950">{{ number_format($avgStudentsPerSchool, 1) }}</p>
-            <p class="mt-1 text-sm text-slate-500">Repere simple d'utilisation SaaS.</p>
+            <p class="mt-1 text-sm text-slate-500">Repere simple d'utilisation.</p>
         </div>
     </div>
 

@@ -22,13 +22,6 @@ class NotificationController extends Controller
             ->paginate(20);
 
         $view = 'notifications.index';
-        Log::debug('ParentNotification@index rendering view', [
-            'view' => $view,
-            'user_id' => auth()->id(),
-            'count' => $notifications->count(),
-            'total' => method_exists($notifications, 'total') ? $notifications->total() : null,
-            'user_column' => $userColumn,
-        ]);
 
         return view($view, [
             'notifications' => $notifications,
