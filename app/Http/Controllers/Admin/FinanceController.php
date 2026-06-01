@@ -9,6 +9,7 @@ use App\Models\Receipt;
 use App\Models\Student;
 use App\Models\User;
 use App\Services\AcademicYearService;
+use App\Services\NotificationService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class FinanceController extends Controller
 {
     public function __construct(
         private readonly AcademicYearService $academicYears,
+        private readonly NotificationService $notifications,
     ) {
     }
 
@@ -424,6 +426,19 @@ class FinanceController extends Controller
                 $warning .= '<br>... et +' . (count($result['skipped']) - 12) . ' autre(s)';
             }
         }
+
+        $this->notifications->notifyUsers(
+            [(int) $parent->id],
+            'payment_received',
+            'Paiement recu',
+            sprintf('Votre paiement de %s MAD a ete enregistre.', number_format((float) $result['total'], 2, '.', ' ')),
+            [
+                'school_id' => $schoolId,
+                'receipt_id' => (int) $result['receipt_id'],
+                'amount' => number_format((float) $result['total'], 2, '.', ''),
+                'payments_count' => (int) $result['created'],
+            ]
+        );
 
         return redirect()
             ->route('admin.finance.receipts.show', ['receipt' => $result['receipt_id']])
