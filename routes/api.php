@@ -40,6 +40,12 @@ Route::middleware([IdentifySchoolFromSubdomain::class])->group(function (): void
         Route::get('/me', [MobileAuthController::class, 'me'])->name('api.me');
         Route::get('/dashboard', [MobileDashboardController::class, 'show'])->name('api.dashboard.show');
         Route::get('/desktop/admin/workspace', [DesktopAdminController::class, 'workspace'])->name('api.desktop.admin.workspace');
+        Route::post('/desktop/admin/homeworks/{homework}/approve', [DesktopAdminController::class, 'approveHomework'])
+            ->whereNumber('homework')
+            ->name('api.desktop.admin.homeworks.approve');
+        Route::post('/desktop/admin/homeworks/{homework}/reject', [DesktopAdminController::class, 'rejectHomework'])
+            ->whereNumber('homework')
+            ->name('api.desktop.admin.homeworks.reject');
         Route::get('/agenda', [MobileAgendaController::class, 'index'])->name('api.agenda.index');
         Route::get('/attendance', [MobileAttendanceController::class, 'index'])->name('api.attendance.index');
         Route::get('/grades', [MobileGradesController::class, 'index'])->name('api.grades.index');

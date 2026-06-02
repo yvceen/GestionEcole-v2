@@ -211,44 +211,52 @@
     <section class="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(520px,0.85fr)]">
         <x-ui.card
             title="Revenus sur 12 mois"
-            subtitle="Vue coloree des encaissements, avec details au survol et selection par mois."
+            subtitle="Lecture claire des encaissements mensuels, avec selection rapide par mois."
             class="border border-slate-200 bg-white shadow-sm"
         >
             <div class="grid gap-3 sm:grid-cols-3">
-                <div class="rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3">
+                <div class="rounded-2xl border border-sky-200 bg-gradient-to-br from-sky-50 to-white px-4 py-3 shadow-sm">
                     <p class="text-xs font-semibold uppercase tracking-[0.12em] text-sky-700">Selection</p>
                     <p class="mt-1 text-xl font-semibold text-slate-950">{{ number_format($selectedChartTotal, 2) }} MAD</p>
                     <p class="mt-1 text-xs text-slate-500">{{ $selectedChartCount }} paiement(s)</p>
                 </div>
-                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+                <div class="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white px-4 py-3 shadow-sm">
                     <p class="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">Meilleur mois</p>
                     <p class="mt-1 text-xl font-semibold text-slate-950">{{ number_format($chartMax, 2) }} MAD</p>
                     <p class="mt-1 text-xs text-slate-500">{{ $chartBestLabel }}</p>
                 </div>
-                <div class="rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3">
+                <div class="rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 to-white px-4 py-3 shadow-sm">
                     <p class="text-xs font-semibold uppercase tracking-[0.12em] text-violet-700">Moyenne</p>
                     <p class="mt-1 text-xl font-semibold text-slate-950">{{ number_format($chartAverage, 2) }} MAD</p>
                     <p class="mt-1 text-xs text-slate-500">Sur 12 mois</p>
                 </div>
             </div>
 
-            <div class="mt-4 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-sky-50 p-4">
-                <div class="h-[340px]">
+            <div class="mt-4 rounded-[28px] border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-sky-50/80 p-5 shadow-inner">
+                <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-950">Encaissements mensuels</p>
+                        <p class="mt-1 text-xs text-slate-500">Cliquez sur une barre pour filtrer les paiements du mois.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700 ring-1 ring-sky-200">
+                            <span class="h-2 w-2 rounded-full bg-sky-500"></span>Revenus
+                        </span>
+                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600 ring-1 ring-slate-200">
+                            <span class="h-2 w-2 rounded-full bg-slate-500"></span>Moyenne
+                        </span>
+                    </div>
+                </div>
+                <div class="h-[360px]">
                     <canvas id="revChart"></canvas>
                 </div>
             </div>
 
             <div class="mt-4 flex flex-wrap items-center gap-2">
-                <span class="inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700 ring-1 ring-sky-200">
-                    <span class="h-2 w-2 rounded-full bg-sky-500"></span>Revenus
-                </span>
-                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">
-                    <span class="h-2 w-2 rounded-full bg-emerald-500"></span>Paiements
-                </span>
                 @if(!empty($selected))
                     <x-ui.badge variant="success">Mois selectionne : {{ $selected }}</x-ui.badge>
                 @else
-                    <span class="app-hint">Astuce : cliquez sur un point du graphique pour afficher les paiements detailles.</span>
+                    <span class="app-hint">Astuce : cliquez sur une barre pour afficher les paiements detailles.</span>
                 @endif
             </div>
         </x-ui.card>
@@ -366,35 +374,37 @@
             const ctx = canvas.getContext('2d');
 
             const selectedMonth = @json($selected);
+            const averageValue = @json((float) $chartAverage);
             const formatMoney = (value) => new Intl.NumberFormat('fr-FR', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
             }).format(Number(value || 0)) + ' MAD';
 
-            function makeGradient() {
+            function makeBarGradient() {
                 const h = canvas.clientHeight || 340;
                 const g = ctx.createLinearGradient(0, 0, 0, h);
-                g.addColorStop(0, 'rgba(14, 165, 233, 0.34)');
-                g.addColorStop(0.55, 'rgba(16, 185, 129, 0.18)');
-                g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                g.addColorStop(0, 'rgba(14, 165, 233, 0.95)');
+                g.addColorStop(0.55, 'rgba(56, 189, 248, 0.62)');
+                g.addColorStop(1, 'rgba(186, 230, 253, 0.42)');
                 return g;
             }
 
             function barColors() {
                 const max = Math.max(...values.map(Number), 1);
+                const gradient = makeBarGradient();
                 return values.map((value, index) => {
                     if (selectedMonth && monthKey[index] === selectedMonth) {
-                        return 'rgba(2, 132, 199, 0.88)';
+                        return 'rgba(2, 132, 199, 0.98)';
                     }
 
                     const ratio = Number(value || 0) / max;
                     if (ratio >= 0.75) {
-                        return 'rgba(16, 185, 129, 0.62)';
+                        return 'rgba(16, 185, 129, 0.78)';
                     }
                     if (ratio >= 0.35) {
-                        return 'rgba(14, 165, 233, 0.48)';
+                        return gradient;
                     }
-                    return 'rgba(148, 163, 184, 0.28)';
+                    return 'rgba(203, 213, 225, 0.65)';
                 });
             }
 
@@ -407,44 +417,46 @@
                             label: 'Revenus',
                             data: values,
                             backgroundColor: barColors(),
-                            borderColor: 'rgba(15, 23, 42, 0.08)',
+                            borderColor: (context) => {
+                                const index = context.dataIndex;
+                                return selectedMonth && monthKey[index] === selectedMonth
+                                    ? 'rgba(2, 132, 199, 1)'
+                                    : 'rgba(14, 165, 233, 0.16)';
+                            },
                             borderWidth: 1,
                             borderRadius: 12,
                             borderSkipped: false,
-                            maxBarThickness: 34,
+                            maxBarThickness: 42,
                             yAxisID: 'y',
                         },
                         {
                             type: 'line',
-                            label: 'Tendance',
+                            label: 'Moyenne',
+                            data: values.map(() => averageValue),
+                            borderColor: 'rgba(15, 23, 42, 0.72)',
+                            borderWidth: 2,
+                            borderDash: [8, 7],
+                            pointRadius: 0,
+                            pointHoverRadius: 0,
+                            yAxisID: 'y',
+                        },
+                        {
+                            type: 'line',
+                            label: 'Selection',
                             data: values,
-                            fill: true,
-                            backgroundColor: makeGradient(),
-                            borderColor: '#0f172a',
-                            borderWidth: 3,
-                            tension: 0.38,
+                            borderColor: 'rgba(15, 23, 42, 0.92)',
+                            backgroundColor: '#ffffff',
+                            borderWidth: 0,
+                            showLine: false,
                             pointRadius: (context) => {
                                 const index = context.dataIndex;
-                                return selectedMonth && monthKey[index] === selectedMonth ? 7 : 4;
+                                return selectedMonth && monthKey[index] === selectedMonth ? 6 : 0;
                             },
-                            pointHoverRadius: 8,
-                            pointBorderWidth: 2,
+                            pointHoverRadius: 7,
+                            pointBorderWidth: 3,
                             pointBorderColor: '#0f172a',
                             pointBackgroundColor: '#ffffff',
                             yAxisID: 'y',
-                        },
-                        {
-                            type: 'line',
-                            label: 'Paiements',
-                            data: counts,
-                            borderColor: '#10b981',
-                            backgroundColor: '#10b981',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            tension: 0.35,
-                            pointRadius: 3,
-                            pointHoverRadius: 6,
-                            yAxisID: 'payments',
                         }
                     ]
                 },
@@ -454,54 +466,58 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
+                            enabled: true,
                             displayColors: false,
-                            padding: 14,
-                            cornerRadius: 14,
-                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            padding: 12,
+                            cornerRadius: 12,
+                            backgroundColor: 'rgba(15, 23, 42, 0.94)',
                             titleColor: '#fff',
                             bodyColor: '#fff',
+                            filter: (tooltipItem) => tooltipItem.dataset.label === 'Revenus',
                             callbacks: {
                                 title: (items) => items?.[0]?.label ?? '',
                                 label: (tooltipItem) => {
                                     const index = tooltipItem.dataIndex;
-                                    if (tooltipItem.dataset.yAxisID === 'payments') {
-                                        return 'Paiements : ' + (counts[index] ?? 0);
-                                    }
-
                                     return 'Revenus : ' + formatMoney(values[index] ?? 0);
                                 },
                                 afterBody: (items) => {
                                     const index = items?.[0]?.dataIndex ?? 0;
-                                    return ['Cliquez pour filtrer ce mois', 'Cle : ' + (monthKey[index] ?? '')];
+                                    return [
+                                        'Paiements : ' + (counts[index] ?? 0),
+                                        'Cliquez pour filtrer ce mois',
+                                    ];
                                 },
                             }
                         }
                     },
-                    interaction: { mode: 'nearest', intersect: false },
+                    interaction: { mode: 'index', intersect: false },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: { color: 'rgba(15, 23, 42, 0.06)' },
+                            grace: '12%',
+                            grid: { color: 'rgba(15, 23, 42, 0.055)', drawTicks: false },
                             border: { display: false },
                             ticks: {
                                 color: '#64748b',
-                                callback: (value) => formatMoney(value)
+                                padding: 8,
+                                callback: (value) => new Intl.NumberFormat('fr-FR', {
+                                    maximumFractionDigits: 0,
+                                }).format(Number(value || 0)) + ' MAD'
                             }
-                        },
-                        payments: {
-                            beginAtZero: true,
-                            position: 'right',
-                            grid: { drawOnChartArea: false },
-                            border: { display: false },
-                            ticks: {
-                                color: '#059669',
-                                precision: 0,
-                            },
                         },
                         x: {
                             grid: { display: false },
                             border: { display: false },
-                            ticks: { maxRotation: 35, minRotation: 35, color: '#64748b' }
+                            ticks: {
+                                maxRotation: 0,
+                                minRotation: 0,
+                                color: '#64748b',
+                                font: { size: 11, weight: '600' },
+                                callback: function(value, index) {
+                                    const label = this.getLabelForValue(value);
+                                    return index % 2 === 0 ? label : '';
+                                }
+                            }
                         }
                     },
                     onHover: (_, elements) => {
@@ -527,7 +543,7 @@
             });
 
             window.addEventListener('resize', () => {
-                chart.data.datasets[0].backgroundColor = makeGradient();
+                chart.data.datasets[0].backgroundColor = barColors();
                 chart.update('none');
             });
         })();

@@ -10,9 +10,11 @@ use App\Models\Route as TransportRoute;
 use App\Models\Student;
 use App\Models\TransportAssignment;
 use App\Models\User;
+use App\Services\NotificationService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class DesktopAdminController extends Controller
@@ -31,10 +33,22 @@ class DesktopAdminController extends Controller
 
         return response()->json([
             'students' => $this->students($user, $schoolId),
+            'attendance' => $this->attendance($user, $schoolId),
             'homeworks' => $this->homeworks($user, $schoolId),
             'finance' => $this->finance($user, $schoolId),
             'transport' => $this->transport($user, $schoolId),
+            'users' => $this->users($user, $schoolId),
         ]);
+    }
+
+    public function approveHomework(Homework $homework): JsonResponse
+    {
+        return $this->updateHomeworkStatus($homework, 'approved');
+    }
+
+    public function rejectHomework(Homework $homework): JsonResponse
+    {
+        return $this->updateHomeworkStatus($homework, 'rejected');
     }
 
     private function canUseDesktop(User $user): bool
@@ -137,6 +151,7 @@ class DesktopAdminController extends Controller
             'items' => $items->map(fn (Homework $homework) => [
                 'id' => (int) $homework->id,
                 'title' => (string) $homework->title,
+                'description' => (string) ($homework->description ?? ''),
                 'classroom' => (string) ($homework->classroom?->name ?? ''),
                 'teacher' => (string) ($homework->teacher?->name ?? ''),
                 'subject' => (string) ($homework->subject?->name ?? ''),
@@ -145,6 +160,164 @@ class DesktopAdminController extends Controller
                 'created_at' => $homework->created_at?->toIso8601String(),
             ])->values()->all(),
         ];
+    }
+
+    private function attendance(User $user, int $schoolId): array
+    {
+        $query = Attendance::query()
+            ->where('school_id', $schoolId)
+            ->with(['student:id,full_name,classroom_id', 'classroom:id,name'])
+            ->latest('date')
+            ->latest('id');
+
+        $this->applyClassroomScope($query, $user, $schoolId);
+
+        $today = now()->toDateString();
+        $todayQuery = (clone $query)->whereDate('date', $today);
+        $items = (clone $query)->limit(50)->get();
+
+        return [
+            'summary' => [
+                'today_present' => (clone $todayQuery)->where('status', Attendance::STATUS_PRESENT)->count(),
+                'today_absent' => (clone $todayQuery)->where('status', Attendance::STATUS_ABSENT)->count(),
+                'today_late' => (clone $todayQuery)->where('status', Attendance::STATUS_LATE)->count(),
+                'shown' => $items->count(),
+            ],
+            'items' => $items->map(fn (Attendance $attendance) => [
+                'id' => (int) $attendance->id,
+                'student' => (string) ($attendance->student?->full_name ?? ''),
+                'classroom' => (string) ($attendance->classroom?->name ?? $attendance->student?->classroom?->name ?? ''),
+                'date' => $attendance->date?->toDateString(),
+                'status' => (string) $attendance->status,
+                'check_in_at' => $attendance->check_in_at?->toIso8601String(),
+                'check_out_at' => $attendance->check_out_at?->toIso8601String(),
+                'note' => (string) ($attendance->note ?? ''),
+            ])->values()->all(),
+        ];
+    }
+
+    private function updateHomeworkStatus(Homework $homework, string $status): JsonResponse
+    {
+        /** @var User|null $user */
+        $user = request()->user();
+        abort_unless($user, 401);
+        abort_unless($this->canUseDesktop($user), 403, 'Action non autorisee.');
+        abort_if((string) $user->role === User::ROLE_TEACHER, 403, 'Action reservee a l administration.');
+
+        $schoolId = app()->bound('current_school_id')
+            ? (int) app('current_school_id')
+            : (int) ($user->school_id ?? 0);
+
+        abort_unless((int) ($homework->school_id ?? 0) === $schoolId, 404);
+        abort_unless(in_array($status, ['approved', 'rejected'], true), 422);
+
+        $payload = [];
+        if (Schema::hasColumn('homeworks', 'status')) {
+            $payload['status'] = $status;
+        }
+        if ($status === 'approved') {
+            if (Schema::hasColumn('homeworks', 'approved_at')) {
+                $payload['approved_at'] = now();
+            }
+            if (Schema::hasColumn('homeworks', 'approved_by')) {
+                $payload['approved_by'] = (int) $user->id;
+            }
+            if (Schema::hasColumn('homeworks', 'rejected_at')) {
+                $payload['rejected_at'] = null;
+            }
+            if (Schema::hasColumn('homeworks', 'rejected_by')) {
+                $payload['rejected_by'] = null;
+            }
+        } else {
+            if (Schema::hasColumn('homeworks', 'rejected_at')) {
+                $payload['rejected_at'] = now();
+            }
+            if (Schema::hasColumn('homeworks', 'rejected_by')) {
+                $payload['rejected_by'] = (int) $user->id;
+            }
+            if (Schema::hasColumn('homeworks', 'approved_at')) {
+                $payload['approved_at'] = null;
+            }
+            if (Schema::hasColumn('homeworks', 'approved_by')) {
+                $payload['approved_by'] = null;
+            }
+        }
+
+        if ($payload !== []) {
+            $homework->update($payload);
+        }
+
+        $this->notifyHomeworkStatus($homework->fresh(), $schoolId, $status);
+
+        return response()->json([
+            'message' => $status === 'approved' ? 'Devoir approuve.' : 'Devoir rejete.',
+            'homework' => $this->homeworkPayload($homework->fresh(['classroom:id,name', 'teacher:id,name', 'subject:id,name'])),
+        ]);
+    }
+
+    private function homeworkPayload(?Homework $homework): array
+    {
+        if (!$homework) {
+            return [];
+        }
+
+        return [
+            'id' => (int) $homework->id,
+            'title' => (string) $homework->title,
+            'description' => (string) ($homework->description ?? ''),
+            'classroom' => (string) ($homework->classroom?->name ?? ''),
+            'teacher' => (string) ($homework->teacher?->name ?? ''),
+            'subject' => (string) ($homework->subject?->name ?? ''),
+            'status' => (string) $homework->normalized_status,
+            'due_at' => $homework->due_at?->toIso8601String(),
+            'created_at' => $homework->created_at?->toIso8601String(),
+        ];
+    }
+
+    private function notifyHomeworkStatus(?Homework $homework, int $schoolId, string $status): void
+    {
+        if (!$homework) {
+            return;
+        }
+
+        try {
+            $service = app(NotificationService::class);
+            if ($status === 'approved') {
+                $parentIds = $service->parentIdsByClassroom((int) $homework->classroom_id, $schoolId);
+                $studentIds = $service->studentUserIdsByClassroom((int) $homework->classroom_id, $schoolId);
+                $teacherIds = array_filter([(int) ($homework->teacher_id ?? 0)]);
+
+                $service->notifyUsers(
+                    array_values(array_unique(array_merge($parentIds, $studentIds, $teacherIds))),
+                    'homework',
+                    'Devoir approuve',
+                    (string) ($homework->title ?: 'Un devoir a ete valide pour votre classe.'),
+                    [
+                        'homework_id' => (int) $homework->id,
+                        'classroom_id' => (int) $homework->classroom_id,
+                    ]
+                );
+
+                return;
+            }
+
+            $teacherId = (int) ($homework->teacher_id ?? 0);
+            if ($teacherId > 0) {
+                $service->notifyUsers(
+                    [$teacherId],
+                    'homework',
+                    'Devoir refuse',
+                    (string) ($homework->title ?: 'Votre devoir a ete refuse.'),
+                    ['homework_id' => (int) $homework->id]
+                );
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Desktop homework status notification failed', [
+                'homework_id' => $homework->id,
+                'status' => $status,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     private function finance(User $user, int $schoolId): array
@@ -234,6 +407,43 @@ class DesktopAdminController extends Controller
                 'vehicle' => (string) ($assignment->vehicle?->name ?? $assignment->vehicle?->plate_number ?? ''),
                 'pickup_point' => (string) $assignment->pickup_point,
                 'period' => (string) $assignment->period,
+            ])->values()->all(),
+        ];
+    }
+
+    private function users(User $user, int $schoolId): array
+    {
+        if (!in_array((string) $user->role, [User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN], true)) {
+            return [
+                'allowed' => false,
+                'summary' => ['total' => 0, 'active' => 0],
+                'items' => [],
+            ];
+        }
+
+        $query = User::query()
+            ->where('school_id', $schoolId)
+            ->orderBy('role')
+            ->orderBy('name');
+
+        $items = (clone $query)->limit(80)->get();
+
+        return [
+            'allowed' => true,
+            'summary' => [
+                'total' => (clone $query)->count(),
+                'active' => Schema::hasColumn('users', 'is_active')
+                    ? (clone $query)->where('is_active', true)->count()
+                    : (clone $query)->count(),
+            ],
+            'items' => $items->map(fn (User $item) => [
+                'id' => (int) $item->id,
+                'name' => (string) $item->name,
+                'email' => (string) $item->email,
+                'phone' => (string) ($item->phone ?? ''),
+                'role' => (string) $item->role,
+                'role_label' => User::labelForRole((string) $item->role),
+                'is_active' => (bool) ($item->is_active ?? true),
             ])->values()->all(),
         ];
     }
