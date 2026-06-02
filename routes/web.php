@@ -133,6 +133,7 @@ use App\Http\Controllers\SchoolLife\TimetableController as SchoolLifeTimetableCo
 use App\Http\Controllers\SchoolLife\TimetableSettingsController as SchoolLifeTimetableSettingsController;
 use App\Http\Controllers\SchoolLife\UserController as SchoolLifeUserController;
 use App\Http\Controllers\SchoolLife\BillableEventController as SchoolLifeBillableEventController;
+use App\Http\Controllers\Chauffeur\DashboardController as ChauffeurDashboardController;
 
 use App\Http\Middleware\DirectorOnly;
 
@@ -164,6 +165,7 @@ Route::get('/dashboard', function () {
         'teacher'     => redirect()->route('teacher.dashboard'),
         'parent'      => redirect()->route('parent.dashboard'),
         'student'     => redirect()->route('student.dashboard'),
+        'chauffeur'   => redirect()->route('chauffeur.dashboard'),
         'school_life' => redirect()->route('school-life.dashboard'),
         default       => redirect('/'),
     };
@@ -604,6 +606,17 @@ Route::prefix('school-life')
             Route::post('/{message}/approve', [SchoolLifeMessageController::class, 'approve'])->whereNumber('message')->name('approve');
             Route::post('/{message}/reject', [SchoolLifeMessageController::class, 'reject'])->whereNumber('message')->name('reject');
         });
+    });
+
+// =====================================================================
+// CHAUFFEUR
+// =====================================================================
+Route::prefix('chauffeur')
+    ->middleware(['auth', 'chauffeur', 'school.active'])
+    ->as('chauffeur.')
+    ->group(function () {
+        Route::get('/', [ChauffeurDashboardController::class, 'index'])->name('dashboard');
+        Route::post('/logs', [ChauffeurDashboardController::class, 'store'])->name('logs.store');
     });
 
 // =====================================================================

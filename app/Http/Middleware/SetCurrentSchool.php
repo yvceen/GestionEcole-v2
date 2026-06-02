@@ -52,6 +52,6 @@ class SetCurrentSchool
     {
         $segment = strtolower((string) $request->segment(1));
 
-        return in_array($segment, ['admin', 'teacher', 'parent', 'student', 'director', 'school-life'], true);
+        return in_array($segment, ['admin', 'teacher', 'parent', 'student', 'director', 'school-life', 'chauffeur'], true);
     }
 }

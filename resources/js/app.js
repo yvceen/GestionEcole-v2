@@ -317,6 +317,28 @@ function initMyEduDatePickers() {
         wrapper.appendChild(panel);
 
         let visibleDate = parseIsoDate(hidden.value) || new Date();
+        const positionPanel = () => {
+            if (!wrapper.classList.contains('is-open')) {
+                return;
+            }
+
+            const rect = input.getBoundingClientRect();
+            const panelWidth = Math.min(352, window.innerWidth - 32);
+            const spaceBelow = window.innerHeight - rect.bottom;
+            const openUp = spaceBelow < 390 && rect.top > spaceBelow;
+            const left = Math.min(
+                Math.max(16, rect.left),
+                Math.max(16, window.innerWidth - panelWidth - 16)
+            );
+            const top = openUp
+                ? Math.max(16, rect.top - 392)
+                : Math.min(window.innerHeight - 16, rect.bottom + 10);
+
+            panel.style.width = `${panelWidth}px`;
+            panel.style.left = `${left}px`;
+            panel.style.top = `${top}px`;
+            panel.classList.toggle('opens-up', openUp);
+        };
 
         const setValue = (date) => {
             hidden.value = toIsoDate(date);
@@ -378,6 +400,7 @@ function initMyEduDatePickers() {
             closeAll(wrapper);
             wrapper.classList.add('is-open');
             render();
+            positionPanel();
         };
 
         input.addEventListener('click', open);
@@ -418,8 +441,12 @@ function initMyEduDatePickers() {
                 wrapper.classList.add('is-open');
                 input.focus();
                 render();
+                positionPanel();
             }
         });
+
+        window.addEventListener('resize', positionPanel, { passive: true });
+        window.addEventListener('scroll', positionPanel, { passive: true });
     };
 
     document.querySelectorAll('input[type="date"]:not([data-native-date])').forEach(buildPicker);

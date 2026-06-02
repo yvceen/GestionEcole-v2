@@ -36,6 +36,7 @@ class AuthenticatedSessionController extends Controller
             'teacher'     => redirect('/teacher'),
             'parent'      => redirect('/parent'),
             'student'     => redirect('/student'),
+            'chauffeur'   => redirect('/chauffeur'),
             'school_life' => redirect('/school-life'),
             default       => redirect('/dashboard'),
         };

@@ -2606,12 +2606,13 @@ header.sticky.top-0 {
 }
 
 .myedu-date-panel {
-  position: absolute;
-  left: 0;
-  top: calc(100% + 0.65rem);
-  z-index: 60;
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 9999;
   display: none;
   width: min(22rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
   overflow: hidden;
   border: 1px solid rgba(186, 230, 253, 0.9);
   border-radius: 1.35rem;
@@ -2625,6 +2626,10 @@ header.sticky.top-0 {
 .myedu-date-picker.is-open .myedu-date-panel {
   display: block;
   animation: myeduDatePop 150ms ease-out both;
+}
+
+.myedu-date-picker.is-open .myedu-date-panel.opens-up {
+  transform-origin: bottom center;
 }
 
 .myedu-date-head {
