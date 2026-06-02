@@ -31,15 +31,15 @@
 @endphp
 
 <x-dynamic-component :component="$layoutComponent" title="Messagerie">
-    <section class="overflow-hidden rounded-[32px] border border-slate-200 bg-[radial-gradient(circle_at_top_right,_rgba(20,184,166,0.30),_transparent_34%),linear-gradient(135deg,#0f172a_0%,#1e1b4b_52%,#0f766e_100%)] px-6 py-6 text-white shadow-xl shadow-slate-200/70 md:px-8">
+    <section class="overflow-hidden rounded-[32px] border border-sky-100 bg-[radial-gradient(circle_at_top_right,_rgba(14,165,233,0.18),_transparent_34%),radial-gradient(circle_at_bottom_left,_rgba(16,185,129,0.14),_transparent_32%),linear-gradient(135deg,#ffffff,#f8fbff_55%,#eefdf8)] px-6 py-6 text-slate-950 shadow-xl shadow-slate-200/70 md:px-8">
         <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div class="max-w-2xl">
-                <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky-100">
-                    <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+                <div class="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">
+                    <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
                     Messagerie
                 </div>
                 <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Messages</h1>
-                <p class="mt-3 text-sm leading-6 text-slate-200">
+                <p class="mt-3 text-sm leading-6 text-slate-600">
                     Consultez vos conversations, ouvrez un fil et repondez simplement comme dans un chat.
                 </p>
             </div>

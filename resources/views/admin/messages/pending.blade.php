@@ -4,14 +4,14 @@
 @endphp
 
 <x-dynamic-component :component="$layoutComponent" title="Messages en attente">
-    <section class="overflow-hidden rounded-[32px] border border-slate-200 bg-[radial-gradient(circle_at_top_right,_rgba(251,191,36,0.28),_transparent_32%),linear-gradient(135deg,#0f172a,#1e1b4b_55%,#92400e)] px-6 py-6 text-white shadow-xl shadow-slate-200/70 md:px-8">
+    <section class="overflow-hidden rounded-[32px] border border-amber-100 bg-[radial-gradient(circle_at_top_right,_rgba(251,191,36,0.20),_transparent_32%),radial-gradient(circle_at_bottom_left,_rgba(14,165,233,0.12),_transparent_34%),linear-gradient(135deg,#ffffff,#fffbeb_55%,#f8fbff)] px-6 py-6 text-slate-950 shadow-xl shadow-slate-200/70 md:px-8">
         <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div class="max-w-2xl">
-                <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-amber-100">
+                <div class="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">
                     Validation
                 </div>
                 <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Messages en attente</h1>
-                <p class="mt-3 text-sm leading-6 text-amber-50/90">
+                <p class="mt-3 text-sm leading-6 text-slate-600">
                     Consultez les messages soumis a validation avant de les rendre visibles.
                 </p>
             </div>

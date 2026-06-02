@@ -243,6 +243,200 @@ const createPortalShell = () => ({
 Alpine.data('studentPortalShell', createPortalShell);
 Alpine.data('portalShell', createPortalShell);
 
+function initMyEduDatePickers() {
+    const monthNames = [
+        'Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin',
+        'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre',
+    ];
+    const dayNames = ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'];
+
+    const pad = (value) => String(value).padStart(2, '0');
+    const toIsoDate = (date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    const parseIsoDate = (value) => {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) {
+            return null;
+        }
+
+        const [year, month, day] = value.split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+
+        return Number.isNaN(date.getTime()) ? null : date;
+    };
+    const formatDisplay = (value) => {
+        const date = parseIsoDate(value);
+        return date ? `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}` : '';
+    };
+
+    const closeAll = (except = null) => {
+        document.querySelectorAll('.myedu-date-picker.is-open').forEach((picker) => {
+            if (picker !== except) {
+                picker.classList.remove('is-open');
+            }
+        });
+    };
+
+    const buildPicker = (input) => {
+        if (input.dataset.myeduDateReady === 'true') {
+            return;
+        }
+
+        input.dataset.myeduDateReady = 'true';
+
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = input.name;
+        hidden.value = input.value || '';
+        hidden.dataset.myeduDateValue = 'true';
+
+        const originalRequired = input.required;
+        input.required = false;
+        input.name = '';
+        input.type = 'text';
+        input.readOnly = true;
+        input.autocomplete = 'off';
+        input.inputMode = 'none';
+        input.value = formatDisplay(hidden.value);
+        input.classList.add('myedu-date-display');
+        input.placeholder = input.placeholder || 'Choisir une date';
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'myedu-date-picker';
+        input.parentNode.insertBefore(wrapper, input);
+        wrapper.appendChild(input);
+        wrapper.appendChild(hidden);
+
+        const icon = document.createElement('button');
+        icon.type = 'button';
+        icon.className = 'myedu-date-icon';
+        icon.setAttribute('aria-label', 'Ouvrir le calendrier');
+        icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="5" width="16" height="15" rx="3"></rect><path d="M8 3v4M16 3v4M4 10h16"></path></svg>';
+        wrapper.appendChild(icon);
+
+        const panel = document.createElement('div');
+        panel.className = 'myedu-date-panel';
+        wrapper.appendChild(panel);
+
+        let visibleDate = parseIsoDate(hidden.value) || new Date();
+
+        const setValue = (date) => {
+            hidden.value = toIsoDate(date);
+            input.value = formatDisplay(hidden.value);
+            wrapper.classList.remove('is-open');
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            hidden.dispatchEvent(new Event('change', { bubbles: true }));
+        };
+
+        const render = () => {
+            const year = visibleDate.getFullYear();
+            const month = visibleDate.getMonth();
+            const selected = parseIsoDate(hidden.value);
+            const todayIso = toIsoDate(new Date());
+            const firstDay = new Date(year, month, 1);
+            const startOffset = (firstDay.getDay() + 6) % 7;
+            const gridStart = new Date(year, month, 1 - startOffset);
+
+            const days = Array.from({ length: 42 }, (_, index) => {
+                const day = new Date(gridStart);
+                day.setDate(gridStart.getDate() + index);
+                const iso = toIsoDate(day);
+                const isSelected = selected && iso === toIsoDate(selected);
+                const isToday = iso === todayIso;
+                const isMuted = day.getMonth() !== month;
+
+                return `
+                    <button type="button" class="myedu-date-day${isSelected ? ' is-selected' : ''}${isToday ? ' is-today' : ''}${isMuted ? ' is-muted' : ''}" data-date="${iso}">
+                        ${day.getDate()}
+                    </button>
+                `;
+            }).join('');
+
+            panel.innerHTML = `
+                <div class="myedu-date-head">
+                    <button type="button" class="myedu-date-nav" data-move="-1" aria-label="Mois precedent">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"></path></svg>
+                    </button>
+                    <div>
+                        <p>${monthNames[month]}</p>
+                        <strong>${year}</strong>
+                    </div>
+                    <button type="button" class="myedu-date-nav" data-move="1" aria-label="Mois suivant">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"></path></svg>
+                    </button>
+                </div>
+                <div class="myedu-date-weekdays">
+                    ${dayNames.map((day) => `<span>${day}</span>`).join('')}
+                </div>
+                <div class="myedu-date-grid">${days}</div>
+                <div class="myedu-date-actions">
+                    <button type="button" data-action="clear">Vider</button>
+                    <button type="button" data-action="today">Aujourd'hui</button>
+                </div>
+            `;
+        };
+
+        const open = () => {
+            closeAll(wrapper);
+            wrapper.classList.add('is-open');
+            render();
+        };
+
+        input.addEventListener('click', open);
+        icon.addEventListener('click', open);
+
+        panel.addEventListener('click', (event) => {
+            const moveButton = event.target.closest('[data-move]');
+            if (moveButton) {
+                visibleDate = new Date(visibleDate.getFullYear(), visibleDate.getMonth() + Number(moveButton.dataset.move), 1);
+                render();
+                return;
+            }
+
+            const dayButton = event.target.closest('[data-date]');
+            if (dayButton) {
+                const date = parseIsoDate(dayButton.dataset.date);
+                if (date) {
+                    setValue(date);
+                }
+                return;
+            }
+
+            const action = event.target.closest('[data-action]')?.dataset.action;
+            if (action === 'clear') {
+                hidden.value = '';
+                input.value = '';
+                wrapper.classList.remove('is-open');
+            }
+            if (action === 'today') {
+                setValue(new Date());
+            }
+        });
+
+        input.form?.addEventListener('submit', (event) => {
+            if (originalRequired && !hidden.value) {
+                event.preventDefault();
+                closeAll(wrapper);
+                wrapper.classList.add('is-open');
+                input.focus();
+                render();
+            }
+        });
+    };
+
+    document.querySelectorAll('input[type="date"]:not([data-native-date])').forEach(buildPicker);
+
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.myedu-date-picker')) {
+            closeAll();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeAll();
+        }
+    });
+}
+
 async function initNativeAndroidPushRegistration() {
     const cap = window.Capacitor;
     if (!cap || typeof cap.isNativePlatform !== 'function' || !cap.isNativePlatform()) {
@@ -322,6 +516,12 @@ async function initNativeAndroidPushRegistration() {
     } catch (error) {
         console.error('[Push] Unable to initialize registration:', error);
     }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMyEduDatePickers);
+} else {
+    initMyEduDatePickers();
 }
 
 Alpine.start();

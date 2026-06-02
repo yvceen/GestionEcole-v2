@@ -16,25 +16,25 @@
 @endphp
 
 <x-dynamic-component :component="$layoutComponent" title="Evenement {{ $event->title }}">
-    <section class="overflow-hidden rounded-[32px] border border-slate-200 bg-[radial-gradient(circle_at_top_right,_rgba(34,197,94,0.25),_transparent_32%),linear-gradient(135deg,#111827,#1d4ed8_58%,#0f766e)] px-6 py-6 text-white shadow-xl shadow-slate-200/70 md:px-8">
+    <section class="overflow-hidden rounded-[32px] border border-sky-100 bg-[radial-gradient(circle_at_top_right,_rgba(34,197,94,0.17),_transparent_32%),radial-gradient(circle_at_bottom_left,_rgba(59,130,246,0.14),_transparent_34%),linear-gradient(135deg,#ffffff,#f8fbff_58%,#eefdf8)] px-6 py-6 text-slate-950 shadow-xl shadow-slate-200/70 md:px-8">
         <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div class="max-w-3xl">
                 <div class="flex flex-wrap items-center gap-2">
-                    <span class="inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky-100">
+                    <span class="inline-flex rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">
                         Paiement evenement
                     </span>
-                    <span class="inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky-100">
+                    <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">
                         {{ $event->status === 'active' ? 'Actif' : 'Cloture' }}
                     </span>
                 </div>
                 <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">{{ $event->title }}</h1>
-                <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-200">
+                <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
                     {{ $event->description ?: 'Suivi des parents, montants encaisses, restes a payer et recus imprimes.' }}
                 </p>
-                <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-slate-100">
-                    <span class="rounded-full bg-white/10 px-3 py-1">Date : {{ optional($event->event_date)->format('d/m/Y') ?: '-' }}</span>
-                    <span class="rounded-full bg-white/10 px-3 py-1">Limite : {{ optional($event->due_date)->format('d/m/Y') ?: '-' }}</span>
-                    <span class="rounded-full bg-white/10 px-3 py-1">{{ number_format((float) $event->amount_per_student, 2) }} MAD / eleve</span>
+                <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-slate-600">
+                    <span class="rounded-full border border-slate-200 bg-white px-3 py-1">Date : {{ optional($event->event_date)->format('d/m/Y') ?: '-' }}</span>
+                    <span class="rounded-full border border-slate-200 bg-white px-3 py-1">Limite : {{ optional($event->due_date)->format('d/m/Y') ?: '-' }}</span>
+                    <span class="rounded-full border border-slate-200 bg-white px-3 py-1">{{ number_format((float) $event->amount_per_student, 2) }} MAD / eleve</span>
                 </div>
             </div>
 
