@@ -420,6 +420,20 @@ function initMyEduDatePickers() {
             }
         };
 
+        const moveCalendar = (amount) => {
+            visibleDate = new Date(visibleDate.getFullYear(), visibleDate.getMonth() + amount, 1);
+            render();
+            positionPanel();
+            requestAnimationFrame(positionPanel);
+        };
+
+        const moveCalendarYear = (amount) => {
+            visibleDate = new Date(visibleDate.getFullYear() + amount, visibleDate.getMonth(), 1);
+            render();
+            positionPanel();
+            requestAnimationFrame(positionPanel);
+        };
+
         const render = () => {
             const year = visibleDate.getFullYear();
             const month = visibleDate.getMonth();
@@ -464,6 +478,15 @@ function initMyEduDatePickers() {
                         <button type="button" data-action="today">Ce mois</button>
                     </div>
                 `;
+
+                panel.querySelectorAll('[data-year-move]').forEach((button) => {
+                    button.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        moveCalendarYear(Number(button.dataset.yearMove || 0));
+                    });
+                });
+
                 return;
             }
 
@@ -511,6 +534,22 @@ function initMyEduDatePickers() {
                     ${mode === 'datetime-local' ? '<button type="button" data-action="done">Valider</button>' : ''}
                 </div>
             `;
+
+            panel.querySelectorAll('[data-move]').forEach((button) => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    moveCalendar(Number(button.dataset.move || 0));
+                });
+            });
+
+            panel.querySelectorAll('[data-year-move]').forEach((button) => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    moveCalendarYear(Number(button.dataset.yearMove || 0));
+                });
+            });
         };
 
         const open = () => {
@@ -534,17 +573,13 @@ function initMyEduDatePickers() {
         panel.addEventListener('click', (event) => {
             const moveButton = event.target.closest('[data-move]');
             if (moveButton) {
-                visibleDate = new Date(visibleDate.getFullYear(), visibleDate.getMonth() + Number(moveButton.dataset.move), 1);
-                render();
-                positionPanel();
+                moveCalendar(Number(moveButton.dataset.move || 0));
                 return;
             }
 
             const yearMoveButton = event.target.closest('[data-year-move]');
             if (yearMoveButton) {
-                visibleDate = new Date(visibleDate.getFullYear() + Number(yearMoveButton.dataset.yearMove), visibleDate.getMonth(), 1);
-                render();
-                positionPanel();
+                moveCalendarYear(Number(yearMoveButton.dataset.yearMove || 0));
                 return;
             }
 
