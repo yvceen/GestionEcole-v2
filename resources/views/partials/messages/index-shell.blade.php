@@ -31,7 +31,7 @@
 @endphp
 
 <x-dynamic-component :component="$layoutComponent" title="Messagerie">
-    <section class="overflow-hidden rounded-[32px] border border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-sky-900 px-6 py-6 text-white shadow-xl shadow-slate-200/70 md:px-8">
+    <section class="overflow-hidden rounded-[32px] border border-slate-200 bg-[radial-gradient(circle_at_top_right,_rgba(20,184,166,0.30),_transparent_34%),linear-gradient(135deg,#0f172a_0%,#1e1b4b_52%,#0f766e_100%)] px-6 py-6 text-white shadow-xl shadow-slate-200/70 md:px-8">
         <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div class="max-w-2xl">
                 <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky-100">
@@ -80,7 +80,7 @@
                     </a>
                     @if($supportsFolders)
                         @if($canModerate && Route::has($routePrefix . '.pending'))
-                            <a href="{{ route($routePrefix . '.pending') }}" class="rounded-2xl bg-slate-50 px-3 py-2 text-center text-slate-600 transition hover:bg-slate-100">
+                            <a href="{{ route($routePrefix . '.pending') }}" class="rounded-2xl bg-amber-50 px-3 py-2 text-center text-amber-700 ring-1 ring-amber-100 transition hover:bg-amber-100">
                                 Attente
                             </a>
                         @else
@@ -127,12 +127,30 @@
                             'rejected' => 'danger',
                             default => 'info',
                         };
+                        $statusClasses = match($status) {
+                            'pending' => [
+                                'row' => $active ? 'bg-amber-50' : 'bg-amber-50/45 hover:bg-amber-50',
+                                'avatar' => $active ? 'bg-amber-500 text-white' : 'bg-amber-100 text-amber-700 group-hover:bg-amber-500 group-hover:text-white',
+                                'dot' => 'bg-amber-400',
+                            ],
+                            'rejected' => [
+                                'row' => $active ? 'bg-rose-50' : 'bg-rose-50/45 hover:bg-rose-50',
+                                'avatar' => $active ? 'bg-rose-500 text-white' : 'bg-rose-100 text-rose-700 group-hover:bg-rose-500 group-hover:text-white',
+                                'dot' => 'bg-rose-400',
+                            ],
+                            default => [
+                                'row' => $active ? 'bg-sky-50' : ($unreadCount > 0 && !$isSent ? 'bg-cyan-50/70 hover:bg-cyan-50' : 'hover:bg-slate-50'),
+                                'avatar' => $active ? 'bg-sky-600 text-white' : ($unreadCount > 0 && !$isSent ? 'bg-cyan-100 text-cyan-700 group-hover:bg-cyan-600 group-hover:text-white' : 'bg-slate-100 text-slate-700 group-hover:bg-sky-100 group-hover:text-sky-700'),
+                                'dot' => $unreadCount > 0 && !$isSent ? 'bg-cyan-400' : 'bg-emerald-400',
+                            ],
+                        };
                     @endphp
 
-                    <a href="{{ $threadUrl($threadId) }}" class="group block border-b border-slate-100 px-5 py-4 transition {{ $active ? 'bg-sky-50' : 'hover:bg-slate-50' }}">
+                    <a href="{{ $threadUrl($threadId) }}" class="group block border-b border-slate-100 px-5 py-4 transition {{ $statusClasses['row'] }}">
                         <div class="flex items-start gap-3">
-                            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl {{ $active ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700 group-hover:bg-sky-100 group-hover:text-sky-700' }} text-sm font-bold">
+                            <div class="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl {{ $statusClasses['avatar'] }} text-sm font-bold transition">
                                 {{ $initials($participant) }}
+                                <span class="absolute -right-1 -top-1 h-3 w-3 rounded-full {{ $statusClasses['dot'] }} ring-2 ring-white"></span>
                             </div>
 
                             <div class="min-w-0 flex-1">
@@ -149,7 +167,7 @@
                                 <div class="mt-3 flex items-center justify-between gap-2">
                                     <x-ui.badge :variant="$statusVariant">{{ strtoupper($status) }}</x-ui.badge>
                                     @if($unreadCount > 0 && !$isSent)
-                                        <span class="inline-flex min-w-6 items-center justify-center rounded-full bg-sky-600 px-2 py-0.5 text-[11px] font-semibold text-white">
+                                        <span class="inline-flex min-w-6 items-center justify-center rounded-full bg-cyan-600 px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm shadow-cyan-100">
                                             {{ $unreadCount }}
                                         </span>
                                     @endif
@@ -212,7 +230,7 @@
                     </x-ui.button>
                 </div>
 
-                <div class="flex min-h-[32rem] flex-col justify-between bg-gradient-to-br from-slate-50 via-white to-sky-50/50 px-6 py-6">
+                <div class="flex min-h-[32rem] flex-col justify-between bg-[radial-gradient(circle_at_top_right,_rgba(14,165,233,0.12),_transparent_30%),linear-gradient(135deg,#f8fafc,#ffffff,#ecfeff)] px-6 py-6">
                     <div class="max-w-3xl">
                         <div class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-500 ring-1 ring-slate-200">
                             Dernier message

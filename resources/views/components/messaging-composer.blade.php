@@ -1,4 +1,4 @@
-﻿@props([
+@props([
     'title' => 'Nouveau message',
     'subtitle' => 'Envoyez un message clair et bien cible.',
     'action',
@@ -65,6 +65,7 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                         .map((item) => ({
                             ...item,
                             initials: this.makeInitials(item.label),
+                            color: this.colorForTab(tab.key),
                         }))
                         .filter((item) => {
                             if (!term) return true;
@@ -89,6 +90,7 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                                     tabLabel: tab.label,
                                     id: value,
                                     label: item.label,
+                                    color: this.colorForTab(tab.key),
                                 });
                             }
                         });
@@ -103,6 +105,31 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                         return words[0].slice(0, 2).toUpperCase();
                     }
                     return (words[0][0] + words[1][0]).toUpperCase();
+                },
+                colorForTab(key) {
+                    if (key === 'classes') return 'sky';
+                    if (key === 'parents') return 'emerald';
+                    if (key === 'staff') return 'violet';
+                    return 'slate';
+                },
+                tabClasses(key) {
+                    const active = this.activeTab === key;
+                    if (key === 'classes') return active ? 'border-sky-200 bg-sky-600 text-white shadow-sm shadow-sky-100' : 'border-sky-100 bg-sky-50 text-sky-700 hover:bg-sky-100';
+                    if (key === 'parents') return active ? 'border-emerald-200 bg-emerald-600 text-white shadow-sm shadow-emerald-100' : 'border-emerald-100 bg-emerald-50 text-emerald-700 hover:bg-emerald-100';
+                    if (key === 'staff') return active ? 'border-violet-200 bg-violet-600 text-white shadow-sm shadow-violet-100' : 'border-violet-100 bg-violet-50 text-violet-700 hover:bg-violet-100';
+                    return active ? 'border-slate-300 bg-slate-900 text-white' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50';
+                },
+                avatarClasses(color, active) {
+                    if (color === 'sky') return active ? 'bg-sky-600 text-white' : 'bg-sky-50 text-sky-700';
+                    if (color === 'emerald') return active ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700';
+                    if (color === 'violet') return active ? 'bg-violet-600 text-white' : 'bg-violet-50 text-violet-700';
+                    return active ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700';
+                },
+                chipClasses(color) {
+                    if (color === 'sky') return 'border-sky-200 bg-sky-50 text-sky-700';
+                    if (color === 'emerald') return 'border-emerald-200 bg-emerald-50 text-emerald-700';
+                    if (color === 'violet') return 'border-violet-200 bg-violet-50 text-violet-700';
+                    return 'border-slate-200 bg-slate-50 text-slate-700';
                 },
                 setTab(key) {
                     if (this.activeTab === key) return;
@@ -146,35 +173,58 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
 </script>
 
 <div x-data="messageComposer({{ Js::from($composerTabs) }})" class="space-y-6">
-    <x-ui.page-header :title="$title" :subtitle="$subtitle">
-        <x-slot name="actions">
+    <section class="overflow-hidden rounded-[32px] border border-slate-200 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.28),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.22),_transparent_34%),linear-gradient(135deg,#0f172a,#1e1b4b_58%,#0f766e)] px-6 py-6 text-white shadow-xl shadow-slate-200/70 md:px-8">
+        <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div class="max-w-2xl">
+                <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky-100">
+                    Composition
+                </div>
+                <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">{{ $title }}</h1>
+                <p class="mt-3 text-sm leading-6 text-slate-200">{{ $subtitle }}</p>
+            </div>
+
             @if(!empty($backUrl))
                 <x-ui.button :href="$backUrl" variant="secondary">
                     {{ $backLabel }}
                 </x-ui.button>
             @endif
-        </x-slot>
-    </x-ui.page-header>
+        </div>
+    </section>
 
-    <form action="{{ $action }}" method="POST" class="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
+    <form action="{{ $action }}" method="POST" class="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)]">
         @csrf
         @if(strtoupper($method ?? 'POST') !== 'POST')
             @method($method)
         @endif
 
-        <x-ui.card title="Contenu du message" subtitle="Renseignez un sujet clair et un texte facile a comprendre.">
-            @if($errors->any())
-                <x-ui.alert variant="error" class="mb-4">
-                    <div class="font-semibold">Erreurs detectees</div>
-                    <ul class="mt-2 list-disc pl-4 text-xs">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </x-ui.alert>
-            @endif
+        <section class="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-100 px-6 py-5">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-semibold tracking-tight text-slate-950">Contenu du message</h2>
+                        <p class="mt-1 text-sm text-slate-500">Renseignez un sujet clair et un message facile a comprendre.</p>
+                    </div>
+                    <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-50 text-sky-700 ring-1 ring-sky-100">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v10H7l-3 3V5Z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 9h8M8 12h5"/>
+                        </svg>
+                    </span>
+                </div>
+            </div>
 
-            <div class="space-y-4">
+            <div class="space-y-5 px-6 py-6">
+                @if($errors->any())
+                    <x-ui.alert variant="error">
+                        <div class="font-semibold">Erreurs detectees</div>
+                        <ul class="mt-2 list-disc pl-4 text-xs">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </x-ui.alert>
+                @endif
+
                 <x-ui.input
                     label="Sujet"
                     name="subject"
@@ -188,44 +238,58 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                 <x-ui.textarea
                     label="Message"
                     name="body"
-                    rows="10"
+                    rows="12"
                     placeholder="Detaillez votre message..."
                 >{{ old('body', $bodyValue ?? '') }}</x-ui.textarea>
                 @error('body')
                     <p class="app-error">{{ $message }}</p>
                 @enderror
-            </div>
 
-            <div class="mt-5 flex justify-end">
-                <x-ui.button type="submit" variant="primary" x-bind:disabled="!hasSelection">
-                    {{ $submitLabel }}
-                </x-ui.button>
-            </div>
-        </x-ui.card>
-
-        <x-ui.card title="Destinataires" subtitle="Selectionnez une classe ou plusieurs personnes.">
-            <div class="space-y-4">
-                <div class="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                        <p class="text-sm font-semibold text-slate-900" x-text="selectedCount + ' selectionne(s)'"></p>
-                        <p class="mt-1 text-xs text-slate-500" x-text="currentTab?.description || ''"></p>
-                    </div>
-
-                    <div class="flex flex-wrap gap-2">
-                        <button type="button" class="app-button-ghost min-h-9 px-3 py-2 text-xs" @click="selectAll(activeTab)">
-                            Tout selectionner
-                        </button>
-                        <button type="button" class="app-button-ghost min-h-9 px-3 py-2 text-xs" @click="clearSelection(activeTab)">
-                            Effacer
-                        </button>
+                <div class="rounded-[24px] border border-slate-200 bg-slate-50 px-4 py-4">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <p class="text-sm font-semibold text-slate-950">Controle avant envoi</p>
+                            <p class="mt-1 text-xs text-slate-500" x-text="hasSelection ? selectedCount + ' destinataire(s) selectionne(s)' : 'Selectionnez au moins un destinataire pour envoyer.'"></p>
+                        </div>
+                        <x-ui.button type="submit" variant="primary" x-bind:disabled="!hasSelection">
+                            {{ $submitLabel }}
+                        </x-ui.button>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div class="min-h-[52px] rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
+        <section class="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-100 px-6 py-5">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-semibold tracking-tight text-slate-950">Destinataires</h2>
+                        <p class="mt-1 text-sm text-slate-500" x-text="currentTab?.description || 'Selectionnez les destinataires.'"></p>
+                    </div>
+                    <span class="inline-flex min-w-11 items-center justify-center rounded-2xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-700 ring-1 ring-emerald-100" x-text="selectedCount"></span>
+                </div>
+            </div>
+
+            <div class="space-y-5 px-6 py-6">
+                <div class="grid gap-2 sm:grid-cols-3">
+                    <template x-for="tab in tabs" :key="tab.key">
+                        <button
+                            type="button"
+                            class="rounded-2xl border px-4 py-3 text-left text-sm font-semibold transition"
+                            :class="tabClasses(tab.key)"
+                            @click="setTab(tab.key)"
+                        >
+                            <span class="block" x-text="tab.label"></span>
+                            <span class="mt-1 block text-[11px] opacity-80" x-text="tab.items.length + ' disponible(s)'"></span>
+                        </button>
+                    </template>
+                </div>
+
+                <div class="min-h-[58px] rounded-[22px] border border-slate-200 bg-slate-50 px-3 py-3">
                     <template x-for="chip in selectedChips" :key="chip.tab + chip.id">
-                        <span class="mr-2 mt-2 inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700">
+                        <span class="mr-2 mt-2 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold" :class="chipClasses(chip.color)">
                             <span x-text="chip.label"></span>
-                            <button type="button" class="rounded-full p-1 text-sky-500 hover:text-sky-700" @click="deselect(chip.tab, chip.id)">
+                            <button type="button" class="rounded-full px-1 opacity-70 hover:opacity-100" @click="deselect(chip.tab, chip.id)">
                                 &times;
                             </button>
                         </span>
@@ -233,7 +297,7 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                     <p class="text-xs text-slate-400" x-show="selectedCount === 0">Aucun destinataire selectionne.</p>
                 </div>
 
-                <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+                <div class="rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
                     <div class="relative flex items-center">
                         <svg class="absolute left-3 h-4 w-4 text-slate-400" viewBox="0 0 24 24" fill="none">
                             <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"></circle>
@@ -243,47 +307,40 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                             x-model="searchTerm"
                             type="search"
                             placeholder="Rechercher un destinataire"
-                            class="w-full rounded-2xl bg-transparent pl-10 text-sm text-slate-700 outline-none transition focus:ring-2 focus:ring-sky-200"
+                            class="w-full rounded-2xl bg-transparent py-2 pl-10 text-sm text-slate-700 outline-none transition focus:ring-2 focus:ring-sky-200"
                         />
                     </div>
                 </div>
 
                 <div class="flex flex-wrap gap-2">
-                    <template x-for="tab in tabs" :key="tab.key">
-                        <button
-                            type="button"
-                            class="rounded-full border px-4 py-2 text-xs font-semibold transition"
-                            :class="{
-                                'border-sky-200 bg-sky-50 text-sky-700': activeTab === tab.key,
-                                'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50': activeTab !== tab.key
-                            }"
-                            @click="setTab(tab.key)"
-                        >
-                            <span x-text="tab.label"></span>
-                        </button>
-                    </template>
+                    <button type="button" class="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" @click="selectAll(activeTab)">
+                        Tout selectionner
+                    </button>
+                    <button type="button" class="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" @click="clearSelection(activeTab)">
+                        Effacer
+                    </button>
                 </div>
 
-                <div class="max-h-[340px] space-y-2 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-3">
+                <div class="max-h-[390px] space-y-2 overflow-y-auto rounded-[24px] border border-slate-200 bg-slate-50 p-3">
                     <template x-if="activeItems.length === 0">
-                        <p class="py-6 text-center text-xs text-slate-400">Aucun destinataire disponible.</p>
+                        <p class="py-8 text-center text-xs text-slate-400">Aucun destinataire disponible.</p>
                     </template>
 
                     <template x-for="item in activeItems" :key="item.id">
                         <button
                             type="button"
                             class="flex w-full items-center gap-3 rounded-2xl border px-3 py-3 text-left transition"
-                            :class="selected[activeTab]?.includes(String(item.id)) ? 'border-sky-200 bg-sky-50' : 'border-slate-200 bg-white hover:bg-slate-50'"
+                            :class="selected[activeTab]?.includes(String(item.id)) ? 'border-slate-300 bg-white shadow-sm' : 'border-transparent bg-white/70 hover:bg-white'"
                             @click="toggleSelection(activeTab, item.id)"
                         >
-                            <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-sm font-semibold text-slate-700">
+                            <div class="flex h-11 w-11 items-center justify-center rounded-2xl text-sm font-bold" :class="avatarClasses(item.color, selected[activeTab]?.includes(String(item.id)))">
                                 <span x-text="item.initials"></span>
                             </div>
-                            <div class="flex-1">
-                                <p class="text-sm font-semibold text-slate-900" x-text="item.label"></p>
-                                <p class="text-xs text-slate-500" x-text="item.meta"></p>
+                            <div class="min-w-0 flex-1">
+                                <p class="truncate text-sm font-semibold text-slate-950" x-text="item.label"></p>
+                                <p class="truncate text-xs text-slate-500" x-text="item.meta"></p>
                             </div>
-                            <svg class="h-4 w-4 text-sky-600" viewBox="0 0 24 24" fill="none" :class="selected[activeTab]?.includes(String(item.id)) ? 'opacity-100' : 'opacity-0'">
+                            <svg class="h-5 w-5 text-emerald-600 transition" viewBox="0 0 24 24" fill="none" :class="selected[activeTab]?.includes(String(item.id)) ? 'opacity-100' : 'opacity-0'">
                                 <path d="M5 13l4 4 10-10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
                         </button>
@@ -298,6 +355,6 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                     </template>
                 </template>
             </div>
-        </x-ui.card>
+        </section>
     </form>
 </div>
