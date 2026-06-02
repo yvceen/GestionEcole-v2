@@ -1,4 +1,4 @@
-<x-ui.card title="Evenement calendrier" subtitle="Renseignez un titre, une periode et un type pour le rendre lisible dans tous les portails.">
+﻿<x-ui.card title="Événement calendrier" subtitle="Renseignez un titre, une période et un type pour le rendre lisible dans tous les portails.">
     <form method="POST" action="{{ $action }}" class="space-y-6">
         @csrf
         @if(($method ?? 'POST') !== 'POST')
@@ -30,7 +30,7 @@
                 id="starts_on"
                 type="date"
                 name="starts_on"
-                label="Debut"
+                label="Début"
                 :value="old('starts_on', optional($event->starts_on)->format('Y-m-d'))"
                 required
             />

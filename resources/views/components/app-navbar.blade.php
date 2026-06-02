@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'title' => null,
     'links' => [],
     'navigationTitle' => 'Navigation principale',
@@ -23,7 +23,7 @@
         'director' => 'Directeur',
         'teacher' => 'Enseignant',
         'parent' => 'Parent',
-        'student' => 'Eleve',
+        'student' => 'Élève',
         'school_life' => 'Responsable scolaire',
         default => 'Utilisateur',
     };
@@ -74,8 +74,8 @@
         ],
         'school_life' => [
             ['label' => 'Recuperations', 'route' => 'school-life.pickup-requests.index'],
-            ['label' => 'Eleves', 'route' => 'school-life.students.index'],
-            ['label' => 'Presences', 'route' => 'school-life.attendance.index'],
+            ['label' => 'Élèves', 'route' => 'school-life.students.index'],
+            ['label' => 'Présences', 'route' => 'school-life.attendance.index'],
         ],
         default => [],
     })->filter(fn ($item) => is_array($item) && !empty($item['route']) && Route::has($item['route']))->values();
@@ -174,7 +174,7 @@
                     <img
                         src="{{ $schoolLogoUrl ?: $defaultLogoUrl }}"
                         class="h-full w-full {{ $schoolLogoUrl ? 'object-contain' : 'object-cover' }}"
-                        alt="Logo ecole"
+                        alt="Logo École"
                         onerror="this.onerror=null; this.src='{{ $defaultLogoUrl }}';"
                     />
                 </div>
@@ -195,7 +195,7 @@
                 <input
                     class="app-input rounded-full border-slate-200 bg-white/90 pl-10 pr-16"
                     type="search"
-                    placeholder="Rechercher un eleve, une classe, un utilisateur..."
+                    placeholder="Rechercher un Élève, une classe, un utilisateur..."
                     aria-label="Rechercher"
                 >
                 <span class="pointer-events-none absolute inset-y-0 right-3 hidden items-center rounded-full border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-500 lg:flex">
@@ -274,7 +274,7 @@
                         <div class="mb-2 flex items-center justify-between">
                             <div>
                                 <p class="text-sm font-semibold text-slate-900">Notifications</p>
-                                <p class="text-xs text-slate-500">Dernieres activites de votre espace.</p>
+                                <p class="text-xs text-slate-500">Dernières activités de votre espace.</p>
                             </div>
                             <a href="{{ route($notificationRoutePrefix . '.notifications.index') }}" class="text-xs font-semibold text-sky-700 hover:text-sky-800">
                                 Voir tout

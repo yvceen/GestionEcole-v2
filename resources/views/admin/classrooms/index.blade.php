@@ -1,9 +1,9 @@
-<x-admin-layout title="Structure scolaire">
+﻿<x-admin-layout title="Structure scolaire">
     <div class="flex items-start justify-between gap-4">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Structure scolaire</h1>
             <p class="mt-1 text-sm text-slate-500">
-                Ajoutez les niveaux et les classes pour organiser les eleves.
+                Ajoutez les niveaux et les classes pour organiser les Élèves.
             </p>
         </div>
     </div>
@@ -56,7 +56,7 @@
                     <div class="rounded-2xl border border-slate-200/70 bg-slate-50 px-4 py-3 flex items-center justify-between">
                         <div>
                             <div class="text-sm font-semibold text-slate-900">{{ $lvl->name }}</div>
-                            <div class="text-xs text-slate-500">Code: {{ $lvl->code }} • Classes: {{ $lvl->classrooms->count() }}</div>
+                            <div class="text-xs text-slate-500">Code: {{ $lvl->code }} â€¢ Classes: {{ $lvl->classrooms->count() }}</div>
                         </div>
                         <div class="text-xs text-slate-500">Ordre: {{ $lvl->sort_order }}</div>
                     </div>
@@ -125,7 +125,7 @@
                                 <a href="{{ route('admin.structure.classrooms.show', $c) }}"
                                    class="rounded-2xl border border-slate-200/70 bg-slate-50 px-3 py-2 hover:bg-white transition">
                                     <div class="text-sm font-semibold text-slate-900">{{ $c->name }}</div>
-                                    <div class="text-xs text-slate-500">Section: {{ $c->section }} • Ordre: {{ $c->sort_order }}</div>
+                                    <div class="text-xs text-slate-500">Section: {{ $c->section }} â€¢ Ordre: {{ $c->sort_order }}</div>
                                 </a>
                             @empty
                                 <div class="text-sm text-slate-500">Aucune classe.</div>
@@ -133,7 +133,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="text-sm text-slate-500">Ajoute un niveau d abord.</div>
+                    <div class="text-sm text-slate-500">Ajoute un niveau d'abord.</div>
                 @endforelse
             </div>
         </div>

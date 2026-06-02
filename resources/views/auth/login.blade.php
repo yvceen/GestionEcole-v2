@@ -1,4 +1,4 @@
-<x-guest-layout>
+﻿<x-guest-layout>
     @php
         $schoolContext = app()->bound('currentSchool') ? app('currentSchool') : null;
     @endphp
@@ -11,7 +11,7 @@
             {{ $schoolContext ? $schoolContext->name : 'Bienvenue sur My Edu' }}
         </h1>
         <p class="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-600">
-            {{ $schoolContext ? 'Connectez-vous a votre espace educatif en toute securite.' : 'Accedez a votre espace educatif et restez connecte a votre communaute scolaire.' }}
+            {{ $schoolContext ? 'Connectez-vous a votre espace éducatif en toute sécurité.' : 'Accédez a votre espace éducatif et restez connecté a votre communauté scolaire.' }}
         </p>
     </div>
 
@@ -43,7 +43,7 @@
                 required
                 autofocus
                 autocomplete="username"
-                placeholder="nom@ecole.ma"
+                placeholder="nom@École.ma"
                 class="w-full rounded-2xl border-slate-200/80 bg-white/80 px-4 py-3 text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-teal-600"
             >
         </div>
@@ -79,7 +79,7 @@
         <div class="flex items-center justify-between gap-3">
             <div>
                 <div class="text-xs uppercase tracking-wider text-teal-700">Assistance My Edu</div>
-                <div class="mt-1 text-sm font-semibold text-slate-900">Une aide rapide pour votre acces</div>
+                <div class="mt-1 text-sm font-semibold text-slate-900">Une aide rapide pour votre accès</div>
                 <div class="mt-1 text-xs leading-5 text-slate-600">WhatsApp : 0641612016<br>Email : yassine@myedu.school</div>
             </div>
             <div class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white shadow-sm">

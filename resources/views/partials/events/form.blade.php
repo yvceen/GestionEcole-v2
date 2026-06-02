@@ -1,4 +1,4 @@
-<x-ui.card title="Bloc agenda" subtitle="Definissez un titre, un type, un horaire, une classe et une couleur pour l agenda hebdomadaire.">
+﻿<x-ui.card title="Bloc agenda" subtitle="Definissez un titre, un type, un horaire, une classe et une couleur pour l agenda hebdomadaire.">
     <form method="POST" action="{{ $action }}" class="space-y-6">
         @csrf
         @if(($method ?? 'POST') !== 'POST')
@@ -42,7 +42,7 @@
                 id="start"
                 type="datetime-local"
                 name="start"
-                label="Debut"
+                label="Début"
                 :value="old('start', optional($event->start)->format('Y-m-d\\TH:i'))"
                 required
             />

@@ -1,6 +1,6 @@
-@props([
+﻿@props([
     'title' => 'Vie scolaire',
-    'subtitle' => 'Suivi operationnel des eleves, presences, contacts parents et demandes de sortie.',
+    'subtitle' => 'Suivi operationnel des Élèves, présences, contacts parents et demandes de sortie.',
 ])
 
 @php
@@ -8,19 +8,19 @@
 
     $nav = [
         ['label' => 'Tableau de bord', 'route' => 'school-life.dashboard', 'icon' => 'home', 'section' => 'Vue generale'],
-        ['label' => 'Eleves', 'route' => 'school-life.students.index', 'icon' => 'users', 'active_routes' => ['school-life.students.*'], 'section' => 'Gestion'],
+        ['label' => 'Élèves', 'route' => 'school-life.students.index', 'icon' => 'users', 'active_routes' => ['school-life.students.*'], 'section' => 'Gestion'],
         ['label' => 'Utilisateurs', 'route' => 'school-life.users.index', 'icon' => 'users', 'active_routes' => ['school-life.users.*'], 'section' => 'Gestion'],
         ['label' => 'Cartes', 'route' => 'school-life.cards.index', 'icon' => 'users', 'section' => 'Gestion'],
-        ['label' => 'Presences', 'route' => 'school-life.attendance.index', 'icon' => 'shield', 'section' => 'Suivi'],
+        ['label' => 'Présences', 'route' => 'school-life.attendance.index', 'icon' => 'shield', 'section' => 'Suivi'],
         ['label' => 'Scan QR', 'route' => 'attendance.scan.page', 'icon' => 'shield', 'active_routes' => ['attendance.scan.page'], 'section' => 'Suivi'],
         ['label' => 'Notes', 'route' => 'school-life.grades.index', 'icon' => 'chart', 'section' => 'Suivi'],
         ['label' => 'Devoirs', 'route' => 'school-life.homeworks.index', 'icon' => 'clipboard', 'active_routes' => ['school-life.homeworks.*'], 'section' => 'Suivi'],
         ['label' => 'Recuperations', 'route' => 'school-life.pickup-requests.index', 'icon' => 'calendar', 'section' => 'Suivi'],
-        ['label' => 'Paiements evenements', 'route' => 'school-life.finance.events.index', 'icon' => 'wallet', 'active_routes' => ['school-life.finance.events.*'], 'section' => 'Suivi'],
-        ['label' => 'Matieres', 'route' => 'school-life.subjects.index', 'icon' => 'book', 'section' => 'Organisation'],
+        ['label' => 'Paiements Événements', 'route' => 'school-life.finance.events.index', 'icon' => 'wallet', 'active_routes' => ['school-life.finance.events.*'], 'section' => 'Suivi'],
+        ['label' => 'Matières', 'route' => 'school-life.subjects.index', 'icon' => 'book', 'section' => 'Organisation'],
         ['label' => 'Emploi du temps', 'route' => 'school-life.timetable.index', 'icon' => 'calendar', 'section' => 'Organisation'],
         ['label' => 'Agenda', 'route' => 'school-life.events.index', 'icon' => 'calendar', 'section' => 'Organisation'],
-        ['label' => 'Activites', 'route' => 'school-life.activities.index', 'icon' => 'calendar', 'active_routes' => ['school-life.activities.*'], 'section' => 'Organisation'],
+        ['label' => 'Activités', 'route' => 'school-life.activities.index', 'icon' => 'calendar', 'active_routes' => ['school-life.activities.*'], 'section' => 'Organisation'],
         ['label' => 'Transport', 'route' => 'transport.ops.index', 'icon' => 'users', 'active_routes' => ['transport.ops.*'], 'section' => 'Organisation'],
         ['label' => 'Actualites', 'route' => 'school-life.news.index', 'icon' => 'message', 'active_routes' => ['school-life.news.*'], 'section' => 'Communication'],
         ['label' => 'Rendez-vous', 'route' => 'school-life.appointments.index', 'icon' => 'calendar', 'section' => 'Communication'],
@@ -69,12 +69,12 @@
                 :subtitle="$subtitle"
                 :badges="[
                     auth()->user()?->name ?? 'Responsable scolaire',
-                    $currentSchool?->name ?? 'Ecole active',
+                    $currentSchool?->name ?? 'École active',
                     $activeNav['label'] ?? 'Suivi',
                 ]"
                 summary-title="Module actif"
                 :summary-value="$activeNav['label'] ?? 'Vie scolaire'"
-                summary-copy="Acces operationnel unifie pour le suivi des eleves, les presences, les devoirs, les rendez-vous et l emploi du temps."
+                summary-copy="Accès operationnel unifie pour le suivi des Élèves, les présences, les devoirs, les rendez-vous et l emploi du temps."
                 :nav="$nav"
             />
 

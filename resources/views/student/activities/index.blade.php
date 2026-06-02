@@ -1,14 +1,14 @@
-<x-student-layout title="Mes activites" subtitle="Retrouvez les activites de votre ecole et le suivi de votre participation.">
+﻿<x-student-layout title="Mes activités" subtitle="Retrouvez les activités de votre École et le suivi de votre participation.">
     <section class="grid gap-4 sm:grid-cols-3">
         <article class="student-kpi">
-            <p class="student-kpi-label">Activites</p>
+            <p class="student-kpi-label">Activités</p>
             <p class="student-kpi-value">{{ $activities->total() }}</p>
-            <p class="student-kpi-copy">Associees a votre profil eleve.</p>
+            <p class="student-kpi-copy">Associées a votre profil Élève.</p>
         </article>
         <article class="student-kpi">
             <p class="student-kpi-label">Classe</p>
             <p class="student-kpi-value text-xl">{{ $student->classroom?->name ?? '-' }}</p>
-            <p class="student-kpi-copy">Classe actuellement rattachee.</p>
+            <p class="student-kpi-copy">Classe actuellement rattachée.</p>
         </article>
         <article class="student-kpi">
             <p class="student-kpi-label">Confirmations</p>
@@ -19,7 +19,7 @@
         </article>
     </section>
 
-    <x-ui.card title="Liste des activites" subtitle="Visualisez les details et le statut de votre participation.">
+    <x-ui.card title="Liste des activités" subtitle="Visualisez les details et le statut de votre participation.">
         <div class="space-y-4">
             @forelse($activities as $activity)
                 @php($participant = $activity->participants->first())
@@ -50,10 +50,10 @@
                         </div>
                         <div class="flex flex-wrap gap-2">
                             <x-ui.badge :variant="$confirmationVariant">
-                                {{ $confirmation === 'confirmed' ? 'Participation confirmee' : ($confirmation === 'declined' ? 'Participation refusee' : 'Participation en attente') }}
+                                {{ $confirmation === 'confirmed' ? 'Participation confirmee' : ($confirmation === 'declined' ? 'Participation refusée' : 'Participation en attente') }}
                             </x-ui.badge>
                             <x-ui.badge :variant="$attendanceVariant">
-                                {{ $attendance === 'present' ? 'Presence marquee' : ($attendance === 'absent' ? 'Absence marquee' : 'Presence non marquee') }}
+                                {{ $attendance === 'present' ? 'Présence marquee' : ($attendance === 'absent' ? 'Absence marquee' : 'Présence non marquee') }}
                             </x-ui.badge>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                     @endif
                 </article>
             @empty
-                <div class="student-empty">Aucune activite disponible pour votre profil.</div>
+                <div class="student-empty">Aucune activité disponible pour votre profil.</div>
             @endforelse
         </div>
 

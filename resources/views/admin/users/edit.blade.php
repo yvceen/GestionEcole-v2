@@ -1,4 +1,4 @@
-<x-admin-layout title="Modifier utilisateur">
+﻿<x-admin-layout title="Modifier utilisateur">
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Modifier utilisateur</h1>
@@ -43,7 +43,7 @@
         </div>
 
         <div>
-            <label class="mb-1 block text-sm font-semibold">Telephone (optionnel)</label>
+            <label class="mb-1 block text-sm font-semibold">Téléphone (optionnel)</label>
             <input
                 name="phone"
                 value="{{ old('phone', $user->phone) }}"
@@ -61,13 +61,13 @@
                     </option>
                 @endforeach
             </select>
-            <p class="mt-1 text-xs text-slate-500">Le directeur est limite aux fonctionnalites pedagogiques.</p>
+            <p class="mt-1 text-xs text-slate-500">Le directeur est limite aux fonctionnalites pédagogiques.</p>
         </div>
 
         <div id="student-fields" class="{{ old('role', $user->role) === \App\Models\User::ROLE_STUDENT ? '' : 'hidden' }} space-y-5 rounded-2xl border border-sky-100 bg-sky-50/70 p-4">
             <div>
-                <p class="text-sm font-semibold text-slate-900">Dossier eleve lie</p>
-                <p class="mt-1 text-xs text-slate-600">Les comptes eleves doivent rester relies a une classe et a un dossier eleve valide.</p>
+                <p class="text-sm font-semibold text-slate-900">Dossier Élève lié</p>
+                <p class="mt-1 text-xs text-slate-600">Les comptes Élèves doivent rester reliés a une classe et a un dossier Élève valide.</p>
             </div>
 
             <div>
@@ -83,9 +83,9 @@
             </div>
 
             <div>
-                <label class="mb-1 block text-sm font-semibold">Parent lie (optionnel)</label>
+                <label class="mb-1 block text-sm font-semibold">Parent lié (optionnel)</label>
                 <select name="parent_user_id" class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5">
-                    <option value="">Aucun parent lie</option>
+                    <option value="">Aucun parent lié</option>
                     @foreach($parents as $parent)
                         <option value="{{ $parent->id }}" @selected((string) old('parent_user_id', $linkedStudent?->parent_user_id) === (string) $parent->id)>
                             {{ $parent->name }} ({{ $parent->email }})
@@ -125,7 +125,7 @@
                 class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5"
                 placeholder="Laisser vide pour ne pas changer"
             />
-            <x-ui.password-tools target="user_edit_password" helper="Copiez ce mot de passe avant d'enregistrer si vous devez le transmettre." />
+            <x-ui.password-tools target="user_edit_password" helper="Copiez ce mot de passe avant d'enregistrér si vous devez le transmettre." />
             <p class="mt-1 text-xs text-slate-500">Min. 8 caracteres. Laisser vide conserve le mot de passe actuel.</p>
         </div>
 

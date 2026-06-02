@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'mode' => 'create',
     'action',
     'method' => 'POST',
@@ -37,7 +37,7 @@
     @endif
 
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <x-ui.card title="Informations generales" subtitle="Identite et affectation de l'eleve.">
+        <x-ui.card title="Informations generales" subtitle="Identite et affectation de l'Élève.">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div class="md:col-span-2">
                     <x-ui.input
@@ -78,7 +78,7 @@
         <x-ui.card title="Parent" subtitle="Liaison du parent principal.">
             @if($isEdit)
                 <x-ui.select label="Parent" name="parent_user_id">
-                    <option value="">Aucun parent lie</option>
+                    <option value="">Aucun parent lié</option>
                     @foreach($parents as $parent)
                         <option value="{{ $parent->id }}" @selected((string) old('parent_user_id', $student->parent_user_id ?? '') === (string) $parent->id)>
                             {{ $parent->name }} ({{ $parent->email }})
@@ -123,7 +123,7 @@
                             <x-ui.input label="Email du parent" name="parent_email" type="email" :value="old('parent_email')" />
                             <div>
                                 <x-ui.input id="parent_password" label="Mot de passe parent" name="parent_password" type="text" />
-                                <x-ui.password-tools target="parent_password" helper="Mot de passe provisoire du parent, a conserver avant creation du compte." />
+                                <x-ui.password-tools target="parent_password" helper="Mot de passe provisoire du parent, a conserver avant création du compte." />
                             </div>
                         </div>
                     </div>
@@ -133,25 +133,25 @@
     </div>
 
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <x-ui.card title="Compte eleve" subtitle="Acces portail eleve, optionnel.">
+        <x-ui.card title="Compte Élève" subtitle="Accès portail Élève, optionnel.">
             @if($isEdit)
                 <p class="text-sm text-slate-600">
                     Compte actuel :
-                    <span class="font-semibold text-slate-900">{{ $student?->studentUser?->email ?? 'Aucun compte lie' }}</span>
+                    <span class="font-semibold text-slate-900">{{ $student?->studentUser?->email ?? 'Aucun compte lié' }}</span>
                 </p>
             @else
                 <div class="space-y-4">
                     <div class="flex items-center gap-2">
                         <input type="hidden" name="create_student_account" value="0">
                         <input id="create_student_account" type="checkbox" name="create_student_account" value="1" class="rounded border-slate-300 text-sky-700" {{ old('create_student_account') ? 'checked' : '' }}>
-                        <label for="create_student_account" class="text-sm font-semibold text-slate-700">Creer un compte eleve</label>
+                        <label for="create_student_account" class="text-sm font-semibold text-slate-700">Creer un compte Élève</label>
                     </div>
 
                     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-                        <x-ui.input label="Email eleve" name="student_account_email" type="email" :value="old('student_account_email')" />
+                        <x-ui.input label="Email Élève" name="student_account_email" type="email" :value="old('student_account_email')" />
                         <div>
-                            <x-ui.input id="student_account_password" label="Mot de passe eleve" name="student_account_password" type="text" />
-                            <x-ui.password-tools target="student_account_password" helper="Mot de passe provisoire du compte eleve, a copier avant validation." />
+                            <x-ui.input id="student_account_password" label="Mot de passe Élève" name="student_account_password" type="text" />
+                            <x-ui.password-tools target="student_account_password" helper="Mot de passe provisoire du compte Élève, a copier avant validation." />
                         </div>
                     </div>
                 </div>
@@ -185,7 +185,7 @@
                         @endforeach
                     </x-ui.select>
 
-                    <x-ui.select label="Periode" name="transport_period">
+                    <x-ui.select label="Période" name="transport_period">
                         <option value="both" @selected(old('transport_period', $transportAssignment?->period ?? 'both') === 'both')>Matin et soir</option>
                         <option value="morning" @selected(old('transport_period', $transportAssignment?->period) === 'morning')>Matin</option>
                         <option value="evening" @selected(old('transport_period', $transportAssignment?->period) === 'evening')>Soir</option>
@@ -197,7 +197,7 @@
         </x-ui.card>
     </div>
 
-    <x-ui.card title="Frais" subtitle="Configuration financiere de l'eleve.">
+    <x-ui.card title="Frais" subtitle="Configuration financiere de l'Élève.">
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
             <x-ui.input label="Scolarite mensuelle" name="tuition_monthly" type="number" step="0.01" class="fee-input" :value="old('tuition_monthly', $fee?->tuition_monthly ?? 0)" required />
             <x-ui.input label="Cantine mensuelle" name="canteen_monthly" type="number" step="0.01" class="fee-input" :value="old('canteen_monthly', $fee?->canteen_monthly ?? 0)" />
@@ -209,7 +209,7 @@
             <div class="flex items-center gap-2">
                 <input type="hidden" name="insurance_paid" value="0">
                 <input id="insurance_paid" type="checkbox" name="insurance_paid" value="1" class="rounded border-slate-300 text-sky-700" {{ old('insurance_paid', $fee?->insurance_paid ?? false) ? 'checked' : '' }}>
-                <label for="insurance_paid" class="text-sm font-semibold text-slate-700">Assurance deja payee</label>
+                <label for="insurance_paid" class="text-sm font-semibold text-slate-700">Assurance déjà payée</label>
             </div>
 
             <div class="text-right">
@@ -220,10 +220,10 @@
     </x-ui.card>
 
     <div class="app-form-actions">
-        <p class="app-form-actions-copy">Verifiez les informations principales, le parent lie et les options de transport avant validation.</p>
+        <p class="app-form-actions-copy">Vérifiez les informations principales, le parent lié et les options de transport avant validation.</p>
         <div class="flex items-center justify-end gap-2">
             <x-ui.button :href="route('admin.students.index')" variant="secondary">Annuler</x-ui.button>
-            <x-ui.button type="submit" variant="primary">{{ $isEdit ? 'Enregistrer les modifications' : 'Creer l\'eleve' }}</x-ui.button>
+            <x-ui.button type="submit" variant="primary">{{ $isEdit ? 'Enregistrer les modifications' : 'Creer l\'Élève' }}</x-ui.button>
         </div>
     </div>
 

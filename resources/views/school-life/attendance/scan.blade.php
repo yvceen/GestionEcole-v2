@@ -1,6 +1,6 @@
-@include('partials.attendance.qr-scanner-scripts')
+﻿@include('partials.attendance.qr-scanner-scripts')
 
-<x-school-life-layout title="Scan QR presences" subtitle="Enregistrez rapidement les arrivees et sorties a partir des cartes eleves, avec camera si disponible et saisie manuelle si besoin.">
+<x-school-life-layout title="Scan QR présences" subtitle="Enregistrez rapidement les arrivees et sorties a partir des cartes Élèves, avec caméra si disponible et saisie manuelle si besoin.">
     <x-ui.page-header
         title="Scan arrivee / sortie"
         subtitle="Premier scan du jour : arrivee. Scan suivant : sortie. Les corrections restent possibles sur les derniers pointages."
@@ -12,7 +12,7 @@
         </x-slot>
     </x-ui.page-header>
 
-    <x-ui.card title="Contexte du scan" subtitle="Choisissez la date et, si besoin, une classe pour limiter les derniers pointages affiches.">
+    <x-ui.card title="Contexte du scan" subtitle="Choisissez la date et, si besoin, une classe pour limiter les derniers pointages affichés.">
         <form method="GET" class="grid gap-3 lg:grid-cols-[220px_220px_auto_auto]">
             <input type="date" name="date" value="{{ $date }}" class="app-input">
             <select name="classroom_id" class="app-input">
@@ -35,7 +35,7 @@
             csrfToken: @js(csrf_token()),
             records: @js($records->map(fn ($attendance) => [
                 'id' => $attendance->id,
-                'student_name' => $attendance->student?->full_name ?? 'Eleve',
+                'student_name' => $attendance->student?->full_name ?? 'Élève',
                 'classroom_name' => $attendance->student?->classroom?->name ?? '-',
                 'status_label' => match ((string) $attendance->status) {
                     \App\Models\Attendance::STATUS_PRESENT => 'Present',
@@ -94,13 +94,13 @@
 
                 <div class="flex flex-wrap gap-3">
                     <x-ui.button type="button" variant="primary" x-on:click="startScanner()" x-bind:disabled="scanning || busy || isProcessing">
-                        <span x-text="scanning ? 'Camera active' : 'Activer la camera'"></span>
+                        <span x-text="scanning ? 'Camera active' : 'Activer la caméra'"></span>
                     </x-ui.button>
                     <x-ui.button type="button" variant="secondary" x-on:click="restartScanner()" x-bind:disabled="busy || isProcessing">
                         Redemarrer le scan
                     </x-ui.button>
                     <x-ui.button type="button" variant="secondary" x-on:click="stopScanner({ preserveLock: true })" x-bind:disabled="!scanning">
-                        Arreter
+                        Arrêter
                     </x-ui.button>
                 </div>
 
@@ -112,9 +112,9 @@
                 </form>
 
                 <p class="text-xs leading-5 text-slate-500">
-                    Le QR eleve contient uniquement un code securise. Si le scan camera n est pas disponible, vous pouvez aussi saisir le code de la carte manuellement.
+                    Le QR Élève contient uniquement un code sécurisé. Si le scan caméra n est pas disponible, vous pouvez aussi saisir le code de la carte manuellement.
                 </p>
-                <p class="text-xs leading-5 text-slate-500" x-show="cameraError" x-text="cameraError"></p>
+                <p class="text-xs leading-5 text-slate-500" x-show="caméraError" x-text="caméraError"></p>
             </div>
         </x-ui.card>
 
@@ -153,7 +153,7 @@
                 </template>
             </x-ui.card>
 
-            <x-ui.card title="Derniers pointages" subtitle="Liste courte des arrivees et sorties du jour, avec acces direct a la correction.">
+            <x-ui.card title="Derniers pointages" subtitle="Liste courte des arrivees et sorties du jour, avec accès direct a la correction.">
                 <div class="space-y-3">
                     <template x-for="record in records" :key="record.id">
                         <div class="rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm">

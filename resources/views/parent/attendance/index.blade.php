@@ -1,4 +1,4 @@
-<x-parent-layout title="Presences" subtitle="Visualisez les presences, absences et retards de vos enfants avec des filtres simples par eleve et par date.">
+﻿<x-parent-layout title="Présences" subtitle="Visualisez les présences, absences et retards de vos enfants avec des filtres simples par Élève et par date.">
     <section class="grid gap-4 md:grid-cols-4">
         <article class="student-kpi">
             <p class="student-kpi-label">Total</p>
@@ -19,7 +19,7 @@
     </section>
 
     <section class="portal-filter-bar mt-6">
-        <form method="GET" data-loading-label="Filtrage des presences..." class="portal-filter-grid lg:grid-cols-[minmax(0,1.2fr)_180px_180px_180px_auto]">
+        <form method="GET" data-loading-label="Filtrage des présences..." class="portal-filter-grid lg:grid-cols-[minmax(0,1.2fr)_180px_180px_180px_auto]">
             <select name="child_id" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
                 <option value="">Tous mes enfants</option>
                 @foreach($children as $child)
@@ -52,7 +52,7 @@
             <table class="min-w-full text-sm">
                 <thead class="border-b border-slate-200 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                     <tr>
-                        <th class="px-3 py-3">Eleve</th>
+                        <th class="px-3 py-3">Élève</th>
                         <th class="px-3 py-3">Date</th>
                         <th class="px-3 py-3">Statut</th>
                         <th class="px-3 py-3">Enregistre par</th>
@@ -78,7 +78,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-3 py-10 text-center text-sm text-slate-500">Aucune presence enregistree.</td>
+                            <td colspan="5" class="px-3 py-10 text-center text-sm text-slate-500">Aucune présence enregistrée.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -117,7 +117,7 @@
                     </div>
                 </article>
             @empty
-                <div class="student-empty">Aucune presence enregistree.</div>
+                <div class="student-empty">Aucune présence enregistrée.</div>
             @endforelse
         </div>
 

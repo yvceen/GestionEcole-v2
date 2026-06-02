@@ -1,7 +1,7 @@
-<x-admin-layout title="Modifier un evenement calendrier" subtitle="Mettez a jour une date ou une information sans changer la logique applicative.">
+﻿<x-admin-layout title="Modifier un Événement calendrier" subtitle="Mettez a jour une date ou une information sans changer la logique applicative.">
     <x-ui.page-header
-        title="Modifier l evenement"
-        subtitle="Ajustez le titre, la periode ou la description."
+        title="Modifier l Événement"
+        subtitle="Ajustez le titre, la période ou la description."
     />
 
     @include('partials.calendar.form', [

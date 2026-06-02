@@ -1,4 +1,4 @@
-@php
+﻿@php
     $logoPath = is_string($school?->logo_path ?? null) ? ltrim((string) $school->logo_path, '/') : '';
     $logoUrl = null;
     if ($logoPath !== '') {
@@ -82,7 +82,7 @@
         </div>
 
         <div class="border-t border-slate-200 bg-slate-50 px-8 py-5 text-sm text-slate-500">
-            Document genere depuis MyEdu. Les equipes administratives peuvent l imprimer ou l exporter en PDF.
+            Document généré depuis MyEdu. Les Équipes administratives peuvent l imprimer ou l exporter en PDF.
         </div>
     </div>
 </x-dynamic-component>

@@ -1,8 +1,8 @@
-﻿<x-teacher-layout title="Creer une evaluation">
+﻿<x-teacher-layout title="Creer une Évaluation">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-semibold text-slate-900">Creer une evaluation</h1>
-            <p class="text-sm text-slate-500 mt-1">Choisissez la classe, la matiere et la date de l evaluation.</p>
+            <h1 class="text-2xl font-semibold text-slate-900">Creer une Évaluation</h1>
+            <p class="text-sm text-slate-500 mt-1">Choisissez la classe, la matiere et la date de l Évaluation.</p>
         </div>
         <a href="{{ route('teacher.assessments.index') }}" class="text-sm font-semibold text-slate-700 hover:underline">← Retour</a>
     </div>

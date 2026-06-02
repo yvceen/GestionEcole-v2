@@ -1,7 +1,7 @@
-﻿<x-admin-layout title="Modifier un eleve">
+﻿<x-admin-layout title="Modifier un Élève">
     <x-students.header
-        title="Modifier un eleve"
-        subtitle="Mettez a jour les informations de l'eleve sans modifier la logique metier."
+        title="Modifier un Élève"
+        subtitle="Mettez a jour les informations de l'Élève sans modifier la logique metier."
     >
         <x-ui.button :href="route('admin.students.index')" variant="ghost">
             Retour
@@ -26,7 +26,7 @@
         </div>
     @endif
 
-    <x-ui.card class="mt-6" title="Cycle de vie" subtitle="Archivez un eleve qui ne frequente plus l'ecole sans supprimer son historique.">
+    <x-ui.card class="mt-6" title="Cycle de vie" subtitle="Archivez un Élève qui ne frequente plus l'École sans supprimer son historique.">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
                 @if($student->is_archived)
@@ -39,7 +39,7 @@
                     </p>
                 @else
                     <span class="app-badge app-badge-success">Actif</span>
-                    <p class="mt-2 text-sm text-slate-600">L'eleve apparait dans les listes actives et les workflows operationnels.</p>
+                    <p class="mt-2 text-sm text-slate-600">L'Élève apparait dans les listes actives et les workflows operationnels.</p>
                 @endif
             </div>
 
@@ -49,22 +49,22 @@
                     <x-ui.button type="submit" variant="secondary">Reactiver</x-ui.button>
                 </form>
             @else
-                <form method="POST" action="{{ route('admin.students.archive', $student) }}" class="w-full space-y-3 sm:max-w-sm" onsubmit="return confirm('Archiver cet eleve ? Son historique sera conserve.')">
+                <form method="POST" action="{{ route('admin.students.archive', $student) }}" class="w-full space-y-3 sm:max-w-sm" onsubmit="return confirm('Archiver cet Élève ? Son historique sera conserve.')">
                     @csrf
                     <textarea name="archive_reason" rows="2" class="app-input" placeholder="Motif optionnel: depart, transfert...">{{ old('archive_reason') }}</textarea>
                     @error('archive_reason')<p class="app-error">{{ $message }}</p>@enderror
-                    <x-ui.button type="submit" variant="secondary">Archiver cet eleve</x-ui.button>
+                    <x-ui.button type="submit" variant="secondary">Archiver cet Élève</x-ui.button>
                 </form>
             @endif
         </div>
     </x-ui.card>
 
-    <x-ui.card class="mt-6 border-rose-200 bg-rose-50/70" title="Zone sensible" subtitle="La suppression est disponible uniquement si aucun dossier operationnel n'est lie a cet eleve.">
-        <form method="POST" action="{{ route('admin.students.destroy', $student) }}" onsubmit="return confirm('Supprimer cet eleve ? Cette action sera refusee si des donnees liees existent.')">
+    <x-ui.card class="mt-6 border-rose-200 bg-rose-50/70" title="Zone sensible" subtitle="La suppression est disponible uniquement si aucun dossier operationnel n'est lié a cet Élève.">
+        <form method="POST" action="{{ route('admin.students.destroy', $student) }}" onsubmit="return confirm('Supprimer cet Élève ? Cette action sera refusée si des données liees existent.')">
             @csrf
             @method('DELETE')
             <x-ui.button type="submit" variant="danger">
-                Supprimer cet eleve
+                Supprimer cet Élève
             </x-ui.button>
         </form>
     </x-ui.card>

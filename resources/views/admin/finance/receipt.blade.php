@@ -1,7 +1,7 @@
-@extends('layouts.receipt')
+﻿@extends('layouts.receipt')
 
-@section('title', 'Recu ' . ($receipt->receipt_number ?? ''))
-@section('heading', 'Recu de paiement')
+@section('title', 'Reçu ' . ($receipt->receipt_number ?? ''))
+@section('heading', 'Reçu de paiement')
 @section('receipt_variant', 'a4')
 
 @section('actions')

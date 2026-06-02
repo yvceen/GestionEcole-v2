@@ -1,11 +1,11 @@
-<section class="space-y-6">
+﻿<section class="space-y-6">
     <header>
         <h2 class="text-lg font-medium text-gray-900">
             Supprimer le compte
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            Une fois votre compte supprime, toutes ses donnees seront effacees definitivement. Verifiez d avoir conserve les informations importantes avant de continuer.
+            Une fois votre compte supprimé, toutes ses données seront effacees définitivement. Vérifiez d avoir conserve les informations importantes avant de continuer.
         </p>
     </header>
 

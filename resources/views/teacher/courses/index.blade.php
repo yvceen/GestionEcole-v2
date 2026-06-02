@@ -1,4 +1,4 @@
-{{-- resources/views/teacher/courses/index.blade.php --}}
+﻿{{-- resources/views/teacher/courses/index.blade.php --}}
 <x-teacher-layout title="Mes cours">
     <x-slot name="header">Mes cours</x-slot>
 
@@ -50,7 +50,7 @@
             <div class="rounded-[28px] border border-black/5 bg-white/70 backdrop-blur-xl p-5 shadow-[0_18px_45px_-35px_rgba(0,0,0,.45)]">
                 <div class="text-xs uppercase tracking-wider text-slate-500">Cours (cette page)</div>
                 <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $pageCount }}</div>
-                <div class="mt-1 text-xs text-slate-500">Resultats affiches</div>
+                <div class="mt-1 text-xs text-slate-500">Resultats affichés</div>
             </div>
 
             <div class="rounded-[28px] border border-black/5 bg-white/70 backdrop-blur-xl p-5 shadow-[0_18px_45px_-35px_rgba(0,0,0,.45)]">
@@ -87,13 +87,13 @@
                 </div>
 
                 <div class="md:col-span-3">
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Periode</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Période</label>
                     @php $p = request('period','all'); @endphp
                     <select name="period" class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5 text-sm">
                         <option value="all" @selected($p==='all')>Tout</option>
                         <option value="week" @selected($p==='week')>Cette semaine</option>
                         <option value="month" @selected($p==='month')>Ce mois</option>
-                        <option value="year" @selected($p==='year')>Cette annee</option>
+                        <option value="year" @selected($p==='year')>Cette année</option>
                     </select>
                 </div>
             </div>
@@ -141,7 +141,7 @@
                             </div>
 
                             <div class="mt-1 text-xs text-slate-500 truncate">
-                                {{ $className }} • {{ $levelName }}
+                                {{ $className }} â€¢ {{ $levelName }}
                             </div>
                         </div>
 

@@ -1,4 +1,4 @@
-@php
+﻿@php
     $routePrefix = $routePrefix ?? 'admin.messages';
     $layoutComponent = $layoutComponent ?? 'admin-layout';
     $canCompose = $canCompose ?? true;
@@ -76,7 +76,7 @@
 
                 <div class="mt-5 grid {{ $supportsFolders ? 'grid-cols-3' : 'grid-cols-1' }} gap-2 text-sm font-semibold">
                     <a href="{{ route($routePrefix . '.index') }}" class="rounded-2xl px-3 py-2 text-center transition {{ !$isSent ? 'bg-sky-600 text-white shadow-sm shadow-sky-200' : 'bg-slate-50 text-slate-600 hover:bg-slate-100' }}">
-                        {{ $supportsFolders ? 'Recus' : 'Discussions' }}
+                        {{ $supportsFolders ? 'Reçus' : 'Discussions' }}
                     </a>
                     @if($supportsFolders)
                         @if($canModerate && Route::has($routePrefix . '.pending'))
@@ -258,7 +258,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 13.5h5M7.5 9.5h9M21 11.5a8 8 0 0 1-8 8H7l-4 2 1.2-4A8 8 0 1 1 21 11.5Z"/>
                             </svg>
                         </div>
-                        <h2 class="mt-6 text-xl font-semibold tracking-tight text-slate-950">Aucune conversation selectionnee</h2>
+                        <h2 class="mt-6 text-xl font-semibold tracking-tight text-slate-950">Aucune conversation sélectionnée</h2>
                         <p class="mt-2 text-sm text-slate-500">Choisissez une discussion dans la liste pour afficher son apercu.</p>
                     </div>
                 </div>

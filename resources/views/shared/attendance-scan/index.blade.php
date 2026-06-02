@@ -1,6 +1,6 @@
-@php
+﻿@php
     $layout = $user->role === \App\Models\User::ROLE_TEACHER ? 'teacher-layout' : 'school-life-layout';
-    $scanTitle = 'Scan QR des presences';
+    $scanTitle = 'Scan QR des présences';
     $scanSubtitle = 'Scan mobile simple a l entree, avec retour immediat sur le statut present ou en retard.';
 @endphp
 
@@ -9,7 +9,7 @@
 <x-dynamic-component :component="$layout" :title="$scanTitle" :subtitle="$scanSubtitle">
     <x-ui.page-header
         title="Scan d entree"
-        subtitle="Les enseignants et la vie scolaire peuvent scanner un QR eleve. Un seul enregistrement est garde par jour."
+        subtitle="Les enseignants et la vie scolaire peuvent scanner un QR Élève. Un seul enregistrément est garde par jour."
     />
 
     <div
@@ -50,13 +50,13 @@
 
                 <div class="flex flex-wrap gap-3">
                     <x-ui.button type="button" variant="primary" x-on:click="startScanner()" x-bind:disabled="scanning || busy || isProcessing">
-                        <span x-text="scanning ? 'Camera active' : 'Activer la camera'"></span>
+                        <span x-text="scanning ? 'Camera active' : 'Activer la caméra'"></span>
                     </x-ui.button>
                     <x-ui.button type="button" variant="secondary" x-on:click="restartScanner()" x-bind:disabled="busy || isProcessing">
                         Redemarrer le scan
                     </x-ui.button>
                     <x-ui.button type="button" variant="secondary" x-on:click="stopScanner({ preserveLock: true })" x-bind:disabled="!scanning">
-                        Arreter
+                        Arrêter
                     </x-ui.button>
                 </div>
 
@@ -70,21 +70,21 @@
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
                     <p class="font-semibold text-slate-900">Mode one-shot</p>
                     <p class="mt-1 leading-6">
-                        Des qu un QR code est lu, le scan se fige, la camera s arrete et la validation part une seule fois.
+                        Des qu un QR code est lu, le scan se fige, la caméra s arrête et la validation part une seule fois.
                         Utilisez <span class="font-semibold">Redemarrer le scan</span> pour reprendre.
                     </p>
-                    <p class="mt-2 text-xs text-slate-500" x-show="cameraError" x-text="cameraError"></p>
+                    <p class="mt-2 text-xs text-slate-500" x-show="caméraError" x-text="caméraError"></p>
                 </div>
             </div>
         </x-ui.card>
 
         <div class="space-y-6">
-            <x-ui.card title="Dernier scan" subtitle="Nom de l eleve, statut et message de confirmation.">
+            <x-ui.card title="Dernier scan" subtitle="Nom de l Élève, statut et message de confirmation.">
                 <template x-if="result">
                     <div class="rounded-[24px] border px-5 py-5 shadow-sm transition" :class="resultCardClass()">
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold" :class="resultBadgeClass()" x-text="resultLabel()"></span>
-                            <span x-show="result.duplicate" class="app-badge app-badge-info">Deja pointe</span>
+                            <span x-show="result.duplicate" class="app-badge app-badge-info">Déjà pointe</span>
                         </div>
                         <p class="mt-4 text-lg font-semibold" x-text="result.student_name || 'Scan QR'"></p>
                         <p class="mt-2 text-sm leading-6 opacity-90" x-text="result.message"></p>
@@ -98,7 +98,7 @@
                 </template>
             </x-ui.card>
 
-            <x-ui.card title="Scans recents" subtitle="Derniers pointages de la journee.">
+            <x-ui.card title="Scans recents" subtitle="Derniers pointages de la journée.">
                 <div class="space-y-3">
                     @forelse($recentScans as $attendance)
                         <div class="rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
@@ -116,7 +116,7 @@
                             </div>
                         </div>
                     @empty
-                        <div class="student-empty">Aucun scan enregistre aujourd hui.</div>
+                        <div class="student-empty">Aucun scan enregistré aujourd hui.</div>
                     @endforelse
                 </div>
             </x-ui.card>

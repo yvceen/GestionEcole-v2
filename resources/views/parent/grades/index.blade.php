@@ -1,4 +1,4 @@
-<x-parent-layout title="Notes" subtitle="Consultez les evaluations et moyennes de vos enfants avec un filtre simple par dossier eleve.">
+﻿<x-parent-layout title="Notes" subtitle="Consultez les Évaluations et moyennes de vos enfants avec un filtre simple par dossier Élève.">
     <section class="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_320px]">
         <div class="space-y-4">
             <section class="portal-filter-bar">
@@ -27,9 +27,9 @@
                     <table class="min-w-full text-sm">
                         <thead class="border-b border-slate-200 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                             <tr>
-                                <th class="px-3 py-3">Eleve</th>
+                                <th class="px-3 py-3">Élève</th>
                                 <th class="px-3 py-3">Matiere</th>
-                                <th class="px-3 py-3">Evaluation</th>
+                                <th class="px-3 py-3">Évaluation</th>
                                 <th class="px-3 py-3">Enseignant</th>
                                 <th class="px-3 py-3">Score</th>
                                 <th class="px-3 py-3">Taux</th>
@@ -41,7 +41,7 @@
                                 <tr>
                                     <td class="px-3 py-4 font-semibold text-slate-950">{{ $grade->student?->full_name ?? '-' }}</td>
                                     <td class="px-3 py-4 text-slate-600">{{ $grade->subject?->name ?? '-' }}</td>
-                                    <td class="px-3 py-4 text-slate-600">{{ $grade->assessment?->title ?? 'Evaluation' }}</td>
+                                    <td class="px-3 py-4 text-slate-600">{{ $grade->assessment?->title ?? 'Évaluation' }}</td>
                                     <td class="px-3 py-4 text-slate-600">{{ $grade->teacher?->name ?? '-' }}</td>
                                     <td class="px-3 py-4 font-semibold text-slate-950">{{ number_format((float) $grade->score, 2) }} / {{ $grade->max_score ?? '-' }}</td>
                                     <td class="px-3 py-4"><span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">{{ number_format($percent, 2) }}%</span></td>
@@ -67,7 +67,7 @@
                             <div class="portal-record-card-head">
                                 <div class="min-w-0">
                                     <p class="portal-record-title">{{ $grade->student?->full_name ?? '-' }}</p>
-                                    <p class="portal-record-subtitle">{{ $grade->subject?->name ?? '-' }} | {{ $grade->assessment?->title ?? 'Evaluation' }}</p>
+                                    <p class="portal-record-subtitle">{{ $grade->subject?->name ?? '-' }} | {{ $grade->assessment?->title ?? 'Évaluation' }}</p>
                                 </div>
                                 <span class="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
                                     {{ number_format($percent, 2) }}%

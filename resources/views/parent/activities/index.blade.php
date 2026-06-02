@@ -1,14 +1,14 @@
-<x-parent-layout title="Activites scolaires" subtitle="Consultez les activites de vos enfants et confirmez rapidement leur participation.">
+﻿<x-parent-layout title="Activités scolaires" subtitle="Consultez les activités de vos enfants et confirmez rapidement leur participation.">
     <section class="grid gap-4 sm:grid-cols-3">
         <article class="student-kpi">
             <p class="student-kpi-label">Enfants concernes</p>
             <p class="student-kpi-value">{{ $children->count() }}</p>
-            <p class="student-kpi-copy">Associes aux activites scolaires.</p>
+            <p class="student-kpi-copy">Associes aux activités scolaires.</p>
         </article>
         <article class="student-kpi">
-            <p class="student-kpi-label">Activites</p>
+            <p class="student-kpi-label">Activités</p>
             <p class="student-kpi-value">{{ $activities->total() }}</p>
-            <p class="student-kpi-copy">Dans l ecole active.</p>
+            <p class="student-kpi-copy">Dans l'École active.</p>
         </article>
         <article class="student-kpi">
             <p class="student-kpi-label">Confirmations en attente</p>
@@ -19,7 +19,7 @@
         </article>
     </section>
 
-    <x-ui.card title="Activites de vos enfants" subtitle="Vous pouvez confirmer ou refuser la participation par enfant.">
+    <x-ui.card title="Activités de vos enfants" subtitle="Vous pouvez confirmer ou refuser la participation par enfant.">
         <div class="space-y-4">
             @forelse($activities as $activity)
                 <article class="rounded-3xl border border-slate-200 bg-white p-5">
@@ -104,7 +104,7 @@
                     @endif
                 </article>
             @empty
-                <div class="student-empty">Aucune activite associee a vos enfants pour le moment.</div>
+                <div class="student-empty">Aucune activité associee a vos enfants pour le moment.</div>
             @endforelse
         </div>
 

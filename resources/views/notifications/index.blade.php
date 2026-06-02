@@ -1,4 +1,4 @@
-@php
+﻿@php
     $role = $role ?? (string) auth()->user()?->role;
     $routePrefix = match ($role) {
         'school_life' => 'school-life',
@@ -23,7 +23,7 @@
             <div class="flex items-center justify-between gap-3">
                 <div>
                     <h2 class="text-lg font-semibold text-slate-900">Notifications</h2>
-                    <p class="text-sm text-slate-600">Retrouvez ici toutes vos mises a jour recentes.</p>
+                    <p class="text-sm text-slate-600">Retrouvez ici toutes vos mises a jour récentes.</p>
                 </div>
                 <div class="flex items-center gap-2">
                     @if(Route::has($routePrefix.'.notifications.read_all'))

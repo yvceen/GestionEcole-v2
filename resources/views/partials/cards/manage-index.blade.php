@@ -1,11 +1,11 @@
-@php
+﻿@php
     $isStudents = $scope === 'students';
 @endphp
 
-<x-ui.card title="Cartes scolaires" subtitle="Generez, consultez et imprimez des cartes propres a l ecole active, avec QR code non sensible.">
+<x-ui.card title="Cartes scolaires" subtitle="Générez, consultez et imprimez des cartes propres a l'École active, avec QR code non sensible.">
     <form method="GET" class="grid gap-3 lg:grid-cols-[180px_minmax(0,1fr)_auto]">
         <select name="scope" class="app-input">
-            <option value="students" @selected($isStudents)>Cartes eleves</option>
+            <option value="students" @selected($isStudents)>Cartes Élèves</option>
             <option value="parents" @selected(!$isStudents)>Cartes parents</option>
         </select>
 
@@ -13,7 +13,7 @@
             type="search"
             name="q"
             value="{{ $q }}"
-            placeholder="{{ $isStudents ? 'Rechercher un eleve, une classe ou un parent' : 'Rechercher un parent, email ou telephone' }}"
+            placeholder="{{ $isStudents ? 'Rechercher un Élève, une classe ou un parent' : 'Rechercher un parent, email ou téléphone' }}"
             class="app-input"
         >
 
@@ -22,15 +22,15 @@
 </x-ui.card>
 
 <x-ui.card
-    :title="$isStudents ? 'Cartes eleves' : 'Cartes parents'"
-    :subtitle="$isStudents ? 'Chaque carte contient un code securise et un QR utilisable pour le pointage.' : 'Les cartes parents restent consultables et imprimables sans exposer de donnees sensibles.'"
+    :title="$isStudents ? 'Cartes Élèves' : 'Cartes parents'"
+    :subtitle="$isStudents ? 'Chaque carte contient un code sécurisé et un QR utilisable pour le pointage.' : 'Les cartes parents restent consultables et imprimables sans exposer de données sensibles.'"
 >
     <div class="overflow-x-auto rounded-2xl border border-slate-200">
         <table class="app-table min-w-[880px]">
             <thead>
                 <tr>
-                    <th>{{ $isStudents ? 'Eleve' : 'Parent' }}</th>
-                    <th>{{ $isStudents ? 'Classe' : 'Coordonnees' }}</th>
+                    <th>{{ $isStudents ? 'Élève' : 'Parent' }}</th>
+                    <th>{{ $isStudents ? 'Classe' : 'Coordonnées' }}</th>
                     <th>{{ $isStudents ? 'Parent' : 'Enfants' }}</th>
                     <th>Code carte</th>
                     <th class="text-right">Actions</th>
@@ -57,7 +57,7 @@
                         <td class="max-w-[280px]">
                             @if($isStudents)
                                 <div>{{ $item->parentUser?->name ?? '-' }}</div>
-                                <div class="mt-1 text-xs text-slate-500">{{ $item->parentUser?->phone ?? 'Telephone non renseigne' }}</div>
+                                <div class="mt-1 text-xs text-slate-500">{{ $item->parentUser?->phone ?? 'Téléphone non renseigne' }}</div>
                             @else
                                 <div class="break-words">
                                     {{ $item->children->pluck('full_name')->implode(', ') ?: '-' }}

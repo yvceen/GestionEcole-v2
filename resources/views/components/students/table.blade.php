@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'students',
     'classrooms',
     'classroomId' => null,
@@ -65,7 +65,7 @@
 
     <x-ui.card padding="p-0" class="overflow-hidden">
         <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
-            <p class="text-sm font-semibold text-slate-800">Liste des eleves</p>
+            <p class="text-sm font-semibold text-slate-800">Liste des Élèves</p>
             <span class="app-badge app-badge-info">{{ $students->total() }} resultats</span>
         </div>
 
@@ -107,7 +107,7 @@
                                     @endif
 
                                     @if($student->feePlan?->insurance_paid)
-                                        <span class="app-badge app-badge-info">Assurance payee</span>
+                                        <span class="app-badge app-badge-info">Assurance payée</span>
                                     @endif
 
                                     @if(!($student->transportAssignment?->is_active) && !($student->feePlan?->insurance_paid))
@@ -133,7 +133,7 @@
                                             <x-ui.button type="submit" size="sm" variant="secondary">Reactiver</x-ui.button>
                                         </form>
                                     @else
-                                        <form method="POST" action="{{ route('admin.students.archive', $student) }}" onsubmit="return confirm('Archiver cet eleve ? Son historique sera conserve.')">
+                                        <form method="POST" action="{{ route('admin.students.archive', $student) }}" onsubmit="return confirm('Archiver cet Élève ? Son historique sera conserve.')">
                                             @csrf
                                             <x-ui.button type="submit" size="sm" variant="ghost">Archiver</x-ui.button>
                                         </form>
@@ -152,8 +152,8 @@
                         <tr>
                             <td colspan="5" class="px-6 py-14 text-center">
                                 <div class="mx-auto max-w-sm">
-                                    <p class="text-base font-semibold text-slate-800">Aucun eleve trouve</p>
-                                    <p class="mt-1 text-sm text-slate-500">Ajustez la recherche ou ajoutez un nouvel eleve.</p>
+                                    <p class="text-base font-semibold text-slate-800">Aucun Élève trouve</p>
+                                    <p class="mt-1 text-sm text-slate-500">Ajustez la recherche ou ajoutez un nouvel Élève.</p>
                                 </div>
                             </td>
                         </tr>
@@ -171,9 +171,9 @@
         <div @click.outside="deleteAction = ''" class="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl">
             <h3 class="text-lg font-semibold text-slate-900">Confirmer la suppression</h3>
             <p class="mt-2 text-sm text-slate-600">
-                Vous allez supprimer l'eleve
+                Vous allez supprimer l'Élève
                 <span class="font-semibold text-slate-900" x-text="deleteName"></span>.
-                Cette action est irreversible et sera bloquee si l'eleve possede deja des notes, presences, paiements, transport ou un compte eleve.
+                Cette action est irreversible et sera bloquee si l'Élève possede déjà des notes, présences, paiements, transport ou un compte Élève.
             </p>
             <div class="mt-6 flex justify-end gap-2">
                 <button

@@ -1,4 +1,4 @@
-@php
+﻿@php
     $user = $user ?? null;
     $linkedStudent = $linkedStudent ?? null;
     $selectedRole = old('role', $user?->role ?? \App\Models\User::ROLE_PARENT);
@@ -31,7 +31,7 @@
                 <input name="email" type="email" value="{{ old('email', $user?->email) }}" class="app-input" required>
             </div>
             <div>
-                <label class="mb-1 block text-sm font-semibold">Telephone</label>
+                <label class="mb-1 block text-sm font-semibold">Téléphone</label>
                 <input name="phone" value="{{ old('phone', $user?->phone) }}" class="app-input" placeholder="06...">
             </div>
             <div>
@@ -49,8 +49,8 @@
 
         <div id="student-fields" class="{{ $selectedRole === \App\Models\User::ROLE_STUDENT ? '' : 'hidden' }} space-y-5 rounded-2xl border border-sky-100 bg-sky-50/70 p-4">
             <div>
-                <p class="text-sm font-semibold text-slate-900">Dossier eleve</p>
-                <p class="mt-1 text-xs text-slate-600">Ces informations lient le compte a un dossier eleve.</p>
+                <p class="text-sm font-semibold text-slate-900">Dossier Élève</p>
+                <p class="mt-1 text-xs text-slate-600">Ces informations lient le compte a un dossier Élève.</p>
             </div>
 
             <div class="grid gap-5 md:grid-cols-2">
@@ -66,9 +66,9 @@
                     </select>
                 </div>
                 <div>
-                    <label class="mb-1 block text-sm font-semibold">Parent lie</label>
+                    <label class="mb-1 block text-sm font-semibold">Parent lié</label>
                     <select name="parent_user_id" class="app-input">
-                        <option value="">Aucun parent lie</option>
+                        <option value="">Aucun parent lié</option>
                         @foreach($parents as $parent)
                             <option value="{{ $parent->id }}" @selected((string) old('parent_user_id', $linkedStudent?->parent_user_id) === (string) $parent->id)>
                                 {{ $parent->name }} - {{ $parent->phone ?: $parent->email }}

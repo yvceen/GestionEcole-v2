@@ -1,4 +1,4 @@
-@php
+﻿@php
     $routePrefix = $routePrefix ?? 'admin.news';
     $layoutComponent = $layoutComponent ?? 'admin-layout';
     $canManage = $canManage ?? true;
@@ -7,7 +7,7 @@
 <x-dynamic-component :component="$layoutComponent" title="Actualites">
     <x-ui.page-header
         title="Actualites"
-        subtitle="Pilotez les publications de l etablissement avec une vue plus lisible sur le contenu, la cible et la date de diffusion."
+        subtitle="Pilotez les publications de l'Établissement avec une vue plus lisible sur le contenu, la cible et la date de diffusion."
     >
         <x-slot name="actions">
             @if($canManage)
@@ -20,7 +20,7 @@
         <article class="app-stat-card">
             <p class="app-stat-label">Total</p>
             <p class="app-stat-value">{{ $stats['total'] ?? 0 }}</p>
-            <p class="app-stat-meta">Publications de l ecole active.</p>
+            <p class="app-stat-meta">Publications de l'École active.</p>
         </article>
         <article class="app-stat-card">
             <p class="app-stat-label">Publiees</p>
@@ -30,7 +30,7 @@
         <article class="app-stat-card">
             <p class="app-stat-label">Brouillons</p>
             <p class="app-stat-value text-amber-700">{{ $stats['draft'] ?? 0 }}</p>
-            <p class="app-stat-meta">Encore en preparation.</p>
+            <p class="app-stat-meta">Encore en préparation.</p>
         </article>
         <article class="app-stat-card">
             <p class="app-stat-label">Mises en avant</p>
@@ -53,7 +53,7 @@
 
             <select name="scope" class="app-input">
                 <option value="all" @selected(($scope ?? 'all') === 'all')>Toutes les audiences</option>
-                <option value="school" @selected(($scope ?? '') === 'school')>Toute l ecole</option>
+                <option value="school" @selected(($scope ?? '') === 'school')>Toute l'École</option>
                 <option value="classroom" @selected(($scope ?? '') === 'classroom')>Classe</option>
             </select>
 
@@ -73,7 +73,7 @@
                     default => 'warning',
                 };
             @endphp
-            <x-ui.card :title="$item->title" :subtitle="optional($item->date)->format('d/m/Y') ?: 'Date non definie'">
+            <x-ui.card :title="$item->title" :subtitle="optional($item->date)->format('d/m/Y') ?: 'Date non définie'">
                 <div class="flex flex-col gap-4">
                     @if($item->cover_url)
                         <img src="{{ $item->cover_url }}" alt="Couverture actualite" class="h-48 w-full rounded-2xl object-cover">
@@ -82,7 +82,7 @@
                     <div class="flex flex-wrap items-center gap-2">
                         <x-ui.badge :variant="$variant">{{ ucfirst($item->status ?? 'draft') }}</x-ui.badge>
                         <x-ui.badge :variant="($item->scope ?? 'school') === 'school' ? 'info' : 'warning'">
-                            {{ ($item->scope ?? 'school') === 'school' ? 'Toute l ecole' : ($item->classroom?->name ?? 'Classe') }}
+                            {{ ($item->scope ?? 'school') === 'school' ? 'Toute l'École' : ($item->classroom?->name ?? 'Classe') }}
                         </x-ui.badge>
                         @if($item->is_pinned)
                             <x-ui.badge variant="info">Epinglee</x-ui.badge>

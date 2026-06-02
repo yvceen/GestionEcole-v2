@@ -1,4 +1,4 @@
-<x-parent-layout title="Cours" subtitle="Retrouvez les cours publies pour les classes de vos enfants avec un acces direct aux pieces jointes.">
+<x-parent-layout title="Cours" subtitle="Retrouvez les cours publies pour les classes de vos enfants avec un accès direct aux pieces jointes.">
     <section class="student-panel">
         <form method="GET" data-loading-label="Recherche des cours..." class="grid gap-3 lg:grid-cols-[minmax(0,1fr)_260px_180px]">
             <input
@@ -21,7 +21,7 @@
 
     <section class="mt-6 space-y-4">
         @if($courses instanceof \Illuminate\Support\Collection)
-            <div class="student-empty">Aucun cours disponible car aucun enfant n est rattache a une classe exploitable.</div>
+            <div class="student-empty">Aucun cours disponible car aucun enfant n est rattaché a une classe exploitable.</div>
         @elseif($courses->isEmpty())
             <div class="student-empty">Aucun cours publie ne correspond a votre filtre actuel.</div>
         @else

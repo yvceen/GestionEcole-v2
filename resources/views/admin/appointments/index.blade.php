@@ -1,4 +1,4 @@
-@php
+﻿@php
     $layoutComponent = $layoutComponent ?? 'admin-layout';
     $routePrefix = $routePrefix ?? 'admin.appointments';
     $canCreate = $canCreate ?? true;
@@ -43,7 +43,7 @@
         <div class="app-stat-card">
             <p class="app-stat-label">Cette semaine</p>
             <p class="app-stat-value">{{ $stats['this_week'] ?? 0 }}</p>
-            <p class="app-stat-meta">Volume recu recemment.</p>
+            <p class="app-stat-meta">Volume reçu recemment.</p>
         </div>
     </section>
 
@@ -52,7 +52,7 @@
             <div class="app-field">
                 <label for="appointments-q" class="app-label">Recherche</label>
                 <input id="appointments-q" name="q" value="{{ $q ?? '' }}"
-                       placeholder="Parent, enfant, telephone, titre..."
+                       placeholder="Parent, enfant, téléphone, titre..."
                        class="app-input">
             </div>
 
@@ -104,7 +104,7 @@
                             <tr>
                                 <td>
                                     <p class="font-semibold text-slate-900">{{ optional($item->parentUser)->name ?? $item->parent_name ?? 'Parent inconnu' }}</p>
-                                    <p class="mt-1 text-xs text-slate-500">{{ $item->parent_phone ?: 'Telephone non renseigne' }}</p>
+                                    <p class="mt-1 text-xs text-slate-500">{{ $item->parent_phone ?: 'Téléphone non renseigne' }}</p>
                                 </td>
                                 <td>
                                     <p class="font-semibold text-slate-900">{{ $item->title }}</p>

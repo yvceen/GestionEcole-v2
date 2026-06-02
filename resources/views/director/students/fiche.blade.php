@@ -1,4 +1,4 @@
-﻿<x-director-layout title="Fiche eleve">
+﻿<x-director-layout title="Fiche Élève">
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-semibold text-slate-900">{{ $student->full_name }}</h1>

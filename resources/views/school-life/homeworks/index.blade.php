@@ -1,4 +1,4 @@
-<x-school-life-layout title="Gestion des devoirs" subtitle="Consultez, validez et corrigez les devoirs visibles pour la vie scolaire.">
+﻿<x-school-life-layout title="Gestion des devoirs" subtitle="Consultez, validez et corrigez les devoirs visibles pour la vie scolaire.">
     @php
         $routePrefix = $routePrefix ?? 'school-life.homeworks';
         $summaryCards = [
@@ -111,7 +111,7 @@
         <div class="flex flex-col gap-4 border-b border-slate-200/80 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h3 class="text-base font-semibold text-slate-950">Devoirs a suivre</h3>
-                <p class="mt-1 text-sm text-slate-500">Acces vie scolaire pour relire, approuver, corriger ou retirer un devoir.</p>
+                <p class="mt-1 text-sm text-slate-500">Accès vie scolaire pour relire, approuver, corriger ou retirer un devoir.</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
@@ -132,7 +132,7 @@
                         <th class="min-w-[165px]">Echeance</th>
                         <th class="min-w-[120px]">Pieces jointes</th>
                         <th class="min-w-[120px]">Statut</th>
-                        <th class="min-w-[165px]">Cree le</th>
+                        <th class="min-w-[165px]">Créé le</th>
                         <th class="min-w-[260px] text-right">Actions</th>
                     </tr>
                 </thead>

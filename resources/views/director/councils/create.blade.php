@@ -1,10 +1,10 @@
-<x-director-layout title="Nouvelle decision - Conseil de classe">
+﻿<x-director-layout title="Nouvelle decision - Conseil de classe">
     <div class="flex items-center justify-between gap-3">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Nouvelle decision</h1>
             <p class="mt-1 text-sm text-slate-500">Ajoutez une decision de conseil de classe.</p>
         </div>
-        <a href="{{ route('director.councils.index') }}" class="text-sm font-semibold text-slate-700 hover:underline">← Retour</a>
+        <a href="{{ route('director.councils.index') }}" class="text-sm font-semibold text-slate-700 hover:underline">â† Retour</a>
     </div>
 
     @if($errors->any())
@@ -40,7 +40,7 @@
         </div>
 
         <div>
-            <label class="block text-sm font-semibold mb-1">Periode</label>
+            <label class="block text-sm font-semibold mb-1">Période</label>
             <input name="period" value="{{ old('period') }}"
                    class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5"
                    placeholder="Ex: 1er trimestre 2025/2026" required />

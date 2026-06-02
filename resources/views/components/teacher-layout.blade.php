@@ -1,6 +1,6 @@
-@props([
+﻿@props([
     'title' => 'Espace Enseignant',
-    'subtitle' => 'Retrouvez vos outils pedagogiques, vos suivis et vos actions rapides dans un espace aligne sur le portail parent.',
+    'subtitle' => 'Retrouvez vos outils pédagogiques, vos suivis et vos actions rapides dans un espace aligne sur le portail parent.',
 ])
 
 @php
@@ -16,13 +16,13 @@
         $nav[] = ['label' => 'Notes', 'route' => 'teacher.grades.index', 'icon' => 'chart'];
     }
     if (Route::has('teacher.attendance.index')) {
-        $nav[] = ['label' => 'Presences', 'route' => 'teacher.attendance.index', 'icon' => 'shield'];
+        $nav[] = ['label' => 'Présences', 'route' => 'teacher.attendance.index', 'icon' => 'shield'];
     }
     if (Route::has('attendance.scan.page')) {
         $nav[] = ['label' => 'Scan QR', 'route' => 'attendance.scan.page', 'icon' => 'shield', 'active_routes' => ['attendance.scan.page']];
     }
     if (Route::has('teacher.assessments.index')) {
-        $nav[] = ['label' => 'Evaluations', 'route' => 'teacher.assessments.index', 'icon' => 'calendar'];
+        $nav[] = ['label' => 'Évaluations', 'route' => 'teacher.assessments.index', 'icon' => 'calendar'];
     }
     if (Route::has('teacher.messages.index')) {
         $nav[] = ['label' => 'Messagerie', 'route' => 'teacher.messages.index', 'icon' => 'message'];
@@ -80,12 +80,12 @@
                 :subtitle="$subtitle"
                 :badges="[
                     auth()->user()?->name ?? 'Enseignant',
-                    $currentSchool?->name ?? 'Ecole active',
-                    $activeNav['label'] ?? 'Suivi pedagogique',
+                    $currentSchool?->name ?? 'École active',
+                    $activeNav['label'] ?? 'Suivi pédagogique',
                 ]"
                 summary-title="Organisation"
                 :summary-value="$activeNav['label'] ?? 'Espace enseignant'"
-                summary-copy="Cours, devoirs, evaluations et suivi des classes restent alignes avec le meme niveau de lisibilite que le portail parent."
+                summary-copy="Cours, devoirs, Évaluations et suivi des classes restent alignes avec le même niveau de lisibilite que le portail parent."
                 :nav="$nav"
             />
 

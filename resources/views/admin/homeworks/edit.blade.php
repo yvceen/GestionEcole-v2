@@ -1,4 +1,4 @@
-@php
+﻿@php
     $routePrefix = $routePrefix ?? 'admin.homeworks';
     $layoutComponent = $layoutComponent ?? 'admin-layout';
 @endphp
@@ -10,7 +10,7 @@
         subtitle="Mettez a jour le contenu, la classe cible ou l echeance sans casser le suivi de publication."
     />
 
-    <x-ui.card title="Edition du devoir" subtitle="Les modifications sont appliquees au devoir deja publie ou en attente.">
+    <x-ui.card title="Edition du devoir" subtitle="Les modifications sont appliquees au devoir déjà publie ou en attente.">
         <form method="POST" action="{{ route($routePrefix . '.update', $homework) }}" class="space-y-5">
             @csrf
             @method('PUT')

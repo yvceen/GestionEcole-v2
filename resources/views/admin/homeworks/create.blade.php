@@ -1,4 +1,4 @@
-@php
+﻿@php
     $routePrefix = $routePrefix ?? 'admin.homeworks';
     $layoutComponent = $layoutComponent ?? 'admin-layout';
 @endphp
@@ -10,7 +10,7 @@
         subtitle="Ajoutez un devoir avec une presentation simple, lisible et alignee avec le reste de l interface."
     />
 
-    <x-ui.card title="Informations du devoir" subtitle="Selectionnez la classe, puis renseignez le contenu et l echeance.">
+    <x-ui.card title="Informations du devoir" subtitle="Sélectionnez la classe, puis renseignez le contenu et l echeance.">
         <form method="POST" action="{{ route($routePrefix . '.store') }}" class="space-y-5">
             @csrf
 

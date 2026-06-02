@@ -1,8 +1,8 @@
-<x-admin-layout title="Frais parent">
+﻿<x-admin-layout title="Frais parent">
     <div class="flex items-start justify-between gap-4">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Frais - {{ $parent->name }}</h1>
-            <p class="mt-1 text-sm text-slate-500">Renseignez les montants mensuels et annuels par eleve sans quitter ce module.</p>
+            <p class="mt-1 text-sm text-slate-500">Renseignez les montants mensuels et annuels par Élève sans quitter ce module.</p>
         </div>
 
         <a href="{{ route('admin.parents.index') }}"
@@ -31,21 +31,21 @@
 
         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div class="border-b border-slate-200 p-4">
-                <div class="text-sm font-semibold text-slate-900">Eleves</div>
-                <div class="text-xs text-slate-500">Renseignez les montants puis enregistrez.</div>
+                <div class="text-sm font-semibold text-slate-900">Élèves</div>
+                <div class="text-xs text-slate-500">Renseignez les montants puis enregistréz.</div>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm">
                     <thead class="bg-slate-50">
                         <tr class="text-left">
-                            <th class="p-4">Eleve</th>
+                            <th class="p-4">Élève</th>
                             <th class="p-4">Classe</th>
                             <th class="p-4">Scolarite /mois</th>
                             <th class="p-4">Transport /mois</th>
                             <th class="p-4">Cantine /mois</th>
                             <th class="p-4">Assurance /an</th>
-                            <th class="p-4">Debut (mois)</th>
+                            <th class="p-4">Début (mois)</th>
                             <th class="p-4">Note</th>
                         </tr>
                     </thead>
@@ -112,7 +112,7 @@
 
                         @if($students->count() === 0)
                             <tr>
-                                <td colspan="8" class="p-8 text-center text-slate-500">Aucun eleve lie a ce parent.</td>
+                                <td colspan="8" class="p-8 text-center text-slate-500">Aucun Élève lié a ce parent.</td>
                             </tr>
                         @endif
                     </tbody>

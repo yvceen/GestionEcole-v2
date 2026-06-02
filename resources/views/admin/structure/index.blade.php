@@ -20,10 +20,10 @@
         <div class="app-card px-6 py-6 md:px-7">
             <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                 <div class="max-w-2xl">
-                    <p class="app-overline">Organisation pedagogique</p>
+                    <p class="app-overline">Organisation pédagogique</p>
                     <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Niveaux, classes et effectifs</h2>
                     <p class="mt-3 text-sm leading-6 text-slate-500">
-                        Centralisez la structure scolaire, creez rapidement vos niveaux et classes, puis ouvrez chaque classe pour consulter ses eleves.
+                        Centralisez la structure scolaire, creez rapidement vos niveaux et classes, puis ouvrez chaque classe pour consulter ses Élèves.
                     </p>
                 </div>
 
@@ -36,17 +36,17 @@
                 <div class="app-stat-card">
                     <div class="app-stat-label">Niveaux</div>
                     <div class="app-stat-value">{{ $totalLevels }}</div>
-                    <div class="app-stat-meta">Cycles ou groupes pedagogiques configures.</div>
+                    <div class="app-stat-meta">Cycles ou groupes pédagogiques configurés.</div>
                 </div>
                 <div class="app-stat-card">
                     <div class="app-stat-label">Classes</div>
                     <div class="app-stat-value">{{ $totalClasses }}</div>
-                    <div class="app-stat-meta">Classes actives rattachees aux niveaux.</div>
+                    <div class="app-stat-meta">Classes actives rattachées aux niveaux.</div>
                 </div>
                 <div class="app-stat-card">
-                    <div class="app-stat-label">Eleves</div>
+                    <div class="app-stat-label">Élèves</div>
                     <div class="app-stat-value">{{ $totalStudents }}</div>
-                    <div class="app-stat-meta">Total d'eleves comptabilises dans la structure.</div>
+                    <div class="app-stat-meta">Total d'Élèves comptabilises dans la structure.</div>
                 </div>
             </div>
         </div>
@@ -76,7 +76,7 @@
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
                     <div class="text-sm font-semibold text-slate-900">Bon a savoir</div>
                     <p class="mt-2 text-sm leading-6 text-slate-500">
-                        Pour "CP B", le slug devient automatiquement "CP-B". L'ordre des classes est genere automatiquement a la creation.
+                        Pour "CP B", le slug devient automatiquement "CP-B". L'ordre des classes est généré automatiquement a la création.
                     </p>
                 </div>
             </div>
@@ -86,9 +86,9 @@
     <section id="forms" class="grid gap-6 xl:grid-cols-2">
         <div class="app-card px-6 py-6 md:px-7">
             <div class="border-b border-slate-200 pb-5">
-                <p class="app-overline">Creation</p>
+                <p class="app-overline">Création</p>
                 <h2 class="mt-2 text-lg font-semibold text-slate-900">Ajouter un niveau</h2>
-                <p class="mt-2 text-sm leading-6 text-slate-500">Creez un niveau avec un code court et un nom lisible pour l'equipe pedagogique.</p>
+                <p class="mt-2 text-sm leading-6 text-slate-500">Creez un niveau avec un code court et un nom lisible pour l'equipe pédagogique.</p>
             </div>
 
             <form method="POST" action="{{ route('admin.structure.levels.store') }}" class="mt-6 space-y-5">
@@ -104,7 +104,7 @@
                     <div class="app-field">
                         <label class="app-label">Nom</label>
                         <input name="name" value="{{ old('name') }}" required class="app-input" placeholder="Primaire">
-                        <p class="app-hint">Nom affiche dans la structure et les formulaires.</p>
+                        <p class="app-hint">Nom affiché dans la structure et les formulaires.</p>
                     </div>
                 </div>
 
@@ -116,7 +116,7 @@
 
         <div class="app-card px-6 py-6 md:px-7">
             <div class="border-b border-slate-200 pb-5">
-                <p class="app-overline">Creation</p>
+                <p class="app-overline">Création</p>
                 <h2 class="mt-2 text-lg font-semibold text-slate-900">Ajouter une classe</h2>
                 <p class="mt-2 text-sm leading-6 text-slate-500">Associez une classe a un niveau existant et definissez, si besoin, une section personnalisee.</p>
             </div>
@@ -137,13 +137,13 @@
                     @if($levels->count() === 0)
                         <p class="app-error">Aucun niveau disponible. Ajoutez d'abord un niveau.</p>
                     @else
-                        <p class="app-hint">Selectionnez d'abord le niveau auquel rattacher la classe.</p>
+                        <p class="app-hint">Sélectionnez d'abord le niveau auquel rattachér la classe.</p>
                     @endif
                 </div>
 
                 <div class="grid gap-5 md:grid-cols-2">
                     <div class="app-field">
-                        <label class="app-label">Nom affiche</label>
+                        <label class="app-label">Nom affiché</label>
                         <input name="name" value="{{ old('name') }}" required placeholder="CP A" class="app-input">
                         <p class="app-hint">Ex. : CP A, CE1 B, 6e A.</p>
                     </div>
@@ -179,7 +179,7 @@
                     </div>
 
                     <p class="mt-4 max-w-3xl text-sm leading-6 text-slate-500">
-                        Parcourez la structure de l'etablissement niveau par niveau, consultez les classes associees et accedez rapidement aux actions de modification ou de suppression.
+                        Parcourez la structure de l'Établissement niveau par niveau, consultez les classes associées et accedez rapidement aux actions de modification ou de suppression.
                     </p>
 
                     <div class="mt-5 flex flex-wrap gap-2">
@@ -210,7 +210,7 @@
         @if($levels->count() === 0)
             <x-ui.empty-state
                 title="Aucun niveau pour le moment"
-                description="Commencez par creer un niveau puis ajoutez vos classes pour structurer l'etablissement."
+                description="Commencez par creer un niveau puis ajoutez vos classes pour structurer l'Établissement."
             />
         @else
             <div id="levelsWrap" class="space-y-4">
@@ -230,7 +230,7 @@
 
                                     <div class="mt-3 flex flex-wrap gap-2">
                                         <x-ui.badge variant="info">{{ $lvl->classrooms->count() }} classe(s)</x-ui.badge>
-                                        <x-ui.badge variant="info">{{ $lvlStudents }} eleve(s)</x-ui.badge>
+                                        <x-ui.badge variant="info">{{ $lvlStudents }} Élève(s)</x-ui.badge>
                                         <x-ui.badge variant="warning">Ordre : {{ $lvl->sort_order ?? '-' }}</x-ui.badge>
                                     </div>
                                 </div>
@@ -277,7 +277,7 @@
                             @if($lvl->classrooms->count() === 0)
                                 <x-ui.empty-state
                                     title="Aucune classe dans ce niveau"
-                                    description="Ajoutez une premiere classe pour commencer a affecter des eleves."
+                                    description="Ajoutez une premiere classe pour commencer a affecter des Élèves."
                                 />
                             @else
                                 <div class="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
@@ -296,7 +296,7 @@
                                                         @endif
                                                     </h4>
                                                     <div class="mt-3 flex flex-wrap gap-2">
-                                                        <x-ui.badge variant="info">{{ $c->students_count }} eleve(s)</x-ui.badge>
+                                                        <x-ui.badge variant="info">{{ $c->students_count }} Élève(s)</x-ui.badge>
                                                         <x-ui.badge variant="warning">Ordre : {{ $c->sort_order ?? '-' }}</x-ui.badge>
                                                     </div>
                                                 </div>

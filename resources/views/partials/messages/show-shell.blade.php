@@ -1,9 +1,9 @@
-@php
+﻿@php
     $routePrefix = $routePrefix ?? 'admin.messages';
     $layoutComponent = $layoutComponent ?? 'admin-layout';
     $canModerate = $canModerate ?? false;
     $canCompose = $canCompose ?? true;
-    $replyHelpText = $replyHelpText ?? "La reponse est ajoutee a cette conversation.";
+    $replyHelpText = $replyHelpText ?? "La réponse est ajoutee a cette conversation.";
 
     $status = (string) ($message->status ?? 'approved');
     $statusVariant = match($status) {
@@ -101,7 +101,7 @@
                         'replyRecipient' => $replyRecipient,
                         'replyToId' => $message->id,
                         'replySubject' => $message->subjectText(),
-                        'replyLabel' => 'Envoyer la reponse',
+                        'replyLabel' => 'Envoyer la réponse',
                     ])
                 </div>
             </section>

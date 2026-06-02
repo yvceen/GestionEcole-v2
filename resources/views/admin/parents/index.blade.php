@@ -1,15 +1,15 @@
-<x-admin-layout title="Parents">
+﻿<x-admin-layout title="Parents">
     <div class="flex items-start justify-between gap-4">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Parents</h1>
-            <p class="mt-1 text-sm text-slate-500">Gerez les frais des familles et accedez rapidement aux plans par eleve.</p>
+            <p class="mt-1 text-sm text-slate-500">Gerez les frais des familles et accedez rapidement aux plans par Élève.</p>
         </div>
 
         <form method="GET" class="flex items-center gap-2">
             <input type="text"
                    name="q"
                    value="{{ $q }}"
-                   placeholder="Rechercher par nom, email ou telephone..."
+                   placeholder="Rechercher par nom, email ou téléphone..."
                    class="w-64 rounded-2xl border-slate-200 bg-white/70 px-3 py-2 text-sm focus:border-slate-900 focus:ring-slate-900" />
             <button class="rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-black transition">
                 Rechercher

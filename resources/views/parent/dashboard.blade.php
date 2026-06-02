@@ -1,6 +1,6 @@
-<x-parent-layout
+﻿<x-parent-layout
     title="Tableau de bord"
-    subtitle="Visualisez rapidement les enfants relies a votre compte, leurs prochaines echeances et les indicateurs importants de la semaine."
+    subtitle="Visualisez rapidement les enfants reliés a votre compte, leurs prochaines echeances et les indicateurs importants de la semaine."
 >
     <section class="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_340px]">
         <div class="space-y-4">
@@ -10,7 +10,7 @@
                         <p class="student-eyebrow">Profil parent</p>
                         <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{{ auth()->user()?->name }}</h2>
                         <p class="mt-2 text-sm text-slate-600">
-                            {{ $children->count() }} enfant(s) rattache(s) a votre compte
+                            {{ $children->count() }} enfant(s) rattaché(s) a votre compte
                             @if($children->isNotEmpty())
                                 <span class="mx-2 text-slate-300">|</span>
                                 {{ $children->pluck('classroom.name')->filter()->unique()->implode(', ') }}
@@ -52,7 +52,7 @@
                 </article>
 
                 <article class="student-kpi">
-                    <p class="student-kpi-label">Alertes presence</p>
+                    <p class="student-kpi-label">Alertes présence</p>
                     <p class="student-kpi-value">{{ (int) ($attendanceNotificationCount ?? 0) }}</p>
                     <p class="student-kpi-copy">Notifications non lues sur absences et retards.</p>
                 </article>
@@ -130,9 +130,9 @@
                 <div class="flex items-center justify-between gap-3">
                     <div>
                         <p class="student-panel-title">Absences et retards recents</p>
-                        <p class="student-panel-copy">Dernieres alertes de presence pour vos enfants.</p>
+                        <p class="student-panel-copy">Dernières alertes de présence pour vos enfants.</p>
                     </div>
-                    <a href="{{ route('parent.attendance.index') }}" data-loading-label="Ouverture des presences..." class="text-sm font-semibold text-sky-700 hover:text-sky-800">
+                    <a href="{{ route('parent.attendance.index') }}" data-loading-label="Ouverture des présences..." class="text-sm font-semibold text-sky-700 hover:text-sky-800">
                         Voir tout le suivi
                     </a>
                 </div>
@@ -167,7 +167,7 @@
                         </div>
                     @empty
                         <div class="student-empty">
-                            Aucune absence ni retard recent a signaler.
+                            Aucune absence ni retard récent a signaler.
                         </div>
                     @endforelse
                 </div>
@@ -177,7 +177,7 @@
                 <div class="flex items-center justify-between gap-3">
                     <div>
                         <p class="student-panel-title">Actualites de l agenda</p>
-                        <p class="student-panel-copy">Nouveaux evenements et mises a jour importantes de l ecole.</p>
+                        <p class="student-panel-copy">Nouveaux Événements et mises a jour importantes de l'École.</p>
                     </div>
                     @if(Route::has('parent.events.index'))
                         <a href="{{ route('parent.events.index') }}" data-loading-label="Ouverture de l'agenda..." class="text-sm font-semibold text-sky-700 hover:text-sky-800">
@@ -192,7 +192,7 @@
                             <p class="mt-1 text-xs text-slate-500">
                                 {{ $announcement->date?->format('d/m/Y') ?? '-' }}
                                 <span class="mx-2 text-slate-300">|</span>
-                                {{ $announcement->scope === 'classroom' ? 'Classe ciblee' : 'Toute l ecole' }}
+                                {{ $announcement->scope === 'classroom' ? 'Classe ciblée' : 'Toute l'École' }}
                             </p>
                         </div>
                     @empty
@@ -206,7 +206,7 @@
             <article class="student-panel">
                 <div class="flex items-start justify-between gap-3">
                     <div>
-                        <p class="student-panel-title">Acces rapides</p>
+                        <p class="student-panel-title">Accès rapides</p>
                         <p class="student-panel-copy">Les actions les plus utiles pour votre suivi quotidien.</p>
                     </div>
                     <span class="portal-chip">1 a 2 clics max</span>
@@ -218,8 +218,8 @@
                     <a href="{{ route('parent.grades.index') }}" data-loading-label="Ouverture des notes..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">
                         Consulter les notes
                     </a>
-                    <a href="{{ route('parent.attendance.index') }}" data-loading-label="Ouverture des presences..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">
-                        Suivre les presences
+                    <a href="{{ route('parent.attendance.index') }}" data-loading-label="Ouverture des présences..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">
+                        Suivre les présences
                     </a>
                     @if(Route::has('parent.pickup-requests.index'))
                         <a href="{{ route('parent.pickup-requests.index') }}" data-loading-label="Ouverture des demandes..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">
@@ -234,12 +234,12 @@
 
             <article class="student-panel">
                 <div>
-                    <p class="student-panel-title">Derniers recus</p>
-                    <p class="student-panel-copy">Acces direct aux paiements et justificatifs les plus recents.</p>
+                    <p class="student-panel-title">Derniers reçus</p>
+                    <p class="student-panel-copy">Accès direct aux paiements et justificatifs les plus recents.</p>
                 </div>
                 <div class="mt-4 space-y-3">
                     @forelse($receipts as $receipt)
-                        <a href="{{ route('parent.finance.receipts.show', $receipt) }}" data-loading-label="Ouverture du recu..." class="block rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white">
+                        <a href="{{ route('parent.finance.receipts.show', $receipt) }}" data-loading-label="Ouverture du reçu..." class="block rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white">
                             <div class="flex items-center justify-between gap-3">
                                 <div>
                                     <p class="font-semibold text-slate-950">{{ $receipt->receipt_number }}</p>
@@ -250,7 +250,7 @@
                         </a>
                     @empty
                         <div class="student-empty px-4 py-6">
-                            Aucun recu disponible pour le moment.
+                            Aucun reçu disponible pour le moment.
                         </div>
                     @endforelse
                 </div>

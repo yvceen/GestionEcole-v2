@@ -1,8 +1,8 @@
-<x-parent-layout title="Mes enfants" subtitle="Accedez rapidement au dossier scolaire, aux presences, au planning et au suivi financier de chaque enfant.">
+﻿<x-parent-layout title="Mes enfants" subtitle="Accédez rapidement au dossier scolaire, aux présences, au planning et au suivi financier de chaque enfant.">
     <section class="space-y-4">
         @if($children->isEmpty())
             <div class="student-empty">
-                Aucun eleve lie a ce compte parent.
+                Aucun Élève lié a ce compte parent.
             </div>
         @else
             <div class="grid gap-4 lg:grid-cols-2">
@@ -50,13 +50,13 @@
                             <a href="{{ route('parent.children.courses', $child) }}" data-loading-label="Ouverture des cours..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Cours</a>
                             <a href="{{ route('parent.children.homeworks', $child) }}" data-loading-label="Ouverture des devoirs..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Devoirs</a>
                             <a href="{{ route('parent.children.grades', $child) }}" data-loading-label="Ouverture des notes..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Notes</a>
-                            <a href="{{ route('parent.children.attendance', $child) }}" data-loading-label="Ouverture des presences..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Presence</a>
+                            <a href="{{ route('parent.children.attendance', $child) }}" data-loading-label="Ouverture des présences..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Présence</a>
                             <a href="{{ route('parent.children.timetable', $child) }}" data-loading-label="Ouverture de l'emploi du temps..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Emploi du temps</a>
                             <a href="{{ route('parent.children.finance', $child) }}" data-loading-label="Ouverture de la finance..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Finance</a>
                         </div>
 
                         <p class="mt-4 text-sm text-slate-500">
-                            Total paye : <span class="font-semibold text-slate-950">{{ number_format((float) $payments['total'], 2) }} MAD</span>
+                            Total payé : <span class="font-semibold text-slate-950">{{ number_format((float) $payments['total'], 2) }} MAD</span>
                         </p>
                     </article>
                 @endforeach

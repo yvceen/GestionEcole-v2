@@ -10,7 +10,7 @@
         </x-slot>
     </x-ui.page-header>
 
-    <x-ui.card title="Circuit de transport" subtitle="Mettez a jour l'itineraire, le vehicule et les arrets.">
+    <x-ui.card title="Circuit de transport" subtitle="Mettez a jour l'itineraire, le vehicule et les arrêts.">
         <form method="POST" action="{{ route('admin.transport.routes.update', $route) }}" class="space-y-5">
             @csrf
             @method('PUT')
@@ -75,8 +75,8 @@
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                 <div class="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                        <p class="text-sm font-semibold text-slate-900">Arrets de la route</p>
-                        <p class="mt-1 text-xs text-slate-500">Cliquez sur la carte pour ajouter un arret, glissez pour reordonner ou deplacer.</p>
+                        <p class="text-sm font-semibold text-slate-900">Arrêts de la route</p>
+                        <p class="mt-1 text-xs text-slate-500">Cliquez sur la carte pour ajouter un arrêt, glissez pour reordonner ou deplacer.</p>
                     </div>
                 </div>
 
@@ -90,7 +90,7 @@
                     </div>
 
                     <div class="rounded-xl border border-slate-200 bg-white p-3">
-                        <div class="mb-2 text-xs font-semibold text-slate-500">Liste des arrets</div>
+                        <div class="mb-2 text-xs font-semibold text-slate-500">Liste des arrêts</div>
                         <div id="stopsList" class="space-y-2"></div>
                     </div>
                 </div>

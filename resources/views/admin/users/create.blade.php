@@ -1,8 +1,8 @@
-<x-admin-layout title="Creer un utilisateur">
+﻿<x-admin-layout title="Creer un utilisateur">
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Creer un utilisateur</h1>
-            <p class="mt-1 text-sm text-slate-500">Ajouter un compte admin, directeur, enseignant, parent, eleve, responsable scolaire ou chauffeur.</p>
+            <p class="mt-1 text-sm text-slate-500">Ajouter un compte admin, directeur, enseignant, parent, Élève, responsable scolaire ou chauffeur.</p>
         </div>
         <a href="{{ route('admin.users.index') }}" class="text-sm font-semibold text-slate-700 hover:underline">Retour</a>
     </div>
@@ -44,7 +44,7 @@
         </div>
 
         <div>
-            <label class="mb-1 block text-sm font-semibold">Telephone (optionnel)</label>
+            <label class="mb-1 block text-sm font-semibold">Téléphone (optionnel)</label>
             <input
                 name="phone"
                 value="{{ old('phone') }}"
@@ -62,13 +62,13 @@
                     </option>
                 @endforeach
             </select>
-            <p class="mt-1 text-xs text-slate-500">Le directeur a uniquement acces aux modules pedagogiques.</p>
+            <p class="mt-1 text-xs text-slate-500">Le directeur a uniquement accès aux modules pédagogiques.</p>
         </div>
 
         <div id="student-fields" class="{{ old('role') === \App\Models\User::ROLE_STUDENT ? '' : 'hidden' }} space-y-5 rounded-2xl border border-sky-100 bg-sky-50/70 p-4">
             <div>
-                <p class="text-sm font-semibold text-slate-900">Dossier eleve</p>
-                <p class="mt-1 text-xs text-slate-600">Un compte eleve cree ici doit aussi generer son dossier eleve lie.</p>
+                <p class="text-sm font-semibold text-slate-900">Dossier Élève</p>
+                <p class="mt-1 text-xs text-slate-600">Un compte Élève créé ici doit aussi générer son dossier Élève lié.</p>
             </div>
 
             <div>
@@ -84,9 +84,9 @@
             </div>
 
             <div>
-                <label class="mb-1 block text-sm font-semibold">Parent lie (optionnel)</label>
+                <label class="mb-1 block text-sm font-semibold">Parent lié (optionnel)</label>
                 <select name="parent_user_id" class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5">
-                    <option value="">Aucun parent lie</option>
+                    <option value="">Aucun parent lié</option>
                     @foreach($parents as $parent)
                         <option value="{{ $parent->id }}" @selected((string) old('parent_user_id') === (string) $parent->id)>
                             {{ $parent->name }} ({{ $parent->email }})

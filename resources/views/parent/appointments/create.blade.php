@@ -1,4 +1,4 @@
-<x-parent-layout title="Demander un rendez-vous">
+﻿<x-parent-layout title="Demander un rendez-vous">
     <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6">
         <h1 class="text-2xl font-semibold text-slate-900">Demander un rendez-vous</h1>
         <p class="mt-1 text-sm text-slate-700">Envoyez une demande. L administration pourra confirmer, refuser ou replanifier depuis le module existant.</p>
@@ -20,7 +20,7 @@
             <div>
                 <label class="mb-1 block text-xs font-semibold text-slate-700">Titre</label>
                 <input name="title" value="{{ old('title') }}"
-                       placeholder="Ex: Suivi pedagogique"
+                       placeholder="Ex: Suivi pédagogique"
                        class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/20">
             </div>
 
@@ -45,7 +45,7 @@
             @endif
 
             <div>
-                <label class="mb-1 block text-xs font-semibold text-slate-700">Telephone (optionnel)</label>
+                <label class="mb-1 block text-xs font-semibold text-slate-700">Téléphone (optionnel)</label>
                 <input name="parent_phone" value="{{ old('parent_phone') }}"
                        placeholder="06 xx xx xx xx"
                        class="w-full rounded-2xl border border-black/10 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/20">

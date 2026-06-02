@@ -1,4 +1,4 @@
-<x-school-life-layout title="Tableau de bord" subtitle="Vue rapide des priorites de la vie scolaire aujourd'hui.">
+﻿<x-school-life-layout title="Tableau de bord" subtitle="Vue rapide des priorites de la vie scolaire aujourd'hui.">
     <x-ui.page-header
         title="Vue generale"
         subtitle="Retrouvez les priorites du jour, les incidents a suivre et les actions operationnelles les plus utiles."
@@ -16,14 +16,14 @@
                 <p class="app-overline">Vue generale</p>
                 <h2 class="app-section-title mt-2">Chiffres cles du jour</h2>
             </div>
-            <p class="app-muted max-w-2xl">Une lecture rapide pour prioriser les presences, les retards et les recuperations.</p>
+            <p class="app-muted max-w-2xl">Une lecture rapide pour prioriser les présences, les retards et les recuperations.</p>
         </div>
 
         <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
             <article class="app-stat-card">
-                <p class="app-stat-label">Eleves</p>
+                <p class="app-stat-label">Élèves</p>
                 <p class="app-stat-value">{{ $stats['students'] }}</p>
-                <p class="app-stat-meta">Dossiers visibles dans l ecole active.</p>
+                <p class="app-stat-meta">Dossiers visibles dans l'École active.</p>
             </article>
             <article class="app-stat-card">
                 <p class="app-stat-label">Parents</p>
@@ -54,7 +54,7 @@
     </section>
 
     <section class="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
-        <x-ui.card title="Activite du jour" subtitle="Derniers signalements a traiter rapidement.">
+        <x-ui.card title="Activité du jour" subtitle="Derniers signalements a traiter rapidement.">
             <div class="space-y-3">
                 @forelse($recentAttendance as $attendance)
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
@@ -76,10 +76,10 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0" />
                             </svg>
                         </div>
-                        <p class="app-empty-state-title">Aucun signalement recent</p>
+                        <p class="app-empty-state-title">Aucun signalement récent</p>
                         <p class="app-empty-state-copy">Les absences et retards recents apparaitront ici des qu ils seront saisis.</p>
                         <div class="app-empty-state-actions">
-                            <x-ui.button :href="route('school-life.attendance.index')" variant="secondary">Ouvrir les presences</x-ui.button>
+                            <x-ui.button :href="route('school-life.attendance.index')" variant="secondary">Ouvrir les présences</x-ui.button>
                         </div>
                     </div>
                 @endforelse
@@ -87,13 +87,13 @@
         </x-ui.card>
 
         <div class="space-y-6">
-            <x-ui.card title="Actions rapides" subtitle="Accedez aux ecrans les plus utiles sans perdre de temps.">
+            <x-ui.card title="Actions rapides" subtitle="Accédez aux ecrans les plus utiles sans perdre de temps.">
                 <div class="grid gap-3">
                     <x-ui.button :href="route('attendance.scan.page')" variant="primary">Scanner les cartes</x-ui.button>
                     <x-ui.button :href="route('school-life.users.index', ['role' => 'parent'])" variant="secondary">Contacts parents</x-ui.button>
                     <x-ui.button :href="route('school-life.users.create')" variant="secondary">Creer utilisateur</x-ui.button>
                     <x-ui.button :href="route('school-life.cards.index')" variant="secondary">Voir les cartes</x-ui.button>
-                    <x-ui.button :href="route('school-life.students.index')" variant="secondary">Suivre les eleves</x-ui.button>
+                    <x-ui.button :href="route('school-life.students.index')" variant="secondary">Suivre les Élèves</x-ui.button>
                     <x-ui.button :href="route('transport.ops.index')" variant="ghost">Ouvrir le transport</x-ui.button>
                 </div>
             </x-ui.card>

@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'title' => 'Super administration',
     'subtitle' => null,
 ])
@@ -7,7 +7,7 @@
     use Illuminate\Support\Facades\Route;
 
     $user = auth()->user();
-    $pageSubtitle = $subtitle ?: 'Pilotage centralise des ecoles, des administrateurs et de l activite globale.';
+    $pageSubtitle = $subtitle ?: 'Pilotage centralise des ecoles, des administrateurs et de l activité globale.';
     $navGroups = [
         [
             'label' => 'Vue generale',
@@ -17,7 +17,7 @@
                     'route' => 'super.dashboard',
                     'patterns' => ['super.dashboard'],
                     'icon' => 'dashboard',
-                    'description' => 'Indicateurs et activite',
+                    'description' => 'Indicateurs et activité',
                 ],
             ],
         ],
@@ -32,7 +32,7 @@
                     'description' => 'Parcourir et administrer',
                 ],
                 [
-                    'label' => 'Nouvelle ecole',
+                    'label' => 'Nouvelle École',
                     'route' => 'super.schools.create',
                     'patterns' => ['super.schools.create'],
                     'icon' => 'plus',
@@ -164,7 +164,7 @@
                     <div class="flex flex-wrap items-center justify-end gap-2">
                         @if(Route::has('super.schools.create'))
                             <x-ui.button :href="route('super.schools.create')" variant="primary" size="sm">
-                                Nouvelle ecole
+                                Nouvelle École
                             </x-ui.button>
                         @endif
 

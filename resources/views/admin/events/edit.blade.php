@@ -1,6 +1,6 @@
-<x-admin-layout title="Modifier un bloc agenda" subtitle="Mettez a jour un bloc hebdomadaire sans modifier la logique des autres modules.">
+﻿<x-admin-layout title="Modifier un bloc agenda" subtitle="Mettez a jour un bloc hebdomadaire sans modifier la logique des autres modules.">
     <x-ui.page-header
-        title="Modifier l evenement"
+        title="Modifier l Événement"
         subtitle="Ajustez l horaire, la classe, l enseignant ou la couleur."
     />
 

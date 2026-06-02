@@ -5,9 +5,9 @@
     $storeRoute = $storeRoute ?? route($layoutRoutePrefix . '.store');
     $historyRouteName = $historyRouteName ?? ($layoutRoutePrefix . '.index');
     $pageTitle = $pageTitle ?? "Registre d'appel";
-    $pageSubtitle = $pageSubtitle ?? "Saisissez les presences, absences et retards par classe et par date, puis retrouvez vos derniers appels en un coup d'oeil.";
+    $pageSubtitle = $pageSubtitle ?? "Saisissez les présences, absences et retards par classe et par date, puis retrouvez vos derniers appels en un coup d'oeil.";
     $modeBadge = $modeBadge ?? 'Saisie manuelle';
-    $helperCopy = $helperCopy ?? "Si un appel existe deja pour cette classe et cette date, la saisie est rechargee et sera mise a jour.";
+    $helperCopy = $helperCopy ?? "Si un appel existe déjà pour cette classe et cette date, la saisie est rechargee et sera mise a jour.";
     $saveLabel = $saveLabel ?? (!empty($attendanceByStudentId) ? 'Mettre a jour le registre' : 'Enregistrer le registre');
 @endphp
 
@@ -64,7 +64,7 @@
 
         <x-ui.card
             :title="$pageTitle"
-            :subtitle="$selectedClassroom ? 'Saisie pour '.$selectedClassroom->name.' le '.\Carbon\Carbon::parse($date)->format('d/m/Y') : 'Selectionnez une classe pour charger la liste des eleves.'"
+            :subtitle="$selectedClassroom ? 'Saisie pour '.$selectedClassroom->name.' le '.\Carbon\Carbon::parse($date)->format('d/m/Y') : 'Sélectionnez une classe pour charger la liste des Élèves.'"
         >
             @if(!$selectedClassroom)
                 <div class="student-empty px-5 py-8">
@@ -72,7 +72,7 @@
                 </div>
             @elseif($students->isEmpty())
                 <div class="student-empty px-5 py-8">
-                    Aucun eleve n'est actuellement rattache a cette classe.
+                    Aucun Élève n'est actuellement rattaché a cette classe.
                 </div>
             @else
                 <form method="POST" action="{{ $storeRoute }}" class="space-y-5" id="manual-attendance-form">
@@ -96,7 +96,7 @@
                         <table class="app-table min-w-[920px]">
                             <thead>
                                 <tr>
-                                    <th>Eleve</th>
+                                    <th>Élève</th>
                                     <th>Statut</th>
                                     <th>Observation</th>
                                 </tr>
@@ -176,7 +176,7 @@
     </div>
 
     <aside class="space-y-6">
-        <x-ui.card title="Repere rapide" subtitle="Ce bloc vous aide a savoir ou vous en etes sur la journee selectionnee.">
+        <x-ui.card title="Repere rapide" subtitle="Ce bloc vous aide a savoir ou vous en etes sur la journée sélectionnée.">
             <div class="space-y-3">
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
                     <p class="app-stat-label">Classe chargee</p>
@@ -189,13 +189,13 @@
                 </div>
 
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
-                    <p class="app-stat-label">Eleves dans le registre</p>
+                    <p class="app-stat-label">Élèves dans le registre</p>
                     <p class="mt-2 text-lg font-semibold text-slate-950">{{ $students->count() }}</p>
                 </div>
             </div>
         </x-ui.card>
 
-        <x-ui.card title="Derniers appels" subtitle="Historique recent des appels deja saisis, avec absences et retards.">
+        <x-ui.card title="Derniers appels" subtitle="Historique récent des appels déjà saisis, avec absences et retards.">
             <div class="space-y-3">
                 @forelse($sessionHistory as $session)
                     <a
@@ -208,7 +208,7 @@
                                     <p class="truncate text-sm font-semibold text-slate-950">{{ $session['classroom_name'] }}</p>
                                     <p class="mt-1 text-xs text-slate-500">{{ $session['date']->format('d/m/Y') }}</p>
                                 </div>
-                                <span class="app-badge app-badge-info">{{ $session['total_students'] }} eleves</span>
+                                <span class="app-badge app-badge-info">{{ $session['total_students'] }} Élèves</span>
                             </div>
 
                             <div class="flex flex-wrap gap-2">
@@ -219,7 +219,7 @@
                     </a>
                 @empty
                     <div class="student-empty px-5 py-8">
-                        Aucun appel recent n'a encore ete enregistre.
+                        Aucun appel récent n'a encore ete enregistré.
                     </div>
                 @endforelse
             </div>

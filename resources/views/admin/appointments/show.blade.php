@@ -1,4 +1,4 @@
-@php
+﻿@php
     $layoutComponent = $layoutComponent ?? 'admin-layout';
     $routePrefix = $routePrefix ?? 'admin.appointments';
     $canEdit = $canEdit ?? true;
@@ -49,7 +49,7 @@
                 </div>
 
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Telephone</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Téléphone</p>
                     <p class="mt-2 text-sm text-slate-700">{{ $appointment->parent_phone ?: 'Non renseigne' }}</p>
                 </div>
 
@@ -90,7 +90,7 @@
         <x-ui.card title="Suivi" subtitle="Repers utiles pour l equipe administrative.">
             <div class="space-y-4 text-sm text-slate-600">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Cree le</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Créé le</p>
                     <p class="mt-1 text-slate-900">{{ optional($appointment->created_at)->format('d/m/Y H:i') ?? 'N/A' }}</p>
                 </div>
                 <div>

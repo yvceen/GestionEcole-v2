@@ -1,17 +1,17 @@
-@php
+﻿@php
     $showManageActions = $showManageActions ?? false;
 @endphp
 
 <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
     <article class="app-stat-card">
-        <p class="app-stat-label">Evenements</p>
+        <p class="app-stat-label">Événements</p>
         <p class="app-stat-value">{{ $summary['total'] ?? 0 }}</p>
-        <p class="app-stat-meta">Total affiche pour le mois choisi.</p>
+        <p class="app-stat-meta">Total affiché pour le mois choisi.</p>
     </article>
     <article class="app-stat-card">
         <p class="app-stat-label">Examens</p>
         <p class="app-stat-value text-amber-700">{{ $summary['exam'] ?? 0 }}</p>
-        <p class="app-stat-meta">Evaluations et temps forts pedagogiques.</p>
+        <p class="app-stat-meta">Évaluations et temps forts pédagogiques.</p>
     </article>
     <article class="app-stat-card">
         <p class="app-stat-label">Vacances</p>
@@ -19,13 +19,13 @@
         <p class="app-stat-meta">Fermetures et conges scolaires.</p>
     </article>
     <article class="app-stat-card">
-        <p class="app-stat-label">Evenements</p>
+        <p class="app-stat-label">Événements</p>
         <p class="app-stat-value text-sky-700">{{ $summary['event'] ?? 0 }}</p>
-        <p class="app-stat-meta">Vie scolaire, reunions et activites.</p>
+        <p class="app-stat-meta">Vie scolaire, reunions et activités.</p>
     </article>
 </section>
 
-<x-ui.card title="Filtrer le calendrier" subtitle="Consultez le mois en cours, changez de periode et ciblez un type d evenement si besoin.">
+<x-ui.card title="Filtrer le calendrier" subtitle="Consultez le mois en cours, changez de période et ciblez un type d Événement si besoin.">
     <form method="GET" class="grid gap-3 lg:grid-cols-[220px_220px_auto_auto]">
         <input type="month" name="month" value="{{ $month->format('Y-m') }}" class="app-input">
 
@@ -77,7 +77,7 @@
                                 <x-ui.button :href="route('admin.calendar.edit', $event)" variant="secondary" class="px-3 py-2">
                                     Modifier
                                 </x-ui.button>
-                                <form method="POST" action="{{ route('admin.calendar.destroy', $event) }}" onsubmit="return confirm('Supprimer cet evenement du calendrier ?')">
+                                <form method="POST" action="{{ route('admin.calendar.destroy', $event) }}" onsubmit="return confirm('Supprimer cet Événement du calendrier ?')">
                                     @csrf
                                     @method('DELETE')
                                     <x-ui.button type="submit" variant="danger" class="px-3 py-2">
@@ -90,7 +90,7 @@
                 </article>
             @empty
                 <div class="student-empty">
-                    Aucun evenement calendrier pour cette selection.
+                    Aucun Événement calendrier pour cette sélection.
                 </div>
             @endforelse
         </div>
@@ -100,7 +100,7 @@
         </div>
     </x-ui.card>
 
-    <x-ui.card title="A venir" subtitle="Les prochains rendez-vous visibles pour l ecole active.">
+    <x-ui.card title="A venir" subtitle="Les prochains rendez-vous visibles pour l'École active.">
         <div class="space-y-3">
             @forelse($upcoming as $event)
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
@@ -117,7 +117,7 @@
                     </div>
                 </div>
             @empty
-                <div class="student-empty">Aucun evenement a venir pour le moment.</div>
+                <div class="student-empty">Aucun Événement a venir pour le moment.</div>
             @endforelse
         </div>
     </x-ui.card>

@@ -1,6 +1,6 @@
-<x-guest-layout>
+﻿<x-guest-layout>
     <div class="mb-4 text-sm text-gray-600">
-        Merci pour votre inscription. Avant de commencer, veuillez verifier votre adresse e-mail en cliquant sur le lien que nous venons de vous envoyer. Si vous ne l avez pas recu, vous pouvez demander un nouvel envoi.
+        Merci pour votre inscription. Avant de commencer, veuillez verifier votre adresse e-mail en cliquant sur le lien que nous venons de vous envoyer. Si vous ne l avez pas reçu, vous pouvez demander un nouvel envoi.
     </div>
 
     @if (session('status') == 'verification-link-sent')

@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'links' => null,
     'navigationTitle' => 'Navigation principale',
     'mobileDockLinks' => null,
@@ -20,7 +20,7 @@
         'director' => 'Direction',
         'teacher' => 'Enseignement',
         'parent' => 'Parents',
-        'student' => 'Eleves',
+        'student' => 'Élèves',
         'school_life' => 'Vie scolaire',
         'super_admin' => 'Super administration',
         default => 'Espace',
@@ -36,12 +36,12 @@
             'admin' => [
                 ['label' => 'Tableau de bord', 'route' => 'admin.dashboard'],
                 ['label' => 'Structure', 'route' => 'admin.structure.index'],
-                ['label' => 'Eleves', 'route' => 'admin.students.index'],
+                ['label' => 'Élèves', 'route' => 'admin.students.index'],
                 ['label' => 'Utilisateurs', 'route' => 'admin.users.index'],
                 ['label' => 'Finance', 'route' => 'admin.finance.index'],
-                ['label' => 'Matieres', 'route' => 'admin.subjects.index'],
+                ['label' => 'Matières', 'route' => 'admin.subjects.index'],
                 ['label' => 'Devoirs', 'route' => 'admin.homeworks.index'],
-                ['label' => 'Pedagogie enseignants', 'route' => 'admin.teachers.pedagogy'],
+                ['label' => 'Pédagogie enseignants', 'route' => 'admin.teachers.pedagogy'],
                 ['label' => 'Actualites', 'route' => 'admin.news.index'],
                 ['label' => 'Rendez-vous', 'route' => 'admin.appointments.index'],
                 ['label' => 'Vie scolaire', 'route' => 'admin.school-life.index'],
@@ -51,7 +51,7 @@
                 ['label' => 'Notifications', 'route' => 'admin.notifications.index'],
             ],
             'director' => [
-                ['label' => 'Eleves', 'route' => 'director.students.index'],
+                ['label' => 'Élèves', 'route' => 'director.students.index'],
                 ['label' => 'Enseignants', 'route' => 'director.teachers.index'],
                 ['label' => 'Suivi', 'route' => 'director.monitoring'],
             ],
@@ -74,8 +74,8 @@
             ],
             'school_life' => [
                 ['label' => 'Tableau de bord', 'route' => 'school-life.dashboard'],
-                ['label' => 'Eleves', 'route' => 'school-life.students.index'],
-                ['label' => 'Presences', 'route' => 'school-life.attendance.index'],
+                ['label' => 'Élèves', 'route' => 'school-life.students.index'],
+                ['label' => 'Présences', 'route' => 'school-life.attendance.index'],
                 ['label' => 'Devoirs', 'route' => 'school-life.homeworks.index'],
                 ['label' => 'Recuperations', 'route' => 'school-life.pickup-requests.index'],
                 ['label' => 'Notifications', 'route' => 'school-life.notifications.index'],

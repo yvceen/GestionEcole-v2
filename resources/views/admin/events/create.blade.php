@@ -1,6 +1,6 @@
-<x-admin-layout title="Ajouter un bloc agenda" subtitle="Ajoutez un cours, un examen ou une activite dans l agenda hebdomadaire.">
+﻿<x-admin-layout title="Ajouter un bloc agenda" subtitle="Ajoutez un cours, un examen ou une activité dans l agenda hebdomadaire.">
     <x-ui.page-header
-        title="Nouvel evenement"
+        title="Nouvel Événement"
         subtitle="Les blocs apparaissent ensuite dans la vue semaine FullCalendar."
     />
 

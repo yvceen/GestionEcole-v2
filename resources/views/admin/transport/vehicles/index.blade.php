@@ -1,7 +1,7 @@
-<x-admin-layout title="Gestion des vehicules">
+<x-admin-layout title="Gestion des véhicules">
     <x-ui.page-header
-        title="Vehicules de transport"
-        subtitle="Gerez la flotte, les conducteurs et la disponibilite des vehicules."
+        title="Véhicules de transport"
+        subtitle="Gerez la flotte, les conducteurs et la disponibilite des véhicules."
     >
         <x-slot name="actions">
             <x-ui.button :href="route('admin.transport.vehicles.create')" variant="primary">Ajouter vehicule</x-ui.button>
@@ -16,7 +16,7 @@
     <div class="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-200 bg-gradient-to-r from-sky-50 via-white to-indigo-50 px-6 py-5">
             <p class="text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Flotte active</p>
-            <h2 class="mt-2 text-xl font-bold text-slate-950">Vehicules et conducteurs</h2>
+            <h2 class="mt-2 text-xl font-bold text-slate-950">Véhicules et conducteurs</h2>
         </div>
 
         <div class="overflow-x-auto">
@@ -70,7 +70,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center text-slate-500">Aucun vehicule enregistre.</td>
+                            <td colspan="6" class="px-6 py-12 text-center text-slate-500">Aucun vehicule enregistré.</td>
                         </tr>
                     @endforelse
                 </tbody>

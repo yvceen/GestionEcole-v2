@@ -1,8 +1,8 @@
-<x-director-layout title="Conseil de classe">
+﻿<x-director-layout title="Conseil de classe">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Conseil de classe</h1>
-            <p class="mt-1 text-sm text-slate-500">Decisions, recommandations et suivi par classe et periode.</p>
+            <p class="mt-1 text-sm text-slate-500">Decisions, recommandations et suivi par classe et période.</p>
         </div>
 
         <a href="{{ route('director.councils.create') }}"
@@ -28,7 +28,7 @@
                 <thead class="bg-slate-50/80">
                     <tr class="text-left border-b border-black/5">
                         <th class="p-4 text-xs font-semibold text-slate-500">Classe</th>
-                        <th class="p-4 text-xs font-semibold text-slate-500">Periode</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500">Période</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Decision</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Date</th>
                     </tr>
@@ -47,7 +47,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="4" class="p-10 text-center text-slate-500">Aucune decision enregistree.</td></tr>
+                        <tr><td colspan="4" class="p-10 text-center text-slate-500">Aucune decision enregistrée.</td></tr>
                     @endforelse
                 </tbody>
             </table>

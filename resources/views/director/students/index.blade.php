@@ -1,8 +1,8 @@
-<x-director-layout title="Eleves">
+﻿<x-director-layout title="Élèves">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <h1 class="text-2xl font-semibold tracking-tight">Eleves</h1>
-            <p class="mt-1 text-sm text-slate-500">Filtrez par niveau, classe, eleve ou parent, puis ouvrez rapidement la fiche de suivi.</p>
+            <h1 class="text-2xl font-semibold tracking-tight">Élèves</h1>
+            <p class="mt-1 text-sm text-slate-500">Filtrez par niveau, classe, Élève ou parent, puis ouvrez rapidement la fiche de suivi.</p>
         </div>
     </div>
 
@@ -22,7 +22,7 @@
                 @endforeach
             </select>
 
-            <input name="q" value="{{ $q }}" placeholder="Nom de l eleve, email ou telephone du parent..."
+            <input name="q" value="{{ $q }}" placeholder="Nom de l Élève, email ou téléphone du parent..."
                    class="rounded-2xl border border-black/10 bg-white/70 px-4 py-2 text-sm"/>
             <input name="parent_name" value="{{ $parentName }}" placeholder="Nom du parent..."
                    class="rounded-2xl border border-black/10 bg-white/70 px-4 py-2 text-sm"/>
@@ -43,7 +43,7 @@
             <table class="min-w-full text-sm">
                 <thead class="text-xs text-slate-500">
                         <tr>
-                            <th class="px-4 py-3 text-left">Eleve</th>
+                            <th class="px-4 py-3 text-left">Élève</th>
                             <th class="px-4 py-3 text-left">Classe</th>
                             <th class="px-4 py-3 text-left">Niveau</th>
                             <th class="px-4 py-3 text-left">Parent</th>
@@ -65,13 +65,13 @@
                             <td class="px-4 py-3 text-right">
                                 <a href="{{ route('director.students.show', $s) }}"
                                    class="rounded-2xl bg-slate-900 px-4 py-2 text-xs font-semibold text-white hover:bg-black">
-                                    Ouvrir la fiche →
+                                    Ouvrir la fiche â†’
                                 </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-4 py-6 text-center text-slate-500">Aucun eleve ne correspond a ces filtres.</td>
+                            <td colspan="5" class="px-4 py-6 text-center text-slate-500">Aucun Élève ne correspond a ces filtres.</td>
                         </tr>
                     @endforelse
                 </tbody>

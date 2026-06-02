@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -87,7 +87,7 @@
                 <div class="no-print mb-5 flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Finance</p>
-                        <h1 class="mt-1 text-2xl font-semibold text-slate-950">@yield('heading', 'Recu')</h1>
+                        <h1 class="mt-1 text-2xl font-semibold text-slate-950">@yield('heading', 'Reçu')</h1>
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2">

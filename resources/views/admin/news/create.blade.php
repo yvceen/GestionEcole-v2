@@ -1,4 +1,4 @@
-@php
+﻿@php
     $routePrefix = $routePrefix ?? 'admin.news';
     $layoutComponent = $layoutComponent ?? 'admin-layout';
 @endphp
@@ -6,7 +6,7 @@
 <x-dynamic-component :component="$layoutComponent" title="Nouvelle actualite">
     <x-ui.page-header
         title="Nouvelle actualite"
-        subtitle="Preparez une publication moderne, lisible et bien ciblee pour les familles."
+        subtitle="Preparez une publication moderne, lisible et bien ciblée pour les familles."
     >
         <x-slot name="actions">
             <x-ui.button :href="route($routePrefix . '.index')" variant="secondary">Retour</x-ui.button>

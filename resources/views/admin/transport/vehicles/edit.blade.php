@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="app-field">
-                    <label class="app-label">Numero d'immatriculation</label>
+                    <label class="app-label">Numéro d'immatriculation</label>
                     <input type="text" name="registration_number" value="{{ old('registration_number', $vehicle->registration_number) }}" class="app-input @error('registration_number') border-rose-500 @enderror" required>
                     @error('registration_number')<p class="app-error">{{ $message }}</p>@enderror
                 </div>
@@ -77,7 +77,7 @@
                 </div>
 
                 <div class="app-field">
-                    <label class="app-label">Annee du modele</label>
+                    <label class="app-label">Année du modele</label>
                     <input type="number" name="model_year" value="{{ old('model_year', $vehicle->model_year) }}" min="1990" max="{{ date('Y') + 1 }}" class="app-input @error('model_year') border-rose-500 @enderror">
                     @error('model_year')<p class="app-error">{{ $message }}</p>@enderror
                 </div>

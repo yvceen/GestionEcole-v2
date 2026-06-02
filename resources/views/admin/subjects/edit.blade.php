@@ -1,4 +1,4 @@
-@php
+﻿@php
     $layoutComponent = $layoutComponent ?? 'admin-layout';
     $routePrefix = $routePrefix ?? 'admin.subjects';
 @endphp
@@ -7,7 +7,7 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Modifier une matiere</h1>
-            <p class="mt-1 text-sm text-slate-500">Mettez a jour la fiche et gerez l affectation enseignants sans quitter le module Matieres.</p>
+            <p class="mt-1 text-sm text-slate-500">Mettez a jour la fiche et gerez l affectation enseignants sans quitter le module Matières.</p>
         </div>
         <a href="{{ route($routePrefix . '.index') }}" class="text-sm font-semibold text-slate-700 hover:underline">Retour</a>
     </div>

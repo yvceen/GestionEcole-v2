@@ -1,4 +1,4 @@
-<x-director-layout title="Nouveau rapport pedagogique">
+<x-director-layout title="Nouveau rapport pédagogique">
     <div class="flex items-center justify-between gap-3">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Nouveau rapport</h1>
@@ -30,7 +30,7 @@
             <label class="block text-sm font-semibold mb-1">Resume</label>
             <textarea name="summary" rows="4"
                       class="w-full rounded-2xl border border-black/10 bg-white px-4 py-3"
-                      placeholder="Synthese globale : evolution, points positifs, difficultes..." required>{{ old('summary') }}</textarea>
+                      placeholder="Synthese globale : evolution, points positifs, difficultés..." required>{{ old('summary') }}</textarea>
         </div>
 
         <div>

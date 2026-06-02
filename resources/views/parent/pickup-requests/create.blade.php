@@ -1,7 +1,7 @@
 ﻿<x-parent-layout title="Nouvelle recuperation" subtitle="Indiquez l'enfant concerne, l'heure prevue et une note optionnelle.">
     <x-ui.card title="Demande de recuperation" subtitle="La vie scolaire recevra votre demande et pourra l'approuver, la rejeter ou la marquer comme traitee.">
         @if($children->isEmpty())
-            <div class="student-empty">Aucun enfant n'est rattache a votre compte.</div>
+            <div class="student-empty">Aucun enfant n'est rattaché a votre compte.</div>
         @else
             <form method="POST" action="{{ route('parent.pickup-requests.store') }}" class="space-y-5" x-data="{ reason: @js(old('reason', '')), useSuggestion(text) { this.reason = text; this.$nextTick(() => this.$refs.reason?.focus()); } }">
                 @csrf
@@ -29,9 +29,9 @@
                     <div class="mb-2 flex flex-wrap gap-2">
                         @foreach([
                             'Je suis en route',
-                            'Je serai a l ecole dans 5 minutes',
+                            'Je serai a l'École dans 5 minutes',
                             'Preparez mon enfant, s il vous plait',
-                            'Je suis arrive devant l ecole',
+                            'Je suis arrive devant l'École',
                             'Je passerai plus tard',
                         ] as $suggestion)
                             <button

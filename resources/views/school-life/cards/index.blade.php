@@ -1,4 +1,4 @@
-<x-school-life-layout title="Cartes et QR" subtitle="Consultez rapidement les cartes eleves et parents pour les operations de terrain et les controles du jour.">
+﻿<x-school-life-layout title="Cartes et QR" subtitle="Consultez rapidement les cartes Élèves et parents pour les opérations de terrain et les controles du jour.">
     <x-ui.page-header
         title="Cartes operationnelles"
         subtitle="La vie scolaire peut consulter et imprimer les cartes sans regenerer les QR codes."

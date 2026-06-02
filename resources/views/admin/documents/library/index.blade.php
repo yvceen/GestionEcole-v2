@@ -1,7 +1,7 @@
-<x-admin-layout title="Documents">
+﻿<x-admin-layout title="Documents">
     <x-ui.page-header
         title="Bibliotheque documentaire"
-        subtitle="Centralisez les fichiers administratifs, pedagogiques et de communication en gardant le ciblage par ecole, classe ou role."
+        subtitle="Centralisez les fichiers administratifs, pédagogiques et de communication en gardant le ciblage par École, classe ou role."
     />
 
     @if(session('success'))
@@ -55,7 +55,7 @@
                                     {{ $document->is_active ? 'Actif' : 'Masque' }}
                                 </x-ui.badge>
                                 <x-ui.badge variant="warning">
-                                    {{ $document->audience_scope === 'school' ? 'Toute l ecole' : ($document->audience_scope === 'classroom' ? ($document->classroom?->name ?? 'Classe') : ('Role: '.$document->role)) }}
+                                    {{ $document->audience_scope === 'school' ? 'Toute l'École' : ($document->audience_scope === 'classroom' ? ($document->classroom?->name ?? 'Classe') : ('Role: '.$document->role)) }}
                                 </x-ui.badge>
                             </div>
 
@@ -91,7 +91,7 @@
                     </x-ui.card>
                 @empty
                     <x-ui.card title="Aucun document" subtitle="Ajoutez un premier document pour demarrer la diffusion.">
-                        <p class="text-sm text-slate-500">Les familles et eleves verront ici les fichiers reels mis a disposition selon leur audience.</p>
+                        <p class="text-sm text-slate-500">Les familles et Élèves verront ici les fichiers réels mis a disposition selon leur audience.</p>
                     </x-ui.card>
                 @endforelse
             </div>

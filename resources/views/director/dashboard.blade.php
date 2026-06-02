@@ -1,4 +1,4 @@
-<x-director-layout title="Tableau de bord - Direction">
+﻿<x-director-layout title="Tableau de bord - Direction">
     @php
         $panel = "rounded-[28px] border border-black/5 bg-white/70 backdrop-blur-2xl shadow-[0_18px_45px_-35px_rgba(0,0,0,.45)]";
         $soft = "border border-black/5 bg-white/60";
@@ -46,7 +46,7 @@
             <p class="mt-1 text-sm text-slate-500">
                 Semaine : {{ $fmtDate($startOfWeek) }} -> {{ $fmtDate($endOfWeek) }}
                 <span class="mx-2 text-slate-300">|</span>
-                Vue direction pour le suivi pedagogique et la vigilance quotidienne.
+                Vue direction pour le suivi pédagogique et la vigilance quotidienne.
             </p>
         </div>
 
@@ -64,12 +64,12 @@
 
     <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-6">
         <div class="{{ $panel }} p-5">
-            <div class="text-xs uppercase tracking-wider text-slate-500">Eleves</div>
+            <div class="text-xs uppercase tracking-wider text-slate-500">Élèves</div>
             <div class="mt-2 flex items-end justify-between">
                 <div class="text-3xl font-semibold text-slate-900">{{ $studentsCount }}</div>
                 {!! $badge('Total inscrits', 'blue') !!}
             </div>
-            <div class="mt-2 text-xs text-slate-500">Nombre total d'eleves rattaches a l'etablissement.</div>
+            <div class="mt-2 text-xs text-slate-500">Nombre total d'Élèves rattachés a l'Établissement.</div>
         </div>
 
         <div class="{{ $panel }} p-5">
@@ -92,16 +92,16 @@
                     @endif
                 </div>
             </div>
-            <div class="mt-2 text-xs text-slate-500">Effectif enseignant et statut d'activite.</div>
+            <div class="mt-2 text-xs text-slate-500">Effectif enseignant et statut d'activité.</div>
         </div>
 
         <div class="{{ $panel }} p-5">
             <div class="text-xs uppercase tracking-wider text-slate-500">Parents</div>
             <div class="mt-2 flex items-end justify-between">
                 <div class="text-3xl font-semibold text-slate-900">{{ $parentsCount }}</div>
-                {!! $badge('Comptes lies', 'slate') !!}
+                {!! $badge('Comptes liés', 'slate') !!}
             </div>
-            <div class="mt-2 text-xs text-slate-500">Parents ayant un compte relie a un eleve.</div>
+            <div class="mt-2 text-xs text-slate-500">Parents ayant un compte relié a un Élève.</div>
         </div>
 
         <div class="{{ $panel }} p-5">
@@ -110,7 +110,7 @@
                 <div class="text-3xl font-semibold text-rose-700">{{ (int) ($attendanceSummary['today_absent'] ?? 0) }}</div>
                 {!! $badge('Aujourd hui', 'red') !!}
             </div>
-            <div class="mt-2 text-xs text-slate-500">Absences declarees sur la journee courante.</div>
+            <div class="mt-2 text-xs text-slate-500">Absences déclarées sur la journée courante.</div>
         </div>
 
         <div class="{{ $panel }} p-5">
@@ -119,19 +119,19 @@
                 <div class="text-3xl font-semibold text-amber-700">{{ (int) ($attendanceSummary['today_late'] ?? 0) }}</div>
                 {!! $badge('A surveiller', 'amber') !!}
             </div>
-            <div class="mt-2 text-xs text-slate-500">Retards remontes par l'equipe pedagogique.</div>
+            <div class="mt-2 text-xs text-slate-500">Retards remontes par l'equipe pédagogique.</div>
         </div>
     </div>
 
     <div class="mt-4 {{ $panel }} p-6">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <div class="text-sm font-semibold text-slate-900">Vue hebdomadaire des presences</div>
-                <div class="mt-1 text-xs text-slate-500">Absences et retards cumules par jour sur l'ecole active.</div>
+                <div class="text-sm font-semibold text-slate-900">Vue hebdomadaire des présences</div>
+                <div class="mt-1 text-xs text-slate-500">Absences et retards cumules par jour sur l'École active.</div>
             </div>
             <a href="{{ route('director.attendance.index') }}"
                class="rounded-2xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold hover:bg-slate-50">
-                Ouvrir le monitoring des presences
+                Ouvrir le monitoring des présences
             </a>
         </div>
 
@@ -157,7 +157,7 @@
     <div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
         <div class="{{ $panel }} p-6">
             <div class="flex items-center justify-between">
-                <div class="text-sm font-semibold text-slate-900">Activite de la semaine</div>
+                <div class="text-sm font-semibold text-slate-900">Activité de la semaine</div>
                 <div class="text-xs text-slate-500">Cours et devoirs</div>
             </div>
 
@@ -225,7 +225,7 @@
                     </div>
 
                     <div class="mt-3 text-xs text-slate-500">
-                        Utilisez cette liste pour prioriser les relances pedagogiques.
+                        Utilisez cette liste pour prioriser les relances pédagogiques.
                     </div>
                 </div>
             </div>
@@ -234,7 +234,7 @@
         <div class="{{ $panel }} p-6">
             <div class="flex items-center justify-between">
                 <div class="text-sm font-semibold text-slate-900">Classes a la traine</div>
-                <div class="text-xs text-slate-500">Top 20 activite faible</div>
+                <div class="text-xs text-slate-500">Top 20 activité faible</div>
             </div>
 
             <div class="mt-4 space-y-2">
@@ -250,7 +250,7 @@
                             <div class="text-xs text-slate-500">
                                 Enseignants : {{ $classroom->teachers_count ?? 0 }}
                                 <span class="mx-2 text-slate-300">|</span>
-                                {!! $badge('Activite : '.$activity, $tone) !!}
+                                {!! $badge('Activité : '.$activity, $tone) !!}
                             </div>
                         </div>
 
@@ -267,7 +267,7 @@
             </div>
 
             <div class="mt-4 text-xs text-slate-500">
-                Conseil : combinez cette vue avec le monitoring des presences pour identifier les classes qui demandent un accompagnement plus fort.
+                Conseil : combinez cette vue avec le monitoring des présences pour identifier les classes qui demandent un accompagnement plus fort.
             </div>
         </div>
     </div>

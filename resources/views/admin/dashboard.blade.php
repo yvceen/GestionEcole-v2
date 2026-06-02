@@ -1,10 +1,10 @@
-<x-admin-layout title="Tableau de bord">
+﻿<x-admin-layout title="Tableau de bord">
     @php
         $structureStats = [
             [
-                'title' => 'Eleves',
+                'title' => 'Élèves',
                 'value' => $studentsCount,
-                'meta' => 'Effectif total enregistre.',
+                'meta' => 'Effectif total enregistré.',
                 'badge' => 'Population scolaire',
                 'tone' => 'blue',
                 'icon' => 'students',
@@ -32,8 +32,8 @@
             [
                 'title' => 'Enseignants',
                 'value' => $teachersCount,
-                'meta' => "Corps enseignant de l'etablissement.",
-                'badge' => 'Pedagogie',
+                'meta' => "Corps enseignant de l'Établissement.",
+                'badge' => 'Pédagogie',
                 'tone' => 'violet',
                 'icon' => 'teachers',
             ],
@@ -43,7 +43,7 @@
             [
                 'title' => 'Presents',
                 'value' => (int) ($attendanceSummary['today_present'] ?? 0),
-                'meta' => 'Eleves pointes presents aujourd hui.',
+                'meta' => 'Élèves pointes presents aujourd hui.',
                 'badge' => 'Situation stable',
                 'valueClass' => 'text-emerald-700',
                 'ring' => 'from-emerald-500/15 via-emerald-500/5 to-white',
@@ -53,7 +53,7 @@
             [
                 'title' => 'Absents',
                 'value' => (int) ($attendanceSummary['today_absent'] ?? 0),
-                'meta' => 'Absences remontees aujourd hui dans l ecole active.',
+                'meta' => 'Absences remontees aujourd hui dans l'École active.',
                 'badge' => 'Suivi necessaire',
                 'valueClass' => 'text-rose-700',
                 'ring' => 'from-rose-500/15 via-rose-500/5 to-white',
@@ -63,7 +63,7 @@
             [
                 'title' => 'Retards',
                 'value' => (int) ($attendanceSummary['today_late'] ?? 0),
-                'meta' => 'Retards saisis par les enseignants sur la journee.',
+                'meta' => 'Retards saisis par les enseignants sur la journée.',
                 'badge' => 'A verifier',
                 'valueClass' => 'text-amber-700',
                 'ring' => 'from-amber-500/15 via-amber-500/5 to-white',
@@ -73,7 +73,7 @@
         ];
 
         $quickLinks = [
-            ['label' => 'Nouvel eleve', 'href' => route('admin.students.create'), 'variant' => 'primary'],
+            ['label' => 'Nouvel Élève', 'href' => route('admin.students.create'), 'variant' => 'primary'],
             ['label' => 'Paiement', 'href' => route('admin.finance.payments.create'), 'variant' => 'secondary'],
             ['label' => 'Structure', 'href' => route('admin.structure.index'), 'variant' => 'secondary'],
             ['label' => 'Utilisateurs', 'href' => route('admin.users.index'), 'variant' => 'secondary'],
@@ -90,7 +90,7 @@
 
     <x-ui.page-header
         title="Vue d'ensemble"
-        subtitle="Les chiffres essentiels de l'etablissement, sans surcharge."
+        subtitle="Les chiffres essentiels de l'Établissement, sans surcharge."
     >
         <x-slot name="actions">
             @foreach($quickLinks as $link)
@@ -146,11 +146,11 @@
         <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Presences</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Présences</p>
                     <h2 class="mt-1 text-lg font-semibold text-slate-950">Aujourd'hui</h2>
                 </div>
                 <x-ui.button :href="route('admin.attendance.index')" variant="secondary" size="sm">
-                    Suivi des presences
+                    Suivi des présences
                 </x-ui.button>
             </div>
 
@@ -178,7 +178,7 @@
     </section>
 
     <x-ui.card
-        title="Vue hebdomadaire des presences"
+        title="Vue hebdomadaire des présences"
         subtitle="Absences et retards de la semaine."
         class="border border-slate-200 bg-white shadow-sm"
     >
@@ -211,12 +211,12 @@
     <section class="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(520px,0.85fr)]">
         <x-ui.card
             title="Revenus sur 12 mois"
-            subtitle="Lecture claire des encaissements mensuels, avec selection rapide par mois."
+            subtitle="Lecture claire des encaissements mensuels, avec sélection rapide par mois."
             class="border border-slate-200 bg-white shadow-sm"
         >
             <div class="grid gap-3 sm:grid-cols-3">
                 <div class="rounded-2xl border border-sky-200 bg-gradient-to-br from-sky-50 to-white px-4 py-3 shadow-sm">
-                    <p class="text-xs font-semibold uppercase tracking-[0.12em] text-sky-700">Selection</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.12em] text-sky-700">Sélection</p>
                     <p class="mt-1 text-xl font-semibold text-slate-950">{{ number_format($selectedChartTotal, 2) }} MAD</p>
                     <p class="mt-1 text-xs text-slate-500">{{ $selectedChartCount }} paiement(s)</p>
                 </div>
@@ -254,7 +254,7 @@
 
             <div class="mt-4 flex flex-wrap items-center gap-2">
                 @if(!empty($selected))
-                    <x-ui.badge variant="success">Mois selectionne : {{ $selected }}</x-ui.badge>
+                    <x-ui.badge variant="success">Mois sélectionné : {{ $selected }}</x-ui.badge>
                 @else
                     <span class="app-hint">Astuce : cliquez sur une barre pour afficher les paiements detailles.</span>
                 @endif
@@ -263,7 +263,7 @@
 
         <x-ui.card
             title="Paiements detailles"
-            subtitle="Filtrez par mois, date, methode ou recherche."
+            subtitle="Filtrez par mois, date, méthode ou recherche."
             class="border border-slate-200 bg-white shadow-sm"
         >
             <form method="GET" action="{{ route('admin.dashboard') }}" class="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2">
@@ -278,7 +278,7 @@
                 </div>
 
                 <div>
-                    <label class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Methode</label>
+                    <label class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Méthode</label>
                     <select name="finance_method" class="mt-1 w-full rounded-xl border-slate-200 bg-white text-sm">
                         <option value="">Toutes</option>
                         @foreach($financeMethods as $method => $label)
@@ -299,7 +299,7 @@
 
                 <div class="sm:col-span-2">
                     <label class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Recherche</label>
-                    <input name="finance_search" value="{{ $financeSearch }}" class="mt-1 w-full rounded-xl border-slate-200 bg-white text-sm" placeholder="Eleve, parent, recu ou note...">
+                    <input name="finance_search" value="{{ $financeSearch }}" class="mt-1 w-full rounded-xl border-slate-200 bg-white text-sm" placeholder="Élève, parent, reçu ou note...">
                 </div>
 
                 <div class="flex flex-wrap gap-2 sm:col-span-2">
@@ -326,10 +326,10 @@
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Eleve</th>
+                                <th>Élève</th>
                                 <th>Parent</th>
-                                <th>Recu</th>
-                                <th>Methode</th>
+                                <th>Reçu</th>
+                                <th>Méthode</th>
                                 <th class="text-right">Montant</th>
                             </tr>
                         </thead>
@@ -442,7 +442,7 @@
                         },
                         {
                             type: 'line',
-                            label: 'Selection',
+                            label: 'Sélection',
                             data: values,
                             borderColor: 'rgba(15, 23, 42, 0.92)',
                             backgroundColor: '#ffffff',

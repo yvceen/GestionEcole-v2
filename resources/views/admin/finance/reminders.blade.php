@@ -1,4 +1,4 @@
-<x-admin-layout title="Rappels de paiement" subtitle="Programmez des relances claires, ciblees sur les familles concernees et alignees sur les impayes reels.">
+﻿<x-admin-layout title="Rappels de paiement" subtitle="Programmez des relances claires, ciblees sur les familles concernees et alignees sur les impayés réels.">
     @php
         $setting = $setting ?? null;
         $summary = $summary ?? [];
@@ -8,7 +8,7 @@
 
     <x-ui.page-header
         title="Rappels de paiement"
-        subtitle="Configurez la date de relance, verifiez les familles ciblees et envoyez un rappel manuel si necessaire."
+        subtitle="Configurez la date de relance, vérifiez les familles ciblees et envoyez un rappel manuel si necessaire."
     >
         <x-slot name="actions">
             <form method="POST" action="{{ route('admin.finance.reminders.send_now') }}">
@@ -37,12 +37,12 @@
         <div class="app-stat-card">
             <p class="app-stat-label">Montant en retard</p>
             <p class="app-stat-value">{{ number_format((float) ($summary['total_overdue'] ?? 0), 2) }}</p>
-            <p class="app-stat-meta">MAD deja en retard sur des mois precedents.</p>
+            <p class="app-stat-meta">MAD déjà en retard sur des mois précédents.</p>
         </div>
         <div class="app-stat-card">
             <p class="app-stat-label">Dernier envoi</p>
             <p class="app-stat-value text-xl">{{ $setting?->last_sent_at?->format('d/m/Y H:i') ?? '-' }}</p>
-            <p class="app-stat-meta">Evite les doubles envois automatiques le meme jour.</p>
+            <p class="app-stat-meta">Evite les doubles envois automatiques le même jour.</p>
         </div>
     </section>
 
@@ -57,7 +57,7 @@
                     <input type="checkbox" name="is_enabled" value="1" @checked((bool) ($setting?->is_enabled ?? false)) class="mt-1 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
                     <span>
                         <span class="block text-sm font-semibold text-slate-900">Activer les rappels automatiques</span>
-                        <span class="mt-1 block text-sm text-slate-500">La verification se fera automatiquement chaque matin selon le jour que vous avez defini.</span>
+                        <span class="mt-1 block text-sm text-slate-500">La verification se fera automatiquement chaque matin selon le jour que vous avez défini.</span>
                     </span>
                 </label>
 
@@ -98,7 +98,7 @@
                                 <p class="mt-2 text-sm text-slate-600">Enfants : {{ implode(', ', $recipient['children']) }}</p>
                             </div>
                             <div class="flex flex-wrap gap-2">
-                                <x-ui.badge variant="warning">{{ $recipient['unpaid_months'] }} mois impayes</x-ui.badge>
+                                <x-ui.badge variant="warning">{{ $recipient['unpaid_months'] }} mois impayés</x-ui.badge>
                                 <x-ui.badge variant="danger">{{ $recipient['overdue_months'] }} mois en retard</x-ui.badge>
                             </div>
                         </div>

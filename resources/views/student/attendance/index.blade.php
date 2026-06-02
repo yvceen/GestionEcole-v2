@@ -1,4 +1,4 @@
-<x-student-layout title="Mes presences" subtitle="Visualisez rapidement vos presences, absences et retards, avec des filtres simples par date et statut.">
+﻿<x-student-layout title="Mes présences" subtitle="Visualisez rapidement vos présences, absences et retards, avec des filtres simples par date et statut.">
     <section class="grid gap-4 md:grid-cols-4">
         <article class="student-kpi">
             <p class="student-kpi-label">Total</p>
@@ -19,7 +19,7 @@
     </section>
 
     <section class="portal-filter-bar mt-6">
-        <form method="GET" data-loading-label="Filtrage des presences..." class="portal-filter-grid md:grid-cols-[180px_180px_180px_auto]">
+        <form method="GET" data-loading-label="Filtrage des présences..." class="portal-filter-grid md:grid-cols-[180px_180px_180px_auto]">
             <input type="date" name="date_from" value="{{ $dateFrom?->format('Y-m-d') }}" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
             <input type="date" name="date_to" value="{{ $dateTo?->format('Y-m-d') }}" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
             <select name="status" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
@@ -72,7 +72,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-3 py-10 text-center text-sm text-slate-500">Aucune presence enregistree.</td>
+                            <td colspan="4" class="px-3 py-10 text-center text-sm text-slate-500">Aucune présence enregistrée.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -93,7 +93,7 @@
                     <div class="portal-record-card-head">
                         <div class="min-w-0">
                             <p class="portal-record-title">{{ $attendance->date?->format('d/m/Y') ?? '-' }}</p>
-                            <p class="portal-record-subtitle">Historique de presence</p>
+                            <p class="portal-record-subtitle">Historique de présence</p>
                         </div>
                         <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $tone }}">
                             {{ $attendance->status === 'late' ? 'En retard' : strtoupper((string) $attendance->status) }}
@@ -111,7 +111,7 @@
                     </div>
                 </article>
             @empty
-                <div class="student-empty">Aucune presence enregistree.</div>
+                <div class="student-empty">Aucune présence enregistrée.</div>
             @endforelse
         </div>
 

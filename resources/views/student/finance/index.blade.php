@@ -1,4 +1,4 @@
-<x-student-layout title="Mon suivi financier" subtitle="Consultez vos paiements, imprimez vos recus et gardez une vue claire de votre dossier financier.">
+﻿<x-student-layout title="Mon suivi financier" subtitle="Consultez vos paiements, imprimez vos reçus et gardez une vue claire de votre dossier financier.">
     <section class="grid gap-4 md:grid-cols-3">
         <article class="student-kpi">
             <p class="student-kpi-label">Total regle</p>
@@ -6,9 +6,9 @@
             <p class="student-kpi-copy">Montant cumule de vos paiements.</p>
         </article>
         <article class="student-kpi">
-            <p class="student-kpi-label">Operations</p>
+            <p class="student-kpi-label">Opérations</p>
             <p class="student-kpi-value">{{ $paymentsCount }}</p>
-            <p class="student-kpi-copy">Lignes de paiement enregistrees.</p>
+            <p class="student-kpi-copy">Lignes de paiement enregistrées.</p>
         </article>
         <article class="student-kpi">
             <p class="student-kpi-label">Dernier paiement</p>
@@ -29,18 +29,18 @@
             <article class="student-panel">
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Recu</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Reçu</p>
                         <h2 class="mt-2 text-xl font-semibold tracking-tight text-slate-950">{{ $receipt->receipt_number }}</h2>
                         <p class="mt-2 text-sm text-slate-500">
                             {{ $receipt->issued_at?->format('d/m/Y H:i') ?? '-' }}
                             <span class="mx-2 text-slate-300">|</span>
-                            Methode {{ strtoupper((string) $receipt->method) }}
+                            Méthode {{ strtoupper((string) $receipt->method) }}
                         </p>
                     </div>
 
                     <div class="flex flex-wrap gap-2">
-                        <a href="{{ route('student.finance.receipts.show', $receipt) }}" data-loading-label="Ouverture du recu..." class="app-button-secondary rounded-full px-4 py-2 text-sm font-semibold">
-                            Voir le recu
+                        <a href="{{ route('student.finance.receipts.show', $receipt) }}" data-loading-label="Ouverture du reçu..." class="app-button-secondary rounded-full px-4 py-2 text-sm font-semibold">
+                            Voir le reçu
                         </a>
                         <a href="{{ route('student.finance.receipts.export', $receipt) }}" target="_blank" class="app-button-primary rounded-full px-4 py-2 text-sm font-semibold">
                             Imprimer
@@ -80,7 +80,7 @@
                     </div>
 
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Total du recu</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Total du reçu</p>
                         <p class="mt-3 text-2xl font-semibold tracking-tight text-slate-950">{{ number_format($receiptTotal, 2) }} MAD</p>
                         <p class="mt-2 text-sm text-slate-600">{{ $receipt->payments->count() }} ligne(s) pour votre dossier.</p>
                     </div>
@@ -88,7 +88,7 @@
             </article>
         @empty
             <div class="student-empty">
-                Aucun paiement enregistre pour le moment.
+                Aucun paiement enregistré pour le moment.
             </div>
         @endforelse
     </section>

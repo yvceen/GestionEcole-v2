@@ -1,4 +1,4 @@
-@php
+﻿@php
     $payments = $receipt->payments ?? collect();
     $school = $receipt->school
         ?? (app()->bound('currentSchool') ? app('currentSchool') : (app()->bound('current_school') ? app('current_school') : null));
@@ -23,7 +23,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <title>Recu {{ $receipt->receipt_number }}</title>
+    <title>Reçu {{ $receipt->receipt_number }}</title>
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
@@ -122,12 +122,12 @@
                         @if($schoolLogoUrl)
                             <img src="{{ $schoolLogoUrl }}" alt="Logo" class="logo">
                         @endif
-                        <div class="muted" style="margin-top: 10px;">Recu de paiement</div>
+                        <div class="muted" style="margin-top: 10px;">Reçu de paiement</div>
                         <div class="title">{{ $schoolName }}</div>
-                        <div class="muted" style="margin-top: 6px;">Document genere depuis l'espace eleve MyEdu.</div>
+                        <div class="muted" style="margin-top: 6px;">Document généré depuis l'espace Élève MyEdu.</div>
                     </td>
                     <td class="meta">
-                        <div class="muted">Numero de recu</div>
+                        <div class="muted">Numéro de reçu</div>
                         <div style="font-size:16px;font-weight:700;margin-top:6px;">{{ $receipt->receipt_number }}</div>
                         <div class="muted" style="margin-top:14px;">Date</div>
                         <div style="font-weight:600;margin-top:4px;">{{ $issuedAt }}</div>
@@ -141,7 +141,7 @@
                 <tr>
                     <td style="width:52%; padding-right: 12px; vertical-align: top;">
                         <div class="panel panel-muted">
-                            <div class="muted" style="text-transform: uppercase; font-size: 11px;">Eleve</div>
+                            <div class="muted" style="text-transform: uppercase; font-size: 11px;">Élève</div>
                             <div style="font-size:18px; font-weight:700; margin-top:8px;">{{ $student->full_name }}</div>
                             <div class="muted" style="margin-top:8px;">Classe {{ $student->classroom?->name ?? '-' }}</div>
                             <div class="muted" style="margin-top:4px;">Parent {{ $parentName }}</div>
@@ -151,7 +151,7 @@
                         <div class="panel">
                             <div class="muted" style="text-transform: uppercase; font-size: 11px;">Paiement</div>
                             <div style="font-size:28px; font-weight:700; margin-top:8px;">{{ number_format($total, 2) }} MAD</div>
-                            <div class="muted" style="margin-top:10px;">Methode {{ $paymentMethod }}</div>
+                            <div class="muted" style="margin-top:10px;">Méthode {{ $paymentMethod }}</div>
                             <div class="muted" style="margin-top:4px;">{{ $payments->count() }} ligne(s) facturee(s)</div>
                         </div>
                     </td>
@@ -161,7 +161,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Eleve</th>
+                        <th>Élève</th>
                         <th>Classe</th>
                         <th>Mois</th>
                         <th class="right">Montant</th>

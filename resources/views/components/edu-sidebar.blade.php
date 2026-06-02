@@ -29,7 +29,7 @@
             <x-school-logo :size="44" />
             <div class="min-w-0">
                 <div class="truncate text-sm font-semibold text-slate-900">{{ $user?->name ?? 'Utilisateur' }}</div>
-                <span class="text-xs capitalize text-slate-500">{{ $user?->role ?? 'Equipe educative' }}</span>
+                <span class="text-xs capitalize text-slate-500">{{ $user?->role ?? 'Equipe éducative' }}</span>
             </div>
         </div>
 

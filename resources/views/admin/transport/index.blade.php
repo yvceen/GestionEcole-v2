@@ -1,10 +1,10 @@
-<x-admin-layout title="Transport scolaire">
+﻿<x-admin-layout title="Transport scolaire">
     <x-ui.page-header
         title="Transport scolaire"
-        subtitle="Pilotez les circuits, vehicules et affectations depuis un espace plus clair."
+        subtitle="Pilotez les circuits, véhicules et affectations depuis un espace plus clair."
     >
         <x-slot name="actions">
-            <x-ui.button :href="route('admin.transport.assignments.create')" variant="primary">Affecter des eleves</x-ui.button>
+            <x-ui.button :href="route('admin.transport.assignments.create')" variant="primary">Affecter des Élèves</x-ui.button>
             <x-ui.button :href="route('admin.transport.routes.create')" variant="secondary">Nouvelle route</x-ui.button>
         </x-slot>
     </x-ui.page-header>
@@ -13,8 +13,8 @@
         <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
             <div>
                 <p class="text-xs font-bold uppercase tracking-[0.2em] text-sky-700">Gestion transport</p>
-                <h2 class="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-slate-950">Une vue simple pour suivre les trajets, les conducteurs et les eleves transportes.</h2>
-                <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600">Les tarifs restent dans la partie finance. Ici, vous gerez uniquement les circuits, les vehicules, les arrets et les affectations.</p>
+                <h2 class="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-slate-950">Une vue simple pour suivre les trajets, les conducteurs et les Élèves transportés.</h2>
+                <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600">Les tarifs restent dans la partie finance. Ici, vous gerez uniquement les circuits, les véhicules, les arrêts et les affectations.</p>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <a href="{{ route('admin.transport.routes.index') }}" class="rounded-3xl border border-white bg-white/85 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
@@ -22,7 +22,7 @@
                     <strong class="mt-2 block text-2xl text-slate-950">{{ $routesCount }}</strong>
                 </a>
                 <a href="{{ route('admin.transport.vehicles.index') }}" class="rounded-3xl border border-white bg-white/85 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-                    <span class="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Vehicules</span>
+                    <span class="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Véhicules</span>
                     <strong class="mt-2 block text-2xl text-slate-950">{{ $vehiclesCount }}</strong>
                 </a>
             </div>
@@ -31,29 +31,29 @@
 
     <section class="grid gap-4 sm:grid-cols-4">
         <article class="app-stat-card border-sky-100 bg-sky-50/60">
-            <p class="app-stat-label">Vehicules</p>
+            <p class="app-stat-label">Véhicules</p>
             <p class="app-stat-value">{{ $vehiclesCount }}</p>
             <p class="app-stat-meta">{{ $activeVehiclesCount ?? 0 }} actifs</p>
         </article>
         <article class="app-stat-card border-indigo-100 bg-indigo-50/60">
             <p class="app-stat-label">Circuits</p>
             <p class="app-stat-value">{{ $routesCount }}</p>
-            <p class="app-stat-meta">Routes configurees pour l ecole</p>
+            <p class="app-stat-meta">Routes configurees pour l'École</p>
         </article>
         <article class="app-stat-card border-emerald-100 bg-emerald-50/60">
             <p class="app-stat-label">Affectations</p>
             <p class="app-stat-value">{{ $assignmentsCount }}</p>
-            <p class="app-stat-meta">Eleves rattaches au transport</p>
+            <p class="app-stat-meta">Élèves rattachés au transport</p>
         </article>
         <article class="app-stat-card border-amber-100 bg-amber-50/60">
             <p class="app-stat-label">Pilotage</p>
             <p class="app-stat-value">{{ ($routes ?? collect())->sum('active_assignments_count') }}</p>
-            <p class="app-stat-meta">Places eleves sur les routes visibles</p>
+            <p class="app-stat-meta">Places Élèves sur les routes visibles</p>
         </article>
     </section>
 
     <section class="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-        <x-ui.card title="Circuits prioritaires" subtitle="Vue rapide des vehicules, conducteurs, arrets et eleves.">
+        <x-ui.card title="Circuits prioritaires" subtitle="Vue rapide des véhicules, conducteurs, arrêts et Élèves.">
             <div class="space-y-4">
                 @forelse($routes as $route)
                     <article class="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 px-4 py-4 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-md">
@@ -64,8 +64,8 @@
                             </div>
                             <div class="flex flex-wrap gap-2">
                                 <x-ui.badge :variant="$route->is_active ? 'success' : 'warning'">{{ $route->is_active ? 'Actif' : 'Inactif' }}</x-ui.badge>
-                                <x-ui.badge variant="info">{{ (int) $route->active_assignments_count }} eleve(s)</x-ui.badge>
-                                <x-ui.badge variant="warning">{{ (int) $route->stops_count }} arret(s)</x-ui.badge>
+                                <x-ui.badge variant="info">{{ (int) $route->active_assignments_count }} Élève(s)</x-ui.badge>
+                                <x-ui.badge variant="warning">{{ (int) $route->stops_count }} arrêt(s)</x-ui.badge>
                             </div>
                         </div>
 
@@ -84,8 +84,8 @@
                                     $lastStop = $orderedStops->last();
                                 @endphp
                                 <p class="font-semibold text-slate-900">Horaire indicatif</p>
-                                <p>Matin : {{ $firstStop?->scheduled_time ? substr((string) $firstStop->scheduled_time, 0, 5) : 'Non defini' }}</p>
-                                <p>Soir : {{ $lastStop?->scheduled_time ? substr((string) $lastStop->scheduled_time, 0, 5) : 'Non defini' }}</p>
+                                <p>Matin : {{ $firstStop?->scheduled_time ? substr((string) $firstStop->scheduled_time, 0, 5) : 'Non défini' }}</p>
+                                <p>Soir : {{ $lastStop?->scheduled_time ? substr((string) $lastStop->scheduled_time, 0, 5) : 'Non défini' }}</p>
                             </div>
                         </div>
 
@@ -100,16 +100,16 @@
         </x-ui.card>
 
         <div class="space-y-6">
-            <x-ui.card title="Actions rapides" subtitle="Acces direct aux ecrans les plus utiles.">
+            <x-ui.card title="Actions rapides" subtitle="Accès direct aux ecrans les plus utiles.">
                 <div class="space-y-3">
-                    <x-ui.button :href="route('admin.transport.vehicles.index')" variant="primary">Gerer les vehicules</x-ui.button>
+                    <x-ui.button :href="route('admin.transport.vehicles.index')" variant="primary">Gerer les véhicules</x-ui.button>
                     <x-ui.button :href="route('admin.transport.routes.index')" variant="secondary">Gerer les routes</x-ui.button>
                     <x-ui.button :href="route('admin.transport.assignments.index')" variant="secondary">Gerer les affectations</x-ui.button>
-                    <x-ui.button :href="route('admin.students.index')" variant="ghost">Ouvrir les fiches eleves</x-ui.button>
+                    <x-ui.button :href="route('admin.students.index')" variant="ghost">Ouvrir les fiches Élèves</x-ui.button>
                 </div>
             </x-ui.card>
 
-            <x-ui.card title="Dernieres affectations" subtitle="Suivez les mouvements transport les plus recents.">
+            <x-ui.card title="Dernières affectations" subtitle="Suivez les mouvements transport les plus recents.">
                 <div class="space-y-3">
                     @forelse($recentAssignments as $assignment)
                         <article class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
@@ -122,7 +122,7 @@
                             </div>
                         </article>
                     @empty
-                        <div class="student-empty">Aucune affectation recente.</div>
+                        <div class="student-empty">Aucune affectation récente.</div>
                     @endforelse
                 </div>
             </x-ui.card>

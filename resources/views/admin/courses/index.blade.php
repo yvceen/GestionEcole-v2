@@ -1,8 +1,8 @@
-<x-admin-layout title="Cours">
+﻿<x-admin-layout title="Cours">
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-semibold text-slate-900">Cours</h1>
-            <p class="mt-1 text-sm text-slate-500">Cours de l'ecole.</p>
+            <p class="mt-1 text-sm text-slate-500">Cours de l'École.</p>
         </div>
         <a href="{{ route('admin.courses.create') }}" class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-black">
             Nouveau cours

@@ -34,7 +34,7 @@
                 </div>
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
                     <p class="font-semibold text-slate-900">{{ $selectedClass?->name ?? 'Classe' }}</p>
-                    <p class="mt-1 text-xs">Selectionnez une autre classe pour recharger la grille.</p>
+                    <p class="mt-1 text-xs">Sélectionnez une autre classe pour recharger la grille.</p>
                 </div>
             </div>
             <button type="submit" class="app-button-secondary">Filtrer</button>

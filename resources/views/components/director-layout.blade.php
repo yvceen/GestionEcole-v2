@@ -1,6 +1,6 @@
-@props([
+﻿@props([
     'title' => 'Espace Directeur',
-    'subtitle' => 'Pilotez les indicateurs, les suivis pedagogiques et les arbitrages de direction dans un shell aligne sur le portail parent.',
+    'subtitle' => 'Pilotez les indicateurs, les suivis pédagogiques et les arbitrages de direction dans un shell aligne sur le portail parent.',
 ])
 
 @php
@@ -9,15 +9,15 @@
     $nav = [
         ['label' => 'Tableau de bord', 'route' => 'director.dashboard', 'icon' => 'home', 'section' => 'Vue generale'],
         ['label' => 'Suivi', 'route' => 'director.monitoring', 'icon' => 'chart', 'section' => 'Suivi'],
-        ['label' => 'Presences', 'route' => 'director.attendance.index', 'icon' => 'shield', 'section' => 'Suivi'],
+        ['label' => 'Présences', 'route' => 'director.attendance.index', 'icon' => 'shield', 'section' => 'Suivi'],
         ['label' => 'Devoirs', 'route' => 'director.homeworks.index', 'icon' => 'clipboard', 'section' => 'Suivi'],
-        ['label' => 'Eleves', 'route' => 'director.students.index', 'icon' => 'user', 'section' => 'Gestion'],
+        ['label' => 'Élèves', 'route' => 'director.students.index', 'icon' => 'user', 'section' => 'Gestion'],
         ['label' => 'Parents', 'route' => 'director.parents.index', 'icon' => 'users', 'section' => 'Gestion'],
         ['label' => 'Enseignants', 'route' => 'director.teachers.index', 'icon' => 'users', 'section' => 'Gestion'],
-        ['label' => 'Matieres', 'route' => 'director.subjects.index', 'icon' => 'book', 'section' => 'Organisation'],
+        ['label' => 'Matières', 'route' => 'director.subjects.index', 'icon' => 'book', 'section' => 'Organisation'],
         ['label' => 'Emploi du temps', 'route' => 'director.timetable.index', 'icon' => 'calendar', 'section' => 'Organisation'],
         ['label' => 'Agenda', 'route' => 'director.events.index', 'icon' => 'calendar', 'section' => 'Organisation'],
-        ['label' => 'Activites', 'route' => 'director.activities.index', 'icon' => 'calendar', 'section' => 'Organisation'],
+        ['label' => 'Activités', 'route' => 'director.activities.index', 'icon' => 'calendar', 'section' => 'Organisation'],
         ['label' => 'Rendez-vous', 'route' => 'director.appointments.index', 'icon' => 'calendar', 'section' => 'Communication'],
         ['label' => 'Actualites', 'route' => 'director.news.index', 'icon' => 'message', 'section' => 'Communication'],
     ];
@@ -81,12 +81,12 @@
                 :subtitle="$subtitle"
                 :badges="[
                     auth()->user()?->name ?? 'Direction',
-                    $currentSchool?->name ?? 'Ecole active',
+                    $currentSchool?->name ?? 'École active',
                     $activeNav['label'] ?? 'Pilotage',
                 ]"
                 summary-title="Vue active"
                 :summary-value="$activeNav['label'] ?? 'Direction'"
-                summary-copy="Les vues de suivi, de resultats et de coordination gardent la meme structure de navigation et le meme rythme visuel."
+                summary-copy="Les vues de suivi, de resultats et de coordination gardent la même structure de navigation et le même rythme visuel."
                 :nav="$nav"
             />
 

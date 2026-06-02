@@ -1,4 +1,4 @@
-@php
+﻿@php
     $schoolName = $school?->name ?? config('app.name', 'MyEdu');
     $logoPath = is_string($school?->logo_path ?? null) ? ltrim((string) $school->logo_path, '/') : '';
     $schoolLogoUrl = null;
@@ -74,7 +74,7 @@
         @endforeach
 
         <div class="footer">
-            <span class="muted">Document genere depuis MyEdu pour remise aux familles.</span>
+            <span class="muted">Document généré depuis MyEdu pour remise aux familles.</span>
         </div>
     </div>
 </body>

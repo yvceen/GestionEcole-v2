@@ -1,4 +1,4 @@
-<x-student-layout
+﻿<x-student-layout
     title="Tableau de bord"
     subtitle="Retrouvez en un coup d'oeil votre prochain cours, vos devoirs urgents, vos notifications et les indicateurs utiles de votre semaine."
 >
@@ -7,7 +7,7 @@
             <article class="student-panel">
                 <div class="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
                     <div>
-                        <p class="student-eyebrow">Profil eleve</p>
+                        <p class="student-eyebrow">Profil Élève</p>
                         <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{{ $student->full_name }}</h2>
                         <p class="mt-2 text-sm text-slate-600">
                             Classe <span class="font-semibold text-slate-950">{{ $student->classroom?->name ?? '-' }}</span>
@@ -121,7 +121,7 @@
                 <div class="flex items-center justify-between gap-3">
                     <div>
                         <p class="student-panel-title">Actualites de l agenda</p>
-                        <p class="student-panel-copy">Informations recentes sur les cours, examens et activites.</p>
+                        <p class="student-panel-copy">Informations récentes sur les cours, examens et activités.</p>
                     </div>
                     @if(Route::has('student.events.index'))
                         <a href="{{ route('student.events.index') }}" data-loading-label="Ouverture de l'agenda..." class="text-sm font-semibold text-sky-700 hover:text-sky-800">
@@ -136,7 +136,7 @@
                             <p class="mt-1 text-xs text-slate-500">
                                 {{ $announcement->date?->format('d/m/Y') ?? '-' }}
                                 <span class="mx-2 text-slate-300">|</span>
-                                {{ $announcement->scope === 'classroom' ? 'Classe ciblee' : 'Toute l ecole' }}
+                                {{ $announcement->scope === 'classroom' ? 'Classe ciblée' : 'Toute l'École' }}
                             </p>
                         </div>
                     @empty
@@ -150,10 +150,10 @@
             <article class="student-panel">
                 <div class="flex items-start justify-between gap-3">
                     <div>
-                        <p class="student-panel-title">Acces rapides</p>
+                        <p class="student-panel-title">Accès rapides</p>
                         <p class="student-panel-copy">Les rubriques essentielles restent visibles sans chercher dans tout le menu.</p>
                     </div>
-                    <span class="portal-chip">Acces direct</span>
+                    <span class="portal-chip">Accès direct</span>
                 </div>
                 <div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
                     @if(Route::has('student.timetable.index'))
@@ -164,8 +164,8 @@
                     <a href="{{ route('student.grades.index') }}" data-loading-label="Ouverture des notes..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">
                         Consulter mes notes
                     </a>
-                    <a href="{{ route('student.attendance.index') }}" data-loading-label="Ouverture des presences..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">
-                        Voir mes presences
+                    <a href="{{ route('student.attendance.index') }}" data-loading-label="Ouverture des présences..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">
+                        Voir mes présences
                     </a>
                     <a href="{{ route('student.notifications.index') }}" data-loading-label="Ouverture des notifications..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">
                         Ouvrir mes notifications

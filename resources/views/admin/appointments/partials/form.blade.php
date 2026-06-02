@@ -1,4 +1,4 @@
-@php
+﻿@php
     $selectedStudentId = old('student_id', $appointment?->student_id);
     $scheduledAtValue = old('scheduled_at', optional($appointment?->scheduled_for)->format('Y-m-d\TH:i'));
 @endphp
@@ -17,7 +17,7 @@
     <x-ui.card title="Demande" subtitle="Informations visibles dans la liste et cote parent.">
         <div class="grid gap-5 md:grid-cols-2">
             <x-ui.input label="Titre" name="title" :value="old('title', $appointment?->title)" />
-            <x-ui.input label="Telephone parent" name="parent_phone" :value="old('parent_phone', $appointment?->parent_phone)" />
+            <x-ui.input label="Téléphone parent" name="parent_phone" :value="old('parent_phone', $appointment?->parent_phone)" />
             <x-ui.input label="Date et heure" name="scheduled_at" type="datetime-local" :value="$scheduledAtValue" />
 
             <div>

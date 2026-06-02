@@ -1,7 +1,7 @@
-<x-school-life-layout title="Notes" subtitle="Vue de consultation des notes pour le suivi vie scolaire.">
-    <x-ui.card title="Filtres" subtitle="Recherche simple par eleve et classe.">
+﻿<x-school-life-layout title="Notes" subtitle="Vue de consultation des notes pour le suivi vie scolaire.">
+    <x-ui.card title="Filtres" subtitle="Recherche simple par Élève et classe.">
         <form method="GET" class="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px_auto_auto]">
-            <input name="q" value="{{ $q }}" class="app-input" placeholder="Nom de l'eleve">
+            <input name="q" value="{{ $q }}" class="app-input" placeholder="Nom de l'Élève">
             <select name="classroom_id" class="app-input">
                 <option value="">Toutes les classes</option>
                 @foreach($classrooms as $classroom)
@@ -13,12 +13,12 @@
         </form>
     </x-ui.card>
 
-    <x-ui.card title="Dernieres notes" subtitle="Consultation uniquement.">
+    <x-ui.card title="Dernières notes" subtitle="Consultation uniquement.">
         <div class="overflow-x-auto rounded-2xl border border-slate-200">
             <table class="app-table min-w-[820px]">
                 <thead>
                     <tr>
-                        <th>Eleve</th>
+                        <th>Élève</th>
                         <th>Classe</th>
                         <th>Matiere</th>
                         <th>Note</th>

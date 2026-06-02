@@ -1,8 +1,8 @@
-<x-admin-layout title="Affectation pedagogique">
+﻿<x-admin-layout title="Affectation pédagogique">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Affectation pedagogique</h1>
-            <p class="mt-1 text-sm text-slate-500">Affectez des classes et des matieres a chaque enseignant, puis centralisez ses ressources.</p>
+            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Affectation pédagogique</h1>
+            <p class="mt-1 text-sm text-slate-500">Affectez des classes et des matières a chaque enseignant, puis centralisez ses ressources.</p>
         </div>
     </div>
 
@@ -17,7 +17,7 @@
             <div class="border-b border-black/10 bg-white/60 px-5 py-4 flex items-center justify-between">
                 <div>
                     <div class="text-sm font-semibold text-slate-900">Enseignants</div>
-                    <div class="text-xs text-slate-500">Choisissez un enseignant pour gerer ses classes, ses matieres et ses ressources.</div>
+                    <div class="text-xs text-slate-500">Choisissez un enseignant pour gerer ses classes, ses matières et ses ressources.</div>
                 </div>
                 <div class="text-xs text-slate-500">Total : <span class="font-semibold text-slate-900">{{ count($teachers ?? []) }}</span></div>
             </div>
@@ -41,7 +41,7 @@
         <div class="rounded-[28px] border border-black/10 bg-white/80 shadow-sm overflow-hidden">
             <div class="border-b border-black/10 bg-white/60 px-5 py-4">
                 <div class="text-sm font-semibold text-slate-900">Affectation</div>
-                <div class="text-xs text-slate-500">Classes et matieres enseignees.</div>
+                <div class="text-xs text-slate-500">Classes et matières enseignees.</div>
             </div>
 
             <div class="p-6">
@@ -55,7 +55,7 @@
                         </div>
                         <div class="flex gap-2">
                             <span class="inline-flex items-center rounded-full bg-black/5 px-3 py-1 text-xs font-semibold text-slate-700">{{ count($assignedClassroomIds ?? []) }} classes</span>
-                            <span class="inline-flex items-center rounded-full bg-black/5 px-3 py-1 text-xs font-semibold text-slate-700">{{ count($assignedSubjectIds ?? []) }} matieres</span>
+                            <span class="inline-flex items-center rounded-full bg-black/5 px-3 py-1 text-xs font-semibold text-slate-700">{{ count($assignedSubjectIds ?? []) }} matières</span>
                         </div>
                     </div>
 
@@ -81,7 +81,7 @@
 
                         <div>
                             <div class="flex items-center justify-between mb-2">
-                                <label class="block text-sm font-semibold">Matieres enseignees</label>
+                                <label class="block text-sm font-semibold">Matières enseignees</label>
                             </div>
                             <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
                                 @forelse(($subjects ?? []) as $s)
@@ -108,8 +108,8 @@
         <div class="mt-6 grid gap-4 xl:grid-cols-[380px_minmax(0,1fr)]">
             <div class="rounded-[28px] border border-black/10 bg-white/80 p-6 shadow-sm">
                 <div>
-                    <div class="text-sm font-semibold text-slate-900">Ressources pedagogiques</div>
-                    <div class="mt-1 text-xs text-slate-500">Deposez les supports relies a l enseignant, une matiere et une classe.</div>
+                    <div class="text-sm font-semibold text-slate-900">Ressources pédagogiques</div>
+                    <div class="mt-1 text-xs text-slate-500">Deposez les supports reliés a l enseignant, une matiere et une classe.</div>
                 </div>
 
                 <form method="POST" action="{{ route('admin.teachers.pedagogy.resources.store', $selectedTeacher) }}" enctype="multipart/form-data" class="mt-5 space-y-4">
@@ -156,7 +156,7 @@
                 <div class="flex items-center justify-between gap-3">
                     <div>
                         <div class="text-sm font-semibold text-slate-900">Bibliotheque de l enseignant</div>
-                        <div class="mt-1 text-xs text-slate-500">Classement par matiere et classe, sans sortir du module pedagogique.</div>
+                        <div class="mt-1 text-xs text-slate-500">Classement par matiere et classe, sans sortir du module pédagogique.</div>
                     </div>
                     <div class="text-xs text-slate-500">{{ count($resources ?? []) }} fichier(s)</div>
                 </div>
@@ -167,7 +167,7 @@
                             <div class="flex items-start justify-between gap-3">
                                 <div>
                                     <div class="text-sm font-semibold text-slate-900">{{ $resource->title }}</div>
-                                    <div class="mt-1 text-xs text-slate-500">{{ $resource->subject?->name ?? 'Sans matiere' }} • {{ $resource->classroom?->name ?? 'Toutes classes' }}</div>
+                                    <div class="mt-1 text-xs text-slate-500">{{ $resource->subject?->name ?? 'Sans matiere' }} â€¢ {{ $resource->classroom?->name ?? 'Toutes classes' }}</div>
                                 </div>
                                 <form method="POST" action="{{ route('admin.teachers.pedagogy.resources.destroy', [$selectedTeacher, $resource]) }}" onsubmit="return confirm('Supprimer cette ressource ?')">
                                     @csrf
@@ -183,7 +183,7 @@
                             </div>
                         </article>
                     @empty
-                        <div class="rounded-2xl border border-dashed border-black/10 px-4 py-8 text-center text-sm text-slate-500">Aucune ressource pedagogique enregistree pour cet enseignant.</div>
+                        <div class="rounded-2xl border border-dashed border-black/10 px-4 py-8 text-center text-sm text-slate-500">Aucune ressource pédagogique enregistrée pour cet enseignant.</div>
                     @endforelse
                 </div>
             </div>

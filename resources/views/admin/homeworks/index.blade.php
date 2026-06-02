@@ -1,4 +1,4 @@
-@php
+﻿@php
     $layoutComponent = $layoutComponent ?? 'admin-layout';
 @endphp
 
@@ -187,7 +187,7 @@
                                     <td class="min-w-[230px]">
                                         <p class="font-semibold text-slate-900">{{ $hw->title }}</p>
                                         <p class="mt-1 text-xs text-slate-500">
-                                            Cree le {{ optional($hw->created_at)->format('d/m/Y H:i') ?? '-' }}
+                                            Créé le {{ optional($hw->created_at)->format('d/m/Y H:i') ?? '-' }}
                                         </p>
                                     </td>
                                     <td class="min-w-[330px]">

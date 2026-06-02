@@ -1,9 +1,9 @@
-<x-parent-layout title="Devoir">
+﻿<x-parent-layout title="Devoir">
     <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
             <div class="inline-flex items-center gap-2 rounded-full border border-black/5 bg-white/70 px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm">
                 <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-                {{ $homework->classroom?->name ?? '-' }} • {{ $homework->classroom?->level?->name ?? '-' }}
+                {{ $homework->classroom?->name ?? '-' }} â€¢ {{ $homework->classroom?->level?->name ?? '-' }}
             </div>
 
             <h1 class="mt-4 text-2xl font-semibold tracking-tight text-slate-900">
@@ -72,7 +72,7 @@
                                 <div class="flex items-start justify-between gap-3">
                                     <div>
                                         <div class="text-sm font-semibold text-slate-900">
-                                            {{ $s->student?->full_name ?? 'Eleve' }}
+                                            {{ $s->student?->full_name ?? 'Élève' }}
                                         </div>
                                         <div class="mt-1 text-xs text-slate-500">
                                             Envoye: {{ $s->submitted_at?->format('d/m/Y H:i') ?? $s->created_at->format('d/m/Y H:i') }}
@@ -108,10 +108,10 @@
                 @csrf
 
                 <div class="text-sm font-semibold text-slate-900">Envoyer une submission</div>
-                <p class="mt-1 text-xs text-slate-500">Selectionnez l eleve, ajoutez une description et joignez les fichiers.</p>
+                <p class="mt-1 text-xs text-slate-500">Sélectionnez l Élève, ajoutez une description et joignez les fichiers.</p>
 
                 <div class="mt-4">
-                    <label class="text-xs font-semibold text-slate-700">Eleve</label>
+                    <label class="text-xs font-semibold text-slate-700">Élève</label>
                     <select name="student_id" class="mt-1 w-full rounded-2xl border border-slate-200 bg-white/70 px-3 py-2 text-sm">
                         @foreach($children as $c)
                             <option value="{{ $c->id }}">{{ $c->full_name }} - {{ $c->classroom?->name ?? '-' }}</option>
@@ -146,7 +146,7 @@
 
                 <button type="submit"
                         class="mt-5 w-full rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black transition">
-                    Envoyer ✅
+                    Envoyer âœ…
                 </button>
             </form>
         </div>

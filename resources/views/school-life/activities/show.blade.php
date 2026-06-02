@@ -1,4 +1,4 @@
-<x-school-life-layout :title="$activity->title" subtitle="Suivi des participants, pointage et compte rendu de l activite.">
+﻿<x-school-life-layout :title="$activity->title" subtitle="Suivi des participants, pointage et compte rendu de l activité.">
     <x-ui.page-header :title="$activity->title" :subtitle="($activity->start_date?->format('d/m/Y H:i') ?? '-') . ' -> ' . ($activity->end_date?->format('d/m/Y H:i') ?? '-')">
         <x-slot name="actions">
             <x-ui.button :href="route('school-life.activities.index')" variant="secondary">Retour liste</x-ui.button>
@@ -20,7 +20,7 @@
         </article>
     </section>
 
-    <x-ui.card title="Participants" subtitle="Mettez a jour la confirmation et la presence de chaque eleve.">
+    <x-ui.card title="Participants" subtitle="Mettez a jour la confirmation et la présence de chaque Élève.">
         <div class="space-y-3">
             @forelse($activity->participants as $participant)
                 <form method="POST" action="{{ route('school-life.activities.participants.update', [$activity, $participant]) }}" class="rounded-2xl border border-slate-200 bg-white px-4 py-4">
@@ -36,7 +36,7 @@
                             <option value="declined" @selected($participant->confirmation_status === 'declined')>Refuse</option>
                         </select>
                         <select name="attendance_status" class="app-input">
-                            <option value="">Presence non renseignee</option>
+                            <option value="">Présence non renseignee</option>
                             <option value="present" @selected($participant->attendance_status === 'present')>Present</option>
                             <option value="absent" @selected($participant->attendance_status === 'absent')>Absent</option>
                         </select>
@@ -45,7 +45,7 @@
                     </div>
                 </form>
             @empty
-                <div class="student-empty">Aucun participant pour cette activite.</div>
+                <div class="student-empty">Aucun participant pour cette activité.</div>
             @endforelse
         </div>
     </x-ui.card>
@@ -64,7 +64,7 @@
                         @endif
                     </article>
                 @empty
-                    <div class="student-empty">Aucun rapport pour cette activite.</div>
+                    <div class="student-empty">Aucun rapport pour cette activité.</div>
                 @endforelse
             </div>
         </x-ui.card>

@@ -1,5 +1,5 @@
-<x-school-life-layout title="Activites" subtitle="Participation des eleves, presence et suivi terrain des activites.">
-    <x-ui.page-header title="Activites scolaires" subtitle="Vue operationnelle pour confirmer, pointer et suivre les activites du jour.">
+﻿<x-school-life-layout title="Activités" subtitle="Participation des Élèves, présence et suivi terrain des activités.">
+    <x-ui.page-header title="Activités scolaires" subtitle="Vue operationnelle pour confirmer, pointer et suivre les activités du jour.">
         <x-slot name="actions">
             <x-ui.button :href="route('admin.activities.index')" variant="secondary">Gestion admin</x-ui.button>
             <x-ui.button :href="route('school-life.events.index')" variant="primary">Agenda hebdo</x-ui.button>
@@ -30,7 +30,7 @@
         </form>
     </x-ui.card>
 
-    <x-ui.card title="Activites" subtitle="Ouvrez une activite pour gerer les participants, presences et rapports.">
+    <x-ui.card title="Activités" subtitle="Ouvrez une activité pour gerer les participants, présences et rapports.">
         <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             @forelse($activities as $activity)
                 <article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -48,11 +48,11 @@
                         <x-ui.badge variant="warning">Presents: {{ (int) $activity->attended_count }}</x-ui.badge>
                     </div>
                     <div class="mt-4">
-                        <x-ui.button :href="route('school-life.activities.show', $activity)" variant="primary" size="sm">Gerer activite</x-ui.button>
+                        <x-ui.button :href="route('school-life.activities.show', $activity)" variant="primary" size="sm">Gerer activité</x-ui.button>
                     </div>
                 </article>
             @empty
-                <div class="student-empty md:col-span-2 xl:col-span-3">Aucune activite disponible.</div>
+                <div class="student-empty md:col-span-2 xl:col-span-3">Aucune activité disponible.</div>
             @endforelse
         </div>
         <div class="mt-4">{{ $activities->links() }}</div>

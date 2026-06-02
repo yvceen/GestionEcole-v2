@@ -1,6 +1,6 @@
-<x-parent-layout title="Transport scolaire" subtitle="Suivez le circuit de transport de vos enfants et les derniers pointages montee/descente.">
+﻿<x-parent-layout title="Transport scolaire" subtitle="Suivez le circuit de transport de vos enfants et les derniers pointages montée/descente.">
     <section class="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-        <x-ui.card title="Affectations transport" subtitle="Informations de route, vehicule et points d arret.">
+        <x-ui.card title="Affectations transport" subtitle="Informations de route, vehicule et points d arrêt.">
             <div class="space-y-3">
                 @forelse($children as $child)
                     @php($assignment = $child->transportAssignment)
@@ -29,13 +29,13 @@
                                     <p>Chauffeur: <span class="font-semibold text-slate-900">{{ $assignment->vehicle->driver->name }}</span></p>
                                 @endif
                                 @if($assignment->pickup_point)
-                                    <p>Point montee: <span class="font-semibold text-slate-900">{{ $assignment->pickup_point }}</span></p>
+                                    <p>Point montée: <span class="font-semibold text-slate-900">{{ $assignment->pickup_point }}</span></p>
                                 @endif
                             </div>
 
                             @if($assignment->route->stops->isNotEmpty())
                                 <div class="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
-                                    <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Arrets</p>
+                                    <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Arrêts</p>
                                     <div class="mt-2 space-y-1 text-sm text-slate-700">
                                         @foreach($assignment->route->stops->sortBy('stop_order') as $stop)
                                             <p>
@@ -53,12 +53,12 @@
                         @endif
                     </article>
                 @empty
-                    <div class="student-empty">Aucun enfant lie a ce compte.</div>
+                    <div class="student-empty">Aucun enfant lié a ce compte.</div>
                 @endforelse
             </div>
         </x-ui.card>
 
-        <x-ui.card title="Derniers pointages" subtitle="12 derniers evenements montee/descente recents.">
+        <x-ui.card title="Derniers pointages" subtitle="12 derniers Événements montée/descente recents.">
             <div class="space-y-2">
                 @forelse($logs as $log)
                     <article class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
@@ -73,7 +73,7 @@
                         </p>
                     </article>
                 @empty
-                    <div class="student-empty">Aucun pointage transport recent.</div>
+                    <div class="student-empty">Aucun pointage transport récent.</div>
                 @endforelse
             </div>
         </x-ui.card>

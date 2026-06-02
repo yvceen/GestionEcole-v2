@@ -1,4 +1,4 @@
-<x-director-layout title="Enseignants">
+﻿<x-director-layout title="Enseignants">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight">Gestion des enseignants</h1>
@@ -6,7 +6,7 @@
         </div>
 
         <form method="GET" class="flex flex-col gap-2 sm:flex-row">
-            <input name="q" value="{{ $q }}" placeholder="Rechercher par nom, email ou telephone..."
+            <input name="q" value="{{ $q }}" placeholder="Rechercher par nom, email ou téléphone..."
                    class="min-w-0 rounded-2xl border border-black/10 bg-white/70 px-4 py-2 text-sm"/>
             <button class="rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-black">Rechercher</button>
         </form>
@@ -40,7 +40,7 @@
                                 <div class="mt-1 text-lg font-semibold">{{ $t->homeworks_count }}</div>
                             </div>
                             <div class="rounded-2xl border border-black/5 bg-white/60 p-3">
-                                <div class="text-[11px] uppercase tracking-wider text-slate-500">Derniere activite</div>
+                                <div class="text-[11px] uppercase tracking-wider text-slate-500">Derniere activité</div>
                                 <div class="mt-1 text-xs font-semibold text-slate-900">
                                     {{ $t->last_activity ? \Carbon\Carbon::parse($t->last_activity)->format('Y-m-d') : '-' }}
                                 </div>

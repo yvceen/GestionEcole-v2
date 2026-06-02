@@ -1,4 +1,4 @@
-<x-school-life-layout title="Demandes de recuperation" subtitle="Traitez les demandes parent pour recuperer un enfant pendant la journee scolaire.">
+﻿<x-school-life-layout title="Demandes de recuperation" subtitle="Traitez les demandes parent pour recuperer un enfant pendant la journée scolaire.">
     <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <article class="app-stat-card">
             <p class="app-stat-label">En attente</p>
@@ -18,7 +18,7 @@
         <article class="app-stat-card">
             <p class="app-stat-label">Rejetees</p>
             <p class="app-stat-value text-rose-700">{{ $stats['rejected'] }}</p>
-            <p class="app-stat-meta">Demandes refusees.</p>
+            <p class="app-stat-meta">Demandes refusées.</p>
         </article>
     </section>
 

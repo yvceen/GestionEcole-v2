@@ -1,4 +1,4 @@
-<x-admin-layout title="Tarifs Parent">
+﻿<x-admin-layout title="Tarifs Parent">
     <div class="flex items-start justify-between gap-4">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Tarifs - {{ $parent->name }}</h1>
@@ -9,7 +9,7 @@
 
         <a href="{{ route('admin.parents.index') }}"
            class="rounded-2xl border border-slate-200 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-white transition">
-            ← Retour
+            â† Retour
         </a>
     </div>
 
@@ -41,13 +41,13 @@
                 <table class="min-w-full text-sm">
                     <thead class="bg-slate-50">
                         <tr class="text-left">
-                            <th class="p-4">Eleve</th>
+                            <th class="p-4">Élève</th>
                             <th class="p-4">Classe</th>
                             <th class="p-4">Scolarite /mois</th>
                             <th class="p-4">Transport /mois</th>
                             <th class="p-4">Cantine /mois</th>
                             <th class="p-4">Assurance /an</th>
-                            <th class="p-4">Debut (mois)</th>
+                            <th class="p-4">Début (mois)</th>
                             <th class="p-4">Note</th>
                         </tr>
                     </thead>
@@ -115,7 +115,7 @@
                         @if($students->count() === 0)
                             <tr>
                                 <td colspan="8" class="p-8 text-center text-slate-500">
-                                    Aucun eleve pour ce parent.
+                                    Aucun Élève pour ce parent.
                                 </td>
                             </tr>
                         @endif

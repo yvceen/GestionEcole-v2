@@ -1,7 +1,7 @@
-@extends('layouts.receipt')
+﻿@extends('layouts.receipt')
 
-@section('title', 'Recu ' . ($receipt->receipt_number ?? ''))
-@section('heading', 'Export du recu')
+@section('title', 'Reçu ' . ($receipt->receipt_number ?? ''))
+@section('heading', 'Export du reçu')
 @section('receipt_variant', 'a4')
 
 @section('actions')
@@ -9,7 +9,7 @@
         href="{{ route('parent.finance.receipts.show', $receipt) }}"
         class="app-button-secondary rounded-full px-4 py-2 text-sm font-medium"
     >
-        Retour au recu
+        Retour au reçu
     </a>
     <button
         type="button"

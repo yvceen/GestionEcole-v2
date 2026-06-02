@@ -302,6 +302,7 @@ function initMyEduDatePickers() {
         document.querySelectorAll('.myedu-date-picker.is-open').forEach((picker) => {
             if (picker !== except) {
                 picker.classList.remove('is-open');
+                picker._myeduDatePanel?.classList.remove('is-open');
             }
         });
     };
@@ -346,7 +347,8 @@ function initMyEduDatePickers() {
 
         const panel = document.createElement('div');
         panel.className = 'myedu-date-panel';
-        wrapper.appendChild(panel);
+        document.body.appendChild(panel);
+        wrapper._myeduDatePanel = panel;
 
         let visibleDate = mode === 'month'
             ? (parseIsoMonth(hidden.value) || new Date())
@@ -357,28 +359,32 @@ function initMyEduDatePickers() {
             }
 
             const rect = input.getBoundingClientRect();
-            const panelWidth = Math.min(352, window.innerWidth - 32);
-            const panelHeight = Math.min(panel.scrollHeight || 390, window.innerHeight - 32);
+            const viewportPadding = 12;
+            const panelWidth = Math.min(320, window.innerWidth - (viewportPadding * 2));
+
+            panel.style.width = `${panelWidth}px`;
+            panel.style.maxHeight = `${Math.max(240, window.innerHeight - (viewportPadding * 2))}px`;
+
+            const measuredHeight = panel.scrollHeight || panel.getBoundingClientRect().height || 340;
+            const panelHeight = Math.min(measuredHeight, window.innerHeight - (viewportPadding * 2));
             const spaceBelow = window.innerHeight - rect.bottom;
             const spaceAbove = rect.top;
             const left = Math.min(
-                Math.max(16, rect.left),
-                Math.max(16, window.innerWidth - panelWidth - 16)
+                Math.max(viewportPadding, rect.left),
+                Math.max(viewportPadding, window.innerWidth - panelWidth - viewportPadding)
             );
-            let top = rect.bottom + 10;
+            let top = rect.bottom + 8;
             let openUp = false;
 
-            if (top + panelHeight > window.innerHeight - 16) {
-                if (spaceAbove >= Math.min(panelHeight, 260) || spaceAbove > spaceBelow) {
-                    top = Math.max(16, rect.top - panelHeight - 10);
+            if (top + panelHeight > window.innerHeight - viewportPadding) {
+                if (spaceAbove >= Math.min(panelHeight, 230) || spaceAbove > spaceBelow) {
+                    top = Math.max(viewportPadding, rect.top - panelHeight - 8);
                     openUp = true;
                 } else {
-                    top = Math.max(16, window.innerHeight - panelHeight - 16);
+                    top = Math.max(viewportPadding, window.innerHeight - panelHeight - viewportPadding);
                 }
             }
 
-            panel.style.width = `${panelWidth}px`;
-            panel.style.maxHeight = `${Math.max(260, window.innerHeight - 32)}px`;
             panel.style.left = `${left}px`;
             panel.style.top = `${top}px`;
             panel.classList.toggle('opens-up', openUp);
@@ -410,6 +416,7 @@ function initMyEduDatePickers() {
 
             if (close) {
                 wrapper.classList.remove('is-open');
+                panel.classList.remove('is-open');
             }
         };
 
@@ -515,8 +522,10 @@ function initMyEduDatePickers() {
                 visibleDate = new Date(currentValue.getFullYear(), currentValue.getMonth(), 1);
             }
             wrapper.classList.add('is-open');
+            panel.classList.add('is-open');
             render();
             positionPanel();
+            requestAnimationFrame(positionPanel);
         };
 
         input.addEventListener('click', open);
@@ -570,6 +579,7 @@ function initMyEduDatePickers() {
                 hidden.value = '';
                 input.value = '';
                 wrapper.classList.remove('is-open');
+                panel.classList.remove('is-open');
                 syncDisplay();
             }
             if (action === 'today') {
@@ -577,6 +587,7 @@ function initMyEduDatePickers() {
             }
             if (action === 'done') {
                 wrapper.classList.remove('is-open');
+                panel.classList.remove('is-open');
             }
         });
 
@@ -595,6 +606,7 @@ function initMyEduDatePickers() {
                 event.preventDefault();
                 closeAll(wrapper);
                 wrapper.classList.add('is-open');
+                panel.classList.add('is-open');
                 input.focus();
                 render();
                 positionPanel();
@@ -608,7 +620,7 @@ function initMyEduDatePickers() {
     document.querySelectorAll('input[type="date"]:not([data-native-date]), input[type="month"]:not([data-native-date]), input[type="datetime-local"]:not([data-native-date])').forEach(buildPicker);
 
     document.addEventListener('click', (event) => {
-        if (!event.target.closest('.myedu-date-picker')) {
+        if (!event.target.closest('.myedu-date-picker') && !event.target.closest('.myedu-date-panel')) {
             closeAll();
         }
     });

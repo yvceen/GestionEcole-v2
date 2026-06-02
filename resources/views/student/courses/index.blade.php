@@ -1,4 +1,4 @@
-<x-student-layout title="Mes cours" subtitle="Retrouvez les contenus publies pour votre classe, avec acces direct aux pieces jointes utiles.">
+<x-student-layout title="Mes cours" subtitle="Retrouvez les contenus publies pour votre classe, avec accès direct aux pieces jointes utiles.">
     <section class="student-panel">
         <form method="GET" data-loading-label="Recherche des cours..." class="grid gap-3 md:grid-cols-[minmax(0,1fr)_180px]">
             <input

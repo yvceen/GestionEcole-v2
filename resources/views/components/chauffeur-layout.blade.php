@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'title' => 'Espace chauffeur',
     'subtitle' => 'Pointage transport, circuits et contacts parents.',
 ])
@@ -41,12 +41,12 @@
                 :subtitle="$subtitle"
                 :badges="[
                     auth()->user()?->name ?? 'Chauffeur',
-                    $currentSchool?->name ?? 'Ecole active',
+                    $currentSchool?->name ?? 'École active',
                     'Pointage du jour',
                 ]"
                 summary-title="Mission du jour"
                 summary-value="Transport"
-                summary-copy="Suivez les eleves affectes, enregistrez les montees et descentes, puis gardez un journal clair des passages."
+                summary-copy="Suivez les Élèves affectés, enregistréz les montées et descentes, puis gardez un journal clair des passages."
                 :nav="$nav"
             />
 

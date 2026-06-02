@@ -1,10 +1,10 @@
-<x-admin-layout title="Classes">
+﻿<x-admin-layout title="Classes">
     <div class="flex items-start justify-between gap-4">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Creer une classe</h1>
             <p class="mt-1 text-sm text-slate-500">Ajoutez une classe (et niveau si besoin).</p>
         </div>
-        <a href="{{ route('admin.classrooms.index') }}" class="text-sm font-semibold text-slate-700 hover:underline">← Retour</a>
+        <a href="{{ route('admin.classrooms.index') }}" class="text-sm font-semibold text-slate-700 hover:underline">â† Retour</a>
     </div>
 
     @if($errors->any())
@@ -36,7 +36,7 @@
                         </option>
                     @endforeach
                 </select>
-                <div class="mt-2 text-xs text-slate-500">Si aucun niveau n est selectionne, vous pouvez en creer un dans le champ suivant.</div>
+                <div class="mt-2 text-xs text-slate-500">Si aucun niveau n est sélectionné, vous pouvez en creer un dans le champ suivant.</div>
             </div>
 
             <div>

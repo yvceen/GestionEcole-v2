@@ -1,4 +1,4 @@
-@if($errors->any())
+﻿@if($errors->any())
     <div class="rounded-3xl border border-red-200 bg-red-50 p-4 text-red-900">
         <ul class="ml-5 list-disc">
             @foreach($errors->all() as $error)
@@ -22,7 +22,7 @@
             <div>
                 <label class="app-label" for="body">Contenu</label>
                 <textarea id="body" name="body" rows="10" class="app-input">{{ old('body', $news->body) }}</textarea>
-                <p class="app-hint">Ajoutez un message complet et structure pour les familles et les equipes.</p>
+                <p class="app-hint">Ajoutez un message complet et structure pour les familles et les Équipes.</p>
             </div>
 
             <div>
@@ -36,7 +36,7 @@
         </div>
     </x-ui.card>
 
-    <x-ui.card title="Publication et audience" subtitle="Gardez la maitrise de la visibilite par ecole ou classe.">
+    <x-ui.card title="Publication et audience" subtitle="Gardez la maitrise de la visibilite par École ou classe.">
         <div class="space-y-5">
             <x-ui.select label="Statut" name="status">
                 @foreach(['draft' => 'Brouillon', 'published' => 'Publie', 'archived' => 'Archive'] as $value => $label)
@@ -47,7 +47,7 @@
             <x-ui.input label="Date de publication" name="date" type="date" :value="old('date', optional($news->date)->format('Y-m-d'))" />
 
             <x-ui.select label="Audience" name="scope">
-                <option value="school" @selected(old('scope', $news->scope ?? 'school') === 'school')>Toute l ecole</option>
+                <option value="school" @selected(old('scope', $news->scope ?? 'school') === 'school')>Toute l'École</option>
                 <option value="classroom" @selected(old('scope', $news->scope ?? '') === 'classroom')>Une classe</option>
             </x-ui.select>
 
@@ -76,7 +76,7 @@
 </div>
 
 <div class="app-form-actions">
-    <p class="app-form-actions-copy">Verifiez la cible, le statut et la date avant de publier pour garantir une communication claire.</p>
+    <p class="app-form-actions-copy">Vérifiez la cible, le statut et la date avant de publier pour garantir une communication claire.</p>
     <div class="flex justify-end gap-3">
         <x-ui.button :href="url()->previous()" variant="secondary">Annuler</x-ui.button>
         <x-ui.button type="submit" variant="primary">{{ $news->exists ? 'Mettre a jour' : 'Enregistrer' }}</x-ui.button>

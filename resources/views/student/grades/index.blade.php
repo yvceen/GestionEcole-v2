@@ -1,10 +1,10 @@
-<x-student-layout title="Mes notes" subtitle="Suivez vos evaluations, vos moyennes et la progression par matiere depuis un tableau simple a lire.">
+﻿<x-student-layout title="Mes notes" subtitle="Suivez vos Évaluations, vos moyennes et la progression par matiere depuis un tableau simple a lire.">
     <section class="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_320px]">
         <div class="space-y-4">
             <section class="portal-filter-bar">
                 <form method="GET" data-loading-label="Filtrage des notes..." class="portal-filter-grid md:grid-cols-[minmax(0,1fr)_auto]">
                     <select name="subject_id" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900">
-                        <option value="">Toutes les matieres</option>
+                        <option value="">Toutes les matières</option>
                         @foreach($subjects as $subject)
                             <option value="{{ $subject->id }}" @selected($subjectId === (int) $subject->id)>{{ $subject->name }}</option>
                         @endforeach
@@ -28,7 +28,7 @@
                         <thead class="border-b border-slate-200 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                             <tr>
                                 <th class="px-3 py-3">Matiere</th>
-                                <th class="px-3 py-3">Evaluation</th>
+                                <th class="px-3 py-3">Évaluation</th>
                                 <th class="px-3 py-3">Enseignant</th>
                                 <th class="px-3 py-3">Score</th>
                                 <th class="px-3 py-3">Moyenne</th>
@@ -41,7 +41,7 @@
                                 @endphp
                                 <tr>
                                     <td class="px-3 py-4 font-semibold text-slate-950">{{ $grade->subject?->name ?? '-' }}</td>
-                                    <td class="px-3 py-4 text-slate-600">{{ $grade->assessment?->title ?? 'Evaluation' }}</td>
+                                    <td class="px-3 py-4 text-slate-600">{{ $grade->assessment?->title ?? 'Évaluation' }}</td>
                                     <td class="px-3 py-4 text-slate-600">{{ $grade->teacher?->name ?? '-' }}</td>
                                     <td class="px-3 py-4 font-semibold text-slate-950">{{ number_format((float) $grade->score, 2) }} / {{ $grade->max_score ?? '-' }}</td>
                                     <td class="px-3 py-4">
@@ -71,7 +71,7 @@
                             <div class="portal-record-card-head">
                                 <div class="min-w-0">
                                     <p class="portal-record-title">{{ $grade->subject?->name ?? '-' }}</p>
-                                    <p class="portal-record-subtitle">{{ $grade->assessment?->title ?? 'Evaluation' }}</p>
+                                    <p class="portal-record-subtitle">{{ $grade->assessment?->title ?? 'Évaluation' }}</p>
                                 </div>
                                 <span class="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
                                     {{ number_format($percent, 2) }}%

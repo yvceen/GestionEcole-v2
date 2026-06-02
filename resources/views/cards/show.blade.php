@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -22,7 +22,7 @@
                 <div class="relative flex items-center gap-4">
                     <x-school-logo :size="64" class="h-16 w-16 overflow-hidden rounded-2xl shadow-sm" />
                     <div class="min-w-0">
-                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Carte numerique</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Carte numérique</p>
                         <h1 class="mt-2 text-xl font-semibold text-slate-950">{{ $school?->name ?? 'MyEdu' }}</h1>
                         <p class="mt-1 text-sm text-slate-600">{{ $roleLabel }}</p>
                     </div>
@@ -46,7 +46,7 @@
                         <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Code carte</p>
                         <p class="mt-2 text-base font-semibold text-slate-950">{{ $token }}</p>
                         <p class="mt-2 text-xs leading-5 text-slate-500">
-                            Le QR contient un code securise propre a la carte, sans afficher d informations personnelles.
+                            Le QR contient un code sécurisé propre a la carte, sans afficher d informations personnelles.
                         </p>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                     <p class="mt-4 text-center text-xs leading-5 text-slate-500">
-                        QR de service pour controle interne et pointage.
+                        QR de service pour contrôle interne et pointage.
                     </p>
                 </div>
             </div>

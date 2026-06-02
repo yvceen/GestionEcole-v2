@@ -1,4 +1,4 @@
-<x-teacher-layout title="Espace Enseignant">
+﻿<x-teacher-layout title="Espace Enseignant">
     <x-slot name="header">Tableau de bord</x-slot>
 
     @php
@@ -17,7 +17,7 @@
         $alerts = $alerts ?? [
             'classrooms_no_courses' => collect(),
             'classrooms_no_grades'  => collect(),
-            'hint' => "Publiez au moins 1 cours + 1 evaluation par classe chaque semaine.",
+            'hint' => "Publiez au moins 1 cours + 1 Évaluation par classe chaque semaine.",
         ];
 
         $ranking = $ranking ?? [
@@ -55,13 +55,13 @@
     <div class="{{ $card }} p-6">
         <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div>
-                <div class="text-2xl md:text-3xl font-semibold text-slate-900">Bienvenue 👋</div>
+                <div class="text-2xl md:text-3xl font-semibold text-slate-900">Bienvenue ðŸ‘‹</div>
                 <div class="mt-1 text-sm text-slate-500">
-                    Vue rapide : cours, evaluations, notes, absences - tout est visible par la direction automatiquement.
+                    Vue rapide : cours, Évaluations, notes, absences - tout est visible par la direction automatiquement.
                 </div>
 
                 <div class="mt-4 flex flex-wrap gap-2">
-                    <span class="{{ $chip }}">Semaine : {{ $startOfWeek->format('d/m/Y') }} → {{ $endOfWeek->format('d/m/Y') }}</span>
+                    <span class="{{ $chip }}">Semaine : {{ $startOfWeek->format('d/m/Y') }} â†’ {{ $endOfWeek->format('d/m/Y') }}</span>
                     <span class="{{ $chip }}">Objectif : regularite + suivi clair</span>
                 </div>
             </div>
@@ -74,17 +74,17 @@
 
                 <a href="{{ route('teacher.assessments.create') }}"
                    class="rounded-2xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold hover:bg-slate-50">
-                    + Nouvelle evaluation
+                    + Nouvelle Évaluation
                 </a>
 
                 <a href="{{ route('teacher.grades.index') }}"
                    class="rounded-2xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold hover:bg-slate-50">
-                    Saisir des notes →
+                    Saisir des notes â†’
                 </a>
 
                 <a href="{{ route('teacher.attendance.index') }}"
                    class="rounded-2xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold hover:bg-slate-50">
-                    Absences →
+                    Absences â†’
                 </a>
             </div>
         </div>
@@ -95,7 +95,7 @@
         <div class="{{ $card }} p-5">
             <div class="text-xs uppercase tracking-wider text-slate-500">Cours (total)</div>
             <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $kpis['courses_total'] }}</div>
-            <div class="mt-2 text-xs text-slate-500">Depuis le debut</div>
+            <div class="mt-2 text-xs text-slate-500">Depuis le début</div>
         </div>
 
         <div class="{{ $card }} p-5">
@@ -105,7 +105,7 @@
         </div>
 
         <div class="{{ $card }} p-5">
-            <div class="text-xs uppercase tracking-wider text-slate-500">Evaluations (semaine)</div>
+            <div class="text-xs uppercase tracking-wider text-slate-500">Évaluations (semaine)</div>
             <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $kpis['assessments_week'] }}</div>
             <div class="mt-2 text-xs text-slate-500">Controles / examens</div>
         </div>
@@ -113,7 +113,7 @@
         <div class="{{ $card }} p-5">
             <div class="text-xs uppercase tracking-wider text-slate-500">Notes saisies (semaine)</div>
             <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $kpis['grades_week'] }}</div>
-            <div class="mt-2 text-xs text-slate-500">Toutes matieres</div>
+            <div class="mt-2 text-xs text-slate-500">Toutes matières</div>
         </div>
 
         <div class="{{ $card }} p-5">
@@ -140,7 +140,7 @@
                                 {{ $c->name ?? 'Classe' }}
                             </span>
                         @empty
-                            <div class="text-sm text-slate-600">✅ Toutes les classes ont au moins 1 cours</div>
+                            <div class="text-sm text-slate-600">âœ… Toutes les classes ont au moins 1 cours</div>
                         @endforelse
                     </div>
                 </div>
@@ -153,7 +153,7 @@
                                 {{ $c->name ?? 'Classe' }}
                             </span>
                         @empty
-                            <div class="text-sm text-slate-600">✅ Notes saisies pour toutes les classes</div>
+                            <div class="text-sm text-slate-600">âœ… Notes saisies pour toutes les classes</div>
                         @endforelse
                     </div>
                 </div>
@@ -161,7 +161,7 @@
                 <div class="{{ $mini }}">
                     <div class="text-xs font-semibold text-slate-500">Conseil</div>
                     <div class="mt-2 text-sm text-slate-700">
-                        {{ $alerts['hint'] ?? "Publiez au moins 1 cours + 1 evaluation par classe chaque semaine." }}
+                        {{ $alerts['hint'] ?? "Publiez au moins 1 cours + 1 Évaluation par classe chaque semaine." }}
                     </div>
                 </div>
             </div>
@@ -220,7 +220,7 @@
         {{-- RANKING CLASSES --}}
         <div class="{{ $card }} p-6">
             <div class="flex items-center justify-between">
-                <div class="text-sm font-semibold text-slate-900">Classes - activite</div>
+                <div class="text-sm font-semibold text-slate-900">Classes - activité</div>
                 <div class="text-xs text-slate-500">Semaine</div>
             </div>
 
@@ -231,7 +231,7 @@
                         <div class="flex items-center justify-between rounded-2xl border border-black/5 bg-white/60 px-4 py-3">
                             <div class="min-w-0">
                                 <div class="truncate text-sm font-semibold text-slate-900">{{ $c['name'] ?? 'Classe' }}</div>
-                                <div class="text-xs text-slate-500">Cours: {{ $c['courses'] ?? 0 }} • Notes: {{ $c['grades'] ?? 0 }}</div>
+                                <div class="text-xs text-slate-500">Cours: {{ $c['courses'] ?? 0 }} â€¢ Notes: {{ $c['grades'] ?? 0 }}</div>
                             </div>
                             <span class="rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 text-xs font-semibold">
                                 {{ $c['score'] ?? 0 }} pts
@@ -250,7 +250,7 @@
                         <div class="flex items-center justify-between rounded-2xl border border-black/5 bg-white/60 px-4 py-3">
                             <div class="min-w-0">
                                 <div class="truncate text-sm font-semibold text-slate-900">{{ $c['name'] ?? 'Classe' }}</div>
-                                <div class="text-xs text-slate-500">Cours: {{ $c['courses'] ?? 0 }} • Notes: {{ $c['grades'] ?? 0 }}</div>
+                                <div class="text-xs text-slate-500">Cours: {{ $c['courses'] ?? 0 }} â€¢ Notes: {{ $c['grades'] ?? 0 }}</div>
                             </div>
                             <span class="rounded-full bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 text-xs font-semibold">
                                 {{ $c['score'] ?? 0 }} pts
@@ -282,7 +282,7 @@
                             <span class="text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">A faire</span>
                         </div>
                     @empty
-                        <div class="text-sm text-slate-600">Tous vos appels du jour sont deja saisis.</div>
+                        <div class="text-sm text-slate-600">Tous vos appels du jour sont déjà saisis.</div>
                     @endforelse
                 </div>
             </div>
@@ -290,7 +290,7 @@
 
         <div class="{{ $card }} p-6">
             <div class="flex items-center justify-between">
-                <div class="text-sm font-semibold text-slate-900">Dernieres sessions d'appel</div>
+                <div class="text-sm font-semibold text-slate-900">Dernières sessions d'appel</div>
                 <div class="text-xs text-slate-500">Classe + date</div>
             </div>
 
@@ -302,7 +302,7 @@
                         <div class="mt-1 text-xs text-slate-500">{{ $session['date']->format('d/m/Y') }}</div>
                         <div class="mt-4 flex flex-wrap gap-2">
                             <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                                {{ $session['total_students'] }} eleves
+                                {{ $session['total_students'] }} Élèves
                             </span>
                             <span class="rounded-full bg-red-50 text-red-700 border border-red-200 px-3 py-1 text-xs font-semibold">
                                 {{ $session['absent_count'] }} absent(s)
@@ -313,7 +313,7 @@
                         </div>
                     </a>
                 @empty
-                    <div class="text-sm text-slate-600 md:col-span-2 xl:col-span-3">Aucune session d'appel recente.</div>
+                    <div class="text-sm text-slate-600 md:col-span-2 xl:col-span-3">Aucune session d'appel récente.</div>
                 @endforelse
             </div>
         </div>
@@ -327,7 +327,7 @@
             <div class="flex items-center justify-between border-b border-black/5 bg-white/60 px-6 py-4">
                 <div class="text-sm font-semibold text-slate-900">Derniers cours</div>
                 <a href="{{ route('teacher.courses.index') }}" class="text-xs font-semibold text-slate-700 hover:underline">
-                    Voir tout →
+                    Voir tout â†’
                 </a>
             </div>
             <div class="p-6 space-y-3">
@@ -336,36 +336,36 @@
                         <div class="text-sm font-semibold text-slate-900">{{ $it['title'] ?? 'Cours' }}</div>
                         <div class="mt-1 text-xs text-slate-500">
                             {{ $it['date'] ?? '' }}
-                            @if(!empty($it['classroom'])) • Classe : {{ $it['classroom'] }} @endif
+                            @if(!empty($it['classroom'])) â€¢ Classe : {{ $it['classroom'] }} @endif
                         </div>
                     </div>
                 @empty
-                    <div class="text-sm text-slate-600">Aucun cours recent.</div>
+                    <div class="text-sm text-slate-600">Aucun cours récent.</div>
                 @endforelse
             </div>
         </div>
 
-        {{-- Dernieres saisies --}}
+        {{-- Dernières saisies --}}
         <div class="{{ $card }} overflow-hidden">
             <div class="flex items-center justify-between border-b border-black/5 bg-white/60 px-6 py-4">
-                <div class="text-sm font-semibold text-slate-900">Dernieres saisies</div>
+                <div class="text-sm font-semibold text-slate-900">Dernières saisies</div>
                 <div class="text-xs text-slate-500">Notes / absences</div>
             </div>
 
             <div class="p-6 space-y-4">
                 <div class="rounded-2xl border border-black/5 bg-white/60 p-4">
-                    <div class="text-xs font-semibold text-slate-500">Notes (recentes)</div>
+                    <div class="text-xs font-semibold text-slate-500">Notes (récentes)</div>
                     <div class="mt-3 space-y-2">
                         @forelse($latest['grades'] as $g)
                             <div class="flex items-center justify-between gap-3">
                                 <div class="min-w-0">
                                     <div class="truncate text-sm font-semibold text-slate-900">
-                                        {{ $g['student'] ?? 'Eleve' }}
-                                        @if(!empty($g['subject'])) • {{ $g['subject'] }} @endif
+                                        {{ $g['student'] ?? 'Élève' }}
+                                        @if(!empty($g['subject'])) â€¢ {{ $g['subject'] }} @endif
                                     </div>
                                     <div class="text-xs text-slate-500">
                                         {{ $g['date'] ?? '' }}
-                                        @if(!empty($g['classroom'])) • {{ $g['classroom'] }} @endif
+                                        @if(!empty($g['classroom'])) â€¢ {{ $g['classroom'] }} @endif
                                     </div>
                                 </div>
                                 <span class="rounded-full bg-slate-900 text-white px-3 py-1 text-xs font-semibold">
@@ -373,21 +373,21 @@
                                 </span>
                             </div>
                         @empty
-                            <div class="text-sm text-slate-600">Aucune note recente.</div>
+                            <div class="text-sm text-slate-600">Aucune note récente.</div>
                         @endforelse
                     </div>
                 </div>
 
                 <div class="rounded-2xl border border-black/5 bg-white/60 p-4">
-                    <div class="text-xs font-semibold text-slate-500">Absences (recentes)</div>
+                    <div class="text-xs font-semibold text-slate-500">Absences (récentes)</div>
                     <div class="mt-3 space-y-2">
                         @forelse($latest['attendances'] as $a)
                             <div class="flex items-center justify-between gap-3">
                                 <div class="min-w-0">
-                                    <div class="truncate text-sm font-semibold text-slate-900">{{ $a['student'] ?? 'Eleve' }}</div>
+                                    <div class="truncate text-sm font-semibold text-slate-900">{{ $a['student'] ?? 'Élève' }}</div>
                                     <div class="text-xs text-slate-500">
                                         {{ $a['date'] ?? '' }}
-                                        @if(!empty($a['classroom'])) • {{ $a['classroom'] }} @endif
+                                        @if(!empty($a['classroom'])) â€¢ {{ $a['classroom'] }} @endif
                                     </div>
                                 </div>
 
@@ -401,7 +401,7 @@
                                 @endif
                             </div>
                         @empty
-                            <div class="text-sm text-slate-600">Aucune absence recente.</div>
+                            <div class="text-sm text-slate-600">Aucune absence récente.</div>
                         @endforelse
                     </div>
                 </div>
@@ -414,11 +414,11 @@
         <div class="flex items-center justify-between gap-3">
             <div>
                 <div class="text-sm font-semibold text-slate-900">Actualites agenda</div>
-                <div class="mt-1 text-xs text-slate-500">Annonces publiees a partir des nouveaux evenements agenda.</div>
+                <div class="mt-1 text-xs text-slate-500">Annonces publiées a partir des nouveaux Événements agenda.</div>
             </div>
             @if(Route::has('teacher.events.index'))
                 <a href="{{ route('teacher.events.index') }}" class="text-xs font-semibold text-slate-700 hover:underline">
-                    Voir agenda →
+                    Voir agenda â†’
                 </a>
             @endif
         </div>
@@ -429,7 +429,7 @@
                     <p class="mt-1 text-xs text-slate-500">
                         {{ $announcement->date?->format('d/m/Y') ?? '-' }}
                         <span class="mx-1 text-slate-300">|</span>
-                        {{ $announcement->scope === 'classroom' ? 'Classe ciblee' : 'Toute l ecole' }}
+                        {{ $announcement->scope === 'classroom' ? 'Classe ciblée' : 'Toute l'École' }}
                     </p>
                 </article>
             @empty

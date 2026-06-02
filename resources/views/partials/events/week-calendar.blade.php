@@ -1,4 +1,4 @@
-@push('head')
+﻿@push('head')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css">
     <style>
         .myedu-agenda-shell .fc {
@@ -72,9 +72,9 @@
 
 <section class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
     <article class="app-stat-card border-sky-100 bg-sky-50/80">
-        <p class="app-stat-label">Evenements</p>
+        <p class="app-stat-label">Événements</p>
         <p class="app-stat-value">{{ $summary['total'] ?? 0 }}</p>
-        <p class="app-stat-meta">Tous les blocs agenda de l ecole active.</p>
+        <p class="app-stat-meta">Tous les blocs agenda de l'École active.</p>
     </article>
     <article class="app-stat-card border-teal-100 bg-teal-50/80">
         <p class="app-stat-label">Cours</p>
@@ -84,16 +84,16 @@
     <article class="app-stat-card border-rose-100 bg-rose-50/80">
         <p class="app-stat-label">Examens</p>
         <p class="app-stat-value text-rose-700">{{ $summary['exam'] ?? 0 }}</p>
-        <p class="app-stat-meta">Evaluations et controles.</p>
+        <p class="app-stat-meta">Évaluations et controles.</p>
     </article>
     <article class="app-stat-card border-indigo-100 bg-indigo-50/80">
-        <p class="app-stat-label">Activites</p>
+        <p class="app-stat-label">Activités</p>
         <p class="app-stat-value text-sky-700">{{ $summary['activity'] ?? 0 }}</p>
         <p class="app-stat-meta">Sorties, clubs et temps forts.</p>
     </article>
 </section>
 
-<x-ui.card title="Filtres agenda" subtitle="Affinez la semaine affichee par classe ou enseignant, sans recharger la page." class="mt-5">
+<x-ui.card title="Filtres agenda" subtitle="Affinez la semaine affichée par classe ou enseignant, sans recharger la page." class="mt-5">
     <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-end">
         <div>
             <label class="app-label" for="agendaClassroom">Classe</label>
@@ -129,7 +129,7 @@
     <div class="mt-5 flex flex-wrap gap-3 text-xs font-semibold text-slate-600">
         <span class="inline-flex items-center gap-2 rounded-full bg-teal-50 px-3 py-1.5 text-teal-700 ring-1 ring-teal-100"><span class="h-2 w-2 rounded-full bg-teal-500"></span>Cours</span>
         <span class="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-1.5 text-rose-700 ring-1 ring-rose-100"><span class="h-2 w-2 rounded-full bg-rose-500"></span>Examens</span>
-        <span class="inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1.5 text-sky-700 ring-1 ring-sky-100"><span class="h-2 w-2 rounded-full bg-sky-500"></span>Activites</span>
+        <span class="inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1.5 text-sky-700 ring-1 ring-sky-100"><span class="h-2 w-2 rounded-full bg-sky-500"></span>Activités</span>
     </div>
 </x-ui.card>
 
@@ -139,7 +139,7 @@
     </div>
 </x-ui.card>
 
-<x-ui.card title="Prochains blocs" subtitle="Vue de gestion rapide pour ouvrir, modifier ou supprimer les evenements a venir." class="mt-5">
+<x-ui.card title="Prochains blocs" subtitle="Vue de gestion rapide pour ouvrir, modifier ou supprimer les Événements a venir." class="mt-5">
     <div class="grid gap-4 xl:grid-cols-2">
         @forelse($upcomingEvents as $agendaEvent)
             <article class="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-lg">
@@ -160,7 +160,7 @@
                     @if($canManage)
                         <div class="flex flex-wrap justify-end gap-2">
                             <x-ui.button :href="route('admin.events.edit', $agendaEvent)" variant="secondary" size="sm">Modifier</x-ui.button>
-                            <form method="POST" action="{{ route('admin.events.destroy', $agendaEvent) }}" onsubmit="return confirm('Supprimer cet evenement ?')">
+                            <form method="POST" action="{{ route('admin.events.destroy', $agendaEvent) }}" onsubmit="return confirm('Supprimer cet Événement ?')">
                                 @csrf
                                 @method('DELETE')
                                 <x-ui.button type="submit" variant="danger" size="sm">Supprimer</x-ui.button>

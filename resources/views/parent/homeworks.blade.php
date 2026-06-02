@@ -21,7 +21,7 @@
 
     <section class="mt-6 space-y-4">
         @if($homeworks instanceof \Illuminate\Support\Collection)
-            <div class="student-empty">Aucun devoir disponible car aucun enfant n est rattache a une classe exploitable.</div>
+            <div class="student-empty">Aucun devoir disponible car aucun enfant n est rattaché a une classe exploitable.</div>
         @elseif($homeworks->isEmpty())
             <div class="student-empty">Aucun devoir publie ne correspond a votre filtre actuel.</div>
         @else

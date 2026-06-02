@@ -1,9 +1,9 @@
-<x-director-layout title="Resultats & Analyses">
+﻿<x-director-layout title="Resultats & Analyses">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Resultats & Analyses</h1>
             <p class="mt-1 text-sm text-slate-500">
-                Suivi des notes par classe, matiere et enseignant + detection des eleves en difficulte.
+                Suivi des notes par classe, matiere et enseignant + detection des Élèves en difficulté.
             </p>
         </div>
     </div>
@@ -26,7 +26,7 @@
         </div>
 
         <div class="rounded-[28px] border border-black/10 bg-white/80 p-5 shadow-sm">
-            <div class="text-xs font-semibold text-slate-500">Eleves en difficulte</div>
+            <div class="text-xs font-semibold text-slate-500">Élèves en difficulté</div>
             <div class="mt-2 text-3xl font-semibold text-slate-900">{{ $studentsDifficultyCount ?? 0 }}</div>
             <div class="mt-1 text-xs text-slate-500">
                 Seuil actuel : moyenne &lt; {{ $difficultyThreshold ?? 10 }} /20 (modifiable).
@@ -155,7 +155,7 @@
     {{-- DETAILED GRADES LIST --}}
     <div class="mt-6 overflow-hidden rounded-[28px] border border-black/10 bg-white/80 shadow-sm">
         <div class="flex items-center justify-between border-b border-black/10 bg-white/60 px-5 py-4">
-            <div class="text-sm font-semibold text-slate-900">Dernieres notes</div>
+            <div class="text-sm font-semibold text-slate-900">Dernières notes</div>
             <div class="text-xs text-slate-500">
                 Total : <span class="font-semibold text-slate-900">{{ $grades?->total() ?? 0 }}</span>
             </div>
@@ -165,12 +165,12 @@
             <table class="min-w-full text-sm">
                 <thead class="bg-slate-50/80">
                     <tr class="text-left border-b border-black/5">
-                        <th class="p-4 text-xs font-semibold text-slate-500">Eleve</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500">Élève</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Classe</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Matiere</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Enseignant</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Note</th>
-                        <th class="p-4 text-xs font-semibold text-slate-500">Evaluation</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500">Évaluation</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Date</th>
                         <th class="p-4 text-xs font-semibold text-slate-500"></th>
                     </tr>
@@ -186,7 +186,7 @@
 
                         <tr class="hover:bg-slate-50/70 transition">
                             <td class="p-4 font-semibold text-slate-900">
-                                {{ $g->student?->full_name ?? ('Eleve #' . $g->student_id) }}
+                                {{ $g->student?->full_name ?? ('Élève #' . $g->student_id) }}
                             </td>
                             <td class="p-4 text-slate-700">{{ $g->classroom?->name ?? ('Classe #' . $g->classroom_id) }}</td>
                             <td class="p-4 text-slate-700">{{ $g->subject?->name ?? ('Matiere #' . $g->subject_id) }}</td>
@@ -215,7 +215,7 @@
                                 @if(\Illuminate\Support\Facades\Route::has('director.students.fiche'))
                                     <a href="{{ route('director.students.fiche', $g->student_id) }}"
                                        class="inline-flex items-center rounded-2xl border border-black/10 bg-white px-4 py-2 text-xs font-semibold hover:bg-slate-50">
-                                        Voir fiche →
+                                        Voir fiche â†’
                                     </a>
                                 @endif
                             </td>
@@ -223,7 +223,7 @@
                     @empty
                         <tr>
                             <td colspan="8" class="p-10 text-center text-slate-500">
-                                Aucune note enregistree pour le moment.
+                                Aucune note enregistrée pour le moment.
                             </td>
                         </tr>
                     @endforelse

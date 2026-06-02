@@ -1,4 +1,4 @@
-<x-chauffeur-layout title="Espace chauffeur" subtitle="Gestion claire des circuits, eleves transportes et pointages du jour.">
+﻿<x-chauffeur-layout title="Espace chauffeur" subtitle="Gestion claire des circuits, Élèves transportés et pointages du jour.">
     @php
         $statusLabels = [
             '' => 'Tous',
@@ -16,12 +16,12 @@
                 </div>
                 <h1 class="mt-4 text-3xl font-semibold tracking-tight text-slate-950 md:text-4xl">Bonjour {{ $user->name }}</h1>
                 <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-                    Retrouvez les eleves affectes a vos vehicules, confirmez les montees et les descentes, et gardez les parents informes.
+                    Retrouvez les Élèves affectés a vos véhicules, confirmez les montées et les descentes, et gardez les parents informés.
                 </p>
             </div>
 
             <div class="rounded-[28px] border border-white bg-white/85 px-5 py-5 shadow-sm">
-                <p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Vehicules lies</p>
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Véhicules liés</p>
                 <p class="mt-3 text-4xl font-bold tracking-tight text-slate-950">{{ $vehicles->count() }}</p>
                 <p class="mt-2 text-sm text-slate-500">{{ $routes->count() }} circuit(s) actif(s)</p>
             </div>
@@ -30,7 +30,7 @@
 
     <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div class="rounded-[26px] border border-sky-100 bg-sky-50 px-5 py-5 shadow-sm">
-            <p class="text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Eleves</p>
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Élèves</p>
             <p class="mt-3 text-3xl font-bold text-slate-950">{{ $stats['students'] }}</p>
             <p class="mt-1 text-sm text-slate-500">Affectations filtrees</p>
         </div>
@@ -55,7 +55,7 @@
         <form method="GET" action="{{ route('chauffeur.dashboard') }}" class="grid gap-3 xl:grid-cols-[minmax(0,1.4fr)_220px_220px_190px_auto] xl:items-end">
             <div>
                 <label class="mb-1 block text-sm font-semibold text-slate-800">Recherche</label>
-                <input name="q" value="{{ $q }}" class="app-input" placeholder="Eleve, classe, parent ou telephone">
+                <input name="q" value="{{ $q }}" class="app-input" placeholder="Élève, classe, parent ou téléphone">
             </div>
             <div>
                 <label class="mb-1 block text-sm font-semibold text-slate-800">Vehicule</label>
@@ -95,8 +95,8 @@
     <section class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_390px]">
         <div class="rounded-[30px] border border-slate-200 bg-white shadow-sm">
             <div class="border-b border-slate-100 px-6 py-5">
-                <h2 class="text-2xl font-semibold tracking-tight text-slate-950">Eleves a transporter</h2>
-                <p class="mt-1 text-sm text-slate-500">Un eleve peut avoir une montee et une descente par jour. Vous pouvez corriger l'arret ou la note si besoin.</p>
+                <h2 class="text-2xl font-semibold tracking-tight text-slate-950">Élèves a transporter</h2>
+                <p class="mt-1 text-sm text-slate-500">Un Élève peut avoir une montée et une descente par jour. Vous pouvez corriger l'arrêt ou la note si besoin.</p>
             </div>
 
             <div class="divide-y divide-slate-100">
@@ -138,7 +138,7 @@
                                         <p class="mt-1 text-sm font-semibold text-slate-950">{{ $assignment->student?->parentUser?->name ?? '-' }}</p>
                                     </div>
                                     <div class="rounded-2xl bg-emerald-50 px-4 py-3">
-                                        <p class="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Telephone</p>
+                                        <p class="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Téléphone</p>
                                         @if($assignment->student?->parentUser?->phone)
                                             <a href="tel:{{ $assignment->student->parentUser->phone }}" class="mt-1 block text-sm font-semibold text-emerald-800 hover:underline">
                                                 {{ $assignment->student->parentUser->phone }}
@@ -157,14 +157,14 @@
                                     <input type="hidden" name="status" value="{{ \App\Models\TransportLog::STATUS_BOARDED }}">
                                     <div class="space-y-3">
                                         <select name="route_stop_id" class="app-input">
-                                            <option value="">Arret montee</option>
+                                            <option value="">Arrêt montée</option>
                                             @foreach($stops as $stop)
                                                 <option value="{{ $stop->id }}" @selected($todayBoarded?->route_stop_id === $stop->id)>{{ $stop->stop_order }}. {{ $stop->name }}{{ $stop->scheduled_time ? ' - '.$stop->scheduled_time : '' }}</option>
                                             @endforeach
                                         </select>
-                                        <input name="note" value="{{ $todayBoarded?->note }}" class="app-input" placeholder="Note montee">
+                                        <input name="note" value="{{ $todayBoarded?->note }}" class="app-input" placeholder="Note montée">
                                         <x-ui.button type="submit" variant="primary" class="w-full justify-center">
-                                            {{ $todayBoarded ? 'Mettre a jour montee' : 'Confirmer montee' }}
+                                            {{ $todayBoarded ? 'Mettre a jour montée' : 'Confirmer montée' }}
                                         </x-ui.button>
                                     </div>
                                 </form>
@@ -175,7 +175,7 @@
                                     <input type="hidden" name="status" value="{{ \App\Models\TransportLog::STATUS_DROPPED }}">
                                     <div class="space-y-3">
                                         <select name="route_stop_id" class="app-input">
-                                            <option value="">Arret descente</option>
+                                            <option value="">Arrêt descente</option>
                                             @foreach($stops as $stop)
                                                 <option value="{{ $stop->id }}" @selected($todayDropped?->route_stop_id === $stop->id)>{{ $stop->stop_order }}. {{ $stop->name }}{{ $stop->scheduled_time ? ' - '.$stop->scheduled_time : '' }}</option>
                                             @endforeach
@@ -191,7 +191,7 @@
                     </article>
                 @empty
                     <div class="px-6 py-12 text-center text-sm text-slate-500">
-                        Aucun eleve affecte a vos vehicules pour ces filtres.
+                        Aucun Élève affecte a vos véhicules pour ces filtres.
                     </div>
                 @endforelse
             </div>
@@ -199,8 +199,8 @@
 
         <aside class="space-y-5">
             <div class="rounded-[30px] border border-slate-200 bg-white px-5 py-5 shadow-sm">
-                <h2 class="text-xl font-semibold text-slate-950">Mes vehicules</h2>
-                <p class="mt-1 text-sm text-slate-500">Vehicules assignes a votre compte.</p>
+                <h2 class="text-xl font-semibold text-slate-950">Mes véhicules</h2>
+                <p class="mt-1 text-sm text-slate-500">Véhicules assignes a votre compte.</p>
                 <div class="mt-4 space-y-3">
                     @forelse($vehicles as $vehicle)
                         <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
@@ -217,7 +217,7 @@
                         </div>
                     @empty
                         <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-500">
-                            Aucun vehicule n'est encore lie a votre compte.
+                            Aucun vehicule n'est encore lié a votre compte.
                         </div>
                     @endforelse
                 </div>
@@ -225,7 +225,7 @@
 
             <div class="rounded-[30px] border border-slate-200 bg-white px-5 py-5 shadow-sm">
                 <h2 class="text-xl font-semibold text-slate-950">Journal du jour</h2>
-                <p class="mt-1 text-sm text-slate-500">Dernieres operations enregistrees.</p>
+                <p class="mt-1 text-sm text-slate-500">Dernières opérations enregistrées.</p>
                 <div class="mt-4 space-y-3">
                     @forelse($todayLogs->take(14) as $log)
                         <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">

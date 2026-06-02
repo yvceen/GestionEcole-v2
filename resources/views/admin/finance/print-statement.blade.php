@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8">
@@ -80,12 +80,12 @@
         </div>
 
         <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
-          <div class="text-xs text-slate-500">Operations</div>
+          <div class="text-xs text-slate-500">Opérations</div>
           <div class="mt-1 text-lg font-semibold text-slate-900">{{ $count }}</div>
         </div>
 
         <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
-          <div class="text-xs text-slate-500">Periode</div>
+          <div class="text-xs text-slate-500">Période</div>
           <div class="mt-1 text-lg font-semibold text-slate-900">{{ $month }}</div>
         </div>
       </div>
@@ -95,12 +95,12 @@
           <thead>
             <tr>
               <th>Date</th>
-              <th>Periode</th>
+              <th>Période</th>
               <th>Parent</th>
-              <th>Eleve</th>
-              <th>Methode</th>
+              <th>Élève</th>
+              <th>Méthode</th>
               <th class="text-right">Montant</th>
-              <th>Recu</th>
+              <th>Reçu</th>
             </tr>
           </thead>
 
@@ -125,7 +125,7 @@
               @endif
             @empty
               <tr>
-                <td colspan="7" class="px-5 py-8 text-sm text-slate-500">Aucune operation.</td>
+                <td colspan="7" class="px-5 py-8 text-sm text-slate-500">Aucune opération.</td>
               </tr>
             @endforelse
           </tbody>
@@ -133,7 +133,7 @@
       </div>
 
       <div class="mt-6 flex items-center justify-between text-xs text-slate-500">
-        <div>Genere le : {{ now()->format('Y-m-d H:i') }}</div>
+        <div>Généré le : {{ now()->format('Y-m-d H:i') }}</div>
         <div>Powered by MyEdu</div>
       </div>
     </div>

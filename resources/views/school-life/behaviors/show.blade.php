@@ -1,12 +1,12 @@
-<x-school-life-layout :title="'Vie scolaire - ' . $student->full_name" subtitle="Remarques disciplinaires, retards et suivi comportemental.">
+﻿<x-school-life-layout :title="'Vie scolaire - ' . $student->full_name" subtitle="Remarques disciplinaires, retards et suivi comportemental.">
     <x-ui.page-header :title="$student->full_name" :subtitle="'Classe: ' . ($student->classroom?->name ?? '-') . ' | Parent: ' . ($student->parentUser?->name ?? '-')">
         <x-slot name="actions">
-            <x-ui.button :href="route('school-life.students.index')" variant="secondary">Retour eleves</x-ui.button>
+            <x-ui.button :href="route('school-life.students.index')" variant="secondary">Retour Élèves</x-ui.button>
         </x-slot>
     </x-ui.page-header>
 
     <section class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
-        <x-ui.card title="Historique disciplinaire" subtitle="Liste des remarques enregistrees pour cet eleve.">
+        <x-ui.card title="Historique disciplinaire" subtitle="Liste des remarques enregistrées pour cet Élève.">
             <div class="space-y-3">
                 @forelse($behaviors as $behavior)
                     <article class="rounded-2xl border border-slate-200 bg-white px-4 py-4">
@@ -49,7 +49,7 @@
                         </details>
                     </article>
                 @empty
-                    <div class="student-empty">Aucune remarque saisie pour cet eleve.</div>
+                    <div class="student-empty">Aucune remarque saisie pour cet Élève.</div>
                 @endforelse
             </div>
             <div class="mt-4">{{ $behaviors->links() }}</div>
@@ -77,7 +77,7 @@
                 </label>
                 <label class="flex items-center gap-2 text-sm font-semibold text-slate-700">
                     <input type="checkbox" name="visible_to_parent" value="1" class="rounded border-slate-300 text-sky-700">
-                    Rendre visible dans les espaces parent / eleve
+                    Rendre visible dans les espaces parent / Élève
                 </label>
                 <x-ui.button type="submit" variant="primary">Enregistrer remarque</x-ui.button>
             </form>

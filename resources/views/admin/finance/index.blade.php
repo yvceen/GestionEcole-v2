@@ -1,4 +1,4 @@
-<x-admin-layout title="Finance">
+﻿<x-admin-layout title="Finance">
     @php
         $month = $month ?? now()->format('Y-m');
         $q = $q ?? request('q', '');
@@ -23,7 +23,7 @@
 
     <x-ui.page-header
         title="Suivi financier"
-        subtitle="Paiements, recus, filtres operationnels et historique parent sur un seul ecran."
+        subtitle="Paiements, reçus, filtres operationnels et historique parent sur un seul ecran."
     >
         <x-slot name="actions">
             <x-ui.button :href="route('admin.finance.payments.create')" variant="primary">
@@ -33,10 +33,10 @@
                 Rappels automatiques
             </x-ui.button>
             <x-ui.button :href="route('admin.finance.events.index')" variant="outline">
-                Paiements evenements
+                Paiements Événements
             </x-ui.button>
             <x-ui.button :href="route('admin.students.index')" variant="secondary">
-                Voir les eleves
+                Voir les Élèves
             </x-ui.button>
         </x-slot>
     </x-ui.page-header>
@@ -45,8 +45,8 @@
         <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center">
             <div>
                 <p class="text-xs font-bold uppercase tracking-[0.2em] text-sky-700">Centre paiement</p>
-                <h2 class="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-slate-950">Encaissements, recus et suivi des impayes dans un espace plus lisible.</h2>
-                <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600">Utilisez les filtres pour retrouver un parent, ouvrir un recu ou imprimer un releve sans chercher dans plusieurs menus.</p>
+                <h2 class="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-slate-950">Encaissements, reçus et suivi des impayés dans un espace plus lisible.</h2>
+                <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600">Utilisez les filtres pour retrouver un parent, ouvrir un reçu ou imprimer un releve sans chercher dans plusieurs menus.</p>
             </div>
             <div class="grid gap-3 sm:grid-cols-2">
                 <a href="{{ route('admin.finance.payments.create') }}" class="rounded-3xl border border-white bg-white/85 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
@@ -58,7 +58,7 @@
                     <strong class="mt-2 block text-slate-950">Rappels parents</strong>
                 </a>
                 <a href="{{ route('admin.finance.events.index') }}" class="rounded-3xl border border-white bg-white/85 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-                    <span class="text-xs font-bold uppercase tracking-[0.16em] text-indigo-700">Evenements</span>
+                    <span class="text-xs font-bold uppercase tracking-[0.16em] text-indigo-700">Événements</span>
                     <strong class="mt-2 block text-slate-950">Paiements speciaux</strong>
                 </a>
             </div>
@@ -75,13 +75,13 @@
         <div class="app-stat-card border-amber-100 bg-amber-50/60">
             <p class="app-stat-label">Impayes du mois</p>
             <p class="app-stat-value">{{ count($unpaidThisMonth) }}</p>
-            <p class="app-stat-meta">Eleves sans reglement sur la periode courante</p>
+            <p class="app-stat-meta">Élèves sans règlement sur la période courante</p>
         </div>
 
         <div class="app-stat-card border-rose-100 bg-rose-50/60">
             <p class="app-stat-label">Arrieres</p>
             <p class="app-stat-value">{{ count($arrears) }}</p>
-            <p class="app-stat-meta">Eleves avec des mois precedents non soldes</p>
+            <p class="app-stat-meta">Élèves avec des mois précédents non soldes</p>
         </div>
     </section>
 
@@ -109,7 +109,7 @@
         </section>
     @endif
 
-    <x-ui.card title="Filtres" subtitle="Affinez l'historique par periode, parent, classe ou recherche libre.">
+    <x-ui.card title="Filtres" subtitle="Affinez l'historique par période, parent, classe ou recherche libre.">
         <form method="GET" action="{{ route('admin.finance.index') }}" class="grid gap-4 xl:grid-cols-[minmax(0,1.3fr)_220px_220px_220px_180px]">
             <div class="app-field relative xl:col-span-2">
                 <label for="searchBox" class="app-label">Recherche</label>
@@ -128,7 +128,7 @@
                         id="searchBox"
                         name="q"
                         value="{{ $q }}"
-                        placeholder="Nom du parent, de l'eleve, email ou numero..."
+                        placeholder="Nom du parent, de l'Élève, email ou numéro..."
                         autocomplete="off"
                         class="app-input pl-10"
                     >
@@ -142,7 +142,7 @@
             <div class="app-field">
                 <label for="monthInput" class="app-label">Mois de pilotage</label>
                 <input id="monthInput" type="month" name="month" value="{{ $month }}" class="app-input">
-                <p class="app-hint">Utilise pour les stats et le suivi des impayes.</p>
+                <p class="app-hint">Utilise pour les stats et le suivi des impayés.</p>
             </div>
 
             <div class="app-field">
@@ -217,7 +217,7 @@
 
                 <div class="rounded-2xl border border-slate-200 bg-white px-4 py-4">
                     <div class="mb-3 flex items-center justify-between gap-3">
-                        <p class="text-sm font-semibold text-slate-900">Derniers reglements</p>
+                        <p class="text-sm font-semibold text-slate-900">Derniers règlements</p>
                         <a
                             href="{{ route('admin.finance.statement.print', ['type' => 'parent', 'id' => $selectedParent->id, 'month' => $month]) }}"
                             target="_blank"
@@ -244,7 +244,7 @@
                             </div>
                         @empty
                             <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-500">
-                                Aucun paiement enregistre pour ce parent.
+                                Aucun paiement enregistré pour ce parent.
                             </div>
                         @endforelse
                     </div>
@@ -283,13 +283,13 @@
     </x-ui.card>
 
     <section class="grid gap-6 lg:grid-cols-2">
-        <x-ui.card title="Impayes du mois" :subtitle="'Periode : '.$month">
+        <x-ui.card title="Impayes du mois" :subtitle="'Période : '.$month">
             <div class="space-y-3">
                 @forelse($unpaidThisMonth as $item)
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
                         <div class="flex items-start justify-between gap-3">
                             <div>
-                                <p class="font-semibold text-slate-900">{{ $item['student'] ?? 'Eleve non renseigne' }}</p>
+                                <p class="font-semibold text-slate-900">{{ $item['student'] ?? 'Élève non renseigne' }}</p>
                                 <p class="mt-1 text-sm text-slate-500">
                                     {{ $item['parent'] ?? 'Parent non renseigne' }}
                                     <span class="mx-1 text-slate-300">|</span>
@@ -308,13 +308,13 @@
             </div>
         </x-ui.card>
 
-        <x-ui.card title="Arrieres" subtitle="Mois anterieurs non regles">
+        <x-ui.card title="Arrieres" subtitle="Mois anterieurs non réglés">
             <div class="space-y-3">
                 @forelse($arrears as $item)
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
                         <div class="flex items-start justify-between gap-3">
                             <div>
-                                <p class="font-semibold text-slate-900">{{ $item['student'] ?? 'Eleve non renseigne' }}</p>
+                                <p class="font-semibold text-slate-900">{{ $item['student'] ?? 'Élève non renseigne' }}</p>
                                 <p class="mt-1 text-sm text-slate-500">
                                     {{ $item['parent'] ?? 'Parent non renseigne' }}
                                     <span class="mx-1 text-slate-300">|</span>
@@ -346,13 +346,13 @@
         </x-ui.card>
     </section>
 
-    <x-ui.card title="Historique des paiements" subtitle="Liste filtree selon la recherche, la periode, le parent et la classe.">
+    <x-ui.card title="Historique des paiements" subtitle="Liste filtree selon la recherche, la période, le parent et la classe.">
         <div class="mb-4 flex items-center justify-between gap-3">
             <p class="app-hint">
                 Resultats : <span class="font-semibold text-slate-900">{{ $recentPayments?->total() ?? 0 }}</span>
                 @if($dateFromValue || $dateToValue)
                     <span class="ml-2 text-slate-400">|</span>
-                    <span class="ml-2">Periode personnalisee</span>
+                    <span class="ml-2">Période personnalisee</span>
                 @endif
             </p>
         </div>
@@ -364,11 +364,11 @@
                         <tr>
                             <th>Date</th>
                             <th>Parent</th>
-                            <th>Eleve</th>
+                            <th>Élève</th>
                             <th>Classe</th>
                             <th>Montant</th>
-                            <th>Methode</th>
-                            <th>Recu</th>
+                            <th>Méthode</th>
+                            <th>Reçu</th>
                             <th class="text-right">Actions</th>
                         </tr>
                     </thead>
@@ -388,7 +388,7 @@
                                                 class="font-semibold text-sky-700 hover:text-sky-800 hover:underline"
                                                 href="{{ route('admin.finance.receipts.show', $payment->receipt) }}"
                                             >
-                                                {{ $payment->receipt->receipt_number ?? 'Recu' }}
+                                                {{ $payment->receipt->receipt_number ?? 'Reçu' }}
                                             </a>
                                         @else
                                             -

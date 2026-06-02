@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_','-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -35,7 +35,7 @@
                     <div class="leading-tight">
                         <div class="truncate text-sm font-semibold text-slate-950">{{ $schoolContext?->name ?? 'My Edu' }}</div>
                         <div class="text-xs text-slate-500">
-                            {{ $schoolContext ? 'Espace de connexion de l etablissement' : 'Experience educative securisee' }}
+                            {{ $schoolContext ? 'Espace de connexion de l'Établissement' : 'Expérience éducative sécurisée' }}
                         </div>
                     </div>
                 </a>

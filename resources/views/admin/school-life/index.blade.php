@@ -1,4 +1,4 @@
-{{-- resources/views/admin/school-life/index.blade.php --}}
+﻿{{-- resources/views/admin/school-life/index.blade.php --}}
 <x-admin-layout title="Vie scolaire">
     <x-slot name="header">Vie scolaire</x-slot>
 
@@ -6,7 +6,7 @@
         <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
                 <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">Vie scolaire</h1>
-                <p class="mt-1 text-sm text-slate-500">Suivre les infos et activites de l'etablissement.</p>
+                <p class="mt-1 text-sm text-slate-500">Suivre les infos et activités de l'Établissement.</p>
             </div>
             <a href="{{ route('admin.school-life.create') }}"
                class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-black">

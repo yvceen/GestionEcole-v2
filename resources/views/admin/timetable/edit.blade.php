@@ -1,4 +1,4 @@
-@php
+﻿@php
     $layoutComponent = $layoutComponent ?? 'admin-layout';
     $routePrefix = $routePrefix ?? 'admin.timetable';
 @endphp
@@ -6,7 +6,7 @@
 <x-dynamic-component :component="$layoutComponent" title="Modifier l'emploi du temps">
     <x-ui.page-header
         title="Modifier un creneau"
-        subtitle="Ajustez un creneau existant en gardant la meme structure que la creation."
+        subtitle="Ajustez un creneau existant en gardant la même structure que la création."
     >
         <x-slot name="actions">
             <x-ui.button :href="route($routePrefix . '.settings.edit')" variant="secondary">

@@ -1,8 +1,8 @@
-<x-director-layout title="Suivi">
+﻿<x-director-layout title="Suivi">
     <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <h1 class="text-2xl font-semibold tracking-tight">Suivi pedagogique</h1>
-            <p class="mt-1 text-sm text-slate-500">Filtrez par niveau, classe, enseignant, periode ou recherche libre.</p>
+            <h1 class="text-2xl font-semibold tracking-tight">Suivi pédagogique</h1>
+            <p class="mt-1 text-sm text-slate-500">Filtrez par niveau, classe, enseignant, période ou recherche libre.</p>
         </div>
     </div>
 
@@ -70,7 +70,7 @@
                         </div>
                         <div class="mt-1 text-xs text-slate-500">
                             {{ optional($it->created_at)->format('Y-m-d H:i') }}
-                            @if($it->teacher) • {{ $it->teacher->name }} @endif
+                            @if($it->teacher) â€¢ {{ $it->teacher->name }} @endif
                         </div>
 
                         @if($it->description)

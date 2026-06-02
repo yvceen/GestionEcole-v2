@@ -1,8 +1,8 @@
 ﻿@props([
     'target' => null,
-    'label' => 'Generer un mot de passe',
+    'label' => 'Générer un mot de passe',
     'copyLabel' => 'Copier',
-    'helper' => 'Conservez ce mot de passe avant d\'enregistrer.',
+    'helper' => 'Conservez ce mot de passe avant d\'enregistrér.',
     'confirmationTarget' => null,
 ])
 
@@ -124,7 +124,7 @@
                         confirmationTarget.dispatchEvent(new Event('change', { bubbles: true }));
                     }
 
-                    showFeedback('Mot de passe genere');
+                    showFeedback('Mot de passe généré');
                 });
 
                 tool.querySelector('[data-password-copy]')?.addEventListener('click', async () => {

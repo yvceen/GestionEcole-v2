@@ -1,23 +1,23 @@
-<x-director-layout title="Suivi de l eleve">
+﻿<x-director-layout title="Suivi de l Élève">
     <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight">{{ $student->full_name }}</h1>
             <p class="mt-1 text-sm text-slate-500">
-                {{ $student->classroom?->name ?? '-' }} • {{ $student->classroom?->level?->name ?? '-' }}
+                {{ $student->classroom?->name ?? '-' }} â€¢ {{ $student->classroom?->level?->name ?? '-' }}
             </p>
         </div>
 
         <a href="{{ route('director.students.index') }}"
            class="rounded-2xl border border-black/10 bg-white px-4 py-2 text-sm font-semibold hover:bg-white/80">
-            ← Retour
+            â† Retour
         </a>
     </div>
 
     <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4">
         {{-- Notes --}}
         <div class="xl:col-span-1 rounded-[28px] border border-black/5 bg-white/70 p-6 shadow-[0_18px_45px_-35px_rgba(0,0,0,.45)]">
-            <div class="text-sm font-semibold text-slate-900">Notes pedagogiques</div>
-            <p class="mt-1 text-xs text-slate-500">Reserve au suivi pedagogique de la direction.</p>
+            <div class="text-sm font-semibold text-slate-900">Notes pédagogiques</div>
+            <p class="mt-1 text-xs text-slate-500">Reserve au suivi pédagogique de la direction.</p>
 
             <form method="POST" action="{{ route('director.students.notes.store', $student) }}" class="mt-4">
                 @csrf
@@ -33,7 +33,7 @@
                     <div class="rounded-2xl border border-black/5 bg-white/60 p-4">
                         <div class="text-xs text-slate-500">
                             {{ optional($n->created_at)->format('Y-m-d H:i') }}
-                            • {{ $n->author?->name ?? '-' }}
+                            â€¢ {{ $n->author?->name ?? '-' }}
                         </div>
                         <div class="mt-2 text-sm text-slate-800 whitespace-pre-line">{{ $n->note }}</div>
                     </div>
@@ -57,7 +57,7 @@
                     <div class="rounded-2xl border border-black/5 bg-white/60 p-4">
                         <div class="text-sm font-semibold text-slate-900">{{ $c->title }}</div>
                         <div class="mt-1 text-xs text-slate-500">
-                            {{ optional($c->created_at)->format('Y-m-d H:i') }} @if($c->teacher) • {{ $c->teacher->name }} @endif
+                            {{ optional($c->created_at)->format('Y-m-d H:i') }} @if($c->teacher) â€¢ {{ $c->teacher->name }} @endif
                         </div>
                         @if($c->description)
                             <p class="mt-2 text-sm text-slate-700">{{ $c->description }}</p>
@@ -85,8 +85,8 @@
                     <div class="rounded-2xl border border-black/5 bg-white/60 p-4">
                         <div class="text-sm font-semibold text-slate-900">{{ $h->title }}</div>
                         <div class="mt-1 text-xs text-slate-500">
-                            {{ optional($h->created_at)->format('Y-m-d H:i') }} @if($h->teacher) • {{ $h->teacher->name }} @endif
-                            @if(!empty($h->due_at)) • A rendre le : {{ $h->due_at }} @endif
+                            {{ optional($h->created_at)->format('Y-m-d H:i') }} @if($h->teacher) â€¢ {{ $h->teacher->name }} @endif
+                            @if(!empty($h->due_at)) â€¢ A rendre le : {{ $h->due_at }} @endif
                         </div>
                         @if($h->description)
                             <p class="mt-2 text-sm text-slate-700">{{ $h->description }}</p>

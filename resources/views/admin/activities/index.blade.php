@@ -4,11 +4,11 @@
     $canManage = $canManage ?? true;
 @endphp
 
-<x-dynamic-component :component="$layoutComponent" title="Activites" subtitle="Suivi des activites scolaires, planification et participation des eleves.">
-    <x-ui.page-header title="Activites scolaires" subtitle="Creez et planifiez sports, sorties, ateliers et clubs avec suivi de participation.">
+<x-dynamic-component :component="$layoutComponent" title="Activités" subtitle="Suivi des activités scolaires, planification et participation des Élèves.">
+    <x-ui.page-header title="Activités scolaires" subtitle="Creez et planifiez sports, sorties, ateliers et clubs avec suivi de participation.">
         <x-slot name="actions">
             @if($canManage)
-                <x-ui.button :href="route($routePrefix . '.create')" variant="primary">Nouvelle activite</x-ui.button>
+                <x-ui.button :href="route($routePrefix . '.create')" variant="primary">Nouvelle activité</x-ui.button>
             @endif
             <x-ui.button :href="route(str_replace('activities', 'events', $routePrefix) . '.index')" variant="secondary">Ouvrir agenda</x-ui.button>
         </x-slot>
@@ -39,14 +39,14 @@
         </form>
     </x-ui.card>
 
-    <x-ui.card title="Liste des activites" subtitle="Toutes les activites de l ecole active.">
+    <x-ui.card title="Liste des activités" subtitle="Toutes les activités de l'École active.">
         <div class="overflow-x-auto rounded-2xl border border-slate-200">
             <table class="app-table min-w-[920px]">
                 <thead>
                     <tr>
                         <th>Titre</th>
                         <th>Type</th>
-                        <th>Periode</th>
+                        <th>Période</th>
                         <th>Classe</th>
                         <th>Enseignant</th>
                         <th>Participants</th>
@@ -71,7 +71,7 @@
                                 <div class="flex flex-wrap gap-2">
                                     @if($canManage)
                                         <x-ui.button :href="route($routePrefix . '.edit', $activity)" variant="secondary" size="sm">Modifier</x-ui.button>
-                                        <form method="POST" action="{{ route($routePrefix . '.destroy', $activity) }}" onsubmit="return confirm('Supprimer cette activite ?')">
+                                        <form method="POST" action="{{ route($routePrefix . '.destroy', $activity) }}" onsubmit="return confirm('Supprimer cette activité ?')">
                                             @csrf
                                             @method('DELETE')
                                             <x-ui.button type="submit" variant="danger" size="sm">Supprimer</x-ui.button>
@@ -81,7 +81,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="8" class="px-5 py-10 text-center text-sm text-slate-500">Aucune activite trouvee.</td></tr>
+                        <tr><td colspan="8" class="px-5 py-10 text-center text-sm text-slate-500">Aucune activité trouvee.</td></tr>
                     @endforelse
                 </tbody>
             </table>

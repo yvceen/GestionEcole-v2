@@ -1,4 +1,4 @@
-<x-admin-layout title="Detail route transport">
+﻿<x-admin-layout title="Detail route transport">
     <x-ui.page-header :title="$route->route_name" :subtitle="$route->start_point.' -> '.$route->end_point">
         <x-slot name="actions">
             <x-ui.button :href="route('admin.transport.routes.edit', $route)" variant="primary">Modifier</x-ui.button>
@@ -22,7 +22,7 @@
 
     <section class="grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_380px]">
         <div class="space-y-6">
-            <x-ui.card title="Synthese circuit" subtitle="Vehicule, conducteur, arrets et eleves actifs.">
+            <x-ui.card title="Synthese circuit" subtitle="Vehicule, conducteur, arrêts et Élèves actifs.">
                 <div class="grid gap-4 md:grid-cols-2 text-sm">
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
                         <p class="text-slate-500">Vehicule</p>
@@ -31,8 +31,8 @@
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
                         <p class="text-slate-500">Volume</p>
-                        <p class="font-semibold text-slate-900">{{ ($route->assignments ?? collect())->where('is_active', true)->count() }} eleve(s) actifs</p>
-                        <p class="mt-1 text-xs text-slate-500">{{ ($route->stops ?? collect())->count() }} arret(s) - {{ $route->estimated_minutes ?? '-' }} min</p>
+                        <p class="font-semibold text-slate-900">{{ ($route->assignments ?? collect())->where('is_active', true)->count() }} Élève(s) actifs</p>
+                        <p class="mt-1 text-xs text-slate-500">{{ ($route->stops ?? collect())->count() }} arrêt(s) - {{ $route->estimated_minutes ?? '-' }} min</p>
                     </div>
                 </div>
 
@@ -48,12 +48,12 @@
                             @endif
                         </div>
                     @empty
-                        <div class="student-empty">Aucun arret configure pour cette route.</div>
+                        <div class="student-empty">Aucun arrêt configure pour cette route.</div>
                     @endforelse
                 </div>
             </x-ui.card>
 
-            <x-ui.card title="Eleves affectes" subtitle="Liste active des eleves relies a cette route.">
+            <x-ui.card title="Élèves affectés" subtitle="Liste active des Élèves reliés a cette route.">
                 <div class="space-y-3">
                     @forelse(($route->assignments ?? collect())->where('is_active', true) as $assignment)
                         <article class="rounded-2xl border border-slate-200 bg-white px-4 py-3">
@@ -66,14 +66,14 @@
                             </div>
                         </article>
                     @empty
-                        <div class="student-empty">Aucun eleve actif sur cette route.</div>
+                        <div class="student-empty">Aucun Élève actif sur cette route.</div>
                     @endforelse
                 </div>
             </x-ui.card>
         </div>
 
         <div class="space-y-6">
-            <x-ui.card title="Affecter des eleves" subtitle="Ajoutez une classe complete ou une selection precise sans quitter la route.">
+            <x-ui.card title="Affecter des Élèves" subtitle="Ajoutez une classe complete ou une sélection precise sans quitter la route.">
                 <form method="POST" action="{{ route('admin.transport.routes.assign-students', $route) }}" class="space-y-4">
                     @csrf
                     <x-ui.select label="Classe complete (optionnel)" name="classroom_id">
@@ -84,7 +84,7 @@
                     </x-ui.select>
 
                     <div>
-                        <label class="app-label">Eleves complementaires</label>
+                        <label class="app-label">Élèves complementaires</label>
                         <div class="max-h-56 space-y-2 overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50 p-3">
                             @foreach(\App\Models\Student::query()->where('school_id', app('current_school_id'))->active()->orderBy('full_name')->get(['id', 'full_name']) as $student)
                                 <label class="flex items-center gap-2 text-sm text-slate-700">
@@ -95,7 +95,7 @@
                         </div>
                     </div>
 
-                    <x-ui.select label="Periode" name="period">
+                    <x-ui.select label="Période" name="period">
                         <option value="both">Matin et soir</option>
                         <option value="morning">Matin</option>
                         <option value="evening">Soir</option>

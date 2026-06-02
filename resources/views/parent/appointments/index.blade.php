@@ -1,4 +1,4 @@
-<x-parent-layout title="Mes rendez-vous">
+﻿<x-parent-layout title="Mes rendez-vous">
     <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="text-sm text-slate-500">
-                            Cree le {{ optional($appointment->created_at)->format('d/m/Y H:i') ?? 'N/A' }}
+                            Créé le {{ optional($appointment->created_at)->format('d/m/Y H:i') ?? 'N/A' }}
                         </div>
                     </div>
                 </article>

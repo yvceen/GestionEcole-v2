@@ -1,4 +1,4 @@
-<x-school-life-layout title="Detail du devoir" subtitle="Consultez le contenu, les pieces jointes et les actions de moderation.">
+﻿<x-school-life-layout title="Detail du devoir" subtitle="Consultez le contenu, les pieces jointes et les actions de moderation.">
     @php
         $routePrefix = $routePrefix ?? 'school-life.homeworks';
         $normalized = $homework->normalized_status ?? 'pending';
@@ -49,7 +49,7 @@
             <dl class="mt-5 grid gap-4 text-sm text-slate-700 sm:grid-cols-2">
                 <div><dt class="text-xs uppercase tracking-wide text-slate-500">Enseignant</dt><dd class="mt-1 font-medium">{{ $homework->teacher?->name ?? '-' }}</dd></div>
                 <div><dt class="text-xs uppercase tracking-wide text-slate-500">Echeance</dt><dd class="mt-1 font-medium">{{ optional($homework->due_at)->format('Y-m-d H:i') ?? '-' }}</dd></div>
-                <div><dt class="text-xs uppercase tracking-wide text-slate-500">Cree le</dt><dd class="mt-1 font-medium">{{ optional($homework->created_at)->format('Y-m-d H:i') ?? '-' }}</dd></div>
+                <div><dt class="text-xs uppercase tracking-wide text-slate-500">Créé le</dt><dd class="mt-1 font-medium">{{ optional($homework->created_at)->format('Y-m-d H:i') ?? '-' }}</dd></div>
                 <div><dt class="text-xs uppercase tracking-wide text-slate-500">Approuve le</dt><dd class="mt-1 font-medium">{{ optional($homework->approved_at)->format('Y-m-d H:i') ?? '-' }}</dd></div>
                 <div><dt class="text-xs uppercase tracking-wide text-slate-500">Rejete le</dt><dd class="mt-1 font-medium">{{ optional($homework->rejected_at)->format('Y-m-d H:i') ?? '-' }}</dd></div>
             </dl>
@@ -59,7 +59,7 @@
             @endif
         </x-ui.card>
 
-        <x-ui.card title="Pieces jointes" subtitle="Documents associes au devoir.">
+        <x-ui.card title="Pieces jointes" subtitle="Documents associés au devoir.">
             @if($homework->attachments->count())
                 <ul class="space-y-2 text-sm">
                     @foreach($homework->attachments as $attachment)

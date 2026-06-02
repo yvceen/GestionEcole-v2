@@ -1,7 +1,7 @@
 ﻿<x-admin-layout title="Ajouter une route">
     <x-ui.page-header
         title="Ajouter une route"
-        subtitle="Creez un circuit de transport avec des arrets, un vehicule et un parcours clair."
+        subtitle="Creez un circuit de transport avec des arrêts, un vehicule et un parcours clair."
     >
         <x-slot name="actions">
             <x-ui.button :href="route('admin.transport.routes.index')" variant="secondary">
@@ -10,7 +10,7 @@
         </x-slot>
     </x-ui.page-header>
 
-    <x-ui.card title="Circuit de transport" subtitle="Definissez l'itineraire, le vehicule et la liste des arrets.">
+    <x-ui.card title="Circuit de transport" subtitle="Definissez l'itineraire, le vehicule et la liste des arrêts.">
         <form method="POST" action="{{ route('admin.transport.routes.store') }}" class="space-y-5">
             @csrf
 
@@ -42,7 +42,7 @@
 
                 <div class="app-field">
                     <label class="app-label">Point d'arrivee</label>
-                    <input type="text" name="end_point" value="{{ old('end_point') }}" class="app-input @error('end_point') border-rose-500 @enderror" placeholder="Ecole primaire" required>
+                    <input type="text" name="end_point" value="{{ old('end_point') }}" class="app-input @error('end_point') border-rose-500 @enderror" placeholder="École primaire" required>
                     @error('end_point')<p class="app-error">{{ $message }}</p>@enderror
                 </div>
             </div>
@@ -74,8 +74,8 @@
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                 <div class="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                        <p class="text-sm font-semibold text-slate-900">Arrets de la route</p>
-                        <p class="mt-1 text-xs text-slate-500">Cliquez sur la carte pour ajouter un arret, glissez pour reordonner ou deplacer.</p>
+                        <p class="text-sm font-semibold text-slate-900">Arrêts de la route</p>
+                        <p class="mt-1 text-xs text-slate-500">Cliquez sur la carte pour ajouter un arrêt, glissez pour reordonner ou deplacer.</p>
                     </div>
                 </div>
 
@@ -89,7 +89,7 @@
                     </div>
 
                     <div class="rounded-xl border border-slate-200 bg-white p-3">
-                        <div class="mb-2 text-xs font-semibold text-slate-500">Liste des arrets</div>
+                        <div class="mb-2 text-xs font-semibold text-slate-500">Liste des arrêts</div>
                         <div id="stopsList" class="space-y-2"></div>
                     </div>
                 </div>

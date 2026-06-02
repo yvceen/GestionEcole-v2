@@ -1,4 +1,4 @@
-<x-admin-layout title="Frais de l'eleve">
+﻿<x-admin-layout title="Frais de l'Élève">
     <x-students.header
         title="Modifier les frais"
         subtitle="{{ $student->full_name }} - {{ $student->classroom?->name ?? '-' }} - Parent: {{ $student->parentUser?->name ?? '-' }}"
@@ -52,7 +52,7 @@
                     :value="old('insurance_yearly', $student->feePlan->insurance_yearly)"
                 />
                 <x-ui.input
-                    label="Mois de debut"
+                    label="Mois de début"
                     name="starts_month"
                     type="number"
                     min="1"
@@ -64,7 +64,7 @@
                     <div class="flex items-center gap-2">
                         <input type="hidden" name="insurance_paid" value="0">
                         <input id="insurance_paid" name="insurance_paid" type="checkbox" value="1" class="rounded border-slate-300 text-blue-600" {{ old('insurance_paid', $student->feePlan->insurance_paid ?? false) ? 'checked' : '' }}>
-                        <label for="insurance_paid" class="text-sm font-semibold text-slate-700">Assurance annuelle payee</label>
+                        <label for="insurance_paid" class="text-sm font-semibold text-slate-700">Assurance annuelle payée</label>
                     </div>
                 </div>
             </div>
@@ -106,7 +106,7 @@
                         </select>
                     </div>
                     <div>
-                        <label for="transport_period" class="mb-1 block text-sm font-semibold text-slate-700">Periode</label>
+                        <label for="transport_period" class="mb-1 block text-sm font-semibold text-slate-700">Période</label>
                         <select id="transport_period" name="transport_period" class="app-input">
                             <option value="both" @selected(old('transport_period', $transportAssignment?->period ?? 'both') === 'both')>Matin et Soir</option>
                             <option value="morning" @selected(old('transport_period', $transportAssignment?->period) === 'morning')>Matin</option>

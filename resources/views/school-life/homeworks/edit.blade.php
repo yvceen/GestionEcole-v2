@@ -1,4 +1,4 @@
-<x-school-life-layout title="Modifier le devoir" subtitle="Ajustez un devoir publie ou en attente depuis l espace vie scolaire.">
+﻿<x-school-life-layout title="Modifier le devoir" subtitle="Ajustez un devoir publie ou en attente depuis l espace vie scolaire.">
     @php
         $routePrefix = $routePrefix ?? 'school-life.homeworks';
     @endphp
@@ -8,7 +8,7 @@
         subtitle="Mettez a jour le contenu, la classe cible ou l echeance depuis la vie scolaire."
     />
 
-    <x-ui.card title="Edition du devoir" subtitle="Les modifications sont appliquees au devoir deja publie ou en attente.">
+    <x-ui.card title="Edition du devoir" subtitle="Les modifications sont appliquees au devoir déjà publie ou en attente.">
         <form method="POST" action="{{ route($routePrefix . '.update', $homework) }}" class="space-y-5">
             @csrf
             @method('PUT')

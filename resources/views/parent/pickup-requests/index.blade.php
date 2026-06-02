@@ -1,8 +1,8 @@
-<x-parent-layout title="Demandes de recuperation" subtitle="Demandez une sortie / recuperation de votre enfant et suivez la decision de la vie scolaire.">
+﻿<x-parent-layout title="Demandes de recuperation" subtitle="Demandez une sortie / recuperation de votre enfant et suivez la decision de la vie scolaire.">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <h2 class="text-xl font-semibold text-slate-950">Mes demandes</h2>
-            <p class="mt-1 text-sm text-slate-500">Les demandes sont visibles par le responsable scolaire de l'etablissement.</p>
+            <p class="mt-1 text-sm text-slate-500">Les demandes sont visibles par le responsable scolaire de l'Établissement.</p>
         </div>
         <x-ui.button :href="route('parent.pickup-requests.create')" variant="primary">
             Nouvelle demande

@@ -1,8 +1,8 @@
-<x-director-layout title="Rapports pedagogiques">
+﻿<x-director-layout title="Rapports pédagogiques">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Rapports mensuels</h1>
-            <p class="mt-1 text-sm text-slate-500">Suivi pedagogique par mois : activites, difficultes, recommandations.</p>
+            <p class="mt-1 text-sm text-slate-500">Suivi pédagogique par mois : activités, difficultés, recommandations.</p>
         </div>
 
         <a href="{{ route('director.reports.create') }}"
@@ -29,7 +29,7 @@
                     <tr class="text-left border-b border-black/5">
                         <th class="p-4 text-xs font-semibold text-slate-500">Mois</th>
                         <th class="p-4 text-xs font-semibold text-slate-500">Resume</th>
-                        <th class="p-4 text-xs font-semibold text-slate-500">Cree le</th>
+                        <th class="p-4 text-xs font-semibold text-slate-500">Créé le</th>
                     </tr>
                 </thead>
 

@@ -1,4 +1,4 @@
-<x-admin-layout :title="'Classe: '.$classroom->name">
+﻿<x-admin-layout :title="'Classe: '.$classroom->name">
     <div class="flex items-start justify-between gap-4">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">{{ $classroom->name }}</h1>
@@ -13,7 +13,7 @@
 
     <div class="mt-8 rounded-[28px] border border-black/5 bg-white p-6 shadow-[0_18px_45px_-30px_rgba(0,0,0,.35)]">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 class="text-lg font-semibold text-slate-900">Eleves dans cette classe</h2>
+            <h2 class="text-lg font-semibold text-slate-900">Élèves dans cette classe</h2>
             <div class="text-sm text-slate-500">
                 Total: <span class="font-semibold text-slate-900">{{ $students->count() }}</span>
             </div>
@@ -24,7 +24,7 @@
                 <table class="w-full text-sm">
                     <thead class="bg-slate-50 text-slate-600">
                         <tr>
-                            <th class="text-left px-4 py-3 font-semibold">Eleve</th>
+                            <th class="text-left px-4 py-3 font-semibold">Élève</th>
                             <th class="text-left px-4 py-3 font-semibold">Parent</th>
                             <th class="text-left px-4 py-3 font-semibold">Date naissance</th>
                         </tr>
@@ -39,7 +39,7 @@
                         @empty
                             <tr>
                                 <td colspan="3" class="px-4 py-6 text-center text-slate-500">
-                                    Aucun eleve dans cette classe.
+                                    Aucun Élève dans cette classe.
                                 </td>
                             </tr>
                         @endforelse

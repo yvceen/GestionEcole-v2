@@ -15,7 +15,7 @@
                     name="q"
                     value="{{ $q ?? '' }}"
                     autocomplete="off"
-                    placeholder="Rechercher par nom, email ou telephone..."
+                    placeholder="Rechercher par nom, email ou téléphone..."
                     class="app-input pr-10"
                 />
 
@@ -42,7 +42,7 @@
             'director' => 'Directeurs',
             'teacher' => 'Enseignants',
             'parent' => 'Parents',
-            'student' => 'Eleves',
+            'student' => 'Élèves',
             'school_life' => 'Responsables scolaires',
             'chauffeur' => 'Chauffeurs',
         ];

@@ -1,8 +1,8 @@
-<x-admin-layout title="Annees scolaires" subtitle="Gerez les annees scolaires actives, futures et archivees sans perdre l historique.">
-    <x-ui.page-header title="Annees scolaires" subtitle="Chaque ecole garde son historique et travaille par annee active.">
+﻿<x-admin-layout title="Années scolaires" subtitle="Gerez les années scolaires actives, futures et archivees sans perdre l historique.">
+    <x-ui.page-header title="Années scolaires" subtitle="Chaque École garde son historique et travaille par année active.">
         <x-slot name="actions">
-            <x-ui.button :href="route('admin.academic-years.create')" variant="primary">Nouvelle annee</x-ui.button>
-            <x-ui.button :href="route('admin.academic-promotions.index')" variant="secondary">Passage a l annee suivante</x-ui.button>
+            <x-ui.button :href="route('admin.academic-years.create')" variant="primary">Nouvelle année</x-ui.button>
+            <x-ui.button :href="route('admin.academic-promotions.index')" variant="secondary">Passage a l'année suivante</x-ui.button>
         </x-slot>
     </x-ui.page-header>
 
@@ -10,7 +10,7 @@
         <x-ui.alert variant="danger">{{ $errors->first('academic_year') }}</x-ui.alert>
     @endif
 
-    <x-ui.card title="Annee courante" subtitle="L annee affichee par defaut sur les tableaux de bord et ecrans mobiles.">
+    <x-ui.card title="Année courante" subtitle="L année affichée par defaut sur les tableaux de bord et ecrans mobiles.">
         <div class="flex flex-wrap items-center gap-3">
             <x-ui.badge variant="success">{{ $currentAcademicYear->name }}</x-ui.badge>
             <span class="text-sm text-slate-600">{{ $currentAcademicYear->starts_at?->format('d/m/Y') }} - {{ $currentAcademicYear->ends_at?->format('d/m/Y') }}</span>
@@ -18,13 +18,13 @@
         </div>
     </x-ui.card>
 
-    <x-ui.card title="Liste des annees" subtitle="Archivez les annees cloturees et activez la bonne annee au bon moment.">
+    <x-ui.card title="Liste des années" subtitle="Archivez les années cloturees et activez la bonne année au bon moment.">
         <div class="overflow-x-auto rounded-2xl border border-slate-200">
             <table class="app-table min-w-[760px]">
                 <thead>
                     <tr>
-                        <th>Annee</th>
-                        <th>Periode</th>
+                        <th>Année</th>
+                        <th>Période</th>
                         <th>Statut</th>
                         <th>Courante</th>
                         <th>Actions</th>
@@ -52,7 +52,7 @@
                                         </form>
                                     @endif
                                     @if($year->status !== 'archived')
-                                        <form method="POST" action="{{ route('admin.academic-years.archive', $year) }}" onsubmit="return confirm('Archiver cette annee scolaire ?')">
+                                        <form method="POST" action="{{ route('admin.academic-years.archive', $year) }}" onsubmit="return confirm('Archiver cette année scolaire ?')">
                                             @csrf
                                             <x-ui.button type="submit" size="sm" variant="secondary">Archiver</x-ui.button>
                                         </form>
@@ -62,7 +62,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-5 py-10 text-center text-sm text-slate-500">Aucune annee scolaire n est encore configuree.</td>
+                            <td colspan="5" class="px-5 py-10 text-center text-sm text-slate-500">Aucune année scolaire n est encore configuree.</td>
                         </tr>
                     @endforelse
                 </tbody>

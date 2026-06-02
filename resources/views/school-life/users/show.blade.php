@@ -1,4 +1,4 @@
-<x-school-life-layout :title="'Utilisateur - ' . $user->name" subtitle="Informations de contact, role et liens familiaux.">
+﻿<x-school-life-layout :title="'Utilisateur - ' . $user->name" subtitle="Informations de contact, role et liens familiaux.">
     @php
         $roleLabel = \App\Models\User::labelForRole($user->role);
         $isParent = (string) $user->role === \App\Models\User::ROLE_PARENT;
@@ -29,11 +29,11 @@
                 <p class="mt-2 break-all text-sm font-semibold text-slate-950">{{ $user->email ?: '-' }}</p>
             </article>
             <article class="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-4">
-                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Telephone</p>
+                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Téléphone</p>
                 <p class="mt-2 text-sm font-semibold text-slate-950">{{ $user->phone ?: '-' }}</p>
             </article>
             <article class="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-4">
-                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Cree le</p>
+                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Créé le</p>
                 <p class="mt-2 text-sm font-semibold text-slate-950">{{ optional($user->created_at)->format('d/m/Y H:i') ?: '-' }}</p>
             </article>
         </div>
@@ -41,8 +41,8 @@
 
     @if($isParent)
         <section class="mt-6 rounded-[28px] border border-slate-200 bg-white px-6 py-6 shadow-sm">
-            <h2 class="text-xl font-semibold tracking-tight text-slate-950">Parent et enfants lies</h2>
-            <p class="mt-1 text-sm text-slate-500">Coordonnees parent et eleves rattaches.</p>
+            <h2 class="text-xl font-semibold tracking-tight text-slate-950">Parent et enfants liés</h2>
+            <p class="mt-1 text-sm text-slate-500">Coordonnées parent et Élèves rattachés.</p>
 
             @if($children->isNotEmpty())
                 <div class="mt-5 grid gap-4 md:grid-cols-2">
@@ -50,19 +50,19 @@
                         <article class="rounded-2xl border border-slate-200 bg-emerald-50/40 px-5 py-5">
                             <p class="font-semibold text-slate-950">{{ $child->full_name }}</p>
                             <p class="mt-1 text-sm text-slate-600">Classe: {{ $child->classroom?->name ?: '-' }}</p>
-                            <p class="mt-1 text-sm text-slate-600">Email eleve: {{ $child->studentUser?->email ?: '-' }}</p>
+                            <p class="mt-1 text-sm text-slate-600">Email Élève: {{ $child->studentUser?->email ?: '-' }}</p>
                         </article>
                     @endforeach
                 </div>
             @else
-                <p class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-5 text-sm text-slate-500">Aucun enfant lie.</p>
+                <p class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-5 text-sm text-slate-500">Aucun enfant lié.</p>
             @endif
         </section>
     @endif
 
     @if($isStudent && $student)
         <section class="mt-6 rounded-[28px] border border-slate-200 bg-white px-6 py-6 shadow-sm">
-            <h2 class="text-xl font-semibold tracking-tight text-slate-950">Dossier eleve</h2>
+            <h2 class="text-xl font-semibold tracking-tight text-slate-950">Dossier Élève</h2>
             <div class="mt-5 grid gap-4 md:grid-cols-2">
                 <div class="rounded-2xl border border-slate-200 bg-sky-50/50 px-5 py-5">
                     <p class="text-sm text-slate-600">Classe</p>

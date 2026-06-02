@@ -1,4 +1,4 @@
-<x-admin-layout title="Detail de l'affectation">
+﻿<x-admin-layout title="Detail de l'affectation">
     @php
         $startDate = $transportAssignment->assigned_date;
         $endDate = $transportAssignment->ended_date ?? now();
@@ -22,13 +22,13 @@
 
     <div class="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_320px]">
         <div class="space-y-6">
-            <x-ui.card title="Eleve">
+            <x-ui.card title="Élève">
                 @if($transportAssignment->student)
                     <div class="space-y-3 text-sm">
                         <div class="flex justify-between gap-4"><span class="text-slate-500">Nom</span><span class="font-semibold text-slate-900">{{ $transportAssignment->student->full_name }}</span></div>
                         <div class="flex justify-between gap-4"><span class="text-slate-500">Classe</span><span class="text-slate-900">{{ $transportAssignment->student->classroom?->name ?? '-' }}</span></div>
                         <div class="flex justify-between gap-4"><span class="text-slate-500">Parent</span><span class="text-slate-900">{{ $transportAssignment->student->parentUser?->name ?? '-' }}</span></div>
-                        <div class="flex justify-between gap-4"><span class="text-slate-500">Telephone</span><span class="text-slate-900">{{ $transportAssignment->student->parentUser?->phone ?? '-' }}</span></div>
+                        <div class="flex justify-between gap-4"><span class="text-slate-500">Téléphone</span><span class="text-slate-900">{{ $transportAssignment->student->parentUser?->phone ?? '-' }}</span></div>
                     </div>
                 @else
                     <p class="text-sm text-slate-500">Informations non disponibles.</p>
@@ -53,9 +53,9 @@
                 </div>
             </x-ui.card>
 
-            <x-ui.card title="Periode">
+            <x-ui.card title="Période">
                 <div class="space-y-3 text-sm">
-                    <div class="flex justify-between gap-4"><span class="text-slate-500">Date de debut</span><span class="font-semibold text-slate-900">{{ optional($transportAssignment->assigned_date)->format('d/m/Y') }}</span></div>
+                    <div class="flex justify-between gap-4"><span class="text-slate-500">Date de début</span><span class="font-semibold text-slate-900">{{ optional($transportAssignment->assigned_date)->format('d/m/Y') }}</span></div>
                     <div class="flex justify-between gap-4"><span class="text-slate-500">Date de fin</span><span class="text-slate-900">{{ $transportAssignment->ended_date ? $transportAssignment->ended_date->format('d/m/Y') : 'En cours' }}</span></div>
                     <div class="flex justify-between gap-4"><span class="text-slate-500">Duree</span><span class="font-semibold text-slate-900">{{ $months > 0 ? $months.' mois' : $days.' jours' }}</span></div>
                 </div>
@@ -87,8 +87,8 @@
 
             <x-ui.card title="Dates systeme">
                 <div class="space-y-3 text-sm">
-                    <div><span class="text-slate-500">Cree</span><div class="text-slate-900">{{ optional($transportAssignment->created_at)->format('d/m/Y H:i') }}</div></div>
-                    <div><span class="text-slate-500">Modifie</span><div class="text-slate-900">{{ optional($transportAssignment->updated_at)->format('d/m/Y H:i') }}</div></div>
+                    <div><span class="text-slate-500">Créé</span><div class="text-slate-900">{{ optional($transportAssignment->created_at)->format('d/m/Y H:i') }}</div></div>
+                    <div><span class="text-slate-500">Modifié</span><div class="text-slate-900">{{ optional($transportAssignment->updated_at)->format('d/m/Y H:i') }}</div></div>
                 </div>
             </x-ui.card>
         </div>

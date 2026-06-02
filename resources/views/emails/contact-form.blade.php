@@ -3,7 +3,7 @@
 
 **De:** {{ $senderName }}
 **Email:** {{ $senderEmail }}
-**Telephone:** {{ $senderPhone }}
+**Téléphone:** {{ $senderPhone }}
 **Sujet:** {{ $subject_text }}
 
 ---

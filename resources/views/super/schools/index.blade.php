@@ -1,6 +1,6 @@
-<x-super-layout
+﻿<x-super-layout
     title="Gestion des ecoles"
-    subtitle="Parcourez les etablissements, filtrez rapidement les resultats et lancez les actions de gestion sans quitter la liste."
+    subtitle="Parcourez les Établissements, filtrez rapidement les resultats et lancez les actions de gestion sans quitter la liste."
 >
     <x-page-header
         title="Ecoles"
@@ -8,20 +8,20 @@
         eyebrow="Management"
     >
         <x-ui.button :href="route('super.schools.create')" variant="primary">
-            Nouvelle ecole
+            Nouvelle École
         </x-ui.button>
     </x-page-header>
 
     <div class="super-kpi-grid xl:grid-cols-3">
         <x-super.stat label="Total" :value="$schoolsCount" meta="Ecoles repertoriees" tone="slate" />
-        <x-super.stat label="Actives" :value="$activeSchoolsCount" meta="Acces autorise aux utilisateurs" tone="emerald" />
+        <x-super.stat label="Actives" :value="$activeSchoolsCount" meta="Accès autorise aux utilisateurs" tone="emerald" />
         <x-super.stat label="Inactives" :value="$inactiveSchoolsCount" meta="A verifier ou reactiver" tone="rose" />
     </div>
 
     <section class="super-toolbar">
         <div>
             <p class="text-sm font-semibold text-slate-950">Recherche et filtres</p>
-            <p class="mt-1 text-sm text-slate-500">Affinez la liste par nom, nom court, adresse d acces ou statut sans perdre l acces aux actions principales.</p>
+            <p class="mt-1 text-sm text-slate-500">Affinez la liste par nom, nom court, adresse d'accés ou statut sans perdre l'accés aux actions principales.</p>
         </div>
 
         <form method="GET" class="w-full lg:w-auto">
@@ -31,7 +31,7 @@
                     name="q"
                     value="{{ $q ?? '' }}"
                     class="app-input"
-                    placeholder="Rechercher une ecole, un nom court ou une adresse d acces"
+                    placeholder="Rechercher une École, un nom court ou une adresse d'accés"
                 >
 
                 <select name="status" class="app-input">
@@ -53,7 +53,7 @@
 
     <x-super.panel
         title="Liste des ecoles"
-        subtitle="Chaque ligne donne l essentiel : activite, volume et actions de gestion."
+        subtitle="Chaque ligne donne l essentiel : activité, volume et actions de gestion."
     >
         <x-slot:actions>
             <div class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-500">
@@ -63,13 +63,13 @@
 
         @if($schools->isEmpty())
             <div class="super-empty">
-                <x-ui.empty-state title="Aucune ecole trouvee" description="Aucune ecole ne correspond aux filtres actuels. Essayez un autre critere ou creez un nouvel espace.">
+                <x-ui.empty-state title="Aucune École trouvee" description="Aucune École ne correspond aux filtres actuels. Essayez un autre critere ou creez un nouvel espace.">
                     <div class="flex flex-wrap justify-center gap-3">
                         <x-ui.button :href="route('super.schools.index')" variant="secondary">
                             Retirer les filtres
                         </x-ui.button>
                         <x-ui.button :href="route('super.schools.create')" variant="primary">
-                            Creer une ecole
+                            Creer une École
                         </x-ui.button>
                     </div>
                 </x-ui.empty-state>
@@ -80,9 +80,9 @@
                     <table class="super-table">
                         <thead>
                             <tr>
-                                <th>Ecole</th>
+                                <th>École</th>
                                 <th>Utilisateurs</th>
-                                <th>Eleves</th>
+                                <th>Élèves</th>
                                 <th>Statut</th>
                                 <th class="text-right">Actions</th>
                             </tr>
@@ -111,7 +111,7 @@
                                     </td>
                                     <td>
                                         <p class="font-semibold text-slate-950">{{ $school->users_count }}</p>
-                                        <p class="mt-1 text-xs text-slate-500">comptes lies</p>
+                                        <p class="mt-1 text-xs text-slate-500">comptes liés</p>
                                     </td>
                                     <td>
                                         <p class="font-semibold text-slate-950">{{ $school->students_count }}</p>
@@ -138,7 +138,7 @@
                                             <form
                                                 method="POST"
                                                 action="{{ route('super.schools.destroy', $school) }}"
-                                                onsubmit="return confirm('Supprimer definitivement cette ecole, ses utilisateurs et ses donnees associees ?');"
+                                                onsubmit="return confirm('Supprimer définitivement cette École, ses utilisateurs et ses données associées ?');"
                                             >
                                                 @csrf
                                                 @method('DELETE')

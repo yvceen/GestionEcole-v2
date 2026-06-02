@@ -1,4 +1,4 @@
-<x-ui.card title="Activite" subtitle="Configurez une activite scolaire avec son planning, son type et ses responsables.">
+﻿<x-ui.card title="Activité" subtitle="Configurez une activité scolaire avec son planning, son type et ses responsables.">
     <form method="POST" action="{{ $action }}" class="app-form-stack">
         @csrf
         @if(($method ?? 'POST') !== 'POST')
@@ -7,7 +7,7 @@
 
         <div class="app-form-section">
             <h3 class="app-form-section-title">Informations principales</h3>
-            <p class="app-form-section-copy">Renseignez d abord le titre, la description et le type d activite.</p>
+            <p class="app-form-section-copy">Renseignez d'abord le titre, la description et le type d activité.</p>
 
             <div class="mt-4 grid gap-4 md:grid-cols-2">
             <x-ui.input
@@ -16,7 +16,7 @@
                 :value="old('title', $activity->title)"
                 required
                 class="md:col-span-2"
-                hint="Utilisez un titre court et facilement identifiable pour les familles et les equipes."
+                hint="Utilisez un titre court et facilement identifiable pour les familles et les Équipes."
             />
 
             <div class="md:col-span-2">
@@ -54,17 +54,17 @@
 
         <div class="app-form-section">
             <h3 class="app-form-section-title">Planification et responsables</h3>
-            <p class="app-form-section-copy">Choisissez la periode, la classe concernee et le responsable si besoin.</p>
+            <p class="app-form-section-copy">Choisissez la période, la classe concernee et le responsable si besoin.</p>
 
             <div class="mt-4 grid gap-4 md:grid-cols-2">
             <x-ui.input
                 id="start_date"
                 type="datetime-local"
                 name="start_date"
-                label="Debut"
+                label="Début"
                 :value="old('start_date', optional($activity->start_date)->format('Y-m-d\\TH:i'))"
                 required
-                hint="Date et heure de demarrage de l activite."
+                hint="Date et heure de demarrage de l activité."
             />
 
             <x-ui.input
@@ -74,7 +74,7 @@
                 label="Fin"
                 :value="old('end_date', optional($activity->end_date)->format('Y-m-d\\TH:i'))"
                 required
-                hint="La fin doit etre posterieure ou egale au debut."
+                hint="La fin doit etre posterieure ou egale au début."
             />
 
             <div>
@@ -106,7 +106,7 @@
         </div>
 
         <div class="app-form-actions">
-            <p class="app-form-actions-copy">Les informations enregistrees seront visibles dans les espaces concernes selon les droits deja en place.</p>
+            <p class="app-form-actions-copy">Les informations enregistrées seront visibles dans les espaces concernes selon les droits déjà en place.</p>
             <div class="flex flex-wrap gap-3">
                 <x-ui.button :href="url()->previous()" variant="secondary">Annuler</x-ui.button>
                 <x-ui.button type="submit" variant="primary">{{ $submitLabel }}</x-ui.button>

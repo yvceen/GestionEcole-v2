@@ -1,4 +1,4 @@
-<x-school-life-layout title="Utilisateurs" subtitle="Gestion des comptes eleves, parents, enseignants, chauffeurs et responsables scolaires.">
+﻿<x-school-life-layout title="Utilisateurs" subtitle="Gestion des comptes Élèves, parents, enseignants, chauffeurs et responsables scolaires.">
     @php
         $roleLabels = \App\Models\User::roleLabels();
         $roles = [
@@ -6,7 +6,7 @@
             \App\Models\User::ROLE_DIRECTOR => 'Directeurs',
             \App\Models\User::ROLE_TEACHER => 'Enseignants',
             \App\Models\User::ROLE_PARENT => 'Parents',
-            \App\Models\User::ROLE_STUDENT => 'Eleves',
+            \App\Models\User::ROLE_STUDENT => 'Élèves',
             \App\Models\User::ROLE_SCHOOL_LIFE => 'Responsables scolaires',
             \App\Models\User::ROLE_CHAUFFEUR => 'Chauffeurs',
         ];
@@ -20,7 +20,7 @@
                 </div>
                 <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Utilisateurs</h1>
                 <p class="mt-3 text-sm leading-6 text-slate-600">
-                    Creez et mettez a jour les comptes operationnels sans acces admin.
+                    Creez et mettez a jour les comptes operationnels sans accès admin.
                 </p>
             </div>
 
@@ -34,7 +34,7 @@
         <form method="GET" action="{{ route('school-life.users.index') }}" class="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px_auto] lg:items-end">
             <div>
                 <label class="mb-1 block text-sm font-semibold text-slate-800">Recherche</label>
-                <input name="q" value="{{ $q ?? '' }}" class="app-input" placeholder="Nom, email ou telephone">
+                <input name="q" value="{{ $q ?? '' }}" class="app-input" placeholder="Nom, email ou téléphone">
             </div>
             <div>
                 <label class="mb-1 block text-sm font-semibold text-slate-800">Role</label>
@@ -73,7 +73,7 @@
                             <td class="font-semibold text-slate-950">{{ $user->name }}</td>
                             <td>
                                 <div class="text-sm text-slate-700">{{ $user->email }}</div>
-                                <div class="text-xs text-slate-500">{{ $user->phone ?: 'Telephone non renseigne' }}</div>
+                                <div class="text-xs text-slate-500">{{ $user->phone ?: 'Téléphone non renseigne' }}</div>
                             </td>
                             <td>
                                 <x-ui.badge :variant="\App\Models\User::badgeVariantForRole($user->role)">

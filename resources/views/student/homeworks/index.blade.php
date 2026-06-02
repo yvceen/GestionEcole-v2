@@ -1,4 +1,4 @@
-<x-student-layout title="Mes devoirs" subtitle="Consultez vos devoirs, leurs echeances et les documents associes sans perdre le fil des priorites.">
+<x-student-layout title="Mes devoirs" subtitle="Consultez vos devoirs, leurs echeances et les documents associés sans perdre le fil des priorites.">
     <section class="student-panel">
         <form method="GET" data-loading-label="Recherche des devoirs..." class="grid gap-3 md:grid-cols-[minmax(0,1fr)_180px]">
             <input

@@ -1,4 +1,4 @@
-@php
+﻿@php
     $payments = $receipt->payments ?? collect();
     $school = $receipt->school
         ?? (app()->bound('currentSchool') ? app('currentSchool') : (app()->bound('current_school') ? app('current_school') : null));
@@ -38,14 +38,14 @@
                 @endif
 
                 <div class="min-w-0">
-                    <p class="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-slate-500">Recu de paiement</p>
+                    <p class="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-slate-500">Reçu de paiement</p>
                     <h1 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{{ $schoolName }}</h1>
                     <p class="mt-2 text-sm text-slate-500">Document professionnel prepare pour archivage et impression.</p>
                 </div>
             </div>
 
             <div class="min-w-[220px] rounded-2xl border border-slate-200 bg-white px-4 py-4 text-right shadow-sm">
-                <p class="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Numero de recu</p>
+                <p class="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Numéro de reçu</p>
                 <p class="mt-2 text-base font-semibold text-slate-950">{{ $receipt->receipt_number }}</p>
                 <div class="mt-4 border-t border-slate-100 pt-3 text-sm text-slate-500">
                     <p>Date : <span class="font-medium text-slate-900">{{ $issuedAt }}</span></p>
@@ -81,7 +81,7 @@
                 </div>
 
                 <div class="text-right">
-                    <p class="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Methode</p>
+                    <p class="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Méthode</p>
                     <p class="mt-3 text-sm font-semibold text-slate-950">{{ $paymentMethod }}</p>
                 </div>
             </div>
@@ -108,7 +108,7 @@
             <table class="receipt-table text-sm">
                 <thead class="bg-slate-50">
                     <tr class="text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                        <th class="px-4 py-3">Eleve</th>
+                        <th class="px-4 py-3">Élève</th>
                         <th class="px-4 py-3">Classe</th>
                         <th class="px-4 py-3">Mois</th>
                         <th class="px-4 py-3 text-right">Montant</th>
@@ -124,7 +124,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-4 py-8 text-center text-sm text-slate-500">Aucun paiement trouve pour ce recu.</td>
+                            <td colspan="4" class="px-4 py-8 text-center text-sm text-slate-500">Aucun paiement trouve pour ce reçu.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -140,7 +140,7 @@
         @endif
 
         <div class="flex flex-col gap-2 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-            <span>Merci pour votre reglement.</span>
+            <span>Merci pour votre règlement.</span>
             <span class="font-semibold tracking-[0.16em] text-slate-400">Powered by MyEdu</span>
         </div>
     </footer>

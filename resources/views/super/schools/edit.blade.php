@@ -1,6 +1,6 @@
-<x-super-layout
-    title="Modifier une ecole"
-    subtitle="Mettez a jour les informations de l'etablissement, l'acces et le compte administrateur associe."
+﻿<x-super-layout
+    title="Modifier une École"
+    subtitle="Mettez a jour les informations de l'Établissement, l'accès et le compte administrateur associe."
 >
     @php
         $logoPath = $school->logo_path;
@@ -11,7 +11,7 @@
 
     <x-page-header
         title="Modifier {{ $school->name }}"
-        subtitle="Les changements appliques ici mettent a jour l'ecole et, si renseigne, son administrateur principal."
+        subtitle="Les changements appliques ici mettent a jour l'École et, si renseigne, son administrateur principal."
         eyebrow="Edition"
     >
         <x-ui.button :href="route('super.schools.index')" variant="secondary">
@@ -39,12 +39,12 @@
 
         <div class="super-form-stack">
             <x-super.panel
-                title="Informations de l'ecole"
-                subtitle="Modifiez l identite de l etablissement, son nom court et les informations visibles dans la plateforme."
+                title="Informations de l'École"
+                subtitle="Modifiez l identite de l'Établissement, son nom court et les informations visibles dans la plateforme."
             >
                 <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div class="app-field md:col-span-2">
-                        <label for="name" class="app-label">Nom de l ecole</label>
+                        <label for="name" class="app-label">Nom de l'École</label>
                         <input id="name" name="name" value="{{ old('name', $school->name) }}" class="app-input" required>
                         @error('name')
                             <p class="app-error">{{ $message }}</p>
@@ -64,7 +64,7 @@
 
             <x-super.panel
                 title="Administrateur principal"
-                subtitle="Les champs ci-dessous mettent a jour le compte admin relie a cette ecole."
+                subtitle="Les champs ci-dessous mettent a jour le compte admin relié a cette École."
             >
                 <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div class="app-field">
@@ -97,13 +97,13 @@
 
         <aside class="super-aside-stack">
             <x-super.panel
-                title="Etat de l'ecole"
-                subtitle="Controlez l'acces de cet espace pour ses utilisateurs."
+                title="Etat de l'École"
+                subtitle="Controlez l'accès de cet espace pour ses utilisateurs."
             >
                 <label class="flex items-start justify-between gap-4 rounded-[22px] border border-slate-200 bg-slate-50/75 px-4 py-4">
                     <div>
-                        <p class="text-sm font-semibold text-slate-900">Ecole active</p>
-                        <p class="mt-1 text-sm text-slate-500">Desactivez uniquement si vous souhaitez bloquer temporairement l acces a cet espace.</p>
+                        <p class="text-sm font-semibold text-slate-900">École active</p>
+                        <p class="mt-1 text-sm text-slate-500">Désactivez uniquement si vous souhaitez bloquer temporairement l'accés a cet espace.</p>
                     </div>
                     <input type="checkbox" name="is_active" value="1" @checked(old('is_active', $school->is_active)) class="mt-1 h-5 w-5 rounded border-slate-300 text-sky-700 focus:ring-sky-200">
                 </label>
@@ -145,11 +145,11 @@
                         <dd>{{ $school->slug }}</dd>
                     </div>
                     <div class="super-detail-item">
-                        <dt>Adresse d acces</dt>
+                        <dt>Adresse d'accés</dt>
                         <dd>{{ $school->subdomain }}</dd>
                     </div>
                     <div class="super-detail-item">
-                        <dt>URL de l ecole</dt>
+                        <dt>URL de l'École</dt>
                         <dd class="break-all">{{ $school->appUrl() }}</dd>
                     </div>
                     <div class="super-detail-item">

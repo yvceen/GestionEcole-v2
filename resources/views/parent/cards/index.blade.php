@@ -1,6 +1,6 @@
-<x-parent-layout title="Mes cartes" subtitle="Retrouvez votre carte parent et les cartes eleves de vos enfants dans un espace simple, imprimable et lisible sur mobile.">
+﻿<x-parent-layout title="Mes cartes" subtitle="Retrouvez votre carte parent et les cartes Élèves de vos enfants dans un espace simple, imprimable et lisible sur mobile.">
     <section class="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-        <x-ui.card title="Carte parent" subtitle="Acces rapide a votre carte numerique.">
+        <x-ui.card title="Carte parent" subtitle="Accès rapide a votre carte numérique.">
             <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
                 <p class="text-sm font-semibold text-slate-950">{{ $parent->name }}</p>
                 <p class="mt-1 text-sm text-slate-600">{{ $parent->email ?: 'Email non renseigne' }}</p>
@@ -14,7 +14,7 @@
             </div>
         </x-ui.card>
 
-        <x-ui.card title="Cartes enfants" subtitle="Chaque enfant garde sa propre carte eleve avec QR de pointage.">
+        <x-ui.card title="Cartes enfants" subtitle="Chaque enfant garde sa propre carte Élève avec QR de pointage.">
             <div class="space-y-3">
                 @forelse($children as $child)
                     <div class="rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm">

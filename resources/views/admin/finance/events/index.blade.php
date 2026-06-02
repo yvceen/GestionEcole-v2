@@ -1,18 +1,18 @@
-<x-dynamic-component :component="$layoutComponent" title="Paiements evenements">
+﻿<x-dynamic-component :component="$layoutComponent" title="Paiements Événements">
     <section class="overflow-hidden rounded-[32px] border border-sky-100 bg-[radial-gradient(circle_at_top_right,_rgba(14,165,233,0.18),_transparent_34%),radial-gradient(circle_at_bottom_left,_rgba(16,185,129,0.14),_transparent_32%),linear-gradient(135deg,#ffffff,#f8fbff_55%,#eefdf8)] px-6 py-6 text-slate-950 shadow-xl shadow-slate-200/70 md:px-8">
         <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div class="max-w-2xl">
                 <div class="inline-flex rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">
-                    Evenements scolaires
+                    Événements scolaires
                 </div>
-                <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Paiements evenements</h1>
+                <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Paiements Événements</h1>
                 <p class="mt-3 text-sm leading-6 text-slate-600">
-                    Fetes, sorties, voyages, photos ou activites speciales avec suivi des paiements et recus.
+                    Fêtes, sorties, voyages, photos ou activités spéciales avec suivi des paiements et reçus.
                 </p>
             </div>
 
             <x-ui.button :href="route($routePrefix . '.create')" variant="primary">
-                Nouvel evenement
+                Nouvel Événement
             </x-ui.button>
         </div>
     </section>
@@ -21,7 +21,7 @@
         <form method="GET" action="{{ route($routePrefix . '.index') }}" class="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px_auto] lg:items-end">
             <div>
                 <label class="mb-1 block text-sm font-semibold text-slate-800">Recherche</label>
-                <input name="q" value="{{ $q }}" class="app-input" placeholder="Nom de l evenement">
+                <input name="q" value="{{ $q }}" class="app-input" placeholder="Nom de l Événement">
             </div>
             <div>
                 <label class="mb-1 block text-sm font-semibold text-slate-800">Statut</label>
@@ -53,7 +53,7 @@
                             <x-ui.badge :variant="$event->status === 'active' ? 'success' : 'warning'">{{ $event->status }}</x-ui.badge>
                             <h2 class="mt-3 truncate text-xl font-semibold tracking-tight text-slate-950">{{ $event->title }}</h2>
                             <p class="mt-1 text-sm text-slate-500">
-                                {{ optional($event->event_date)->format('d/m/Y') ?: 'Date non definie' }} | {{ $event->targets_count }} eleve(s)
+                                {{ optional($event->event_date)->format('d/m/Y') ?: 'Date non définie' }} | {{ $event->targets_count }} Élève(s)
                             </p>
                         </div>
                         <p class="shrink-0 text-right text-sm font-semibold text-slate-900">{{ number_format((float) $event->amount_per_student, 2) }} MAD</p>
@@ -83,7 +83,7 @@
                     <div class="flex flex-wrap justify-end gap-2">
                         <x-ui.button :href="route($routePrefix . '.show', $event)" variant="primary" size="sm">Ouvrir</x-ui.button>
                         <x-ui.button :href="route($routePrefix . '.edit', $event)" variant="secondary" size="sm">Modifier</x-ui.button>
-                        <form method="POST" action="{{ route($routePrefix . '.destroy', $event) }}" onsubmit="return confirm('Supprimer cet evenement ?')">
+                        <form method="POST" action="{{ route($routePrefix . '.destroy', $event) }}" onsubmit="return confirm('Supprimer cet Événement ?')">
                             @csrf
                             @method('DELETE')
                             <x-ui.button type="submit" variant="danger" size="sm">Supprimer</x-ui.button>
@@ -93,7 +93,7 @@
             </article>
         @empty
             <div class="rounded-[28px] border border-slate-200 bg-white px-6 py-12 text-center text-sm text-slate-500 lg:col-span-2">
-                Aucun evenement payant pour le moment.
+                Aucun Événement payant pour le moment.
             </div>
         @endforelse
     </section>

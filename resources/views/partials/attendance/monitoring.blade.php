@@ -1,4 +1,4 @@
-@php
+﻿@php
     $selectedClassroomId = $selectedClassroom?->id;
     $selectedStudentId = $selectedStudent?->id;
 
@@ -25,13 +25,13 @@
     <div class="app-stat-card">
         <p class="app-stat-label">Enregistrements</p>
         <p class="app-stat-value">{{ $summary['total'] ?? 0 }}</p>
-        <p class="app-stat-meta">Toutes presences, absences et retards sur la selection.</p>
+        <p class="app-stat-meta">Toutes présences, absences et retards sur la sélection.</p>
     </div>
 
     <div class="app-stat-card">
         <p class="app-stat-label">Presents</p>
         <p class="app-stat-value text-emerald-700">{{ $summary['present'] ?? 0 }}</p>
-        <p class="app-stat-meta">Eleves marques presents.</p>
+        <p class="app-stat-meta">Élèves marqués présents.</p>
     </div>
 
     <div class="app-stat-card">
@@ -43,13 +43,13 @@
     <div class="app-stat-card">
         <p class="app-stat-label">Retards</p>
         <p class="app-stat-value text-amber-700">{{ $summary['late'] ?? 0 }}</p>
-        <p class="app-stat-meta">Eleves arrives apres l'appel.</p>
+        <p class="app-stat-meta">Élèves arrivés après l'appel.</p>
     </div>
 </section>
 
 <x-ui.card
     title="Filtres de suivi"
-    subtitle="Affinez l'analyse par classe, eleve, statut ou plage de dates sans sortir du contexte de l'etablissement."
+    subtitle="Affinez l'analyse par classe, Élève, statut ou plage de dates sans sortir du contexte de l'Établissement."
 >
     <form method="GET" class="grid gap-3 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1.1fr)_180px_180px_180px_auto_auto]">
         <select name="classroom_id" class="app-input">
@@ -65,7 +65,7 @@
         </select>
 
         <select name="student_id" class="app-input">
-            <option value="">Tous les eleves</option>
+            <option value="">Tous les Élèves</option>
             @foreach($students as $student)
                 <option value="{{ $student->id }}" @selected((string) $selectedStudentId === (string) $student->id)>
                     {{ $student->full_name }}
@@ -110,7 +110,7 @@
                         <div class="min-w-0">
                             <p class="truncate text-sm font-semibold text-slate-950">{{ $row->classroom?->name ?? 'Classe' }}</p>
                             <p class="mt-1 text-xs text-slate-500">
-                                {{ (int) $row->total_records }} enregistrement(s)
+                                {{ (int) $row->total_records }} enregistrément(s)
                             </p>
                         </div>
 
@@ -122,19 +122,19 @@
                 </div>
             @empty
                 <div class="student-empty px-5 py-8">
-                    Aucun regroupement par classe pour la selection en cours.
+                    Aucun regroupement par classe pour la sélection en cours.
                 </div>
             @endforelse
         </div>
     </x-ui.card>
 
-    <x-ui.card title="Vue par eleve" subtitle="Identifiez les eleves qui concentrent le plus d'absences ou de retards.">
+    <x-ui.card title="Vue par Élève" subtitle="Identifiez les Élèves qui concentrent le plus d'absences ou de retards.">
         <div class="space-y-3">
             @forelse($studentSummary as $row)
                 <div class="rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
                     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div class="min-w-0">
-                            <p class="truncate text-sm font-semibold text-slate-950">{{ $row->student?->full_name ?? 'Eleve' }}</p>
+                            <p class="truncate text-sm font-semibold text-slate-950">{{ $row->student?->full_name ?? 'Élève' }}</p>
                             <p class="mt-1 text-xs text-slate-500">{{ $row->classroom?->name ?? 'Classe non renseignee' }}</p>
                         </div>
 
@@ -146,7 +146,7 @@
                 </div>
             @empty
                 <div class="student-empty px-5 py-8">
-                    Aucun eleve a signaler sur cette plage.
+                    Aucun Élève a signaler sur cette plage.
                 </div>
             @endforelse
         </div>
@@ -158,7 +158,7 @@
         <table class="app-table min-w-[1180px]">
             <thead>
                 <tr>
-                    <th>Eleve</th>
+                    <th>Élève</th>
                     <th>Classe</th>
                     <th>Date</th>
                     <th>Statut</th>
@@ -203,7 +203,7 @@
                 @empty
                     <tr>
                         <td colspan="9" class="px-5 py-10 text-center text-sm text-slate-500">
-                            Aucun enregistrement de presence ne correspond a ces filtres.
+                            Aucun enregistrément de présence ne correspond a ces filtres.
                         </td>
                     </tr>
                 @endforelse

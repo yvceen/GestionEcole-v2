@@ -1,4 +1,4 @@
-<x-admin-layout title="Detail du vehicule">
+﻿<x-admin-layout title="Detail du vehicule">
     <x-ui.page-header
         :title="ucfirst($vehicle->vehicle_type)"
         :subtitle="$vehicle->registration_number"
@@ -23,7 +23,7 @@
                     <div class="flex justify-between gap-4"><span class="text-slate-500">Plaque mineralogique</span><span class="font-mono text-slate-900">{{ $vehicle->plate_number ?? '-' }}</span></div>
                     <div class="flex justify-between gap-4"><span class="text-slate-500">Capacite</span><span class="font-semibold text-slate-900">{{ $vehicle->capacity }} places</span></div>
                     <div class="flex justify-between gap-4"><span class="text-slate-500">Couleur</span><span class="text-slate-900">{{ $vehicle->color ?? '-' }}</span></div>
-                    <div class="flex justify-between gap-4"><span class="text-slate-500">Annee</span><span class="text-slate-900">{{ $vehicle->model_year ?? '-' }}</span></div>
+                    <div class="flex justify-between gap-4"><span class="text-slate-500">Année</span><span class="text-slate-900">{{ $vehicle->model_year ?? '-' }}</span></div>
                 </div>
             </x-ui.card>
 
@@ -80,8 +80,8 @@
 
             <x-ui.card title="Dates">
                 <div class="space-y-3 text-sm">
-                    <div><span class="text-slate-500">Cree</span><div class="text-slate-900">{{ optional($vehicle->created_at)->format('d/m/Y H:i') }}</div></div>
-                    <div><span class="text-slate-500">Modifie</span><div class="text-slate-900">{{ optional($vehicle->updated_at)->format('d/m/Y H:i') }}</div></div>
+                    <div><span class="text-slate-500">Créé</span><div class="text-slate-900">{{ optional($vehicle->created_at)->format('d/m/Y H:i') }}</div></div>
+                    <div><span class="text-slate-500">Modifié</span><div class="text-slate-900">{{ optional($vehicle->updated_at)->format('d/m/Y H:i') }}</div></div>
                 </div>
             </x-ui.card>
         </div>

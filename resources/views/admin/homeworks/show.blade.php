@@ -1,4 +1,4 @@
-@php
+﻿@php
     $routePrefix = $routePrefix ?? 'admin.homeworks';
     $layoutComponent = $layoutComponent ?? 'admin-layout';
     $normalized = $homework->normalized_status ?? 'pending';
@@ -70,7 +70,7 @@
                     <dd class="mt-1 font-medium">{{ optional($homework->due_at)->format('Y-m-d H:i') ?? '-' }}</dd>
                 </div>
                 <div>
-                    <dt class="text-xs uppercase tracking-wide text-slate-500">Cree le</dt>
+                    <dt class="text-xs uppercase tracking-wide text-slate-500">Créé le</dt>
                     <dd class="mt-1 font-medium">{{ optional($homework->created_at)->format('Y-m-d H:i') ?? '-' }}</dd>
                 </div>
                 <div>
@@ -90,7 +90,7 @@
             @endif
         </x-ui.card>
 
-        <x-ui.card title="Pieces jointes" subtitle="Documents associes au devoir.">
+        <x-ui.card title="Pieces jointes" subtitle="Documents associés au devoir.">
             @if($homework->attachments->count())
                 <ul class="space-y-2 text-sm">
                     @foreach($homework->attachments as $attachment)

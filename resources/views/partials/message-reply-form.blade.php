@@ -1,4 +1,4 @@
-@php
+﻿@php
     $replyAction = $replyAction ?? null;
     $replyRecipient = $replyRecipient ?? null;
     $replyLabel = $replyLabel ?? 'Repondre';
@@ -21,7 +21,7 @@
         @endif
 
         <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-            Reponse adressee a <span class="font-semibold text-slate-900">{{ $replyRecipient->name }}</span>
+            Réponse adressee a <span class="font-semibold text-slate-900">{{ $replyRecipient->name }}</span>
             <span class="text-xs text-slate-500">({{ $replyRecipient->role }})</span>
         </div>
 

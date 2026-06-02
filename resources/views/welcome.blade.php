@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'My Edu') }} | L'education connectee, simplement</title>
+    <title>{{ config('app.name', 'My Edu') }} | L'éducation connectée, simplement</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <x-school-favicons />
     <style>
@@ -28,13 +28,13 @@
 <body class="fut-landing-body antialiased">
 @php
     $values = [
-        ['title' => 'Communication', 'copy' => 'Des echanges plus clairs entre l ecole, les familles et les equipes educatives.', 'tone' => 'cyan'],
+        ['title' => 'Communication', 'copy' => 'Des Échanges plus clairs entre l'École, les familles et les Équipes éducatives.', 'tone' => 'cyan'],
         ['title' => 'Organisation', 'copy' => 'Un quotidien plus fluide, avec les informations importantes toujours au bon endroit.', 'tone' => 'indigo'],
-        ['title' => 'Suivi', 'copy' => 'Une vision rassurante du parcours des eleves, des activites et des temps forts.', 'tone' => 'emerald'],
-        ['title' => 'Innovation', 'copy' => 'Une experience numerique moderne, elegante et adaptee aux etablissements ambitieux.', 'tone' => 'amber'],
+        ['title' => 'Suivi', 'copy' => 'Une vision rassurante du parcours des Élèves, des activités et des temps forts.', 'tone' => 'emerald'],
+        ['title' => 'Innovation', 'copy' => 'Une expérience numérique moderne, élégante et adaptée aux Établissements ambitieux.', 'tone' => 'amber'],
     ];
 
-    $community = ['Direction', 'Enseignants', 'Parents', 'Eleves', 'Vie scolaire', 'Administration'];
+    $community = ['Direction', 'Enseignants', 'Parents', 'Élèves', 'Vie scolaire', 'Administration'];
 
     $partnerSchools = [
         ['name' => 'Achbal Ryad', 'initials' => 'AR', 'tone' => 'sky'],
@@ -50,17 +50,17 @@
     ];
 
     $reasons = [
-        'Interface elegante',
-        'Acces securise',
-        'Suivi en temps reel',
+        'Interface élégante',
+        'Accès sécurisé',
+        'Suivi en temps réel',
         'Notifications instantanees',
         'Application mobile',
     ];
 
     $testimonials = [
-        ['quote' => 'My Edu donne une image moderne a notre etablissement et simplifie la relation avec les familles.', 'name' => 'Direction pedagogique'],
-        ['quote' => 'Les parents comprennent mieux la vie de l ecole, les informations arrivent avec plus de clarte.', 'name' => 'Responsable vie scolaire'],
-        ['quote' => 'L experience est fluide, rassurante et beaucoup plus proche des usages actuels des familles.', 'name' => 'Equipe administrative'],
+        ['quote' => 'My Edu donne une image moderne a notre Établissement et simplifie la relation avec les familles.', 'name' => 'Direction pédagogique'],
+        ['quote' => 'Les parents comprennent mieux la vie de l'École, les informations arrivent avec plus de clarté.', 'name' => 'Responsable vie scolaire'],
+        ['quote' => 'L expérience est fluide, rassurante et beaucoup plus proche des usages actuels des familles.', 'name' => 'Equipe administrative'],
     ];
 @endphp
 @php($errors = $errors ?? new \Illuminate\Support\ViewErrorBag)
@@ -126,13 +126,13 @@
         <section class="fut-hero">
             <div class="mx-auto grid max-w-7xl items-center gap-14 px-5 pb-24 pt-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:px-8 lg:pb-32 lg:pt-24">
                 <div class="fut-hero-copy">
-                    <p class="fut-eyebrow">Brand educative premium</p>
+                    <p class="fut-eyebrow">Brand éducative premium</p>
                     <h1 class="mt-8 text-5xl font-semibold leading-[0.95] tracking-[-0.04em] text-slate-950 sm:text-6xl lg:text-7xl">
                         My Edu
-                        <span class="mt-3 block text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-indigo-600 to-slate-950">L'education connectee, simplement.</span>
+                        <span class="mt-3 block text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-indigo-600 to-slate-950">L'éducation connectée, simplement.</span>
                     </h1>
                     <p class="mt-8 max-w-2xl text-lg leading-8 text-slate-600 sm:text-xl">
-                        Une experience moderne qui rapproche l'ecole, les parents, les enseignants et les eleves dans un environnement numerique intuitif.
+                        Une expérience moderne qui rapproche l'École, les parents, les enseignants et les Élèves dans un environnement numérique intuitif.
                     </p>
                     <div class="mt-10 flex flex-col gap-3 sm:flex-row">
                         <a href="#about" class="fut-button fut-button-dark">Decouvrir la plateforme</a>
@@ -140,13 +140,13 @@
                 </div>
 
                 <div class="fut-hero-visual fut-float-stage">
-                    <img src="{{ asset('images/myedu-premium-education-hero.png') }}" alt="Experience educative moderne My Edu" class="h-full w-full object-cover">
+                    <img src="{{ asset('images/myedu-premium-education-hero.png') }}" alt="Expérience éducative moderne My Edu" class="h-full w-full object-cover">
                     <div class="fut-hero-card fut-hero-card-a">
                         <span>Communication</span>
-                        <strong>Ecole & familles</strong>
+                        <strong>École & familles</strong>
                     </div>
                     <div class="fut-hero-card fut-hero-card-b">
-                        <span>Experience mobile</span>
+                        <span>Expérience mobile</span>
                         <strong>Connectee partout</strong>
                     </div>
                 </div>
@@ -158,7 +158,7 @@
                 <div class="fut-section-heading">
                     <p class="fut-section-label">Ecoles partenaires</p>
                     <h2>Des ecoles qui avancent avec My Edu.</h2>
-                    <p>Une communaute educative connectee, moderne et tournee vers l avenir.</p>
+                    <p>Une communauté éducative connectée, moderne et tournée vers l avenir.</p>
                 </div>
             </div>
 
@@ -185,10 +185,10 @@
                 <div class="fut-about-panel">
                     <div>
                         <p class="fut-section-label">About My Edu</p>
-                        <h2>Une nouvelle maniere de vivre l'ecole.</h2>
+                        <h2>Une nouvelle maniére de vivre l'École.</h2>
                     </div>
                     <p>
-                        My Edu rassemble tous les acteurs de la communaute educative autour d'un espace unique, moderne et accessible, pense pour renforcer la confiance, la communication et l'experience scolaire.
+                        My Edu rassemble tous les acteurs de la communauté éducative autour d'un espace unique, moderne et accèssible, pensé pour renforcer la confiance, la communication et l'expérience scolaire.
                     </p>
                 </div>
             </div>
@@ -197,7 +197,7 @@
         <section id="values" class="fut-section fut-reveal">
             <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
                 <div class="fut-section-heading">
-                    <p class="fut-section-label">Valeurs educatives</p>
+                    <p class="fut-section-label">Valeurs éducatives</p>
                     <h2>Une marque digitale au service de l'apprentissage et du lien.</h2>
                 </div>
                 <div class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
@@ -215,9 +215,9 @@
         <section id="community" class="fut-section fut-reveal">
             <div class="mx-auto grid max-w-7xl gap-10 px-5 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
                 <div class="fut-section-heading">
-                    <p class="fut-section-label">Communaute connectee</p>
-                    <h2>Toute l'ecole avance dans une meme experience.</h2>
-                    <p>Direction, enseignants, parents, eleves et administration retrouvent des reperes simples, une communication claire et une presence digitale plus moderne.</p>
+                    <p class="fut-section-label">Communaute connectée</p>
+                    <h2>Toute l'École avance dans une même expérience.</h2>
+                    <p>Direction, enseignants, parents, Élèves et administration retrouvent des repéres simples, une communication claire et une présence digitale plus moderne.</p>
                 </div>
                 <div class="fut-community-grid">
                     @foreach($community as $item)
@@ -234,15 +234,15 @@
             <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
                 <div class="fut-mobile-panel">
                     <div>
-                        <p class="fut-section-label">Mobile experience</p>
-                        <h2>Votre ecole partout avec vous.</h2>
-                        <p>Recevez les informations importantes, suivez les activites et restez connecte a tout moment avec une experience mobile claire, rassurante et elegante.</p>
+                        <p class="fut-section-label">Mobile expérience</p>
+                        <h2>Votre École partout avec vous.</h2>
+                        <p>Recevez les informations importantes, suivez les activités et restez connecté a tout moment avec une expérience mobile claire, rassurante et élégante.</p>
                     </div>
                     <div class="fut-phone fut-float-stage">
                         <div class="fut-phone-screen">
                             <div class="fut-phone-top"></div>
-                            <div class="fut-phone-message">Nouvelle information de l'ecole</div>
-                            <div class="fut-phone-row"><span>Activites</span><strong>3</strong></div>
+                            <div class="fut-phone-message">Nouvelle information de l'École</div>
+                            <div class="fut-phone-row"><span>Activités</span><strong>3</strong></div>
                             <div class="fut-phone-row"><span>Messages</span><strong>12</strong></div>
                             <div class="fut-phone-row"><span>Agenda</span><strong>Aujourd'hui</strong></div>
                         </div>
@@ -256,7 +256,7 @@
                 <div class="fut-why-panel">
                     <div class="fut-section-heading">
                         <p class="fut-section-label">Why My Edu</p>
-                        <h2>Pensee pour les etablissements modernes.</h2>
+                        <h2>Pensee pour les Établissements modernes.</h2>
                     </div>
                     <div class="fut-reason-list">
                         @foreach($reasons as $reason)
@@ -271,7 +271,7 @@
             <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
                 <div class="fut-section-heading">
                     <p class="fut-section-label">Temoignages</p>
-                    <h2>Une experience qui inspire confiance.</h2>
+                    <h2>Une expérience qui inspire confiance.</h2>
                 </div>
                 <div class="mt-12 grid gap-5 lg:grid-cols-3">
                     @foreach($testimonials as $testimonial)
@@ -290,7 +290,7 @@
                     <div>
                         <p class="fut-section-label">Demonstration</p>
                         <h2>Pret a decouvrir My Edu ?</h2>
-                        <p>Rejoignez une nouvelle experience educative.</p>
+                        <p>Rejoignez une nouvelle expérience éducative.</p>
                     </div>
                     <form action="{{ route('contact.send') }}" method="POST" class="fut-contact">
                         @csrf
@@ -303,9 +303,9 @@
                         @endif
                         <input name="name" value="{{ old('name') }}" class="fut-input" placeholder="Nom complet">
                         <input name="email" type="email" value="{{ old('email') }}" class="fut-input" placeholder="Email professionnel">
-                        <input name="phone" value="{{ old('phone') }}" class="fut-input" placeholder="Telephone">
+                        <input name="phone" value="{{ old('phone') }}" class="fut-input" placeholder="Téléphone">
                         <input name="subject" value="{{ old('subject', 'Demande de demonstration My Edu') }}" class="fut-input" placeholder="Objet">
-                        <textarea name="message" rows="4" class="fut-input fut-textarea" placeholder="Parlez-nous de votre etablissement.">{{ old('message') }}</textarea>
+                        <textarea name="message" rows="4" class="fut-input fut-textarea" placeholder="Parlez-nous de votre Établissement.">{{ old('message') }}</textarea>
                         <button type="submit" class="fut-button fut-button-dark w-full">Demander une demonstration</button>
                     </form>
                 </div>
@@ -322,7 +322,7 @@
                     </span>
                     <strong>My Edu</strong>
                 </div>
-                <p class="mt-4 max-w-xl text-sm leading-6 text-slate-500">L'education connectee, simplement. Une experience moderne pour rapprocher toute la communaute educative.</p>
+                <p class="mt-4 max-w-xl text-sm leading-6 text-slate-500">L'éducation connectée, simplement. Une expérience moderne pour rapprocher toute la communauté éducative.</p>
             </div>
             <div class="fut-footer-links">
                 <a href="https://www.instagram.com/myedu.school" target="_blank" rel="noopener"><span>Instagram</span> myedu.school</a>

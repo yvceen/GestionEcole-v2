@@ -1,7 +1,7 @@
-<x-admin-layout title="Affectations de transport">
+﻿<x-admin-layout title="Affectations de transport">
     <x-ui.page-header
         title="Affectations de transport"
-        subtitle="Suivez les eleves relies a chaque route avec le vehicule, le conducteur et le point de ramassage."
+        subtitle="Suivez les Élèves reliés a chaque route avec le vehicule, le conducteur et le point de ramassage."
     >
         <x-slot name="actions">
             <x-ui.button :href="route('admin.transport.assignments.create')" variant="primary">Ajouter une affectation</x-ui.button>
@@ -16,11 +16,11 @@
     <div class="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-200 bg-gradient-to-r from-sky-50 via-white to-emerald-50 px-6 py-5">
             <p class="text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Liste active</p>
-            <h2 class="mt-2 text-xl font-bold text-slate-950">Eleves affectes au transport</h2>
+            <h2 class="mt-2 text-xl font-bold text-slate-950">Élèves affectés au transport</h2>
         </div>
 
         <div class="hidden border-b border-slate-200 bg-slate-50 px-6 py-3 text-xs font-bold uppercase tracking-[0.14em] text-slate-500 xl:grid xl:grid-cols-[minmax(220px,1.1fr)_minmax(220px,1fr)_minmax(220px,1fr)_minmax(180px,0.85fr)_130px_220px] xl:gap-5">
-            <div>Eleve</div>
+            <div>Élève</div>
             <div>Route</div>
             <div>Vehicule</div>
             <div>Ramassage</div>
@@ -32,7 +32,7 @@
             @forelse($assignments as $assignment)
                 <article class="px-5 py-5 transition hover:bg-sky-50/35 xl:grid xl:grid-cols-[minmax(220px,1.1fr)_minmax(220px,1fr)_minmax(220px,1fr)_minmax(180px,0.85fr)_130px_220px] xl:items-center xl:gap-5 xl:px-6">
                     <div>
-                        <p class="xl:hidden text-[0.65rem] font-bold uppercase tracking-[0.14em] text-slate-400">Eleve</p>
+                        <p class="xl:hidden text-[0.65rem] font-bold uppercase tracking-[0.14em] text-slate-400">Élève</p>
                         <p class="font-semibold text-slate-950">{{ $assignment->student?->full_name ?? '-' }}</p>
                         <p class="mt-1 text-xs text-slate-500">{{ $assignment->student?->classroom?->name ?? '-' }}</p>
                     </div>
@@ -71,7 +71,7 @@
                     </div>
                 </article>
             @empty
-                <div class="px-6 py-12 text-center text-slate-500">Aucune affectation enregistree.</div>
+                <div class="px-6 py-12 text-center text-slate-500">Aucune affectation enregistrée.</div>
             @endforelse
         </div>
 

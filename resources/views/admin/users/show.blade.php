@@ -1,4 +1,4 @@
-<x-admin-layout :title="'Profil utilisateur - ' . $user->name">
+﻿<x-admin-layout :title="'Profil utilisateur - ' . $user->name">
     @php
         $roleLabel = \App\Models\User::labelForRole($user->role);
         $roleVariant = \App\Models\User::badgeVariantForRole($user->role);
@@ -48,17 +48,17 @@
                     <p class="app-stat-meta">Adresse de connexion.</p>
                 </article>
                 <article class="app-stat-card min-h-[9rem]">
-                    <p class="app-stat-label">Telephone</p>
+                    <p class="app-stat-label">Téléphone</p>
                     <p class="app-stat-value text-lg">{{ $user->phone ?: '-' }}</p>
-                    <p class="app-stat-meta">Numero principal disponible.</p>
+                    <p class="app-stat-meta">Numéro principal disponible.</p>
                 </article>
                 <article class="app-stat-card min-h-[9rem]">
-                    <p class="app-stat-label">Ecole</p>
+                    <p class="app-stat-label">École</p>
                     <p class="app-stat-value text-lg">{{ $schoolName }}</p>
                     <p class="app-stat-meta">Contexte scolaire actuel.</p>
                 </article>
                 <article class="app-stat-card min-h-[9rem]">
-                    <p class="app-stat-label">Cree le</p>
+                    <p class="app-stat-label">Créé le</p>
                     <p class="app-stat-value text-lg">{{ optional($user->created_at)->format('d/m/Y') ?: '-' }}</p>
                     <p class="app-stat-meta">{{ optional($user->created_at)->format('H:i') ?: 'Heure indisponible' }}</p>
                 </article>
@@ -86,11 +86,11 @@
                         <dd class="mt-2 text-sm font-semibold text-slate-900">{{ $statusLabel }}</dd>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-4">
-                        <dt class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Telephone</dt>
+                        <dt class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Téléphone</dt>
                         <dd class="mt-2 text-sm font-semibold text-slate-900">{{ $user->phone ?: '-' }}</dd>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-4">
-                        <dt class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Ecole</dt>
+                        <dt class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">École</dt>
                         <dd class="mt-2 text-sm font-semibold text-slate-900">{{ $schoolName }}</dd>
                     </div>
                 </dl>
@@ -104,7 +104,7 @@
                         <p class="mt-2 text-sm font-semibold text-slate-900">#{{ $user->id }}</p>
                     </div>
                     <div class="rounded-2xl border border-slate-200 px-4 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Compte cree le</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Compte créé le</p>
                         <p class="mt-2 text-sm font-semibold text-slate-900">{{ optional($user->created_at)->format('d/m/Y H:i') ?: '-' }}</p>
                     </div>
                     <div class="rounded-2xl border border-slate-200 px-4 py-4">
@@ -118,7 +118,7 @@
                                 Mode: <span class="font-semibold text-slate-900">{{ $user->parentProfile->billing_type ?: '-' }}</span>
                             </p>
                             <p class="mt-1 text-sm text-slate-700">
-                                Debut: <span class="font-semibold text-slate-900">{{ $user->parentProfile->starts_month ?: '-' }}</span>
+                                Début: <span class="font-semibold text-slate-900">{{ $user->parentProfile->starts_month ?: '-' }}</span>
                             </p>
                         </div>
                     @endif
@@ -129,8 +129,8 @@
         @if($isStudent)
             <section class="app-card px-5 py-5 md:px-6">
                 <div class="flex flex-col gap-2">
-                    <h2 class="text-lg font-semibold text-slate-950">Dossier eleve</h2>
-                    <p class="text-sm text-slate-500">Informations reliees au dossier scolaire reel de cet eleve.</p>
+                    <h2 class="text-lg font-semibold text-slate-950">Dossier Élève</h2>
+                    <p class="text-sm text-slate-500">Informations reliées au dossier scolaire réel de cet Élève.</p>
                 </div>
 
                 @if($student)
@@ -155,7 +155,7 @@
                                     <dd class="text-right font-semibold text-slate-900">{{ $student->card_token ?: '-' }}</dd>
                                 </div>
                                 <div class="flex items-start justify-between gap-4">
-                                    <dt class="text-slate-500">Dossier eleve</dt>
+                                    <dt class="text-slate-500">Dossier Élève</dt>
                                     <dd class="text-right font-semibold text-slate-900">#{{ $student->id }}</dd>
                                 </div>
                             </dl>
@@ -170,7 +170,7 @@
                                     <p class="mt-1 text-sm text-slate-600">{{ $student->parentUser->phone ?: '-' }}</p>
                                 </div>
                             @else
-                                <p class="mt-4 text-sm text-slate-500">Aucun parent lie a ce dossier eleve.</p>
+                                <p class="mt-4 text-sm text-slate-500">Aucun parent lié a ce dossier Élève.</p>
                             @endif
 
                             <div class="mt-4 rounded-2xl border border-slate-200 bg-white px-4 py-4">
@@ -190,7 +190,7 @@
                     </div>
                 @else
                     <div class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-5 text-sm text-slate-500">
-                        Aucun dossier eleve lie a ce compte.
+                        Aucun dossier Élève lié a ce compte.
                     </div>
                 @endif
             </section>
@@ -200,7 +200,7 @@
             <section class="app-card px-5 py-5 md:px-6">
                 <div class="flex flex-col gap-2">
                     <h2 class="text-lg font-semibold text-slate-950">Liens familiaux</h2>
-                    <p class="text-sm text-slate-500">Enfants relies a ce compte parent dans l ecole courante.</p>
+                    <p class="text-sm text-slate-500">Enfants reliés a ce compte parent dans l'École courante.</p>
                 </div>
 
                 @if($children->isNotEmpty())
@@ -210,13 +210,13 @@
                                 <p class="text-base font-semibold text-slate-950">{{ $child->full_name }}</p>
                                 <p class="mt-1 text-sm text-slate-600">Classe: {{ $child->classroom?->name ?: '-' }}</p>
                                 <p class="mt-1 text-sm text-slate-600">Code / matricule: {{ $child->card_token ?: '-' }}</p>
-                                <p class="mt-1 text-sm text-slate-600 break-all">Email eleve: {{ $child->studentUser?->email ?: '-' }}</p>
+                                <p class="mt-1 text-sm text-slate-600 break-all">Email Élève: {{ $child->studentUser?->email ?: '-' }}</p>
                             </article>
                         @endforeach
                     </div>
                 @else
                     <div class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-5 text-sm text-slate-500">
-                        Aucun enfant lie a ce parent dans cette ecole.
+                        Aucun enfant lié a ce parent dans cette École.
                     </div>
                 @endif
             </section>
@@ -227,7 +227,7 @@
                 <section class="app-card px-5 py-5 md:px-6">
                     <div class="flex flex-col gap-2">
                         <h2 class="text-lg font-semibold text-slate-950">Affectation enseignants</h2>
-                        <p class="text-sm text-slate-500">Matieres reliees au pivot enseignant-matieres existant.</p>
+                        <p class="text-sm text-slate-500">Matières reliées au pivot enseignant-matières existant.</p>
                     </div>
 
                     @if($subjects->isNotEmpty())
@@ -249,7 +249,7 @@
                 <section class="app-card px-5 py-5 md:px-6">
                     <div class="flex flex-col gap-2">
                         <h2 class="text-lg font-semibold text-slate-950">Classes</h2>
-                        <p class="text-sm text-slate-500">Classes reliees a l affectation enseignant-classe existante.</p>
+                        <p class="text-sm text-slate-500">Classes reliées a l affectation enseignant-classe existante.</p>
                     </div>
 
                     @if($classrooms->isNotEmpty())
@@ -273,7 +273,7 @@
             <section class="app-card px-5 py-5 md:px-6">
                 <div class="flex flex-col gap-2">
                     <h2 class="text-lg font-semibold text-slate-950">Transport</h2>
-                    <p class="text-sm text-slate-500">Vehicules et routes lies a ce chauffeur dans l ecole courante.</p>
+                    <p class="text-sm text-slate-500">Véhicules et routes liés a ce chauffeur dans l'École courante.</p>
                 </div>
 
                 @if($driverVehicles->isNotEmpty())
@@ -295,7 +295,7 @@
                                             @endforeach
                                         </div>
                                     @else
-                                        <p class="mt-2 text-sm text-slate-500">Aucune route reliee.</p>
+                                        <p class="mt-2 text-sm text-slate-500">Aucune route reliée.</p>
                                     @endif
                                 </div>
                             </article>
@@ -303,7 +303,7 @@
                     </div>
                 @else
                     <div class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-5 text-sm text-slate-500">
-                        Aucun vehicule ou circuit relie a ce chauffeur.
+                        Aucun vehicule ou circuit relié a ce chauffeur.
                     </div>
                 @endif
             </section>
@@ -318,13 +318,13 @@
 
                 <div class="mt-5 rounded-2xl border border-slate-200 bg-slate-50/70 px-5 py-5">
                     <p class="text-sm text-slate-700">
-                        Ce compte ne dispose pas de section specialisee supplementaire dans les donnees actuelles.
+                        Ce compte ne dispose pas de section spécialisée supplémentaire dans les données actuelles.
                     </p>
                     <p class="mt-2 text-sm text-slate-700">
                         Role courant: <span class="font-semibold text-slate-900">{{ $roleLabel }}</span>
                     </p>
                     <p class="mt-1 text-sm text-slate-700">
-                        Ecole: <span class="font-semibold text-slate-900">{{ $schoolName }}</span>
+                        École: <span class="font-semibold text-slate-900">{{ $schoolName }}</span>
                     </p>
                 </div>
             </section>

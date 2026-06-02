@@ -7,7 +7,7 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Creer une matiere</h1>
-            <p class="mt-1 text-sm text-slate-500">Centralisez la matiere, son statut et l affectation des enseignants depuis le meme ecran.</p>
+            <p class="mt-1 text-sm text-slate-500">Centralisez la matiere, son statut et l affectation des enseignants depuis le même ecran.</p>
         </div>
         <a href="{{ route($routePrefix . '.index') }}" class="text-sm font-semibold text-slate-700 hover:underline">Retour</a>
     </div>

@@ -23,7 +23,7 @@
         [
             'key' => 'parents',
             'label' => 'Parents',
-            'description' => 'Selectionnez des parents ou plusieurs.',
+            'description' => 'Sélectionnez des parents ou plusieurs.',
             'items' => $parentsCollection->map(function ($parent) {
                 $label = $parent->name ?? 'Parent #' . $parent->id;
                 $meta = $parent->email ?? ($parent->phone ?? '');

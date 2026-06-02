@@ -1,17 +1,17 @@
-@php
+﻿@php
     $layoutComponent = $layoutComponent ?? 'admin-layout';
     $routePrefix = $routePrefix ?? 'admin.subjects';
 @endphp
 
-<x-dynamic-component :component="$layoutComponent" title="Matieres">
+<x-dynamic-component :component="$layoutComponent" title="Matières">
     <div class="mx-auto w-full max-w-7xl space-y-5">
         <section class="app-card px-5 py-5 md:px-6">
             <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                 <div class="max-w-3xl">
-                    <p class="app-overline">Pilotage pedagogique</p>
-                    <h1 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">Matieres</h1>
+                    <p class="app-overline">Pilotage pédagogique</p>
+                    <h1 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">Matières</h1>
                     <p class="mt-2 text-sm leading-6 text-slate-500">
-                        Centralisez les matieres, leurs statuts et les affectations enseignants dans une interface plus stable et plus lisible.
+                        Centralisez les matières, leurs statuts et les affectations enseignants dans une interface plus stable et plus lisible.
                     </p>
                 </div>
 
@@ -25,7 +25,7 @@
                 <article class="app-stat-card min-h-[9.5rem]">
                     <p class="app-stat-label">Total</p>
                     <p class="app-stat-value">{{ $stats['total'] ?? 0 }}</p>
-                    <p class="app-stat-meta">Matieres configurees.</p>
+                    <p class="app-stat-meta">Matières configurees.</p>
                 </article>
                 <article class="app-stat-card min-h-[9.5rem]">
                     <p class="app-stat-label">Actives</p>
@@ -93,8 +93,8 @@
         <section class="overflow-hidden rounded-[30px] border border-black/10 bg-white shadow-[0_24px_64px_-40px_rgba(15,23,42,0.35)]">
             <div class="flex flex-col gap-3 border-b border-black/10 bg-slate-50/90 px-5 py-4 md:flex-row md:items-center md:justify-between md:px-6">
                 <div class="min-w-0">
-                    <h3 class="text-base font-semibold text-slate-950">Liste des matieres</h3>
-                    <p class="mt-1 text-sm text-slate-500">Vue principale des matieres, de leur activation et des affectations enseignants.</p>
+                    <h3 class="text-base font-semibold text-slate-950">Liste des matières</h3>
+                    <p class="mt-1 text-sm text-slate-500">Vue principale des matières, de leur activation et des affectations enseignants.</p>
                 </div>
                 <div class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
                     Total : <span class="ml-1 text-slate-900">{{ $subjects->total() }}</span>

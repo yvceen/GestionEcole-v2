@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'title' => 'Espace parent',
     'subtitle' => 'Retrouvez en quelques clics les informations essentielles de vos enfants, sur ordinateur comme sur mobile.',
 ])
@@ -14,7 +14,7 @@
         ],
         ['label' => 'Absences', 'route' => 'parent.attendance.index', 'icon' => 'shield', 'active_routes' => ['parent.attendance.*']],
         ['label' => 'Agenda', 'route' => 'parent.events.index', 'icon' => 'calendar', 'active_routes' => ['parent.events.*', 'parent.calendar.*']],
-        ['label' => 'Activites', 'route' => 'parent.activities.index', 'icon' => 'calendar', 'active_routes' => ['parent.activities.*']],
+        ['label' => 'Activités', 'route' => 'parent.activities.index', 'icon' => 'calendar', 'active_routes' => ['parent.activities.*']],
         ['label' => 'Transport', 'route' => 'parent.transport.index', 'icon' => 'users', 'active_routes' => ['parent.transport.*']],
         ['label' => 'Paiements', 'route' => 'parent.finance.index', 'icon' => 'wallet', 'active_routes' => ['parent.finance.*']],
     ];
@@ -65,7 +65,7 @@
     $headerActions = [
         ['label' => 'Voir mes enfants', 'route' => 'parent.children.index'],
         ['label' => 'Suivre les absences', 'route' => 'parent.attendance.index'],
-        ['label' => 'Activites et transport', 'route' => 'parent.activities.index'],
+        ['label' => 'Activités et transport', 'route' => 'parent.activities.index'],
         ['label' => 'Voir les paiements', 'route' => 'parent.finance.index'],
     ];
 
@@ -110,11 +110,11 @@
                 :badges="[
                     $parentName,
                     $children->count().' enfant(s)',
-                    $currentSchool?->name ?? 'Ecole active',
+                    $currentSchool?->name ?? 'École active',
                 ]"
                 summary-title="Suivi famille"
                 summary-value="Les infos utiles, sans detour"
-                summary-copy="Absences, paiements, demandes et suivi de chaque enfant sont accessibles depuis une navigation plus simple."
+                summary-copy="Absences, paiements, demandes et suivi de chaque enfant sont accèssibles depuis une navigation plus simple."
                 :nav="$nav"
                 :actions="$headerActions"
             />

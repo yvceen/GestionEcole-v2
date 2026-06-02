@@ -1,4 +1,4 @@
-<x-super-layout
+﻿<x-super-layout
     title="Tableau de bord"
     subtitle="Vue d'ensemble de la plateforme, des ecoles actives et des indicateurs d'utilisation."
 >
@@ -17,7 +17,7 @@
             Gerer les ecoles
         </x-ui.button>
         <x-ui.button :href="route('super.schools.create')" variant="primary">
-            Ajouter une ecole
+            Ajouter une École
         </x-ui.button>
     </x-page-header>
 
@@ -40,7 +40,7 @@
             </svg>
         </x-super.stat>
 
-        <x-super.stat label="Eleves" :value="$studentsCount" meta="Volume global des inscriptions" tone="amber">
+        <x-super.stat label="Élèves" :value="$studentsCount" meta="Volume global des inscriptions" tone="amber">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m-6-3l6 3 6-3"/>
             </svg>
@@ -51,17 +51,17 @@
         <div class="super-mini-stat">
             <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Nouvelles ecoles</p>
             <p class="mt-2 text-2xl font-semibold text-slate-950">{{ $schoolsCreatedThisMonth }}</p>
-            <p class="mt-1 text-sm text-slate-500">Creees depuis le debut du mois.</p>
+            <p class="mt-1 text-sm text-slate-500">Creees depuis le début du mois.</p>
         </div>
 
         <div class="super-mini-stat">
             <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Paiements ce mois</p>
             <p class="mt-2 text-2xl font-semibold text-slate-950">{{ $paymentsCountThisMonth }}</p>
-            <p class="mt-1 text-sm text-slate-500">Operations enregistrees sur la plateforme.</p>
+            <p class="mt-1 text-sm text-slate-500">Opérations enregistrées sur la plateforme.</p>
         </div>
 
         <div class="super-mini-stat">
-            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Moyenne eleves/ecole</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Moyenne Élèves/École</p>
             <p class="mt-2 text-2xl font-semibold text-slate-950">{{ number_format($avgStudentsPerSchool, 1) }}</p>
             <p class="mt-1 text-sm text-slate-500">Repere simple d'utilisation.</p>
         </div>
@@ -69,7 +69,7 @@
 
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(18rem,0.9fr)]">
         <x-super.panel
-            title="Activite de la plateforme"
+            title="Activité de la plateforme"
             subtitle="Une lecture rapide des performances et de la repartition des comptes."
         >
             <div class="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)]">
@@ -109,19 +109,19 @@
                     <div class="super-mini-stat">
                         <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Administrateurs</p>
                         <p class="mt-2 text-2xl font-semibold text-slate-950">{{ $adminsCount }}</p>
-                        <p class="mt-1 text-sm text-slate-500">Comptes responsables des operations locales.</p>
+                        <p class="mt-1 text-sm text-slate-500">Comptes responsables des opérations locales.</p>
                     </div>
 
                     <div class="super-mini-stat">
                         <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Enseignants</p>
                         <p class="mt-2 text-2xl font-semibold text-slate-950">{{ $teachersCount }}</p>
-                        <p class="mt-1 text-sm text-slate-500">Ressources pedagogiques actives dans les ecoles.</p>
+                        <p class="mt-1 text-sm text-slate-500">Ressources pédagogiques actives dans les ecoles.</p>
                     </div>
 
                     <div class="super-mini-stat">
                         <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Parents</p>
                         <p class="mt-2 text-2xl font-semibold text-slate-950">{{ $parentsCount }}</p>
-                        <p class="mt-1 text-sm text-slate-500">Comptes relies au suivi quotidien des eleves.</p>
+                        <p class="mt-1 text-sm text-slate-500">Comptes reliés au suivi quotidien des Élèves.</p>
                     </div>
                 </div>
             </div>
@@ -135,7 +135,7 @@
                 <div class="rounded-[24px] border border-slate-200/80 bg-slate-50/75 p-5">
                     <p class="text-sm font-semibold text-slate-900">Ecoles inactives</p>
                     <p class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{{ $inactiveSchoolsCount }}</p>
-                    <p class="mt-1 text-sm text-slate-500">{{ $inactiveRate }}% du parc n'est pas accessible actuellement.</p>
+                    <p class="mt-1 text-sm text-slate-500">{{ $inactiveRate }}% du parc n'est pas accèssible actuellement.</p>
                     <div class="mt-4">
                         <x-ui.button :href="route('super.schools.index', ['status' => 'inactive'])" variant="secondary" size="sm">
                             Voir les ecoles inactives
@@ -147,7 +147,7 @@
                     <p class="text-sm font-semibold text-slate-900">Raccourcis de gestion</p>
                     <div class="mt-4 space-y-2">
                         <a href="{{ route('super.schools.create') }}" class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
-                            <span>Onboarder une nouvelle ecole</span>
+                            <span>Onboarder une nouvelle École</span>
                             <span aria-hidden="true">+</span>
                         </a>
                         <a href="{{ route('super.schools.index') }}" class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
@@ -161,8 +161,8 @@
     </div>
 
     <x-super.panel
-        title="Ecoles recentes"
-        subtitle="Les derniers espaces crees, avec les actions les plus frequentes directement accessibles."
+        title="Ecoles récentes"
+        subtitle="Les derniers espaces crees, avec les actions les plus frequentes directement accèssibles."
     >
         <x-slot:actions>
             <x-ui.button :href="route('super.schools.index')" variant="secondary" size="sm">
@@ -172,9 +172,9 @@
 
         @if($recentSchools->isEmpty())
             <div class="super-empty">
-                <x-ui.empty-state title="Aucune ecole" description="Commencez par creer votre premiere ecole pour initialiser la plateforme.">
+                <x-ui.empty-state title="Aucune École" description="Commencez par creer votre premiere École pour initialiser la plateforme.">
                     <x-ui.button :href="route('super.schools.create')" variant="primary">
-                        Creer une ecole
+                        Creer une École
                     </x-ui.button>
                 </x-ui.empty-state>
             </div>
@@ -184,9 +184,9 @@
                     <table class="super-table">
                         <thead>
                             <tr>
-                                <th>Ecole</th>
+                                <th>École</th>
                                 <th>Utilisateurs</th>
-                                <th>Eleves</th>
+                                <th>Élèves</th>
                                 <th>Statut</th>
                                 <th class="text-right">Actions</th>
                             </tr>

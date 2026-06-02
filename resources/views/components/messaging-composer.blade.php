@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'title' => 'Nouveau message',
     'subtitle' => 'Envoyez un message clair et bien cible.',
     'action',
@@ -238,8 +238,8 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                 <div class="rounded-[24px] border border-slate-200 bg-slate-50 px-4 py-4">
                     <div class="flex items-center justify-between gap-3">
                         <div>
-                            <p class="text-sm font-semibold text-slate-950">Controle avant envoi</p>
-                            <p class="mt-1 text-xs text-slate-500" x-text="hasSelection ? selectedCount + ' destinataire(s) selectionne(s)' : 'Selectionnez au moins un destinataire pour envoyer.'"></p>
+                            <p class="text-sm font-semibold text-slate-950">contrôle avant envoi</p>
+                            <p class="mt-1 text-xs text-slate-500" x-text="hasSelection ? selectedCount + ' destinataire(s) sélectionné(s)' : 'Sélectionnez au moins un destinataire pour envoyer.'"></p>
                         </div>
                         <x-ui.button type="submit" variant="primary" x-bind:disabled="!hasSelection">
                             {{ $submitLabel }}
@@ -254,7 +254,7 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                 <div class="flex items-start justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-semibold tracking-tight text-slate-950">Destinataires</h2>
-                        <p class="mt-1 text-sm text-slate-500" x-text="currentTab?.description || 'Selectionnez les destinataires.'"></p>
+                        <p class="mt-1 text-sm text-slate-500" x-text="currentTab?.description || 'Sélectionnez les destinataires.'"></p>
                     </div>
                     <span class="inline-flex min-w-11 items-center justify-center rounded-2xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-700 ring-1 ring-emerald-100" x-text="selectedCount"></span>
                 </div>
@@ -284,7 +284,7 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                             </button>
                         </span>
                     </template>
-                    <p class="text-xs text-slate-400" x-show="selectedCount === 0">Aucun destinataire selectionne.</p>
+                    <p class="text-xs text-slate-400" x-show="selectedCount === 0">Aucun destinataire sélectionné.</p>
                 </div>
 
                 <div class="rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm">

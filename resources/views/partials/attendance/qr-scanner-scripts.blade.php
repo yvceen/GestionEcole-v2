@@ -1,4 +1,4 @@
-@once
+﻿@once
     @push('head')
         <style>
             [data-qr-reader] {
@@ -39,7 +39,7 @@
                     scannerLocked: false,
                     scanner: null,
                     audioContext: null,
-                    cameraError: '',
+                    caméraError: '',
                     records: config.records || [],
                     autoStart: config.autoStart !== false,
 
@@ -167,14 +167,14 @@
                         return this.$refs.reader.id;
                     },
 
-                    preferredCameraId(cameras = []) {
-                        if (!Array.isArray(cameras) || cameras.length === 0) {
+                    preferredCameraId(caméras = []) {
+                        if (!Array.isArray(caméras) || caméras.length === 0) {
                             return null;
                         }
 
-                        const preferred = cameras.find((camera) => /back|rear|environment/i.test(camera.label || ''));
+                        const preferred = caméras.find((caméra) => /back|rear|environment/i.test(caméra.label || ''));
 
-                        return (preferred || cameras[cameras.length - 1] || cameras[0])?.id || null;
+                        return (preferred || caméras[caméras.length - 1] || caméras[0])?.id || null;
                     },
 
                     qrBoxSize(width, height) {
@@ -223,27 +223,27 @@
                         video.play().catch(() => {});
                     },
 
-                    cameraFailureMessage(error) {
+                    caméraFailureMessage(error) {
                         const rawMessage = String(error?.message || error || '');
                         const lower = rawMessage.toLowerCase();
 
                         if (lower.includes('permission') || lower.includes('notallowed') || lower.includes('denied')) {
                             return this.isLikelyWebView()
-                                ? 'La camera a ete refusee dans l application. Autorisez la camera puis relancez le scan.'
-                                : 'La camera a ete refusee. Autorisez l acces puis relancez le scan.';
+                                ? 'La caméra a ete refusée dans l application. Autorisez la caméra puis relancez le scan.'
+                                : 'La caméra a ete refusée. Autorisez l'accés puis relancez le scan.';
                         }
 
                         if (lower.includes('notfound') || lower.includes('overconstrained')) {
-                            return 'Aucune camera compatible n a ete detectee. Utilisez la saisie manuelle si besoin.';
+                            return 'Aucune caméra compatible n a ete detectee. Utilisez la saisie manuelle si besoin.';
                         }
 
                         if (!this.supportsCamera()) {
-                            return 'Le scan camera n est pas disponible sur cet appareil. Utilisez la saisie manuelle du code.';
+                            return 'Le scan caméra n est pas disponible sur cet appareil. Utilisez la saisie manuelle du code.';
                         }
 
                         return this.isLikelyWebView()
-                            ? 'La camera ne demarre pas correctement dans l application. Utilisez la saisie manuelle ou relancez le scan.'
-                            : 'La camera ne demarre pas correctement sur cet appareil. Utilisez la saisie manuelle ou relancez le scan.';
+                            ? 'La caméra ne demarre pas correctement dans l application. Utilisez la saisie manuelle ou relancez le scan.'
+                            : 'La caméra ne demarre pas correctement sur cet appareil. Utilisez la saisie manuelle ou relancez le scan.';
                     },
 
                     async startWithSource(source) {
@@ -257,7 +257,7 @@
                         );
 
                         this.scanning = true;
-                        this.cameraError = '';
+                        this.caméraError = '';
 
                         this.$nextTick(() => {
                             this.setReaderPreviewAttributes();
@@ -272,13 +272,13 @@
                         }
 
                         if (!this.supportsCamera()) {
-                            this.cameraError = this.cameraFailureMessage('unsupported');
-                            this.setErrorResult(this.cameraError);
+                            this.caméraError = this.caméraFailureMessage('unsupported');
+                            this.setErrorResult(this.caméraError);
                             return;
                         }
 
                         this.scanCode = '';
-                        this.cameraError = '';
+                        this.caméraError = '';
                         this.scannerLocked = false;
 
                         await this.stopScanner({ preserveLock: false });
@@ -287,19 +287,19 @@
                             await this.startWithSource({ facingMode: { ideal: 'environment' } });
                         } catch (primaryError) {
                             try {
-                                const cameras = await Html5Qrcode.getCameras();
-                                const cameraId = this.preferredCameraId(cameras);
+                                const caméras = await Html5Qrcode.getCameras();
+                                const caméraId = this.preferredCameraId(caméras);
 
-                                if (!cameraId) {
+                                if (!caméraId) {
                                     throw primaryError;
                                 }
 
                                 await this.stopScanner({ preserveLock: false });
-                                await this.startWithSource(cameraId);
+                                await this.startWithSource(caméraId);
                             } catch (fallbackError) {
                                 await this.stopScanner({ preserveLock: false });
-                                this.cameraError = this.cameraFailureMessage(fallbackError || primaryError);
-                                this.setErrorResult(this.cameraError);
+                                this.caméraError = this.caméraFailureMessage(fallbackError || primaryError);
+                                this.setErrorResult(this.caméraError);
                             }
                         }
                     },
@@ -352,7 +352,7 @@
                     async restartScanner() {
                         this.isProcessing = false;
                         this.scannerLocked = false;
-                        this.cameraError = '';
+                        this.caméraError = '';
                         this.scanCode = '';
 
                         await this.stopScanner({ preserveLock: false });

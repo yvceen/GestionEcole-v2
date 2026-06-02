@@ -1,4 +1,4 @@
-@php
+﻿@php
     use Illuminate\Support\Facades\Route;
     use Illuminate\Support\Str;
 
@@ -11,12 +11,12 @@
     if ($user) {
         $byRole = match ($user->role) {
             'admin' => [
-                ['label' => 'Eleves', 'route' => 'admin.students.index'],
+                ['label' => 'Élèves', 'route' => 'admin.students.index'],
                 ['label' => 'Utilisateurs', 'route' => 'admin.users.index'],
                 ['label' => 'Finance', 'route' => 'admin.finance.index'],
             ],
             'director' => [
-                ['label' => 'Eleves', 'route' => 'director.students.index'],
+                ['label' => 'Élèves', 'route' => 'director.students.index'],
                 ['label' => 'Enseignants', 'route' => 'director.teachers.index'],
                 ['label' => 'Suivi', 'route' => 'director.monitoring'],
             ],

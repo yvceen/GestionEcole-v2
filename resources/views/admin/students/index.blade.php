@@ -1,8 +1,8 @@
-﻿<x-admin-layout title="Gestion des eleves">
+﻿<x-admin-layout title="Gestion des Élèves">
     <x-page-header
-        title="Gestion des eleves"
+        title="Gestion des Élèves"
         subtitle="Suivi des inscriptions, des classes et des informations parentales."
-        eyebrow="Eleves"
+        eyebrow="Élèves"
     >
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
             <form method="GET" action="{{ route('admin.students.index') }}" class="relative w-full sm:w-80">
@@ -15,7 +15,7 @@
                     id="studentsSearch"
                     name="q"
                     :value="$q ?? ''"
-                    placeholder="Rechercher par nom, email ou telephone..."
+                    placeholder="Rechercher par nom, email ou téléphone..."
                     autocomplete="off"
                     class="pr-10"
                 />
@@ -33,7 +33,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" />
                 </svg>
-                Nouvel eleve
+                Nouvel Élève
             </x-ui.button>
         </div>
     </x-page-header>

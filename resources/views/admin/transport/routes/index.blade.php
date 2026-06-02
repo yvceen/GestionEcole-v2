@@ -1,11 +1,11 @@
-<x-admin-layout title="Routes de transport">
+﻿<x-admin-layout title="Routes de transport">
     <x-ui.page-header
         title="Routes de transport"
-        subtitle="Visualisez chaque circuit avec son vehicule, ses arrets et les eleves affectes."
+        subtitle="Visualisez chaque circuit avec son vehicule, ses arrêts et les Élèves affectés."
     >
         <x-slot name="actions">
             <x-ui.button :href="route('admin.transport.routes.create')" variant="primary">Ajouter une route</x-ui.button>
-            <x-ui.button :href="route('admin.transport.assignments.create')" variant="secondary">Affecter des eleves</x-ui.button>
+            <x-ui.button :href="route('admin.transport.assignments.create')" variant="secondary">Affecter des Élèves</x-ui.button>
         </x-slot>
     </x-ui.page-header>
 
@@ -29,11 +29,11 @@
 
                     <div class="mt-5 grid gap-3 sm:grid-cols-3">
                         <div class="rounded-2xl border border-sky-100 bg-sky-50/70 p-3">
-                            <p class="text-xs font-bold uppercase tracking-[0.14em] text-sky-700">Eleves</p>
+                            <p class="text-xs font-bold uppercase tracking-[0.14em] text-sky-700">Élèves</p>
                             <p class="mt-2 text-2xl font-bold text-slate-950">{{ (int) $route->active_assignments_count }}</p>
                         </div>
                         <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-3">
-                            <p class="text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">Arrets</p>
+                            <p class="text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">Arrêts</p>
                             <p class="mt-2 text-2xl font-bold text-slate-950">{{ (int) $route->stops_count }}</p>
                         </div>
                         <div class="rounded-2xl border border-indigo-100 bg-indigo-50/70 p-3">
@@ -68,7 +68,7 @@
             </article>
         @empty
             <x-ui.card title="Aucune route" subtitle="Commencez par creer un premier circuit de transport.">
-                <p class="text-sm text-slate-500">Les arrets, le conducteur et les affectations eleves apparaitront ensuite ici.</p>
+                <p class="text-sm text-slate-500">Les arrêts, le conducteur et les affectations Élèves apparaitront ensuite ici.</p>
             </x-ui.card>
         @endforelse
     </div>

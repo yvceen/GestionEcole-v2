@@ -1,11 +1,11 @@
-<x-admin-layout title="Nouvelle affectation">
+﻿<x-admin-layout title="Nouvelle affectation">
     @php
         $selectedStudentIds = collect(old('student_ids', []))->map(fn ($id) => (int) $id)->all();
     @endphp
 
     <x-ui.page-header
         title="Nouvelle affectation"
-        subtitle="Affectez un eleve, plusieurs eleves ou toute une classe a une route de transport."
+        subtitle="Affectez un Élève, plusieurs Élèves ou toute une classe a une route de transport."
     >
         <x-slot name="actions">
             <x-ui.button :href="route('admin.transport.assignments.index')" variant="secondary">
@@ -15,17 +15,17 @@
     </x-ui.page-header>
 
     <div class="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_360px]">
-        <x-ui.card title="Affectation transport" subtitle="Selection simple, route unique, affectation rapide.">
+        <x-ui.card title="Affectation transport" subtitle="Sélection simple, route unique, affectation rapide.">
             <form method="POST" action="{{ route('admin.transport.assignments.store') }}" class="space-y-5">
                 @csrf
 
                 <div class="rounded-3xl border border-sky-100 bg-sky-50/70 p-4">
                     <div class="flex items-start justify-between gap-4">
                         <div>
-                            <p class="text-xs font-bold uppercase tracking-[0.18em] text-sky-700">1. Eleves</p>
-                            <p class="mt-1 text-sm text-slate-600">Choisissez une classe complete ou cochez les eleves manuellement.</p>
+                            <p class="text-xs font-bold uppercase tracking-[0.18em] text-sky-700">1. Élèves</p>
+                            <p class="mt-1 text-sm text-slate-600">Choisissez une classe complete ou cochez les Élèves manuellement.</p>
                         </div>
-                        <span id="selectedStudentsCount" class="rounded-full bg-white px-3 py-1 text-xs font-bold text-sky-700 shadow-sm">0 selection</span>
+                        <span id="selectedStudentsCount" class="rounded-full bg-white px-3 py-1 text-xs font-bold text-sky-700 shadow-sm">0 sélection</span>
                     </div>
 
                     <div class="mt-4 grid gap-4 md:grid-cols-2">
@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="app-field">
-                            <label class="app-label">Recherche eleve</label>
+                            <label class="app-label">Recherche Élève</label>
                             <input type="search" id="studentSearch" class="app-input" placeholder="Nom, classe...">
                         </div>
                     </div>
@@ -99,7 +99,7 @@
 
                 <div class="grid gap-4 md:grid-cols-2">
                     <div class="app-field">
-                        <label class="app-label">Periode</label>
+                        <label class="app-label">Période</label>
                         <select name="period" class="app-input @error('period') border-rose-500 @enderror" required>
                             <option value="both" @selected(old('period', 'both') == 'both')>Matin et soir</option>
                             <option value="morning" @selected(old('period') == 'morning')>Matin</option>
@@ -109,7 +109,7 @@
                     </div>
 
                     <div class="app-field">
-                        <label class="app-label">Date de debut</label>
+                        <label class="app-label">Date de début</label>
                         <input type="date" name="assigned_date" value="{{ old('assigned_date', date('Y-m-d')) }}" class="app-input @error('assigned_date') border-rose-500 @enderror" required>
                         @error('assigned_date')<p class="app-error">{{ $message }}</p>@enderror
                     </div>
@@ -132,11 +132,11 @@
             <div class="rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-5 shadow-sm">
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">Mode rapide</p>
                 <h3 class="mt-3 text-xl font-bold text-slate-950">Affectation par classe</h3>
-                <p class="mt-2 text-sm leading-6 text-slate-600">Selectionnez une classe, une route et une date. Tous les eleves actifs de cette classe seront relies au transport.</p>
+                <p class="mt-2 text-sm leading-6 text-slate-600">Sélectionnez une classe, une route et une date. Tous les Élèves actifs de cette classe seront reliés au transport.</p>
             </div>
             <div class="rounded-3xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-5 shadow-sm">
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-700">Tarifs</p>
-                <p class="mt-3 text-sm leading-6 text-slate-600">Les montants transport restent geres dans la partie finance ou fiche eleve. Ce formulaire sert uniquement aux trajets et affectations.</p>
+                <p class="mt-3 text-sm leading-6 text-slate-600">Les montants transport restent geres dans la partie finance ou fiche Élève. Ce formulaire sert uniquement aux trajets et affectations.</p>
             </div>
         </div>
     </div>
@@ -182,7 +182,7 @@
             });
 
             const checked = studentCheckboxes.filter(input => input.checked).length;
-            selectedStudentsCount.textContent = checked ? `${checked} selection` : `${visible} visible`;
+            selectedStudentsCount.textContent = checked ? `${checked} sélection` : `${visible} visible`;
         }
 
         classroomFilter?.addEventListener('change', updateStudentList);

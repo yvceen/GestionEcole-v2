@@ -1,4 +1,4 @@
-@php
+﻿@php
     $selectedTeacherIds = collect(old('teacher_ids', $assignedTeacherIds ?? []))
         ->map(fn ($id) => (int) $id)
         ->all();
@@ -43,7 +43,7 @@
         <div class="flex items-start justify-between gap-3">
             <div>
                 <h2 class="text-lg font-semibold text-slate-900">Affectation enseignants</h2>
-                <p class="mt-1 text-sm text-slate-500">La meme table `teacher_subjects` continue d etre utilisee par les devoirs, notes et emplois du temps.</p>
+                <p class="mt-1 text-sm text-slate-500">La même table `teacher_subjects` continue d etre utilisée par les devoirs, notes et emplois du temps.</p>
             </div>
                     @if(Route::has('admin.teachers.pedagogy'))
                         <a href="{{ route('admin.teachers.pedagogy') }}" class="text-xs font-semibold text-slate-600 hover:underline">
@@ -69,7 +69,7 @@
                 </label>
             @empty
                 <div class="rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
-                    Aucun enseignant disponible dans cette ecole.
+                    Aucun enseignant disponible dans cette École.
                 </div>
             @endforelse
         </div>

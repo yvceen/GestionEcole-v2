@@ -1,5 +1,5 @@
-<x-school-life-layout title="Operations transport" subtitle="Pointage rapide des montees et descentes pour la journee en cours.">
-    <x-ui.page-header title="Pointage transport" subtitle="Un scan operateur simple pour enregistrer la montee et la descente des eleves.">
+﻿<x-school-life-layout title="Opérations transport" subtitle="Pointage rapide des montées et descentes pour la journée en cours.">
+    <x-ui.page-header title="Pointage transport" subtitle="Un scan operateur simple pour enregistrér la montée et la descente des Élèves.">
         <x-slot name="actions">
             <x-ui.button :href="route('transport.ops.index')" variant="secondary">Actualiser</x-ui.button>
         </x-slot>
@@ -14,7 +14,7 @@
                 @endforeach
             </select>
             <select name="vehicle_id" class="app-input">
-                <option value="">Tous les vehicules</option>
+                <option value="">Tous les véhicules</option>
                 @foreach($vehicles as $vehicle)
                     <option value="{{ $vehicle->id }}" @selected((int) $vehicleId === (int) $vehicle->id)>
                         {{ $vehicle->name ?: $vehicle->registration_number }}
@@ -26,7 +26,7 @@
     </x-ui.card>
 
     <section class="grid gap-4 xl:grid-cols-[minmax(0,1.4fr)_360px]">
-        <x-ui.card title="Affectations du jour" subtitle="Enregistrez une seule montee et une seule descente par eleve et par jour.">
+        <x-ui.card title="Affectations du jour" subtitle="Enregistrez une seule montée et une seule descente par Élève et par jour.">
             <div class="space-y-3">
                 @forelse($assignments as $assignment)
                     @php($todayBoarded = $assignment->transportLogs->firstWhere('status', \App\Models\TransportLog::STATUS_BOARDED))
@@ -59,13 +59,13 @@
                                 <input type="hidden" name="transport_assignment_id" value="{{ $assignment->id }}">
                                 <input type="hidden" name="status" value="{{ \App\Models\TransportLog::STATUS_BOARDED }}">
                                 <select name="route_stop_id" class="app-input">
-                                    <option value="">Arret montee (optionnel)</option>
+                                    <option value="">Arrêt montée (optionnel)</option>
                                     @foreach(($assignment->route?->stops ?? collect())->sortBy('stop_order') as $stop)
                                         <option value="{{ $stop->id }}">{{ $stop->stop_order }}. {{ $stop->name }}</option>
                                     @endforeach
                                 </select>
-                                <input type="text" name="note" class="app-input" placeholder="Note montee (optionnel)">
-                                <x-ui.button type="submit" variant="primary" size="sm">Enregistrer montee</x-ui.button>
+                                <input type="text" name="note" class="app-input" placeholder="Note montée (optionnel)">
+                                <x-ui.button type="submit" variant="primary" size="sm">Enregistrer montée</x-ui.button>
                             </form>
 
                             <form method="POST" action="{{ route('transport.ops.store') }}" class="rounded-xl border border-sky-200 bg-sky-50 px-3 py-3 space-y-2">
@@ -73,7 +73,7 @@
                                 <input type="hidden" name="transport_assignment_id" value="{{ $assignment->id }}">
                                 <input type="hidden" name="status" value="{{ \App\Models\TransportLog::STATUS_DROPPED }}">
                                 <select name="route_stop_id" class="app-input">
-                                    <option value="">Arret descente (optionnel)</option>
+                                    <option value="">Arrêt descente (optionnel)</option>
                                     @foreach(($assignment->route?->stops ?? collect())->sortBy('stop_order') as $stop)
                                         <option value="{{ $stop->id }}">{{ $stop->stop_order }}. {{ $stop->name }}</option>
                                     @endforeach
@@ -84,13 +84,13 @@
                         </div>
                     </article>
                 @empty
-                    <div class="student-empty">Aucune affectation active pour les filtres selectionnes.</div>
+                    <div class="student-empty">Aucune affectation active pour les filtres sélectionnés.</div>
                 @endforelse
             </div>
             <div class="mt-4">{{ $assignments->links() }}</div>
         </x-ui.card>
 
-        <x-ui.card title="Journal recent" subtitle="Dernieres operations de la journee.">
+        <x-ui.card title="Journal récent" subtitle="Dernières opérations de la journée.">
             <div class="space-y-2">
                 @forelse($recentLogs as $log)
                     <article class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
@@ -105,7 +105,7 @@
                         </p>
                     </article>
                 @empty
-                    <div class="student-empty">Aucun enregistrement transport pour aujourd hui.</div>
+                    <div class="student-empty">Aucun enregistrément transport pour aujourd hui.</div>
                 @endforelse
             </div>
         </x-ui.card>

@@ -1,10 +1,10 @@
-<x-school-life-layout title="Corriger un pointage" subtitle="Ajustez une arrivee ou une sortie sans toucher aux autres donnees du portail.">
+﻿<x-school-life-layout title="Corriger un pointage" subtitle="Ajustez une arrivee ou une sortie sans toucher aux autres données du portail.">
     <x-ui.page-header
         title="Correction du pointage"
         subtitle="Modification simple pour la vie scolaire : statut, entree, sortie et note."
     />
 
-    <x-ui.card title="{{ $attendance->student?->full_name ?? 'Eleve' }}" subtitle="{{ $attendance->student?->classroom?->name ?? 'Classe non renseignee' }} | {{ $attendance->date?->format('d/m/Y') }}">
+    <x-ui.card title="{{ $attendance->student?->full_name ?? 'Élève' }}" subtitle="{{ $attendance->student?->classroom?->name ?? 'Classe non renseignee' }} | {{ $attendance->date?->format('d/m/Y') }}">
         <form method="POST" action="{{ route('school-life.qr-scan.records.update', $attendance) }}" class="space-y-6">
             @csrf
             @method('PUT')

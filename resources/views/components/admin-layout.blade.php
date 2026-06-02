@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'title' => 'Administration',
     'subtitle' => null,
 ])
@@ -10,21 +10,21 @@
     $nav = [
         ['label' => 'Tableau de bord', 'route' => 'admin.dashboard', 'icon' => 'home', 'section' => 'Vue generale'],
         ['label' => 'Structure', 'route' => 'admin.structure.index', 'icon' => 'calendar', 'section' => 'Gestion'],
-        ['label' => 'Annees scolaires', 'route' => 'admin.academic-years.index', 'icon' => 'calendar', 'section' => 'Gestion'],
+        ['label' => 'Années scolaires', 'route' => 'admin.academic-years.index', 'icon' => 'calendar', 'section' => 'Gestion'],
         ['label' => 'Promotions', 'route' => 'admin.academic-promotions.index', 'icon' => 'users', 'section' => 'Gestion'],
-        ['label' => 'Eleves', 'route' => 'admin.students.index', 'icon' => 'users', 'section' => 'Gestion'],
+        ['label' => 'Élèves', 'route' => 'admin.students.index', 'icon' => 'users', 'section' => 'Gestion'],
         ['label' => 'Utilisateurs', 'route' => 'admin.users.index', 'icon' => 'user', 'section' => 'Gestion'],
         ['label' => 'Finance', 'route' => 'admin.finance.index', 'icon' => 'wallet', 'section' => 'Gestion'],
         ['label' => 'Vie scolaire', 'route' => 'admin.school-life.index', 'icon' => 'shield', 'section' => 'Gestion'],
-        ['label' => 'Matieres', 'route' => 'admin.subjects.index', 'icon' => 'book', 'section' => 'Organisation'],
+        ['label' => 'Matières', 'route' => 'admin.subjects.index', 'icon' => 'book', 'section' => 'Organisation'],
         ['label' => 'Emploi du temps', 'route' => 'admin.timetable.index', 'icon' => 'calendar', 'section' => 'Organisation'],
-        ['label' => 'Reglages presences', 'route' => 'admin.timetable.settings.edit', 'icon' => 'shield', 'section' => 'Organisation'],
+        ['label' => 'Reglages présences', 'route' => 'admin.timetable.settings.edit', 'icon' => 'shield', 'section' => 'Organisation'],
         ['label' => 'Agenda', 'route' => 'admin.events.index', 'icon' => 'calendar', 'section' => 'Organisation'],
-        ['label' => 'Activites', 'route' => 'admin.activities.index', 'icon' => 'calendar', 'section' => 'Organisation'],
+        ['label' => 'Activités', 'route' => 'admin.activities.index', 'icon' => 'calendar', 'section' => 'Organisation'],
         ['label' => 'Transport scolaire', 'route' => 'admin.transport.index', 'icon' => 'users', 'section' => 'Organisation'],
-        ['label' => 'Presences', 'route' => 'admin.attendance.index', 'icon' => 'shield', 'section' => 'Suivi'],
+        ['label' => 'Présences', 'route' => 'admin.attendance.index', 'icon' => 'shield', 'section' => 'Suivi'],
         ['label' => 'Devoirs', 'route' => 'admin.homeworks.index', 'icon' => 'clipboard', 'section' => 'Suivi'],
-        ['label' => 'Pedagogie enseignants', 'route' => 'admin.teachers.pedagogy', 'icon' => 'chart', 'section' => 'Suivi'],
+        ['label' => 'Pédagogie enseignants', 'route' => 'admin.teachers.pedagogy', 'icon' => 'chart', 'section' => 'Suivi'],
         ['label' => 'Cartes', 'route' => 'admin.cards.index', 'icon' => 'users', 'section' => 'Suivi'],
         ['label' => 'Actualites', 'route' => 'admin.news.index', 'icon' => 'message', 'section' => 'Communication'],
         ['label' => 'Rendez-vous', 'route' => 'admin.appointments.index', 'icon' => 'calendar', 'section' => 'Communication'],
@@ -40,7 +40,7 @@
     $currentAcademicYear = app()->bound('current_school_id') && app('current_school_id')
         ? app(AcademicYearService::class)->getCurrentYearForSchool((int) app('current_school_id'))
         : null;
-    $pageSubtitle = $subtitle ?: 'Pilotez les operations, les parcours administratifs et les interfaces de l etablissement dans un shell unifie.';
+    $pageSubtitle = $subtitle ?: 'Pilotez les opérations, les parcours administratifs et les interfaces de l'Établissement dans un shell unifie.';
 
     $activeNav = array_values(array_filter(
         $nav,
@@ -84,7 +84,7 @@
                 :subtitle="$pageSubtitle"
                 :badges="[
                     $schoolLabel,
-                    $currentAcademicYear?->name ?? 'Annee en preparation',
+                    $currentAcademicYear?->name ?? 'Année en préparation',
                     auth()->user()?->name ?? 'Administrateur',
                     $currentModule['label'] ?? 'Vue generale',
                 ]"

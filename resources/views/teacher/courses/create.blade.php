@@ -1,4 +1,4 @@
-{{-- resources/views/teacher/courses/create.blade.php --}}
+﻿{{-- resources/views/teacher/courses/create.blade.php --}}
 <x-teacher-layout title="Ajouter un cours">
     <x-slot name="header">Ajouter un cours</x-slot>
 
@@ -14,7 +14,7 @@
             @if(\Illuminate\Support\Facades\Route::has('teacher.courses.index'))
                 <a href="{{ route('teacher.courses.index') }}"
                    class="rounded-2xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50">
-                    ← Retour
+                    â† Retour
                 </a>
             @endif
         </div>
@@ -114,7 +114,7 @@
 
                 <div class="mt-4 space-y-3 text-sm text-slate-700">
                     <div class="rounded-2xl border border-black/5 bg-white/60 p-4">
-                        <div class="font-semibold text-slate-900">1) Titre precis</div>
+                        <div class="font-semibold text-slate-900">1) Titre précis</div>
                         <div class="mt-1 text-xs text-slate-500">Chapitre + theme + classe.</div>
                     </div>
 

@@ -1,4 +1,4 @@
-<x-admin-layout title="Ajouter un paiement">
+﻿<x-admin-layout title="Ajouter un paiement">
     @php
         $oldStudentIds = collect(old('student_ids', []))->map(fn ($id) => (int) $id)->values();
         $oldMonths = collect(old('months', []))->map(fn ($month) => (string) $month)->values();
@@ -10,7 +10,7 @@
 
     <x-ui.page-header
         title="Ajouter un paiement"
-        subtitle="Selectionnez un parent, verifiez les eleves lies et enregistrez le reglement sur des mois precis."
+        subtitle="Sélectionnez un parent, vérifiez les Élèves liés et enregistréz le règlement sur des mois précis."
     >
         <x-slot name="actions">
             <x-ui.button :href="route('admin.finance.index')" variant="secondary">
@@ -23,8 +23,8 @@
         <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
             <div>
                 <p class="text-xs font-bold uppercase tracking-[0.2em] text-sky-700">Paiement rapide</p>
-                <h2 class="mt-3 text-2xl font-bold tracking-tight text-slate-950">Parent, eleves, mois, recu. Tout se fait dans le meme ecran.</h2>
-                <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Les montants sont calcules automatiquement depuis les frais configures. L admin controle le resume avant de generer le recu.</p>
+                <h2 class="mt-3 text-2xl font-bold tracking-tight text-slate-950">Parent, Élèves, mois, reçu. Tout se fait dans le même ecran.</h2>
+                <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Les montants sont calculés automatiquement depuis les frais configurés. L admin contrôle le resume avant de générer le reçu.</p>
             </div>
             <div class="grid grid-cols-3 gap-2 text-center">
                 <div class="rounded-2xl border border-white bg-white/80 px-3 py-4 shadow-sm">
@@ -37,7 +37,7 @@
                 </div>
                 <div class="rounded-2xl border border-white bg-white/80 px-3 py-4 shadow-sm">
                     <p class="text-lg font-bold text-indigo-700">3</p>
-                    <p class="mt-1 text-xs font-semibold text-slate-600">Recu</p>
+                    <p class="mt-1 text-xs font-semibold text-slate-600">Reçu</p>
                 </div>
             </div>
         </div>
@@ -62,17 +62,17 @@
 
         <div class="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_380px]">
             <div class="space-y-6">
-                <x-ui.card title="1. Parent et eleves" subtitle="Le chargement des eleves et des frais se fait automatiquement depuis l'ecole active.">
+                <x-ui.card title="1. Parent et Élèves" subtitle="Le chargement des Élèves et des frais se fait automatiquement depuis l'École active.">
                     <div class="mb-5 rounded-3xl border border-sky-100 bg-sky-50/70 px-4 py-3">
-                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Selection</p>
-                        <p class="mt-1 text-sm text-slate-600">Recherchez un parent, puis cochez uniquement les eleves concernes par ce paiement.</p>
+                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sélection</p>
+                        <p class="mt-1 text-sm text-slate-600">Recherchez un parent, puis cochez uniquement les Élèves concernes par ce paiement.</p>
                     </div>
                     <div class="grid gap-4 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
                         <x-ui.input
                             id="parent_search"
                             label="Recherche rapide"
-                            placeholder="Nom, email ou telephone"
-                            hint="Filtre localement la liste des parents de cette ecole."
+                            placeholder="Nom, email ou téléphone"
+                            hint="Filtre localement la liste des parents de cette École."
                         />
 
                         <div class="relative">
@@ -98,17 +98,17 @@
 
                     <div class="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
                         <div id="selectedParentBox" class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                            <p class="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Parent selectionne</p>
+                            <p class="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Parent sélectionné</p>
                             <p id="selectedParentName" class="mt-2 text-sm font-semibold text-slate-900">
-                                {{ $oldParent?->name ?? 'Aucun parent selectionne' }}
+                                {{ $oldParent?->name ?? 'Aucun parent sélectionné' }}
                             </p>
                             <p id="selectedParentMeta" class="mt-1 text-xs text-slate-500">
-                                {{ $oldParent?->email ?: 'Choisissez un parent pour charger ses eleves et leurs frais.' }}
+                                {{ $oldParent?->email ?: 'Choisissez un parent pour charger ses Élèves et leurs frais.' }}
                             </p>
                         </div>
 
                         <div id="kidsInfo" class="hidden rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
-                            Eleves trouves : <span id="kidsCount" class="font-semibold">0</span>
+                            Élèves trouves : <span id="kidsCount" class="font-semibold">0</span>
                         </div>
                     </div>
 
@@ -119,8 +119,8 @@
 
                     <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
                         <div>
-                            <p class="text-sm font-semibold text-slate-900">Eleves concernes</p>
-                            <p class="text-xs text-slate-500">Seuls les eleves lies au parent et appartenant a l'ecole active sont affiches.</p>
+                            <p class="text-sm font-semibold text-slate-900">Élèves concernes</p>
+                            <p class="text-xs text-slate-500">Seuls les Élèves liés au parent et appartenant a l'École active sont affichés.</p>
                         </div>
 
                         <div id="studentsToolbar" class="hidden flex-wrap gap-2">
@@ -140,13 +140,13 @@
                     </div>
 
                     <div id="studentsHint" class="mt-3 hidden text-xs font-medium text-rose-600">
-                        Selectionnez au moins un eleve avec des frais mensuels.
+                        Sélectionnez au moins un Élève avec des frais mensuels.
                     </div>
                 </x-ui.card>
 
-                <x-ui.card title="2. Periode a regler" subtitle="Generez les mois, puis ajustez la selection avant validation.">
+                <x-ui.card title="2. Période a regler" subtitle="Générez les mois, puis ajustez la sélection avant validation.">
                     <div class="mb-5 rounded-3xl border border-emerald-100 bg-emerald-50/70 px-4 py-3">
-                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">Periode</p>
+                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">Période</p>
                         <p class="mt-1 text-sm text-slate-600">Choisissez un intervalle, puis gardez seulement les mois a encaisser.</p>
                     </div>
                     <input type="hidden" id="academic_year_start" value="{{ $academicYearStart }}">
@@ -154,19 +154,19 @@
 
                     <div class="grid gap-4 md:grid-cols-3">
                         <div class="rounded-3xl border border-slate-200 bg-white px-4 py-4">
-                            <p class="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Annee scolaire</p>
-                            <p class="mt-2 text-sm font-semibold text-slate-900">{{ $academicYear->name ?? 'Annee active' }}</p>
+                            <p class="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Année scolaire</p>
+                            <p class="mt-2 text-sm font-semibold text-slate-900">{{ $academicYear->name ?? 'Année active' }}</p>
                             <p class="mt-1 text-xs text-slate-500">{{ $academicYearStart }} -> {{ $academicYearEnd }}</p>
                         </div>
                         <button type="button" id="showUnpaidMonthsBtn" class="rounded-3xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-left transition hover:bg-emerald-100">
                             <span class="block text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Recommande</span>
                             <span class="mt-2 block text-sm font-semibold text-slate-900">Afficher mois non payes</span>
-                            <span class="mt-1 block text-xs text-slate-600">Selon les eleves selectionnes.</span>
+                            <span class="mt-1 block text-xs text-slate-600">Selon les Élèves sélectionnés.</span>
                         </button>
                         <button type="button" id="showAllMonthsBtn" class="rounded-3xl border border-sky-200 bg-sky-50 px-4 py-4 text-left transition hover:bg-sky-100">
                             <span class="block text-xs font-bold uppercase tracking-[0.16em] text-sky-700">Tous</span>
                             <span class="mt-2 block text-sm font-semibold text-slate-900">Afficher tous les mois</span>
-                            <span class="mt-1 block text-xs text-slate-600">Utile pour corriger une selection.</span>
+                            <span class="mt-1 block text-xs text-slate-600">Utile pour corriger une sélection.</span>
                         </button>
                     </div>
 
@@ -180,21 +180,21 @@
                     </div>
 
                     <div id="monthsBox" class="mt-4 grid min-h-[120px] gap-3 rounded-3xl border border-slate-200 bg-slate-50 p-3 sm:grid-cols-2 xl:grid-cols-3">
-                        <div class="text-sm text-slate-500 sm:col-span-2 xl:col-span-3">Selectionnez d'abord un parent et un eleve pour voir les mois non payes.</div>
+                        <div class="text-sm text-slate-500 sm:col-span-2 xl:col-span-3">Sélectionnez d'abord un parent et un Élève pour voir les mois non payes.</div>
                     </div>
 
                     <div id="monthsHint" class="mt-3 hidden text-xs font-medium text-rose-600">
-                        Selectionnez au moins un mois.
+                        Sélectionnez au moins un mois.
                     </div>
                 </x-ui.card>
 
-                <x-ui.card title="3. Informations de paiement" subtitle="Ces informations seront reprises sur le recu.">
+                <x-ui.card title="3. Informations de paiement" subtitle="Ces informations seront reprises sur le reçu.">
                     <div class="mb-5 rounded-3xl border border-indigo-100 bg-indigo-50/70 px-4 py-3">
-                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-indigo-700">Reglement</p>
-                        <p class="mt-1 text-sm text-slate-600">La methode, la date et la note seront reprises sur le recu final.</p>
+                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-indigo-700">Règlement</p>
+                        <p class="mt-1 text-sm text-slate-600">La méthode, la date et la note seront reprises sur le reçu final.</p>
                     </div>
                     <div class="grid gap-4 md:grid-cols-2">
-                        <x-ui.select name="method" label="Methode">
+                        <x-ui.select name="method" label="Méthode">
                             <option value="cash" @selected(old('method', 'cash') === 'cash')>Especes</option>
                             <option value="transfer" @selected(old('method') === 'transfer')>Virement</option>
                             <option value="card" @selected(old('method') === 'card')>Carte</option>
@@ -205,13 +205,13 @@
                     </div>
 
                     <div class="mt-4">
-                        <x-ui.input name="note" label="Note (optionnel)" :value="old('note')" hint="Visible sur le recu si vous la renseignez." />
+                        <x-ui.input name="note" label="Note (optionnel)" :value="old('note')" hint="Visible sur le reçu si vous la renseignez." />
                     </div>
                 </x-ui.card>
             </div>
 
             <div class="space-y-6">
-                <x-ui.card title="Resume" subtitle="Controle final avant creation du recu." class="xl:sticky xl:top-24">
+                <x-ui.card title="Resume" subtitle="contrôle final avant création du reçu." class="xl:sticky xl:top-24">
                     <div class="space-y-4">
                         <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
                             <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Parent</p>
@@ -219,16 +219,16 @@
                                 {{ $oldParent?->name ?? 'Aucun parent' }}
                             </p>
                             <p id="summaryParentMeta" class="mt-1 text-xs text-slate-500">
-                                {{ $oldParent?->email ?: 'Selectionnez un parent pour afficher son resume.' }}
+                                {{ $oldParent?->email ?: 'Sélectionnez un parent pour afficher son resume.' }}
                             </p>
                         </div>
 
                         <div class="rounded-2xl border border-slate-200 bg-white px-4 py-4">
-                            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Total selectionne</p>
+                            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Total sélectionné</p>
                             <p id="totalDisplay" class="mt-2 text-3xl font-semibold tracking-tight text-slate-900">0.00 MAD</p>
                             <div class="mt-3 grid gap-2 text-sm text-slate-600">
                                 <div class="flex items-center justify-between gap-3">
-                                    <span>Eleves choisis</span>
+                                    <span>Élèves choisis</span>
                                     <span id="studentsCount" class="font-semibold text-slate-900">0</span>
                                 </div>
                                 <div class="flex items-center justify-between gap-3">
@@ -243,9 +243,9 @@
                         </div>
 
                         <div class="rounded-2xl border border-slate-200 bg-white px-4 py-4">
-                            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Elements selectionnes</p>
+                            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Elements sélectionnés</p>
                             <div id="selectionPreview" class="mt-3 space-y-2 text-sm text-slate-600">
-                                <p>Aucune selection en cours.</p>
+                                <p>Aucune sélection en cours.</p>
                             </div>
                         </div>
                     </div>
@@ -253,7 +253,7 @@
 
                 <div class="flex flex-col gap-3">
                     <x-ui.button id="submitBtn" type="submit" variant="primary">
-                        Enregistrer et generer le recu
+                        Enregistrer et générer le reçu
                     </x-ui.button>
                     <x-ui.button :href="route('admin.finance.index')" variant="secondary">
                         Annuler
@@ -381,14 +381,14 @@
 
             function monthLabel(month) {
                 const [year, rawMonth] = String(month).split('-').map(Number);
-                const names = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aout', 'Sep', 'Oct', 'Nov', 'Dec'];
+                const names = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoùt', 'Sep', 'Oct', 'Nov', 'Dec'];
 
                 return `${names[(rawMonth || 1) - 1]} ${year}`;
             }
 
             function monthStatus(month, selectedStudents) {
                 if (!selectedStudents.length) {
-                    return { paid: false, unpaid: false, partial: false, label: 'Choisir eleve', count: 0, total: 0 };
+                    return { paid: false, unpaid: false, partial: false, label: 'Choisir Élève', count: 0, total: 0 };
                 }
 
                 const total = selectedStudents.length;
@@ -399,7 +399,7 @@
                     paid: paidCount === total,
                     unpaid: unpaidCount === total,
                     partial: paidCount > 0 && unpaidCount > 0,
-                    label: unpaidCount === 0 ? 'Deja paye' : (paidCount === 0 ? 'Non paye' : `${unpaidCount}/${total} non paye`),
+                    label: unpaidCount === 0 ? 'Déjà payé' : (paidCount === 0 ? 'Non payé' : `${unpaidCount}/${total} non payé`),
                     count: unpaidCount,
                     total,
                 };
@@ -411,18 +411,18 @@
 
             function updateParentSummary() {
                 const option = getParentOption(parentSelect.value);
-                const label = option?.textContent?.trim() || 'Aucun parent selectionne';
+                const label = option?.textContent?.trim() || 'Aucun parent sélectionné';
 
                 selectedParentName.textContent = label;
                 summaryParent.textContent = option ? label : 'Aucun parent';
 
                 if (option && parentSelect.value) {
-                    const meta = label.includes('(') ? label.slice(label.indexOf('(')).replace(/[()]/g, '').trim() : 'Parent de cette ecole';
-                    selectedParentMeta.textContent = meta || 'Parent de cette ecole';
-                    summaryParentMeta.textContent = meta || 'Parent de cette ecole';
+                    const meta = label.includes('(') ? label.slice(label.indexOf('(')).replace(/[()]/g, '').trim() : 'Parent de cette École';
+                    selectedParentMeta.textContent = meta || 'Parent de cette École';
+                    summaryParentMeta.textContent = meta || 'Parent de cette École';
                 } else {
-                    selectedParentMeta.textContent = 'Choisissez un parent pour charger ses eleves et leurs frais.';
-                    summaryParentMeta.textContent = 'Selectionnez un parent pour afficher son resume.';
+                    selectedParentMeta.textContent = 'Choisissez un parent pour charger ses Élèves et leurs frais.';
+                    summaryParentMeta.textContent = 'Sélectionnez un parent pour afficher son resume.';
                 }
             }
 
@@ -483,7 +483,7 @@
                 monthsCountEl.textContent = String(selectedMonths.length);
 
                 if (!selectedStudents.length && !selectedMonths.length) {
-                    selectionPreview.innerHTML = '<p>Aucune selection en cours.</p>';
+                    selectionPreview.innerHTML = '<p>Aucune sélection en cours.</p>';
                     updateSubmitState();
                     return;
                 }
@@ -499,16 +499,16 @@
                 `).join('');
 
                 const extraStudents = selectedStudents.length > 4
-                    ? `<p class="text-xs text-slate-500">+${selectedStudents.length - 4} autre(s) eleve(s)</p>`
+                    ? `<p class="text-xs text-slate-500">+${selectedStudents.length - 4} autre(s) Élève(s)</p>`
                     : '';
 
                 const monthsLine = selectedMonths.length
                     ? `<div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">Mois : <span class="font-semibold text-slate-900">${escapeHtml(selectedMonths.join(', '))}</span></div>`
-                    : '<p class="text-xs text-slate-500">Aucun mois selectionne.</p>';
+                    : '<p class="text-xs text-slate-500">Aucun mois sélectionné.</p>';
 
                 selectionPreview.innerHTML = `
                     <div class="space-y-2">
-                        ${studentLines || '<p class="text-xs text-slate-500">Aucun eleve selectionne.</p>'}
+                        ${studentLines || '<p class="text-xs text-slate-500">Aucun Élève sélectionné.</p>'}
                         ${extraStudents}
                         ${monthsLine}
                     </div>
@@ -524,7 +524,7 @@
                 );
 
                 if (!Array.isArray(items) || items.length === 0) {
-                    setStudentsPlaceholder('Aucun eleve lie a ce parent.');
+                    setStudentsPlaceholder('Aucun Élève lié a ce parent.');
                     updateSummary();
                     return;
                 }
@@ -542,9 +542,9 @@
                     const sourceClass = sourceBadgeClass(student.fee_source);
                     const helperText = hasMonthlyFees
                         ? `Scolarite ${Number(details.tuition || 0).toFixed(2)} MAD | Cantine ${Number(details.canteen || 0).toFixed(2)} MAD | Transport ${Number(details.transport || 0).toFixed(2)} MAD`
-                        : 'Aucun frais mensuel disponible pour cet eleve.';
+                        : 'Aucun frais mensuel disponible pour cet Élève.';
                     const insuranceText = insurance > 0
-                        ? `Assurance annuelle ${insurance.toFixed(2)} MAD${insurancePaid ? ' - deja payee' : ''}`
+                        ? `Assurance annuelle ${insurance.toFixed(2)} MAD${insurancePaid ? ' - déjà payée' : ''}`
                         : 'Pas d assurance annuelle';
 
                     return `
@@ -591,7 +591,7 @@
 
             function renderMonths(months, preferredSelection = [], options = {}) {
                 if (!Array.isArray(months) || months.length === 0) {
-                    monthsBox.innerHTML = '<div class="text-sm text-slate-500 sm:col-span-2 xl:col-span-3">Aucun mois a afficher pour cette selection.</div>';
+                    monthsBox.innerHTML = '<div class="text-sm text-slate-500 sm:col-span-2 xl:col-span-3">Aucun mois a afficher pour cette sélection.</div>';
                     updateSummary();
                     return;
                 }
@@ -655,7 +655,7 @@
                 state.abortController = typeof AbortController !== 'undefined' ? new AbortController() : null;
 
                 hideDebug();
-                setStudentsPlaceholder('Chargement des eleves...');
+                setStudentsPlaceholder('Chargement des Élèves...');
                 parentLoading.classList.remove('hidden');
                 kidsInfo.classList.add('hidden');
                 kidsCount.textContent = '0';
@@ -689,7 +689,7 @@
                         return;
                     }
 
-                    setStudentsPlaceholder('Impossible de charger les eleves.', 'error');
+                    setStudentsPlaceholder('Impossible de charger les Élèves.', 'error');
                     showDebug(error?.message || 'Connexion temporairement indisponible. Veuillez reessayer.');
                     updateSummary();
                 } finally {
@@ -809,8 +809,8 @@
                     kidsInfo.classList.add('hidden');
                     kidsCount.textContent = '0';
                     hideDebug();
-                    setStudentsPlaceholder('Choisissez d abord un parent.');
-                    monthsBox.innerHTML = '<div class="text-sm text-slate-500 sm:col-span-2 xl:col-span-3">Selectionnez d abord un parent et un eleve pour voir les mois non payes.</div>';
+                    setStudentsPlaceholder('Choisissez d'abord un parent.');
+                    monthsBox.innerHTML = '<div class="text-sm text-slate-500 sm:col-span-2 xl:col-span-3">Sélectionnez d'abord un parent et un Élève pour voir les mois non payes.</div>';
                     updateSummary();
                     return;
                 }

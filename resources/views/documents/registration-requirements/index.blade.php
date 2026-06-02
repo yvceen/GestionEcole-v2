@@ -1,7 +1,7 @@
-<x-dynamic-component :component="$context['layout']" :title="$context['title']" :subtitle="$context['subtitle']">
+﻿<x-dynamic-component :component="$context['layout']" :title="$context['title']" :subtitle="$context['subtitle']">
     <x-ui.page-header
         title="Liste des pieces d inscription"
-        subtitle="Gerez les documents et fournitures remis aux familles, puis generez une version imprimable aux couleurs de l etablissement."
+        subtitle="Gerez les documents et fournitures remis aux familles, puis générez une version imprimable aux couleurs de l'Établissement."
     >
         <div class="flex flex-wrap gap-3">
             <x-ui.button :href="route($context['routes']['preview'])" variant="secondary">Apercu imprimable</x-ui.button>

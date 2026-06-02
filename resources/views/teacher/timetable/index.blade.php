@@ -1,9 +1,9 @@
-<x-teacher-layout title="Emploi du temps">
+﻿<x-teacher-layout title="Emploi du temps">
     <section class="app-card mb-6 p-5">
         <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
                 <p class="text-sm font-semibold text-slate-900">Lecture de la semaine</p>
-                <p class="mt-1 text-xs text-slate-500">Selectionnez une classe pour afficher une grille plus lisible.</p>
+                <p class="mt-1 text-xs text-slate-500">Sélectionnez une classe pour afficher une grille plus lisible.</p>
             </div>
             <button type="button" onclick="window.print()" class="app-button-secondary">Imprimer</button>
         </div>
