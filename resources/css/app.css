@@ -2591,12 +2591,22 @@ header.sticky.top-0 {
   align-items: center;
   justify-content: center;
   border-radius: 0.9rem;
+  border: 0;
+  background: transparent;
   color: #0f766e;
+  outline: none;
   transition: background 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 .myedu-date-icon:hover {
   background: rgba(14, 165, 233, 0.1);
+  color: #0369a1;
+}
+
+.myedu-date-icon:focus,
+.myedu-date-icon:focus-visible {
+  background: rgba(14, 165, 233, 0.12);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.16);
   color: #0369a1;
 }
 
@@ -2613,7 +2623,7 @@ header.sticky.top-0 {
   display: none;
   width: min(22rem, calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
-  overflow: hidden;
+  overflow: auto;
   border: 1px solid rgba(186, 230, 253, 0.9);
   border-radius: 1.35rem;
   background:
@@ -2621,6 +2631,7 @@ header.sticky.top-0 {
     linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 255, 0.98));
   box-shadow: 0 24px 70px -36px rgba(15, 23, 42, 0.45), 0 12px 30px -24px rgba(14, 165, 233, 0.45);
   padding: 1rem;
+  overscroll-behavior: contain;
 }
 
 .myedu-date-picker.is-open .myedu-date-panel {
@@ -2708,6 +2719,46 @@ header.sticky.top-0 {
   margin-top: 0.5rem;
 }
 
+.myedu-month-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin-top: 0.9rem;
+}
+
+.myedu-month-choice {
+  min-height: 3rem;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.82);
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+}
+
+.myedu-month-choice:hover {
+  border-color: #bae6fd;
+  background: #e0f2fe;
+  color: #0369a1;
+  transform: translateY(-1px);
+}
+
+.myedu-month-choice.is-today {
+  border-color: #99f6e4;
+  background: #f0fdfa;
+  color: #0f766e;
+}
+
+.myedu-month-choice.is-selected {
+  border-color: #0284c7;
+  background: linear-gradient(135deg, #0284c7, #0f766e);
+  color: #ffffff;
+  box-shadow: 0 12px 24px -18px rgba(14, 116, 144, 0.9);
+}
+
 .myedu-date-day {
   display: inline-flex;
   aspect-ratio: 1;
@@ -2744,6 +2795,44 @@ header.sticky.top-0 {
   background: linear-gradient(135deg, #0284c7, #0f766e);
   color: #ffffff;
   box-shadow: 0 12px 24px -18px rgba(14, 116, 144, 0.9);
+}
+
+.myedu-time-field {
+  margin-top: 0.85rem;
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 1rem;
+  background: #ffffff;
+  padding: 0.65rem;
+  box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.9);
+}
+
+.myedu-time-field span {
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.myedu-time-field input {
+  min-height: 2.45rem;
+  width: 100%;
+  border: 1px solid #dbeafe;
+  border-radius: 0.9rem;
+  background: #f8fafc;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding: 0 0.85rem;
+  outline: none;
+}
+
+.myedu-time-field input:focus {
+  border-color: rgba(14, 165, 233, 0.55);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
 }
 
 .myedu-date-actions {

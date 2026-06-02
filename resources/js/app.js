@@ -252,6 +252,7 @@ function initMyEduDatePickers() {
 
     const pad = (value) => String(value).padStart(2, '0');
     const toIsoDate = (date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    const toIsoMonth = (date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}`;
     const parseIsoDate = (value) => {
         if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) {
             return null;
@@ -262,7 +263,37 @@ function initMyEduDatePickers() {
 
         return Number.isNaN(date.getTime()) ? null : date;
     };
-    const formatDisplay = (value) => {
+    const parseIsoMonth = (value) => {
+        if (!/^\d{4}-\d{2}$/.test(value || '')) {
+            return null;
+        }
+
+        const [year, month] = value.split('-').map(Number);
+        const date = new Date(year, month - 1, 1);
+
+        return Number.isNaN(date.getTime()) ? null : date;
+    };
+    const parseIsoDateTime = (value) => {
+        if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(value || '')) {
+            return null;
+        }
+
+        const [datePart, timePart] = value.split('T');
+        const date = parseIsoDate(datePart);
+
+        return date ? { date, time: (timePart || '08:00').slice(0, 5) } : null;
+    };
+    const formatDisplay = (value, mode = 'date') => {
+        if (mode === 'month') {
+            const date = parseIsoMonth(value);
+            return date ? `${monthNames[date.getMonth()]} ${date.getFullYear()}` : '';
+        }
+
+        if (mode === 'datetime-local') {
+            const parsed = parseIsoDateTime(value);
+            return parsed ? `${pad(parsed.date.getDate())}/${pad(parsed.date.getMonth() + 1)}/${parsed.date.getFullYear()} ${parsed.time}` : '';
+        }
+
         const date = parseIsoDate(value);
         return date ? `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}` : '';
     };
@@ -282,6 +313,7 @@ function initMyEduDatePickers() {
 
         input.dataset.myeduDateReady = 'true';
 
+        const mode = input.type;
         const hidden = document.createElement('input');
         hidden.type = 'hidden';
         hidden.name = input.name;
@@ -295,9 +327,9 @@ function initMyEduDatePickers() {
         input.readOnly = true;
         input.autocomplete = 'off';
         input.inputMode = 'none';
-        input.value = formatDisplay(hidden.value);
+        input.value = formatDisplay(hidden.value, mode);
         input.classList.add('myedu-date-display');
-        input.placeholder = input.placeholder || 'Choisir une date';
+        input.placeholder = input.placeholder || (mode === 'month' ? 'Choisir un mois' : (mode === 'datetime-local' ? 'Choisir date et heure' : 'Choisir une date'));
 
         const wrapper = document.createElement('div');
         wrapper.className = 'myedu-date-picker';
@@ -316,7 +348,9 @@ function initMyEduDatePickers() {
         panel.className = 'myedu-date-panel';
         wrapper.appendChild(panel);
 
-        let visibleDate = parseIsoDate(hidden.value) || new Date();
+        let visibleDate = mode === 'month'
+            ? (parseIsoMonth(hidden.value) || new Date())
+            : ((mode === 'datetime-local' ? parseIsoDateTime(hidden.value)?.date : parseIsoDate(hidden.value)) || new Date());
         const positionPanel = () => {
             if (!wrapper.classList.contains('is-open')) {
                 return;
@@ -324,38 +358,107 @@ function initMyEduDatePickers() {
 
             const rect = input.getBoundingClientRect();
             const panelWidth = Math.min(352, window.innerWidth - 32);
+            const panelHeight = Math.min(panel.scrollHeight || 390, window.innerHeight - 32);
             const spaceBelow = window.innerHeight - rect.bottom;
-            const openUp = spaceBelow < 390 && rect.top > spaceBelow;
+            const spaceAbove = rect.top;
             const left = Math.min(
                 Math.max(16, rect.left),
                 Math.max(16, window.innerWidth - panelWidth - 16)
             );
-            const top = openUp
-                ? Math.max(16, rect.top - 392)
-                : Math.min(window.innerHeight - 16, rect.bottom + 10);
+            let top = rect.bottom + 10;
+            let openUp = false;
+
+            if (top + panelHeight > window.innerHeight - 16) {
+                if (spaceAbove >= Math.min(panelHeight, 260) || spaceAbove > spaceBelow) {
+                    top = Math.max(16, rect.top - panelHeight - 10);
+                    openUp = true;
+                } else {
+                    top = Math.max(16, window.innerHeight - panelHeight - 16);
+                }
+            }
 
             panel.style.width = `${panelWidth}px`;
+            panel.style.maxHeight = `${Math.max(260, window.innerHeight - 32)}px`;
             panel.style.left = `${left}px`;
             panel.style.top = `${top}px`;
             panel.classList.toggle('opens-up', openUp);
         };
 
-        const setValue = (date) => {
-            hidden.value = toIsoDate(date);
-            input.value = formatDisplay(hidden.value);
-            wrapper.classList.remove('is-open');
+        const selectedTime = () => {
+            const parsed = parseIsoDateTime(hidden.value);
+            const timeInput = panel.querySelector('[data-time-input]');
+
+            return timeInput?.value || parsed?.time || '08:00';
+        };
+
+        const syncDisplay = () => {
+            input.value = formatDisplay(hidden.value, mode);
             input.dispatchEvent(new Event('change', { bubbles: true }));
             hidden.dispatchEvent(new Event('change', { bubbles: true }));
+        };
+
+        const setValue = (date, close = true) => {
+            if (mode === 'month') {
+                hidden.value = toIsoMonth(date);
+            } else if (mode === 'datetime-local') {
+                hidden.value = `${toIsoDate(date)}T${selectedTime()}`;
+            } else {
+                hidden.value = toIsoDate(date);
+            }
+
+            syncDisplay();
+
+            if (close) {
+                wrapper.classList.remove('is-open');
+            }
         };
 
         const render = () => {
             const year = visibleDate.getFullYear();
             const month = visibleDate.getMonth();
-            const selected = parseIsoDate(hidden.value);
+            const selected = mode === 'month'
+                ? parseIsoMonth(hidden.value)
+                : (mode === 'datetime-local' ? parseIsoDateTime(hidden.value)?.date : parseIsoDate(hidden.value));
             const todayIso = toIsoDate(new Date());
             const firstDay = new Date(year, month, 1);
             const startOffset = (firstDay.getDay() + 6) % 7;
             const gridStart = new Date(year, month, 1 - startOffset);
+
+            if (mode === 'month') {
+                const selectedMonth = selected ? toIsoMonth(selected) : '';
+                const currentMonth = toIsoMonth(new Date());
+                const months = monthNames.map((name, index) => {
+                    const monthDate = new Date(year, index, 1);
+                    const iso = toIsoMonth(monthDate);
+
+                    return `
+                        <button type="button" class="myedu-month-choice${iso === selectedMonth ? ' is-selected' : ''}${iso === currentMonth ? ' is-today' : ''}" data-month="${iso}">
+                            ${name.slice(0, 3)}
+                        </button>
+                    `;
+                }).join('');
+
+                panel.innerHTML = `
+                    <div class="myedu-date-head">
+                        <button type="button" class="myedu-date-nav" data-year-move="-1" aria-label="Annee precedente">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"></path></svg>
+                        </button>
+                        <div>
+                            <p>Mois</p>
+                            <strong>${year}</strong>
+                        </div>
+                        <button type="button" class="myedu-date-nav" data-year-move="1" aria-label="Annee suivante">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"></path></svg>
+                        </button>
+                    </div>
+                    <div class="myedu-month-grid">${months}</div>
+                    <div class="myedu-date-actions">
+                        <button type="button" data-action="clear">Vider</button>
+                        <button type="button" data-action="today">Ce mois</button>
+                    </div>
+                `;
+                return;
+            }
 
             const days = Array.from({ length: 42 }, (_, index) => {
                 const day = new Date(gridStart);
@@ -389,15 +492,28 @@ function initMyEduDatePickers() {
                     ${dayNames.map((day) => `<span>${day}</span>`).join('')}
                 </div>
                 <div class="myedu-date-grid">${days}</div>
+                ${mode === 'datetime-local' ? `
+                    <label class="myedu-time-field">
+                        <span>Heure</span>
+                        <input type="time" data-time-input value="${parseIsoDateTime(hidden.value)?.time || '08:00'}">
+                    </label>
+                ` : ''}
                 <div class="myedu-date-actions">
                     <button type="button" data-action="clear">Vider</button>
                     <button type="button" data-action="today">Aujourd'hui</button>
+                    ${mode === 'datetime-local' ? '<button type="button" data-action="done">Valider</button>' : ''}
                 </div>
             `;
         };
 
         const open = () => {
             closeAll(wrapper);
+            const currentValue = mode === 'month'
+                ? parseIsoMonth(hidden.value)
+                : (mode === 'datetime-local' ? parseIsoDateTime(hidden.value)?.date : parseIsoDate(hidden.value));
+            if (currentValue) {
+                visibleDate = new Date(currentValue.getFullYear(), currentValue.getMonth(), 1);
+            }
             wrapper.classList.add('is-open');
             render();
             positionPanel();
@@ -411,6 +527,24 @@ function initMyEduDatePickers() {
             if (moveButton) {
                 visibleDate = new Date(visibleDate.getFullYear(), visibleDate.getMonth() + Number(moveButton.dataset.move), 1);
                 render();
+                positionPanel();
+                return;
+            }
+
+            const yearMoveButton = event.target.closest('[data-year-move]');
+            if (yearMoveButton) {
+                visibleDate = new Date(visibleDate.getFullYear() + Number(yearMoveButton.dataset.yearMove), visibleDate.getMonth(), 1);
+                render();
+                positionPanel();
+                return;
+            }
+
+            const monthButton = event.target.closest('[data-month]');
+            if (monthButton) {
+                const monthDate = parseIsoMonth(monthButton.dataset.month);
+                if (monthDate) {
+                    setValue(monthDate);
+                }
                 return;
             }
 
@@ -418,8 +552,16 @@ function initMyEduDatePickers() {
             if (dayButton) {
                 const date = parseIsoDate(dayButton.dataset.date);
                 if (date) {
-                    setValue(date);
+                    setValue(date, mode !== 'datetime-local');
                 }
+                return;
+            }
+
+            const timeInput = event.target.closest('[data-time-input]');
+            if (timeInput && hidden.value) {
+                const parsed = parseIsoDateTime(hidden.value);
+                const date = parsed?.date || parseIsoDate(hidden.value.slice(0, 10)) || new Date();
+                setValue(date, false);
                 return;
             }
 
@@ -428,10 +570,24 @@ function initMyEduDatePickers() {
                 hidden.value = '';
                 input.value = '';
                 wrapper.classList.remove('is-open');
+                syncDisplay();
             }
             if (action === 'today') {
                 setValue(new Date());
             }
+            if (action === 'done') {
+                wrapper.classList.remove('is-open');
+            }
+        });
+
+        panel.addEventListener('change', (event) => {
+            const timeInput = event.target.closest('[data-time-input]');
+            if (!timeInput || mode !== 'datetime-local') {
+                return;
+            }
+
+            const parsed = parseIsoDateTime(hidden.value);
+            setValue(parsed?.date || new Date(), false);
         });
 
         input.form?.addEventListener('submit', (event) => {
@@ -449,7 +605,7 @@ function initMyEduDatePickers() {
         window.addEventListener('scroll', positionPanel, { passive: true });
     };
 
-    document.querySelectorAll('input[type="date"]:not([data-native-date])').forEach(buildPicker);
+    document.querySelectorAll('input[type="date"]:not([data-native-date]), input[type="month"]:not([data-native-date]), input[type="datetime-local"]:not([data-native-date])').forEach(buildPicker);
 
     document.addEventListener('click', (event) => {
         if (!event.target.closest('.myedu-date-picker')) {
