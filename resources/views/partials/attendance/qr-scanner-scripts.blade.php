@@ -230,7 +230,7 @@
                         if (lower.includes('permission') || lower.includes('notallowed') || lower.includes('denied')) {
                             return this.isLikelyWebView()
                                 ? 'La caméra a ete refusée dans l application. Autorisez la caméra puis relancez le scan.'
-                                : 'La caméra a ete refusée. Autorisez l'accés puis relancez le scan.';
+                                : "La caméra a ete refusée. Autorisez l'accés puis relancez le scan.";
                         }
 
                         if (lower.includes('notfound') || lower.includes('overconstrained')) {

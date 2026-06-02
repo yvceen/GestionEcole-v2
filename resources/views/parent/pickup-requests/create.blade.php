@@ -29,9 +29,9 @@
                     <div class="mb-2 flex flex-wrap gap-2">
                         @foreach([
                             'Je suis en route',
-                            'Je serai a l'École dans 5 minutes',
+                            "Je serai a l'École dans 5 minutes",
                             'Preparez mon enfant, s il vous plait',
-                            'Je suis arrive devant l'École',
+                            "Je suis arrive devant l'École",
                             'Je passerai plus tard',
                         ] as $suggestion)
                             <button

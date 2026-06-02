@@ -809,8 +809,8 @@
                     kidsInfo.classList.add('hidden');
                     kidsCount.textContent = '0';
                     hideDebug();
-                    setStudentsPlaceholder('Choisissez d'abord un parent.');
-                    monthsBox.innerHTML = '<div class="text-sm text-slate-500 sm:col-span-2 xl:col-span-3">Sélectionnez d'abord un parent et un Élève pour voir les mois non payes.</div>';
+                    setStudentsPlaceholder("Choisissez d'abord un parent.");
+                    monthsBox.innerHTML = `<div class="text-sm text-slate-500 sm:col-span-2 xl:col-span-3">Sélectionnez d'abord un parent et un Élève pour voir les mois non payes.</div>`;
                     updateSummary();
                     return;
                 }

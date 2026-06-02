@@ -55,7 +55,7 @@
                                     {{ $document->is_active ? 'Actif' : 'Masque' }}
                                 </x-ui.badge>
                                 <x-ui.badge variant="warning">
-                                    {{ $document->audience_scope === 'school' ? 'Toute l'École' : ($document->audience_scope === 'classroom' ? ($document->classroom?->name ?? 'Classe') : ('Role: '.$document->role)) }}
+                                    {{ $document->audience_scope === 'school' ? "Toute l'École" : ($document->audience_scope === 'classroom' ? ($document->classroom?->name ?? 'Classe') : ('Role: '.$document->role)) }}
                                 </x-ui.badge>
                             </div>
 

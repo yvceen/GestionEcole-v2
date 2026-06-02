@@ -136,7 +136,7 @@
                             <p class="mt-1 text-xs text-slate-500">
                                 {{ $announcement->date?->format('d/m/Y') ?? '-' }}
                                 <span class="mx-2 text-slate-300">|</span>
-                                {{ $announcement->scope === 'classroom' ? 'Classe ciblée' : 'Toute l'École' }}
+                                {{ $announcement->scope === 'classroom' ? 'Classe ciblée' : "Toute l'École" }}
                             </p>
                         </div>
                     @empty

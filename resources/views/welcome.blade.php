@@ -28,7 +28,7 @@
 <body class="fut-landing-body antialiased">
 @php
     $values = [
-        ['title' => 'Communication', 'copy' => 'Des Échanges plus clairs entre l'École, les familles et les Équipes éducatives.', 'tone' => 'cyan'],
+        ['title' => 'Communication', 'copy' => "Des Échanges plus clairs entre l'École, les familles et les Équipes éducatives.", 'tone' => 'cyan'],
         ['title' => 'Organisation', 'copy' => 'Un quotidien plus fluide, avec les informations importantes toujours au bon endroit.', 'tone' => 'indigo'],
         ['title' => 'Suivi', 'copy' => 'Une vision rassurante du parcours des Élèves, des activités et des temps forts.', 'tone' => 'emerald'],
         ['title' => 'Innovation', 'copy' => 'Une expérience numérique moderne, élégante et adaptée aux Établissements ambitieux.', 'tone' => 'amber'],
@@ -59,7 +59,7 @@
 
     $testimonials = [
         ['quote' => 'My Edu donne une image moderne a notre Établissement et simplifie la relation avec les familles.', 'name' => 'Direction pédagogique'],
-        ['quote' => 'Les parents comprennent mieux la vie de l'École, les informations arrivent avec plus de clarté.', 'name' => 'Responsable vie scolaire'],
+        ['quote' => "Les parents comprennent mieux la vie de l'École, les informations arrivent avec plus de clarté.", 'name' => 'Responsable vie scolaire'],
         ['quote' => 'L expérience est fluide, rassurante et beaucoup plus proche des usages actuels des familles.', 'name' => 'Equipe administrative'],
     ];
 @endphp

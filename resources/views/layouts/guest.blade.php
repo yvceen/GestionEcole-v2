@@ -35,7 +35,7 @@
                     <div class="leading-tight">
                         <div class="truncate text-sm font-semibold text-slate-950">{{ $schoolContext?->name ?? 'My Edu' }}</div>
                         <div class="text-xs text-slate-500">
-                            {{ $schoolContext ? 'Espace de connexion de l'Établissement' : 'Expérience éducative sécurisée' }}
+                            {{ $schoolContext ? "Espace de connexion de l'Établissement" : 'Expérience éducative sécurisée' }}
                         </div>
                     </div>
                 </a>

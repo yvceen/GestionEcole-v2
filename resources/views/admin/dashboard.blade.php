@@ -53,7 +53,7 @@
             [
                 'title' => 'Absents',
                 'value' => (int) ($attendanceSummary['today_absent'] ?? 0),
-                'meta' => 'Absences remontees aujourd hui dans l'École active.',
+                'meta' => "Absences remontees aujourd hui dans l'École active.",
                 'badge' => 'Suivi necessaire',
                 'valueClass' => 'text-rose-700',
                 'ring' => 'from-rose-500/15 via-rose-500/5 to-white',

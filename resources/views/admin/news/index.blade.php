@@ -82,7 +82,7 @@
                     <div class="flex flex-wrap items-center gap-2">
                         <x-ui.badge :variant="$variant">{{ ucfirst($item->status ?? 'draft') }}</x-ui.badge>
                         <x-ui.badge :variant="($item->scope ?? 'school') === 'school' ? 'info' : 'warning'">
-                            {{ ($item->scope ?? 'school') === 'school' ? 'Toute l'École' : ($item->classroom?->name ?? 'Classe') }}
+                            {{ ($item->scope ?? 'school') === 'school' ? "Toute l'École" : ($item->classroom?->name ?? 'Classe') }}
                         </x-ui.badge>
                         @if($item->is_pinned)
                             <x-ui.badge variant="info">Epinglee</x-ui.badge>

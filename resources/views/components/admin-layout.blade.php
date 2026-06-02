@@ -40,7 +40,7 @@
     $currentAcademicYear = app()->bound('current_school_id') && app('current_school_id')
         ? app(AcademicYearService::class)->getCurrentYearForSchool((int) app('current_school_id'))
         : null;
-    $pageSubtitle = $subtitle ?: 'Pilotez les opérations, les parcours administratifs et les interfaces de l'Établissement dans un shell unifie.';
+    $pageSubtitle = $subtitle ?: "Pilotez les opérations, les parcours administratifs et les interfaces de l'Établissement dans un shell unifie.";
 
     $activeNav = array_values(array_filter(
         $nav,
