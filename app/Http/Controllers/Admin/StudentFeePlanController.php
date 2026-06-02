@@ -3,29 +3,44 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Route as TransportRoute;
 use App\Models\Student;
 use App\Models\StudentFeePlan;
 use App\Models\TransportAssignment;
-use App\Models\Route as TransportRoute;
 use App\Models\Vehicle;
+use App\Services\AcademicYearService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class StudentFeePlanController extends Controller
 {
+    public function __construct(private readonly AcademicYearService $academicYears)
+    {
+    }
+
     public function edit(Student $student)
     {
-        $student->load(['feePlan', 'parentUser', 'classroom.level']);
+        $schoolId = (int) app('current_school_id');
+        $academicYear = $this->academicYears->requireCurrentYearForSchool($schoolId);
+        $academicYearId = (int) $academicYear->id;
 
-        // إذا ماكانش feePlan (احتياط)
+        $student->load([
+            'parentUser',
+            'classroom.level',
+            'feePlan' => fn ($query) => $query->where('academic_year_id', $academicYearId),
+        ]);
+
         if (!$student->feePlan) {
             $student->feePlan = StudentFeePlan::create([
+                'school_id' => $schoolId,
+                'academic_year_id' => $academicYearId,
                 'student_id' => $student->id,
-                'starts_month' => 9,
+                'starts_month' => (int) ($academicYear->starts_at?->month ?? 9),
             ]);
-            $student->load('feePlan');
+            $student->load([
+                'feePlan' => fn ($query) => $query->where('academic_year_id', $academicYearId),
+            ]);
         }
-
-        $schoolId = (int) app('current_school_id');
 
         $routes = TransportRoute::where('school_id', $schoolId)
             ->where('is_active', true)
@@ -40,6 +55,12 @@ class StudentFeePlanController extends Controller
 
         $transportAssignment = TransportAssignment::where('school_id', $schoolId)
             ->where('student_id', $student->id)
+            ->when(Schema::hasColumn('transport_assignments', 'academic_year_id'), function ($query) use ($academicYearId) {
+                $query->where(function ($inner) use ($academicYearId) {
+                    $inner->where('academic_year_id', $academicYearId)
+                        ->orWhereNull('academic_year_id');
+                });
+            })
             ->where('is_active', true)
             ->latest('id')
             ->first();
@@ -49,50 +70,65 @@ class StudentFeePlanController extends Controller
 
     public function update(Request $request, Student $student)
     {
-        $student->load('feePlan');
+        $schoolId = (int) app('current_school_id');
+        $academicYear = $this->academicYears->requireCurrentYearForSchool($schoolId);
+        $academicYearId = (int) $academicYear->id;
 
         $data = $request->validate([
-            'tuition_monthly' => ['required','numeric','min:0'],
-            'transport_monthly' => ['nullable','numeric','min:0'],
-            'canteen_monthly' => ['nullable','numeric','min:0'],
-            'insurance_yearly' => ['nullable','numeric','min:0'],
-            'insurance_paid' => ['nullable','boolean'],
-            'starts_month' => ['required','integer','min:1','max:12'],
-            'notes' => ['nullable','string','max:2000'],
-            'transport_enabled' => ['nullable','boolean'],
-            'transport_route_id' => ['nullable','integer','exists:routes,id'],
-            'transport_vehicle_id' => ['nullable','integer','exists:vehicles,id'],
-            'transport_period' => ['nullable','in:morning,evening,both'],
-            'transport_pickup_point' => ['nullable','string','max:255'],
+            'tuition_monthly' => ['required', 'numeric', 'min:0'],
+            'transport_monthly' => ['nullable', 'numeric', 'min:0'],
+            'canteen_monthly' => ['nullable', 'numeric', 'min:0'],
+            'insurance_yearly' => ['nullable', 'numeric', 'min:0'],
+            'insurance_paid' => ['nullable', 'boolean'],
+            'starts_month' => ['required', 'integer', 'min:1', 'max:12'],
+            'notes' => ['nullable', 'string', 'max:2000'],
+            'transport_enabled' => ['nullable', 'boolean'],
+            'transport_route_id' => ['nullable', 'integer', 'exists:routes,id'],
+            'transport_vehicle_id' => ['nullable', 'integer', 'exists:vehicles,id'],
+            'transport_period' => ['nullable', 'in:morning,evening,both'],
+            'transport_pickup_point' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $student->feePlan->update([
-            'tuition_monthly' => $data['tuition_monthly'],
-            'transport_monthly' => $data['transport_monthly'] ?? 0,
-            'canteen_monthly' => $data['canteen_monthly'] ?? 0,
-            'insurance_yearly' => $data['insurance_yearly'] ?? 0,
-            'insurance_paid' => (bool)($data['insurance_paid'] ?? false),
-            'starts_month' => $data['starts_month'],
-            'notes' => $data['notes'] ?? null,
-        ]);
+        StudentFeePlan::query()->updateOrCreate(
+            [
+                'student_id' => $student->id,
+                'academic_year_id' => $academicYearId,
+            ],
+            [
+                'school_id' => $schoolId,
+                'academic_year_id' => $academicYearId,
+                'tuition_monthly' => $data['tuition_monthly'],
+                'transport_monthly' => $data['transport_monthly'] ?? 0,
+                'canteen_monthly' => $data['canteen_monthly'] ?? 0,
+                'insurance_yearly' => $data['insurance_yearly'] ?? 0,
+                'insurance_paid' => (bool) ($data['insurance_paid'] ?? false),
+                'starts_month' => $data['starts_month'],
+                'notes' => $data['notes'] ?? null,
+            ]
+        );
 
-        $schoolId = (int) app('current_school_id');
-        $transportEnabled = (bool)($data['transport_enabled'] ?? false);
-        $routeId = (int)($data['transport_route_id'] ?? 0);
-        $vehicleId = (int)($data['transport_vehicle_id'] ?? 0);
+        $transportEnabled = (bool) ($data['transport_enabled'] ?? false);
+        $routeId = (int) ($data['transport_route_id'] ?? 0);
+        $vehicleId = (int) ($data['transport_vehicle_id'] ?? 0);
 
         $route = $routeId ? TransportRoute::find($routeId) : null;
         $vehicle = $vehicleId ? Vehicle::find($vehicleId) : null;
 
-        if ($route && (int)$route->school_id !== $schoolId) {
+        if ($route && (int) $route->school_id !== $schoolId) {
             abort(403, 'Invalid route.');
         }
-        if ($vehicle && (int)$vehicle->school_id !== $schoolId) {
+        if ($vehicle && (int) $vehicle->school_id !== $schoolId) {
             abort(403, 'Invalid vehicle.');
         }
 
         $assignment = TransportAssignment::where('school_id', $schoolId)
             ->where('student_id', $student->id)
+            ->when(Schema::hasColumn('transport_assignments', 'academic_year_id'), function ($query) use ($academicYearId) {
+                $query->where(function ($inner) use ($academicYearId) {
+                    $inner->where('academic_year_id', $academicYearId)
+                        ->orWhereNull('academic_year_id');
+                });
+            })
             ->latest('id')
             ->first();
 
@@ -103,6 +139,7 @@ class StudentFeePlanController extends Controller
 
             $payload = [
                 'school_id' => $schoolId,
+                'academic_year_id' => $academicYearId,
                 'student_id' => $student->id,
                 'route_id' => $routeId,
                 'vehicle_id' => $vehicleId ?: ($route?->vehicle_id ?? null),
@@ -128,6 +165,6 @@ class StudentFeePlanController extends Controller
 
         return redirect()
             ->route('admin.students.index')
-            ->with('success', 'Fees updated');
+            ->with('success', 'Frais mis a jour.');
     }
 }

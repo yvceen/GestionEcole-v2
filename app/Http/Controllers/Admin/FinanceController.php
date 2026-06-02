@@ -39,11 +39,11 @@ class FinanceController extends Controller
     {
         $schoolId = $this->schoolId();
 
-        $month = $request->get('month') ?: now()->format('Y-m');
-        $monthDate = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
         $requestedAcademicYearId = $request->integer('academic_year_id') ?: null;
         $academicYear = $this->academicYears->resolveYearForSchool($schoolId, $requestedAcademicYearId);
         $academicYearId = (int) $academicYear->id;
+        $month = $request->get('month') ?: $this->defaultMonthForAcademicYear($academicYear);
+        $monthDate = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
         $q = trim((string) $request->get('q', ''));
         $levelId = max(0, (int) $request->integer('level_id'));
         $parentId = max(0, (int) $request->integer('parent_id'));
@@ -105,7 +105,7 @@ class FinanceController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $students = $this->financeStudentsQuery($schoolId, $parentId);
+        $students = $this->financeStudentsQuery($schoolId, $parentId, $academicYearId);
         $students = $this->applyFinanceStudentFilters($students, $schoolId, $q, $parentId, $classroomId, $levelId)->get();
         $pricedStudents = $this->pricedStudents($students);
 
@@ -162,12 +162,7 @@ class FinanceController extends Controller
             $pricing = $entry['pricing'];
             $monthlyTotal = (float) $pricing['monthly_total'];
             $ymNow = $monthDate->format('Y-m');
-            $startMonth = (int) ($pricing['details']['starts_month'] ?? 9);
-
-            $schoolYearStart = Carbon::create($monthDate->year, $startMonth, 1);
-            if ($monthDate->month < $startMonth) {
-                $schoolYearStart = Carbon::create($monthDate->year - 1, $startMonth, 1);
-            }
+            $schoolYearStart = $this->billingStartFor($academicYear, (int) ($pricing['details']['starts_month'] ?? 9));
 
             $missing = [];
             $cursor = $schoolYearStart->copy();
@@ -215,11 +210,7 @@ class FinanceController extends Controller
                 /** @var \App\Models\Student $student */
                 $student = $entry['student'];
                 $pricing = $entry['pricing'];
-                $startMonth = (int) ($pricing['details']['starts_month'] ?? 9);
-                $schoolYearStart = Carbon::create($cursor->year, $startMonth, 1);
-                if ($cursor->month < $startMonth) {
-                    $schoolYearStart = Carbon::create($cursor->year - 1, $startMonth, 1);
-                }
+                $schoolYearStart = $this->billingStartFor($academicYear, (int) ($pricing['details']['starts_month'] ?? 9));
 
                 if ($cursor->lt($schoolYearStart)) {
                     continue;
@@ -307,7 +298,19 @@ class FinanceController extends Controller
         }
 
         $paidAt = !empty($data['paid_at']) ? Carbon::parse($data['paid_at']) : now();
-        $academicYearId = $this->academicYears->requireCurrentYearForSchool($schoolId)->id;
+        $academicYear = $this->academicYears->requireCurrentYearForSchool($schoolId);
+        $academicYearId = (int) $academicYear->id;
+        $allowedMonths = $this->allowedBillingMonthsFor($academicYear);
+        $invalidMonths = collect($data['months'])
+            ->reject(fn ($month) => in_array((string) $month, $allowedMonths, true))
+            ->values()
+            ->all();
+
+        if ($invalidMonths !== []) {
+            return back()
+                ->withErrors(['months' => 'Mois hors année scolaire ou vacances non facturables : ' . implode(', ', $invalidMonths)])
+                ->withInput();
+        }
 
         try {
             $result = DB::transaction(function () use ($data, $paidAt, $schoolId, $parent, $academicYearId) {
@@ -348,10 +351,14 @@ class FinanceController extends Controller
                     $student = $this->linkedStudentsQuery($parent, $schoolId)
                         ->with([
                             'classroom.fee',
-                            'feePlan',
-                            'parentFee' => function ($query) use ($parent, $schoolId) {
+                            'feePlan' => fn ($query) => $query->where('academic_year_id', $academicYearId),
+                            'parentFee' => function ($query) use ($parent, $schoolId, $academicYearId) {
                                 $query->where('parent_user_id', $parent->id)
-                                    ->where('school_id', $schoolId);
+                                    ->where('school_id', $schoolId)
+                                    ->where(function ($inner) use ($academicYearId) {
+                                        $inner->where('academic_year_id', $academicYearId)
+                                            ->orWhereNull('academic_year_id');
+                                    });
                             },
                         ])
                         ->findOrFail($studentId);
@@ -498,10 +505,14 @@ class FinanceController extends Controller
             ->with([
                 'classroom:id,name',
                 'classroom.fee',
-                'feePlan',
-                'parentFee' => function ($query) use ($parent, $schoolId) {
+                'feePlan' => fn ($query) => $query->where('academic_year_id', $academicYearId),
+                'parentFee' => function ($query) use ($parent, $schoolId, $academicYearId) {
                     $query->where('parent_user_id', $parent->id)
-                        ->where('school_id', $schoolId);
+                        ->where('school_id', $schoolId)
+                        ->where(function ($inner) use ($academicYearId) {
+                            $inner->where('academic_year_id', $academicYearId)
+                                ->orWhereNull('academic_year_id');
+                        });
                 },
             ])
             ->orderBy('full_name')
@@ -641,19 +652,33 @@ class FinanceController extends Controller
                 ]);
             }
 
-            $monthInput = (string) request('month', now()->format('Y-m'));
-            $month = preg_match('/^\d{4}-\d{2}$/', $monthInput) ? $monthInput : now()->format('Y-m');
+            $academicYear = $this->academicYears->requireCurrentYearForSchool($schoolId);
+            $academicYearId = (int) $academicYear->id;
+            $monthInput = (string) request('month', $this->defaultMonthForAcademicYear($academicYear));
+            $month = preg_match('/^\d{4}-\d{2}$/', $monthInput) ? $monthInput : $this->defaultMonthForAcademicYear($academicYear);
+            if (!in_array($month, $this->allowedBillingMonthsFor($academicYear), true)) {
+                return response()->json([
+                    'unpaid_month' => [],
+                    'unpaid_insurance' => [],
+                ]);
+            }
             $periodMonth = Carbon::createFromFormat('Y-m', $month)->startOfMonth()->toDateString();
 
             $paidStudentIds = Payment::query()
                 ->where('school_id', $schoolId)
+                ->when(Schema::hasColumn('payments', 'academic_year_id'), function ($query) use ($academicYearId) {
+                    $query->where(function ($inner) use ($academicYearId) {
+                        $inner->where('academic_year_id', $academicYearId)
+                            ->orWhereNull('academic_year_id');
+                    });
+                })
                 ->whereDate('period_month', $periodMonth)
                 ->pluck('student_id')
                 ->map(fn ($id) => (int) $id)
                 ->all();
 
             $pricedStudents = $this->pricedStudents(
-                $this->financeStudentsQuery($schoolId)->get()
+                $this->financeStudentsQuery($schoolId, 0, $academicYearId)->get()
             );
 
             $unpaidMonth = $pricedStudents
@@ -812,7 +837,7 @@ class FinanceController extends Controller
             });
     }
 
-    private function financeStudentsQuery(int $schoolId, int $parentId = 0): Builder
+    private function financeStudentsQuery(int $schoolId, int $parentId = 0, ?int $academicYearId = null): Builder
     {
         return Student::query()
             ->where('school_id', $schoolId)
@@ -820,10 +845,21 @@ class FinanceController extends Controller
                 'parentUser:id,name,email,phone',
                 'classroom:id,name,level_id',
                 'classroom.fee',
-                'feePlan',
-                'parentFee' => function ($query) use ($schoolId, $parentId) {
+                'feePlan' => function ($query) use ($academicYearId) {
+                    if ($academicYearId) {
+                        $query->where('academic_year_id', $academicYearId);
+                    }
+                },
+                'parentFee' => function ($query) use ($schoolId, $parentId, $academicYearId) {
                     if ($this->supportsParentStudentFeeSchoolColumn()) {
                         $query->where('school_id', $schoolId);
+                    }
+
+                    if ($academicYearId && Schema::hasColumn('parent_student_fees', 'academic_year_id')) {
+                        $query->where(function ($inner) use ($academicYearId) {
+                            $inner->where('academic_year_id', $academicYearId)
+                                ->orWhereNull('academic_year_id');
+                        });
                     }
 
                     if ($parentId > 0) {
@@ -831,8 +867,12 @@ class FinanceController extends Controller
                     }
                 },
             ])
-            ->where(function (Builder $pricingQuery) use ($schoolId, $parentId) {
-                $pricingQuery->whereHas('feePlan')
+            ->where(function (Builder $pricingQuery) use ($schoolId, $parentId, $academicYearId) {
+                $pricingQuery->whereHas('feePlan', function ($query) use ($academicYearId) {
+                    if ($academicYearId) {
+                        $query->where('academic_year_id', $academicYearId);
+                    }
+                })
                     ->orWhereHas('classroom.fee', function ($query) {
                         if ($this->supportsActiveClassroomFees()) {
                             $query->where('is_active', true);
@@ -840,9 +880,16 @@ class FinanceController extends Controller
                     });
 
                 if ($this->supportsParentStudentFees()) {
-                    $pricingQuery->orWhereHas('parentFee', function ($query) use ($schoolId, $parentId) {
+                    $pricingQuery->orWhereHas('parentFee', function ($query) use ($schoolId, $parentId, $academicYearId) {
                         if ($this->supportsParentStudentFeeSchoolColumn()) {
                             $query->where('school_id', $schoolId);
+                        }
+
+                        if ($academicYearId && Schema::hasColumn('parent_student_fees', 'academic_year_id')) {
+                            $query->where(function ($inner) use ($academicYearId) {
+                                $inner->where('academic_year_id', $academicYearId)
+                                    ->orWhereNull('academic_year_id');
+                            });
                         }
 
                         if ($parentId > 0) {
@@ -932,6 +979,54 @@ class FinanceController extends Controller
                 'starts_month' => $startsMonth,
             ],
         ];
+    }
+
+    private function defaultMonthForAcademicYear($academicYear): string
+    {
+        $start = $academicYear->starts_at ? Carbon::parse($academicYear->starts_at)->startOfMonth() : now()->startOfMonth();
+        $end = $academicYear->ends_at ? Carbon::parse($academicYear->ends_at)->startOfMonth() : $start->copy();
+        $today = now()->startOfMonth();
+
+        if ($today->lt($start)) {
+            return $start->format('Y-m');
+        }
+
+        if ($today->gt($end)) {
+            return $end->format('Y-m');
+        }
+
+        return $today->format('Y-m');
+    }
+
+    private function billingStartFor($academicYear, int $startsMonth): Carbon
+    {
+        $academicStart = $academicYear->starts_at ? Carbon::parse($academicYear->starts_at)->startOfMonth() : now()->startOfMonth();
+        $startsMonth = max(1, min(12, $startsMonth ?: (int) $academicStart->month));
+        $candidate = Carbon::create((int) $academicStart->year, $startsMonth, 1);
+
+        if ($candidate->lt($academicStart)) {
+            $candidate->addYear();
+        }
+
+        return $candidate;
+    }
+
+    private function allowedBillingMonthsFor($academicYear): array
+    {
+        $start = $academicYear->starts_at ? Carbon::parse($academicYear->starts_at)->startOfMonth() : now()->startOfMonth();
+        $end = $academicYear->ends_at ? Carbon::parse($academicYear->ends_at)->startOfMonth() : $start->copy();
+        $months = [];
+        $cursor = $start->copy();
+
+        while ($cursor->lte($end)) {
+            if (!in_array((int) $cursor->month, [7, 8], true)) {
+                $months[] = $cursor->format('Y-m');
+            }
+
+            $cursor->addMonth();
+        }
+
+        return $months;
     }
 
     private function pricingSourceLabel(string $source): string

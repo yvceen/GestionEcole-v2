@@ -12,6 +12,10 @@ class AttendanceAutoAbsentService
 {
     public const CUT_OFF_TIME = '09:00:00';
 
+    public function __construct(private readonly AcademicYearService $academicYears)
+    {
+    }
+
     public function markDueAbsences(?int $schoolId = null, ?Carbon $now = null, bool $force = false): int
     {
         $now ??= now();
@@ -23,7 +27,7 @@ class AttendanceAutoAbsentService
         $created = 0;
 
         foreach ($schools as $school) {
-            $created += $this->markDueAbsencesForSchool((int) $school->id, $now);
+            $created += $this->markDueAbsencesForSchool((int) $school->id, $now, $force);
         }
 
         return $created;
@@ -91,6 +95,15 @@ class AttendanceAutoAbsentService
         }
 
         if ($now->isWeekend()) {
+            return false;
+        }
+
+        $academicYear = $this->academicYears->getCurrentYearForSchool($schoolId);
+        if ($academicYear?->starts_at && $now->copy()->startOfDay()->lt($academicYear->starts_at->copy()->startOfDay())) {
+            return false;
+        }
+
+        if ($academicYear?->ends_at && $now->copy()->startOfDay()->gt($academicYear->ends_at->copy()->startOfDay())) {
             return false;
         }
 

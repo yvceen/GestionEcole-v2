@@ -5,12 +5,18 @@ namespace App\Services;
 use App\Models\Payment;
 use App\Models\Student;
 use App\Models\StudentFeePlan;
+use App\Models\AcademicYear;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
+use Throwable;
 
 class FinanceArrearsService
 {
+    public function __construct(private readonly AcademicYearService $academicYears)
+    {
+    }
+
     public function forChildren(Collection $children, int $schoolId, ?Carbon $today = null, ?int $academicYearId = null): array
     {
         $today ??= now();
@@ -24,6 +30,9 @@ class FinanceArrearsService
                 'total_overdue' => 0.0,
             ];
         }
+
+        $academicYear = $this->resolveAcademicYear($schoolId, $academicYearId);
+        $academicYearId = $academicYear?->id ?? $academicYearId;
 
         $children = $children->loadMissing('feePlan');
         $childIds = $children->pluck('id')->all();
@@ -50,14 +59,14 @@ class FinanceArrearsService
 
         $feePlans = $this->resolveFeePlans($childIds, $schoolId, $academicYearId);
 
-        $byChild = $children->mapWithKeys(function (Student $child) use ($paidMonths, $today, $feePlans) {
+        $byChild = $children->mapWithKeys(function (Student $child) use ($paidMonths, $today, $feePlans, $academicYear) {
             $feePlan = $feePlans->get($child->id) ?: $child->feePlan;
             $monthlyDue = $feePlan
                 ? (float) $feePlan->tuition_monthly + (float) $feePlan->transport_monthly + (float) $feePlan->canteen_monthly
                 : 0.0;
 
             $expectedMonths = $monthlyDue > 0
-                ? $this->expectedMonths((int) ($feePlan->starts_month ?? 9), $today)
+                ? $this->expectedMonths((int) ($feePlan->starts_month ?? 9), $today, $academicYear)
                 : collect();
 
             $paid = $paidMonths->get($child->id, collect());
@@ -112,15 +121,48 @@ class FinanceArrearsService
         return $query->get()->keyBy('student_id');
     }
 
-    private function expectedMonths(int $startsMonth, Carbon $today): Collection
+    private function resolveAcademicYear(int $schoolId, ?int $academicYearId): ?AcademicYear
+    {
+        if ($schoolId <= 0) {
+            return null;
+        }
+
+        try {
+            return $this->academicYears->resolveYearForSchool($schoolId, $academicYearId);
+        } catch (Throwable) {
+            return null;
+        }
+    }
+
+    private function expectedMonths(int $startsMonth, Carbon $today, ?AcademicYear $academicYear): Collection
     {
         $startsMonth = max(1, min(12, $startsMonth ?: 9));
-        $startYear = (int) $today->month >= $startsMonth ? (int) $today->year : (int) $today->year - 1;
-        $cursor = Carbon::create($startYear, $startsMonth, 1)->startOfMonth();
         $end = $today->copy()->startOfMonth();
+
+        if ($academicYear?->starts_at) {
+            $cursor = Carbon::parse($academicYear->starts_at)->startOfMonth();
+            if ($academicYear->ends_at) {
+                $yearEnd = Carbon::parse($academicYear->ends_at)->startOfMonth();
+                if ($end->gt($yearEnd)) {
+                    $end = $yearEnd;
+                }
+            }
+        } else {
+            $startYear = (int) $today->month >= $startsMonth ? (int) $today->year : (int) $today->year - 1;
+            $cursor = Carbon::create($startYear, $startsMonth, 1)->startOfMonth();
+        }
+
+        if ($today->copy()->startOfMonth()->lt($cursor)) {
+            return collect();
+        }
 
         $months = collect();
         while ($cursor->lte($end)) {
+            if (in_array((int) $cursor->month, [7, 8], true)) {
+                $cursor->addMonth();
+                continue;
+            }
+
             $months->push([
                 'key' => $cursor->format('Y-m'),
                 'label' => $cursor->translatedFormat('M Y'),

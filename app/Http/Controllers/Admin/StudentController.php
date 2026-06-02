@@ -189,7 +189,9 @@ class StudentController extends Controller
             $vehicleId,
             $route
         ): void {
-            $academicYearId = $this->academicYears->requireCurrentYearForSchool($schoolId)->id;
+            $academicYear = $this->academicYears->requireCurrentYearForSchool($schoolId);
+            $academicYearId = (int) $academicYear->id;
+            $billingStartMonth = (int) ($academicYear->starts_at?->month ?? 9);
             $resolvedParentId = $parentId;
 
             if ($createParent) {
@@ -236,7 +238,7 @@ class StudentController extends Controller
                     'transport_monthly' => $data['transport_monthly'] ?? 0,
                     'insurance_yearly' => $data['insurance_yearly'] ?? 0,
                     'insurance_paid' => (bool) ($data['insurance_paid'] ?? false),
-                    'starts_month' => 9,
+                    'starts_month' => $billingStartMonth,
                 ]
             );
 
@@ -273,7 +275,16 @@ class StudentController extends Controller
 
     public function edit(Student $student)
     {
-        $student->load(['parentUser', 'classroom.level', 'feePlan', 'transportAssignment.route', 'transportAssignment.vehicle.driver']);
+        $schoolId = (int) app('current_school_id');
+        $academicYearId = $this->academicYears->requireCurrentYearForSchool($schoolId)->id;
+
+        $student->load([
+            'parentUser',
+            'classroom.level',
+            'feePlan' => fn ($query) => $query->where('academic_year_id', $academicYearId),
+            'transportAssignment.route',
+            'transportAssignment.vehicle.driver',
+        ]);
 
         $classrooms = Classroom::with('level')
             ->where('is_active', true)
@@ -283,7 +294,6 @@ class StudentController extends Controller
 
         $parents = User::where('role', 'parent')->orderBy('name')->get();
 
-        $schoolId = (int) app('current_school_id');
         $routes = TransportRoute::where('school_id', $schoolId)
             ->where('is_active', true)
             ->orderBy('route_name')
@@ -351,7 +361,9 @@ class StudentController extends Controller
     {
         $data = $request->validated();
         $schoolId = (int) app('current_school_id');
-        $academicYearId = $this->academicYears->requireCurrentYearForSchool($schoolId)->id;
+        $academicYear = $this->academicYears->requireCurrentYearForSchool($schoolId);
+        $academicYearId = (int) $academicYear->id;
+        $billingStartMonth = (int) ($academicYear->starts_at?->month ?? 9);
 
         $student->update([
             'full_name' => $data['full_name'],
@@ -371,7 +383,7 @@ class StudentController extends Controller
                 'transport_monthly' => $data['transport_monthly'] ?? 0,
                 'insurance_yearly' => $data['insurance_yearly'] ?? 0,
                 'insurance_paid' => (bool) ($data['insurance_paid'] ?? false),
-                'starts_month' => 9,
+                'starts_month' => $billingStartMonth,
             ]
         );
 
