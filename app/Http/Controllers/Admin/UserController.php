@@ -22,7 +22,7 @@ use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
-    private function schoolIdOrFail(): int
+    protected function schoolIdOrFail(): int
     {
         $schoolId = app()->bound('current_school_id') ? app('current_school_id') : null;
         if (!$schoolId) {
@@ -32,7 +32,7 @@ class UserController extends Controller
         return (int) $schoolId;
     }
 
-    private function allowedRoles(): array
+    protected function allowedRoles(): array
     {
         return [
             User::ROLE_ADMIN,
@@ -45,7 +45,22 @@ class UserController extends Controller
         ];
     }
 
-    private function normalizedRole(mixed $role): ?string
+    protected function routePrefix(): string
+    {
+        return 'admin.users';
+    }
+
+    protected function layoutComponent(): string
+    {
+        return 'admin-layout';
+    }
+
+    protected function viewPrefix(): string
+    {
+        return 'admin.users';
+    }
+
+    protected function normalizedRole(mixed $role): ?string
     {
         $role = trim((string) $role);
 
@@ -61,6 +76,7 @@ class UserController extends Controller
 
         $users = User::query()
             ->where('school_id', $schoolId)
+            ->whereIn('role', $this->allowedRoles())
             ->when($role, fn ($query) => $query->where('role', $role))
             ->when($q !== '', function ($query) use ($q) {
                 $query->where(function ($nested) use ($q) {
@@ -73,7 +89,7 @@ class UserController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.users.index', compact('users', 'role', 'q'));
+        return view($this->viewPrefix() . '.index', array_merge(compact('users', 'role', 'q'), $this->viewData()));
     }
 
     public function suggest(Request $request)
@@ -89,6 +105,7 @@ class UserController extends Controller
 
         $items = User::query()
             ->where('school_id', $schoolId)
+            ->whereIn('role', $this->allowedRoles())
             ->when($role, fn ($query) => $query->where('role', $role))
             ->where(function ($nested) use ($q) {
                 $nested->where('name', 'like', "%{$q}%")
@@ -109,12 +126,12 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('admin.users.create', [
+        return view($this->viewPrefix() . '.create', [
             'roles' => $this->allowedRoles(),
             'roleLabels' => User::roleLabels(),
             'classrooms' => $this->studentClassrooms($this->schoolIdOrFail()),
             'parents' => $this->parentUsers($this->schoolIdOrFail()),
-        ]);
+        ] + $this->viewData());
     }
 
     public function store(Request $request)
@@ -154,7 +171,7 @@ class UserController extends Controller
             }
         });
 
-        return redirect()->route('admin.users.index')
+        return redirect()->route($this->routePrefix() . '.index')
             ->with('success', 'Utilisateur cree.');
     }
 
@@ -162,21 +179,23 @@ class UserController extends Controller
     {
         $schoolId = $this->schoolIdOrFail();
         abort_if((int) $user->school_id !== (int) $schoolId, 404);
+        abort_unless(in_array((string) $user->role, $this->allowedRoles(), true), 403);
 
-        return view('admin.users.edit', [
+        return view($this->viewPrefix() . '.edit', [
             'user' => $user,
             'roles' => $this->allowedRoles(),
             'roleLabels' => User::roleLabels(),
             'classrooms' => $this->studentClassrooms($schoolId),
             'parents' => $this->parentUsers($schoolId),
             'linkedStudent' => $this->linkedStudent($user, $schoolId),
-        ]);
+        ] + $this->viewData());
     }
 
     public function show(User $user)
     {
         $schoolId = $this->schoolIdOrFail();
         abort_if((int) $user->school_id !== (int) $schoolId, 404);
+        abort_unless(in_array((string) $user->role, $this->allowedRoles(), true), 403);
 
         $user->load([
             'school:id,name',
@@ -214,20 +233,21 @@ class UserController extends Controller
                 ->get();
         }
 
-        return view('admin.users.show', [
+        return view($this->viewPrefix() . '.show', [
             'user' => $user,
             'driverVehicles' => $driverVehicles,
             'linkedStudent' => $user->studentProfile,
             'linkedChildren' => $user->children,
             'teacherSubjects' => $user->subjects,
             'teacherClassrooms' => $user->teacherClassrooms,
-        ]);
+        ] + $this->viewData());
     }
 
     public function update(Request $request, User $user)
     {
         $schoolId = $this->schoolIdOrFail();
         abort_if((int) $user->school_id !== (int) $schoolId, 404);
+        abort_unless(in_array((string) $user->role, $this->allowedRoles(), true), 403);
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -273,13 +293,14 @@ class UserController extends Controller
             }
         });
 
-        return redirect()->route('admin.users.index')->with('success', 'Utilisateur modifie.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Utilisateur modifie.');
     }
 
     public function destroy(User $user)
     {
         $schoolId = $this->schoolIdOrFail();
         abort_if((int) $user->school_id !== (int) $schoolId, 404);
+        abort_unless(in_array((string) $user->role, $this->allowedRoles(), true), 403);
 
         if (Auth::id() === $user->id) {
             return back()->with('success', 'Impossible de supprimer votre propre compte.');
@@ -297,7 +318,7 @@ class UserController extends Controller
             $user->delete();
         });
 
-        return redirect()->route('admin.users.index')->with('success', 'Utilisateur supprime.');
+        return redirect()->route($this->routePrefix() . '.index')->with('success', 'Utilisateur supprime.');
     }
 
     public function suggestParents(Request $request)
@@ -312,6 +333,7 @@ class UserController extends Controller
         $items = User::query()
             ->where('school_id', $schoolId)
             ->where('role', 'parent')
+            ->whereIn('role', $this->allowedRoles())
             ->where(function ($query) use ($q) {
                 $query->where('name', 'like', "%{$q}%")
                     ->orWhere('email', 'like', "%{$q}%")
@@ -326,6 +348,15 @@ class UserController extends Controller
             ]);
 
         return response()->json($items);
+    }
+
+    protected function viewData(): array
+    {
+        return [
+            'routePrefix' => $this->routePrefix(),
+            'layoutComponent' => $this->layoutComponent(),
+            'availableRoles' => $this->allowedRoles(),
+        ];
     }
 
     private function linkedStudent(User $user, int $schoolId): ?Student
@@ -712,6 +743,6 @@ class UserController extends Controller
             ->where('school_id', $schoolId)
             ->where('role', User::ROLE_PARENT)
             ->orderBy('name')
-            ->get(['id', 'name', 'email']);
+            ->get(['id', 'name', 'email', 'phone']);
     }
 }

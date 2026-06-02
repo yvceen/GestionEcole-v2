@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\PickupRequest;
 use App\Models\Student;
+use App\Models\User;
 use App\Services\AttendanceAutoAbsentService;
 
 class DashboardController extends Controller
@@ -25,6 +26,15 @@ class DashboardController extends Controller
             'today_absent' => Attendance::where('school_id', $schoolId)->whereDate('date', now()->toDateString())->where('status', Attendance::STATUS_ABSENT)->count(),
             'today_late' => Attendance::where('school_id', $schoolId)->whereDate('date', now()->toDateString())->where('status', Attendance::STATUS_LATE)->count(),
             'pickup_pending' => PickupRequest::where('school_id', $schoolId)->where('status', PickupRequest::STATUS_PENDING)->count(),
+            'parents' => User::where('school_id', $schoolId)->where('role', User::ROLE_PARENT)->count(),
+            'users' => User::where('school_id', $schoolId)->whereIn('role', [
+                User::ROLE_DIRECTOR,
+                User::ROLE_TEACHER,
+                User::ROLE_PARENT,
+                User::ROLE_STUDENT,
+                User::ROLE_CHAUFFEUR,
+                User::ROLE_SCHOOL_LIFE,
+            ])->count(),
         ];
 
         $recentAttendance = Attendance::query()

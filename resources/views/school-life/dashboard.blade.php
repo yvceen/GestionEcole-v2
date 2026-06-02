@@ -19,11 +19,21 @@
             <p class="app-muted max-w-2xl">Une lecture rapide pour prioriser les presences, les retards et les recuperations.</p>
         </div>
 
-        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
             <article class="app-stat-card">
                 <p class="app-stat-label">Eleves</p>
                 <p class="app-stat-value">{{ $stats['students'] }}</p>
                 <p class="app-stat-meta">Dossiers visibles dans l ecole active.</p>
+            </article>
+            <article class="app-stat-card">
+                <p class="app-stat-label">Parents</p>
+                <p class="app-stat-value text-emerald-700">{{ $stats['parents'] }}</p>
+                <p class="app-stat-meta">Contacts familles disponibles.</p>
+            </article>
+            <article class="app-stat-card">
+                <p class="app-stat-label">Utilisateurs</p>
+                <p class="app-stat-value text-indigo-700">{{ $stats['users'] }}</p>
+                <p class="app-stat-meta">Comptes gerables hors admin.</p>
             </article>
             <article class="app-stat-card">
                 <p class="app-stat-label">Absences du jour</p>
@@ -80,6 +90,8 @@
             <x-ui.card title="Actions rapides" subtitle="Accedez aux ecrans les plus utiles sans perdre de temps.">
                 <div class="grid gap-3">
                     <x-ui.button :href="route('attendance.scan.page')" variant="primary">Scanner les cartes</x-ui.button>
+                    <x-ui.button :href="route('school-life.users.index', ['role' => 'parent'])" variant="secondary">Contacts parents</x-ui.button>
+                    <x-ui.button :href="route('school-life.users.create')" variant="secondary">Creer utilisateur</x-ui.button>
                     <x-ui.button :href="route('school-life.cards.index')" variant="secondary">Voir les cartes</x-ui.button>
                     <x-ui.button :href="route('school-life.students.index')" variant="secondary">Suivre les eleves</x-ui.button>
                     <x-ui.button :href="route('transport.ops.index')" variant="ghost">Ouvrir le transport</x-ui.button>

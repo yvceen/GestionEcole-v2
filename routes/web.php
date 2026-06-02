@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\StructureController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\StudentFeePlanController;
 use App\Http\Controllers\Admin\FinanceController;
+use App\Http\Controllers\Admin\BillableEventController as AdminBillableEventController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ParentFeesController;
 use App\Http\Controllers\Admin\TeacherPedagogyController;
@@ -130,6 +131,8 @@ use App\Http\Controllers\SchoolLife\SubjectController as SchoolLifeSubjectContro
 use App\Http\Controllers\SchoolLife\StudentsController as SchoolLifeStudentsController;
 use App\Http\Controllers\SchoolLife\TimetableController as SchoolLifeTimetableController;
 use App\Http\Controllers\SchoolLife\TimetableSettingsController as SchoolLifeTimetableSettingsController;
+use App\Http\Controllers\SchoolLife\UserController as SchoolLifeUserController;
+use App\Http\Controllers\SchoolLife\BillableEventController as SchoolLifeBillableEventController;
 
 use App\Http\Middleware\DirectorOnly;
 
@@ -231,6 +234,17 @@ Route::prefix('admin')
 
         // Finance
         Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
+        Route::prefix('finance/events')->as('finance.events.')->group(function () {
+            Route::get('/', [AdminBillableEventController::class, 'index'])->name('index');
+            Route::get('/create', [AdminBillableEventController::class, 'create'])->name('create');
+            Route::post('/', [AdminBillableEventController::class, 'store'])->name('store');
+            Route::get('/{event}', [AdminBillableEventController::class, 'show'])->whereNumber('event')->name('show');
+            Route::get('/{event}/edit', [AdminBillableEventController::class, 'edit'])->whereNumber('event')->name('edit');
+            Route::put('/{event}', [AdminBillableEventController::class, 'update'])->whereNumber('event')->name('update');
+            Route::delete('/{event}', [AdminBillableEventController::class, 'destroy'])->whereNumber('event')->name('destroy');
+            Route::post('/{event}/payments', [AdminBillableEventController::class, 'storePayment'])->whereNumber('event')->name('payments.store');
+            Route::get('/payments/{payment}/receipt', [AdminBillableEventController::class, 'receipt'])->whereNumber('payment')->name('payments.receipt');
+        });
         Route::get('/finance/payments/create', [FinanceController::class, 'createPayment'])->name('finance.payments.create');
         Route::post('/finance/payments', [FinanceController::class, 'storePayment'])->name('finance.payments.store');
         Route::get('/finance/receipts/{receipt}', [FinanceController::class, 'showReceipt'])->name('finance.receipts.show');
@@ -514,6 +528,9 @@ Route::prefix('school-life')
         Route::post('/students/{student}/behaviors', [SchoolLifeBehaviorController::class, 'store'])->name('students.behaviors.store');
         Route::put('/students/{student}/behaviors/{behavior}', [SchoolLifeBehaviorController::class, 'update'])->name('students.behaviors.update');
         Route::delete('/students/{student}/behaviors/{behavior}', [SchoolLifeBehaviorController::class, 'destroy'])->name('students.behaviors.destroy');
+        Route::get('/users/suggest', [SchoolLifeUserController::class, 'suggest'])->name('users.suggest');
+        Route::get('/users/suggest-parents', [SchoolLifeUserController::class, 'suggestParents'])->name('users.suggest_parents');
+        Route::resource('users', SchoolLifeUserController::class);
         Route::get('/cards', [CardController::class, 'schoolLifeIndex'])->name('cards.index');
         Route::get('/cards/students/{student}', [CardController::class, 'schoolLifeShowStudent'])->name('cards.students.show');
         Route::get('/cards/parents/{user}', [CardController::class, 'schoolLifeShowParent'])->name('cards.parents.show');
@@ -564,6 +581,17 @@ Route::prefix('school-life')
         Route::post('/pickup-requests/{pickupRequest}/approve', [SchoolLifePickupRequestController::class, 'approve'])->name('pickup-requests.approve');
         Route::post('/pickup-requests/{pickupRequest}/reject', [SchoolLifePickupRequestController::class, 'reject'])->name('pickup-requests.reject');
         Route::post('/pickup-requests/{pickupRequest}/complete', [SchoolLifePickupRequestController::class, 'complete'])->name('pickup-requests.complete');
+        Route::prefix('finance/events')->as('finance.events.')->group(function () {
+            Route::get('/', [SchoolLifeBillableEventController::class, 'index'])->name('index');
+            Route::get('/create', [SchoolLifeBillableEventController::class, 'create'])->name('create');
+            Route::post('/', [SchoolLifeBillableEventController::class, 'store'])->name('store');
+            Route::get('/{event}', [SchoolLifeBillableEventController::class, 'show'])->whereNumber('event')->name('show');
+            Route::get('/{event}/edit', [SchoolLifeBillableEventController::class, 'edit'])->whereNumber('event')->name('edit');
+            Route::put('/{event}', [SchoolLifeBillableEventController::class, 'update'])->whereNumber('event')->name('update');
+            Route::delete('/{event}', [SchoolLifeBillableEventController::class, 'destroy'])->whereNumber('event')->name('destroy');
+            Route::post('/{event}/payments', [SchoolLifeBillableEventController::class, 'storePayment'])->whereNumber('event')->name('payments.store');
+            Route::get('/payments/{payment}/receipt', [SchoolLifeBillableEventController::class, 'receipt'])->whereNumber('payment')->name('payments.receipt');
+        });
         Route::get('/notifications', [NotificationCenterController::class, 'index'])->name('notifications.index');
         Route::get('/notifications/{notification}/open', [NotificationCenterController::class, 'open'])->name('notifications.open');
         Route::post('/notifications/read-all', [NotificationCenterController::class, 'markAllRead'])->name('notifications.read_all');

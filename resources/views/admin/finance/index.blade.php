@@ -32,6 +32,9 @@
             <x-ui.button :href="route('admin.finance.reminders.edit')" variant="outline">
                 Rappels automatiques
             </x-ui.button>
+            <x-ui.button :href="route('admin.finance.events.index')" variant="outline">
+                Paiements evenements
+            </x-ui.button>
             <x-ui.button :href="route('admin.students.index')" variant="secondary">
                 Voir les eleves
             </x-ui.button>
@@ -53,6 +56,10 @@
                 <a href="{{ route('admin.finance.reminders.edit') }}" class="rounded-3xl border border-white bg-white/85 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                     <span class="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Suivi</span>
                     <strong class="mt-2 block text-slate-950">Rappels parents</strong>
+                </a>
+                <a href="{{ route('admin.finance.events.index') }}" class="rounded-3xl border border-white bg-white/85 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                    <span class="text-xs font-bold uppercase tracking-[0.16em] text-indigo-700">Evenements</span>
+                    <strong class="mt-2 block text-slate-950">Paiements speciaux</strong>
                 </a>
             </div>
         </div>
