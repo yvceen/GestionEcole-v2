@@ -8,6 +8,7 @@
     <form method="POST" action="{{ $replyAction }}" class="space-y-4">
         @csrf
         <input type="hidden" name="reply_to_id" value="{{ $replyToId }}">
+        <input type="hidden" name="subject" value="{{ old('subject', $replySubject ?? 'Discussion') }}">
 
         @if($errors->any())
             <x-ui.alert variant="error">
@@ -24,18 +25,11 @@
             <span class="text-xs text-slate-500">({{ $replyRecipient->role }})</span>
         </div>
 
-        <x-ui.input
-            name="subject"
-            label="Sujet"
-            :value="old('subject', $replySubject ?? '')"
-            placeholder="Sujet de la reponse"
-        />
-
         <x-ui.textarea
             name="body"
-            label="Reponse"
+            label="Message"
             rows="5"
-            placeholder="Ecrivez votre reponse..."
+            placeholder="Ecrivez votre message..."
         >{{ old('body') }}</x-ui.textarea>
 
         <div class="flex items-center gap-3">

@@ -6,7 +6,6 @@
     'backUrl' => null,
     'backLabel' => 'Retour',
     'submitLabel' => 'Envoyer',
-    'subjectValue' => null,
     'bodyValue' => null,
     'tabs' => [],
 ])
@@ -179,7 +178,7 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                 <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky-100">
                     Composition
                 </div>
-                <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">{{ $title }}</h1>
+                <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Nouvelle discussion</h1>
                 <p class="mt-3 text-sm leading-6 text-slate-200">{{ $subtitle }}</p>
             </div>
 
@@ -196,13 +195,14 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
         @if(strtoupper($method ?? 'POST') !== 'POST')
             @method($method)
         @endif
+        <input type="hidden" name="subject" value="{{ old('subject', 'Discussion') }}">
 
         <section class="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
             <div class="border-b border-slate-100 px-6 py-5">
                 <div class="flex items-start justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-semibold tracking-tight text-slate-950">Contenu du message</h2>
-                        <p class="mt-1 text-sm text-slate-500">Renseignez un sujet clair et un message facile a comprendre.</p>
+                        <h2 class="text-xl font-semibold tracking-tight text-slate-950">Message</h2>
+                        <p class="mt-1 text-sm text-slate-500">Ecrivez votre message comme dans une conversation directe.</p>
                     </div>
                     <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-50 text-sky-700 ring-1 ring-sky-100">
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -225,21 +225,11 @@ $composerTabs = collect($tabs ?? [])->filter(function ($tab) {
                     </x-ui.alert>
                 @endif
 
-                <x-ui.input
-                    label="Sujet"
-                    name="subject"
-                    :value="old('subject', $subjectValue ?? '')"
-                    placeholder="Resume bref du message"
-                />
-                @error('subject')
-                    <p class="app-error">{{ $message }}</p>
-                @enderror
-
                 <x-ui.textarea
                     label="Message"
                     name="body"
                     rows="12"
-                    placeholder="Detaillez votre message..."
+                    placeholder="Ecrivez votre message..."
                 >{{ old('body', $bodyValue ?? '') }}</x-ui.textarea>
                 @error('body')
                     <p class="app-error">{{ $message }}</p>

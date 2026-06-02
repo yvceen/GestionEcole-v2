@@ -38,9 +38,9 @@
                     <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
                     Messagerie
                 </div>
-                <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Discussions administratives</h1>
+                <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Messages</h1>
                 <p class="mt-3 text-sm leading-6 text-slate-200">
-                    Suivez les conversations avec les familles et les equipes depuis une interface claire, moderne et rapide.
+                    Consultez vos conversations, ouvrez un fil et repondez simplement comme dans un chat.
                 </p>
             </div>
 
@@ -119,7 +119,7 @@
                         $active = $threadId === $mid;
                         $unreadCount = (int) data_get($thread, 'unread_count', 0);
                         $participant = (string) data_get($thread, 'participant_label', 'Utilisateur');
-                        $subject = (string) data_get($thread, 'subject', '(Sans sujet)');
+                        $snippet = (string) data_get($thread, 'snippet', '');
                         $status = (string) data_get($thread, 'status', 'approved');
                         $statusVariant = match($status) {
                             'pending' => 'warning',
@@ -157,12 +157,10 @@
                                 <div class="flex items-start justify-between gap-3">
                                     <div class="min-w-0">
                                         <p class="truncate text-sm font-semibold text-slate-950">{{ $participant }}</p>
-                                        <p class="mt-1 truncate text-sm font-semibold {{ $unreadCount > 0 ? 'text-slate-950' : 'text-slate-600' }}">{{ $subject }}</p>
+                                        <p class="mt-1 truncate text-sm {{ $unreadCount > 0 ? 'font-semibold text-slate-950' : 'font-medium text-slate-600' }}">{{ $snippet }}</p>
                                     </div>
                                     <p class="shrink-0 text-xs text-slate-400">{{ optional(data_get($thread, 'created_at'))->format('H:i') }}</p>
                                 </div>
-
-                                <p class="mt-1 truncate text-xs leading-5 text-slate-500">{{ data_get($thread, 'snippet') }}</p>
 
                                 <div class="mt-3 flex items-center justify-between gap-2">
                                     <x-ui.badge :variant="$statusVariant">{{ strtoupper($status) }}</x-ui.badge>
@@ -214,7 +212,7 @@
                         </div>
                         <div class="min-w-0">
                             <div class="flex flex-wrap items-center gap-2">
-                                <h2 class="truncate text-xl font-semibold tracking-tight text-slate-950">{{ data_get($selected, 'subject', '(Sans sujet)') }}</h2>
+                                <h2 class="truncate text-xl font-semibold tracking-tight text-slate-950">{{ $participant }}</h2>
                                 <x-ui.badge :variant="$statusVariant">{{ strtoupper($status) }}</x-ui.badge>
                             </div>
                             <p class="mt-1 text-sm text-slate-500">

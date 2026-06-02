@@ -28,9 +28,9 @@
                     <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky-100">
                         Conversation
                     </div>
-                    <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">{{ $message->subjectText() }}</h1>
+                    <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Conversation</h1>
                     <p class="mt-3 text-sm leading-6 text-slate-200">
-                        Consultez le fil complet et repondez depuis une interface claire.
+                        Lisez les messages du fil et repondez directement.
                     </p>
                 </div>
 
