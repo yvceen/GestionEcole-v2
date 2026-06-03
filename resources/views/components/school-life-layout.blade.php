@@ -8,6 +8,7 @@
 
     $nav = [
         ['label' => 'Tableau de bord', 'route' => 'school-life.dashboard', 'icon' => 'home', 'section' => 'Vue generale'],
+        ['label' => 'Structure', 'route' => 'school-life.structure.index', 'icon' => 'calendar', 'active_routes' => ['school-life.structure.*'], 'section' => 'Gestion'],
         ['label' => 'Élèves', 'route' => 'school-life.students.index', 'icon' => 'users', 'active_routes' => ['school-life.students.*'], 'section' => 'Gestion'],
         ['label' => 'Utilisateurs', 'route' => 'school-life.users.index', 'icon' => 'users', 'active_routes' => ['school-life.users.*'], 'section' => 'Gestion'],
         ['label' => 'Cartes', 'route' => 'school-life.cards.index', 'icon' => 'users', 'section' => 'Gestion'],

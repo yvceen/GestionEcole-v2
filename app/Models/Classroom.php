@@ -9,7 +9,7 @@ class Classroom extends Model
 {
     use BelongsToSchool;
 
-    protected $fillable = ['school_id','level_id','section','name','sort_order','is_active'];
+    protected $fillable = ['school_id','level_id','section','name','capacity','sort_order','is_active'];
 
     public function level()
     {

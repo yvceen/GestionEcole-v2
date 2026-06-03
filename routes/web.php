@@ -209,11 +209,16 @@ Route::prefix('admin')
 
         // Structure
         Route::get('/structure', [StructureController::class, 'index'])->name('structure.index');
+        Route::post('/structure/presets', [StructureController::class, 'installPresets'])->name('structure.presets.store');
+        Route::post('/structure/cycles', [StructureController::class, 'storeCycle'])->name('structure.cycles.store');
+        Route::put('/structure/cycles/{cycle}', [StructureController::class, 'updateCycle'])->name('structure.cycles.update');
+        Route::delete('/structure/cycles/{cycle}', [StructureController::class, 'destroyCycle'])->name('structure.cycles.destroy');
         Route::post('/structure/levels', [StructureController::class, 'storeLevel'])->name('structure.levels.store');
         Route::put('/structure/levels/{level}', [StructureController::class, 'updateLevel'])->name('structure.levels.update');
         Route::delete('/structure/levels/{level}', [StructureController::class, 'destroyLevel'])->name('structure.levels.destroy');
 
         Route::post('/structure/classrooms', [StructureController::class, 'storeClassroom'])->name('structure.classrooms.store');
+        Route::post('/structure/classrooms/bulk', [StructureController::class, 'storeClassroomsBulk'])->name('structure.classrooms.bulk.store');
         Route::put('/structure/classrooms/{classroom}', [StructureController::class, 'updateClassroom'])->name('structure.classrooms.update');
         Route::delete('/structure/classrooms/{classroom}', [StructureController::class, 'destroyClassroom'])->name('structure.classrooms.destroy');
         Route::get('/structure/classrooms/{classroom}', [StructureController::class, 'showClassroom'])->name('structure.classrooms.show');
@@ -525,6 +530,19 @@ Route::prefix('school-life')
     ->as('school-life.')
     ->group(function () {
         Route::get('/', [SchoolLifeDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/structure', [StructureController::class, 'index'])->name('structure.index');
+        Route::post('/structure/presets', [StructureController::class, 'installPresets'])->name('structure.presets.store');
+        Route::post('/structure/cycles', [StructureController::class, 'storeCycle'])->name('structure.cycles.store');
+        Route::put('/structure/cycles/{cycle}', [StructureController::class, 'updateCycle'])->name('structure.cycles.update');
+        Route::delete('/structure/cycles/{cycle}', [StructureController::class, 'destroyCycle'])->name('structure.cycles.destroy');
+        Route::post('/structure/levels', [StructureController::class, 'storeLevel'])->name('structure.levels.store');
+        Route::put('/structure/levels/{level}', [StructureController::class, 'updateLevel'])->name('structure.levels.update');
+        Route::delete('/structure/levels/{level}', [StructureController::class, 'destroyLevel'])->name('structure.levels.destroy');
+        Route::post('/structure/classrooms', [StructureController::class, 'storeClassroom'])->name('structure.classrooms.store');
+        Route::post('/structure/classrooms/bulk', [StructureController::class, 'storeClassroomsBulk'])->name('structure.classrooms.bulk.store');
+        Route::put('/structure/classrooms/{classroom}', [StructureController::class, 'updateClassroom'])->name('structure.classrooms.update');
+        Route::delete('/structure/classrooms/{classroom}', [StructureController::class, 'destroyClassroom'])->name('structure.classrooms.destroy');
+        Route::get('/structure/classrooms/{classroom}', [StructureController::class, 'showClassroom'])->name('structure.classrooms.show');
         Route::get('/students', [SchoolLifeStudentsController::class, 'index'])->name('students.index');
         Route::get('/students/{student}/behaviors', [SchoolLifeBehaviorController::class, 'show'])->name('students.behaviors.show');
         Route::post('/students/{student}/behaviors', [SchoolLifeBehaviorController::class, 'store'])->name('students.behaviors.store');

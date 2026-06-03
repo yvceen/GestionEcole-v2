@@ -40,6 +40,11 @@ class School extends Model
         return $this->hasMany(AcademicYear::class);
     }
 
+    public function educationCycles()
+    {
+        return $this->hasMany(EducationCycle::class);
+    }
+
     protected static function booted()
     {
         static::creating(function (School $school): void {
@@ -109,6 +114,7 @@ class School extends Model
                     'students',
                     'classrooms',
                     'levels',
+                    'education_cycles',
                     'users',
                 ];
 

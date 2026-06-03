@@ -1,390 +1,241 @@
-﻿<x-admin-layout title="Structure scolaire">
+<x-dynamic-component :component="$layoutComponent" title="Structure scolaire">
     @php
-        $totalLevels = $levels->count();
-        $totalClasses = $levels->sum(fn($l) => $l->classrooms->count());
-        $totalStudents = $levels->sum(fn($l) => $l->classrooms->sum('students_count'));
+        $totalClasses = $levels->sum(fn ($level) => $level->classrooms->count());
+        $totalStudents = $levels->sum(fn ($level) => $level->classrooms->sum('students_count'));
+        $route = fn (string $name, $parameters = []) => route($routePrefix.'.'.$name, $parameters);
+        $cycleStyles = [
+            'rose' => 'border-rose-200 bg-rose-50 text-rose-700',
+            'sky' => 'border-sky-200 bg-sky-50 text-sky-700',
+            'amber' => 'border-amber-200 bg-amber-50 text-amber-700',
+            'violet' => 'border-violet-200 bg-violet-50 text-violet-700',
+            'emerald' => 'border-emerald-200 bg-emerald-50 text-emerald-700',
+            'slate' => 'border-slate-200 bg-slate-50 text-slate-700',
+        ];
     @endphp
 
     @if($errors->any())
         <x-ui.alert variant="error">
-            <div class="font-semibold">Certaines actions n'ont pas pu etre appliquees.</div>
-            <ul class="mt-2 list-disc pl-5">
-                @foreach($errors->all() as $e)
-                    <li>{{ $e }}</li>
-                @endforeach
-            </ul>
+            <div class="font-semibold">Certaines actions n'ont pas pu être appliquées.</div>
+            <ul class="mt-2 list-disc pl-5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
         </x-ui.alert>
     @endif
 
-    <section class="grid gap-6 xl:grid-cols-[minmax(0,1.65fr)_minmax(320px,0.9fr)]">
-        <div class="app-card px-6 py-6 md:px-7">
-            <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-                <div class="max-w-2xl">
-                    <p class="app-overline">Organisation pédagogique</p>
-                    <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Niveaux, classes et effectifs</h2>
-                    <p class="mt-3 text-sm leading-6 text-slate-500">
-                        Centralisez la structure scolaire, creez rapidement vos niveaux et classes, puis ouvrez chaque classe pour consulter ses Élèves.
-                    </p>
+    <section class="app-card overflow-hidden p-0">
+        <div class="border-b border-slate-200 bg-slate-950 px-6 py-7 text-white md:px-8">
+            <div class="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+                <div class="max-w-3xl">
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-sky-300">Organisation pédagogique</p>
+                    <h2 class="mt-3 text-3xl font-semibold">Cycles, niveaux et classes</h2>
+                    <p class="mt-3 text-sm leading-6 text-slate-300">Organisez l'établissement par cycle, créez les niveaux, puis séparez-les en classes comme PS-A, PS-B ou 1AP-A.</p>
                 </div>
-
-                <div class="flex flex-wrap gap-3">
-                    <x-ui.button :href="'#forms'" variant="primary">Ajouter un niveau ou une classe</x-ui.button>
-                </div>
-            </div>
-
-            <div class="mt-6 grid gap-3 sm:grid-cols-3">
-                <div class="app-stat-card">
-                    <div class="app-stat-label">Niveaux</div>
-                    <div class="app-stat-value">{{ $totalLevels }}</div>
-                    <div class="app-stat-meta">Cycles ou groupes pédagogiques configurés.</div>
-                </div>
-                <div class="app-stat-card">
-                    <div class="app-stat-label">Classes</div>
-                    <div class="app-stat-value">{{ $totalClasses }}</div>
-                    <div class="app-stat-meta">Classes actives rattachées aux niveaux.</div>
-                </div>
-                <div class="app-stat-card">
-                    <div class="app-stat-label">Élèves</div>
-                    <div class="app-stat-value">{{ $totalStudents }}</div>
-                    <div class="app-stat-meta">Total d'Élèves comptabilises dans la structure.</div>
-                </div>
+                <form method="POST" action="{{ $route('presets.store') }}">
+                    @csrf
+                    <button class="app-button-secondary border-white/20 bg-white text-slate-900" type="submit">Installer les niveaux standards</button>
+                </form>
             </div>
         </div>
-
-        <div class="app-card px-6 py-6">
-            <div class="space-y-5">
-                <div>
-                    <p class="app-overline">Recherche</p>
-                    <h2 class="mt-2 text-lg font-semibold text-slate-900">Retrouver un niveau ou une classe</h2>
-                    <p class="mt-2 text-sm leading-6 text-slate-500">
-                        Filtrez instantanement la liste pour acceder plus vite a une section precise.
-                    </p>
+        <div class="grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-4">
+            @foreach([['Cycles', $cycles->count()], ['Niveaux', $levels->count()], ['Classes', $totalClasses], ['Élèves', $totalStudents]] as [$label, $value])
+                <div class="rounded-xl border border-slate-200 bg-slate-50 px-5 py-4">
+                    <div class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{{ $label }}</div>
+                    <div class="mt-2 text-3xl font-semibold text-slate-950">{{ $value }}</div>
                 </div>
-
-                <div class="relative">
-                    <input id="searchBox" type="text"
-                           placeholder="Rechercher (niveau, classe, section)..."
-                           class="app-input rounded-2xl pl-11 pr-4" />
-                    <div class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-slate-400" aria-hidden="true">
-                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <circle cx="11" cy="11" r="6"></circle>
-                            <path d="M16 16l4.5 4.5" stroke-linecap="round"></path>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
-                    <div class="text-sm font-semibold text-slate-900">Bon a savoir</div>
-                    <p class="mt-2 text-sm leading-6 text-slate-500">
-                        Pour "CP B", le slug devient automatiquement "CP-B". L'ordre des classes est généré automatiquement a la création.
-                    </p>
-                </div>
-            </div>
+            @endforeach
         </div>
     </section>
 
-    <section id="forms" class="grid gap-6 xl:grid-cols-2">
-        <div class="app-card px-6 py-6 md:px-7">
-            <div class="border-b border-slate-200 pb-5">
-                <p class="app-overline">Création</p>
-                <h2 class="mt-2 text-lg font-semibold text-slate-900">Ajouter un niveau</h2>
-                <p class="mt-2 text-sm leading-6 text-slate-500">Creez un niveau avec un code court et un nom lisible pour l'equipe pédagogique.</p>
+    <section class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div class="space-y-5">
+            <div class="app-card flex flex-col gap-4 px-5 py-5 md:flex-row md:items-center md:justify-between">
+                <div><p class="app-overline">Structure active</p><h2 class="mt-2 text-xl font-semibold text-slate-950">Organisation par cycle</h2></div>
+                <input id="structureSearch" class="app-input md:max-w-sm" placeholder="Rechercher un cycle, niveau ou classe...">
             </div>
 
-            <form method="POST" action="{{ route('admin.structure.levels.store') }}" class="mt-6 space-y-5">
-                @csrf
-
-                <div class="grid gap-5 md:grid-cols-2">
-                    <div class="app-field">
-                        <label class="app-label">Code</label>
-                        <input name="code" value="{{ old('code') }}" required class="app-input" placeholder="PRI">
-                        <p class="app-hint">Ex. : MAT, PRI, COL ou LYC.</p>
-                    </div>
-
-                    <div class="app-field">
-                        <label class="app-label">Nom</label>
-                        <input name="name" value="{{ old('name') }}" required class="app-input" placeholder="Primaire">
-                        <p class="app-hint">Nom affiché dans la structure et les formulaires.</p>
-                    </div>
-                </div>
-
-                <div class="flex justify-end">
-                    <x-ui.button type="submit" variant="primary">Ajouter un niveau</x-ui.button>
-                </div>
-            </form>
-        </div>
-
-        <div class="app-card px-6 py-6 md:px-7">
-            <div class="border-b border-slate-200 pb-5">
-                <p class="app-overline">Création</p>
-                <h2 class="mt-2 text-lg font-semibold text-slate-900">Ajouter une classe</h2>
-                <p class="mt-2 text-sm leading-6 text-slate-500">Associez une classe a un niveau existant et definissez, si besoin, une section personnalisee.</p>
-            </div>
-
-            <form method="POST" action="{{ route('admin.structure.classrooms.store') }}" class="mt-6 space-y-5">
-                @csrf
-
-                <div class="app-field">
-                    <label class="app-label">Niveau</label>
-                    <select name="level_id" required class="app-input">
-                        <option value="">Choisir</option>
-                        @foreach($levels as $lvl)
-                            <option value="{{ $lvl->id }}" @selected((int) old('level_id') === (int) $lvl->id)>
-                                {{ $lvl->name }} ({{ $lvl->code }})
-                            </option>
-                        @endforeach
-                    </select>
-                    @if($levels->count() === 0)
-                        <p class="app-error">Aucun niveau disponible. Ajoutez d'abord un niveau.</p>
-                    @else
-                        <p class="app-hint">Sélectionnez d'abord le niveau auquel rattachér la classe.</p>
-                    @endif
-                </div>
-
-                <div class="grid gap-5 md:grid-cols-2">
-                    <div class="app-field">
-                        <label class="app-label">Nom affiché</label>
-                        <input name="name" value="{{ old('name') }}" required placeholder="CP A" class="app-input">
-                        <p class="app-hint">Ex. : CP A, CE1 B, 6e A.</p>
-                    </div>
-
-                    <div class="app-field">
-                        <label class="app-label">Section (slug)</label>
-                        <input name="section" value="{{ old('section') }}" placeholder="CP-A" class="app-input">
-                        <p class="app-hint">Optionnel. Generee automatiquement sinon.</p>
-                    </div>
-                </div>
-
-                <div class="flex justify-end">
-                    <x-ui.button type="submit" variant="primary" :disabled="$levels->count() === 0">Ajouter une classe</x-ui.button>
-                </div>
-            </form>
-        </div>
-    </section>
-
-    <section class="space-y-5">
-        <div class="app-card overflow-hidden px-6 py-6 md:px-7">
-            <div class="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.7fr)] xl:items-center">
-                <div class="min-w-0">
-                    <div class="flex items-center gap-3">
-                        <div class="grid h-12 w-12 place-items-center rounded-2xl bg-sky-50 text-sky-700 ring-1 ring-sky-100">
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h10"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="app-overline">Organisation</p>
-                            <h2 class="mt-1 text-2xl font-semibold tracking-tight text-slate-950">Niveaux et classes</h2>
-                        </div>
-                    </div>
-
-                    <p class="mt-4 max-w-3xl text-sm leading-6 text-slate-500">
-                        Parcourez la structure de l'Établissement niveau par niveau, consultez les classes associées et accedez rapidement aux actions de modification ou de suppression.
-                    </p>
-
-                    <div class="mt-5 flex flex-wrap gap-2">
-                        <span class="inline-flex items-center rounded-full border border-sky-100 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700">
-                            Vue hierarchique
-                        </span>
-                        <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
-                            Depliez un niveau pour voir ses classes
-                        </span>
-                    </div>
-                </div>
-
-                <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-                    <div class="rounded-2xl border border-slate-200 bg-slate-50/90 px-4 py-4">
-                        <div class="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Niveaux actifs</div>
-                        <div class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{{ $totalLevels }}</div>
-                        <div class="mt-1 text-xs text-slate-500">Structure principale configuree.</div>
-                    </div>
-                    <div class="rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
-                        <div class="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Classes recensees</div>
-                        <div class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{{ $totalClasses }}</div>
-                        <div class="mt-1 text-xs text-slate-500">Repartition visible par niveau.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @if($levels->count() === 0)
-            <x-ui.empty-state
-                title="Aucun niveau pour le moment"
-                description="Commencez par creer un niveau puis ajoutez vos classes pour structurer l'Établissement."
-            />
-        @else
-            <div id="levelsWrap" class="space-y-4">
-                @foreach($levels as $lvl)
+            <div id="structureTree" class="space-y-5">
+                @foreach($cycles as $cycle)
                     @php
-                        $lvlStudents = $lvl->classrooms->sum('students_count');
+                        $cycleClassrooms = $cycle->levels->sum(fn ($level) => $level->classrooms->count());
+                        $cycleStudents = $cycle->levels->sum(fn ($level) => $level->classrooms->sum('students_count'));
+                        $style = $cycleStyles[$cycle->color] ?? $cycleStyles['slate'];
                     @endphp
-
-                    <details class="level-item app-card overflow-hidden" data-search="{{ strtolower($lvl->name.' '.$lvl->code) }}">
-                        <summary class="cursor-pointer list-none px-6 py-5">
-                            <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                                <div class="min-w-0">
-                                    <div class="flex flex-wrap items-center gap-3">
-                                        <h3 class="text-lg font-semibold text-slate-950">{{ strtoupper($lvl->name) }}</h3>
-                                        <x-ui.badge variant="info">{{ strtoupper($lvl->code) }}</x-ui.badge>
-                                    </div>
-
-                                    <div class="mt-3 flex flex-wrap gap-2">
-                                        <x-ui.badge variant="info">{{ $lvl->classrooms->count() }} classe(s)</x-ui.badge>
-                                        <x-ui.badge variant="info">{{ $lvlStudents }} Élève(s)</x-ui.badge>
-                                        <x-ui.badge variant="warning">Ordre : {{ $lvl->sort_order ?? '-' }}</x-ui.badge>
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <details class="relative">
-                                        <summary class="list-none cursor-pointer app-button-secondary min-h-10 rounded-full px-4 py-2 text-xs">
-                                            Modifier le niveau
-                                        </summary>
-                                        <div class="absolute right-0 z-20 mt-3 w-[22rem] rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_28px_70px_-40px_rgba(15,23,42,0.34)]">
-                                            <form method="POST" action="{{ route('admin.structure.levels.update', $lvl) }}" class="space-y-4">
-                                                @csrf
-                                                @method('PUT')
-
-                                                <div class="grid gap-4 sm:grid-cols-2">
-                                                    <div class="app-field">
-                                                        <label class="app-label">Code</label>
-                                                        <input name="code" value="{{ $lvl->code }}" class="app-input">
-                                                    </div>
-                                                    <div class="app-field">
-                                                        <label class="app-label">Nom</label>
-                                                        <input name="name" value="{{ $lvl->name }}" class="app-input">
-                                                    </div>
-                                                </div>
-
-                                                <div class="flex justify-end">
-                                                    <x-ui.button type="submit" variant="primary" size="sm">Enregistrer</x-ui.button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </details>
-
-                                    <form method="POST" action="{{ route('admin.structure.levels.destroy', $lvl) }}"
-                                          onsubmit="return confirm('Supprimer ce niveau ? (il doit etre vide)')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <x-ui.button type="submit" variant="danger" size="sm">Supprimer</x-ui.button>
-                                    </form>
+                    <article class="structure-cycle app-card overflow-hidden" data-search="{{ strtolower($cycle->name.' '.$cycle->code.' '.$cycle->levels->pluck('name')->join(' ').' '.$cycle->levels->flatMap->classrooms->pluck('name')->join(' ')) }}">
+                        <div class="flex flex-col gap-4 border-b border-slate-200 px-6 py-5 lg:flex-row lg:items-center lg:justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="grid h-12 w-12 place-items-center rounded-xl border text-sm font-bold {{ $style }}">{{ $cycle->code }}</div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-slate-950">{{ $cycle->name }}</h3>
+                                    <p class="mt-1 text-xs text-slate-500">{{ $cycle->levels->count() }} niveaux · {{ $cycleClassrooms }} classes · {{ $cycleStudents }} élèves</p>
                                 </div>
                             </div>
-                        </summary>
-
-                        <div class="border-t border-slate-200 px-6 pb-6 pt-5">
-                            @if($lvl->classrooms->count() === 0)
-                                <x-ui.empty-state
-                                    title="Aucune classe dans ce niveau"
-                                    description="Ajoutez une premiere classe pour commencer a affecter des Élèves."
-                                />
-                            @else
-                                <div class="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
-                                    @foreach($lvl->classrooms as $c)
-                                        @php
-                                            $cSearch = strtolower($lvl->name.' '.$lvl->code.' '.$c->name.' '.$c->section);
-                                        @endphp
-                                        <article class="class-item rounded-[22px] border border-slate-200 bg-slate-50/70 p-5 shadow-sm transition hover:border-slate-300 hover:bg-white"
-                                                 data-search="{{ $cSearch }}">
-                                            <div class="flex items-start justify-between gap-4">
-                                                <div class="min-w-0">
-                                                    <h4 class="truncate text-base font-semibold text-slate-900">
-                                                        {{ $c->name }}
-                                                        @if($c->section)
-                                                            <span class="text-sm font-medium text-slate-500">({{ $c->section }})</span>
-                                                        @endif
-                                                    </h4>
-                                                    <div class="mt-3 flex flex-wrap gap-2">
-                                                        <x-ui.badge variant="info">{{ $c->students_count }} Élève(s)</x-ui.badge>
-                                                        <x-ui.badge variant="warning">Ordre : {{ $c->sort_order ?? '-' }}</x-ui.badge>
-                                                    </div>
-                                                </div>
-                                                <a href="{{ route('admin.structure.classrooms.show', $c) }}" class="app-button-ghost min-h-10 rounded-full px-3 py-2 text-xs">
-                                                    Ouvrir
-                                                </a>
-                                            </div>
-
-                                            <div class="mt-5 flex flex-wrap justify-end gap-2">
-                                                <details class="relative">
-                                                    <summary class="list-none cursor-pointer app-button-secondary min-h-10 rounded-full px-4 py-2 text-xs">
-                                                        Modifier
-                                                    </summary>
-                                                    <div class="absolute right-0 z-20 mt-3 w-[20rem] rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_28px_70px_-40px_rgba(15,23,42,0.34)]">
-                                                        <form method="POST" action="{{ route('admin.structure.classrooms.update', $c) }}" class="space-y-4">
-                                                            @csrf
-                                                            @method('PUT')
-
-                                                            <div class="app-field">
-                                                                <label class="app-label">Nom</label>
-                                                                <input name="name" value="{{ $c->name }}" class="app-input">
-                                                            </div>
-
-                                                            <div class="app-field">
-                                                                <label class="app-label">Section</label>
-                                                                <input name="section" value="{{ $c->section }}" class="app-input">
-                                                                <p class="app-hint">Optionnel. Generee automatiquement sinon.</p>
-                                                            </div>
-
-                                                            <div class="flex justify-end">
-                                                                <x-ui.button type="submit" variant="primary" size="sm">Enregistrer</x-ui.button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </details>
-
-                                                <form method="POST" action="{{ route('admin.structure.classrooms.destroy', $c) }}"
-                                                      onsubmit="return confirm('Supprimer cette classe ? (elle doit etre vide)')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <x-ui.button type="submit" variant="danger" size="sm">Supprimer</x-ui.button>
-                                                </form>
-                                            </div>
-                                        </article>
-                                    @endforeach
+                            <details class="relative">
+                                <summary class="app-button-secondary cursor-pointer list-none">Modifier</summary>
+                                <div class="absolute right-0 z-30 mt-2 w-80 rounded-xl border border-slate-200 bg-white p-4 shadow-xl">
+                                    <form method="POST" action="{{ $route('cycles.update', $cycle) }}" class="space-y-3">
+                                        @csrf @method('PUT')
+                                        <input name="name" value="{{ $cycle->name }}" class="app-input" required>
+                                        <input name="code" value="{{ $cycle->code }}" class="app-input" required>
+                                        <select name="color" class="app-input">@foreach(array_keys($cycleStyles) as $color)<option value="{{ $color }}" @selected($cycle->color === $color)>{{ ucfirst($color) }}</option>@endforeach</select>
+                                        <button class="app-button-primary" type="submit">Enregistrer</button>
+                                    </form>
+                                    @if($cycle->levels->isEmpty())
+                                        <form method="POST" action="{{ $route('cycles.destroy', $cycle) }}" class="mt-3" onsubmit="return confirm('Supprimer ce cycle ?')">
+                                            @csrf @method('DELETE')
+                                            <button class="app-button-danger w-full" type="submit">Supprimer le cycle</button>
+                                        </form>
+                                    @endif
                                 </div>
-                            @endif
+                            </details>
                         </div>
-                    </details>
+
+                        <div class="space-y-4 bg-slate-50/70 p-5">
+                            @forelse($cycle->levels as $level)
+                                <details class="rounded-xl border border-slate-200 bg-white" open>
+                                    <summary class="cursor-pointer list-none px-5 py-4">
+                                        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                                            <div>
+                                                <div class="flex flex-wrap items-center gap-2">
+                                                    <span class="rounded-lg bg-slate-950 px-2.5 py-1 text-xs font-bold text-white">{{ $level->code }}</span>
+                                                    <h4 class="font-semibold text-slate-950">{{ $level->name }}</h4>
+                                                </div>
+                                                <p class="mt-2 text-xs text-slate-500">{{ $level->classrooms->count() }} classes · {{ $level->classrooms->sum('students_count') }} élèves</p>
+                                            </div>
+                                            <details class="relative">
+                                                <summary class="cursor-pointer list-none text-xs font-semibold text-sky-700">Gérer le niveau</summary>
+                                                <div class="absolute right-0 z-20 mt-2 w-80 rounded-xl border border-slate-200 bg-white p-4 shadow-xl">
+                                                    <form method="POST" action="{{ $route('levels.update', $level) }}" class="space-y-3">
+                                                        @csrf @method('PUT')
+                                                        <select name="education_cycle_id" class="app-input" required>
+                                                            @foreach($cycles as $cycleOption)<option value="{{ $cycleOption->id }}" @selected($cycleOption->id === $level->education_cycle_id)>{{ $cycleOption->name }}</option>@endforeach
+                                                        </select>
+                                                        <div class="grid grid-cols-[90px_1fr] gap-2">
+                                                            <input name="code" value="{{ $level->code }}" class="app-input" required>
+                                                            <input name="name" value="{{ $level->name }}" class="app-input" required>
+                                                        </div>
+                                                        <button class="app-button-primary" type="submit">Enregistrer</button>
+                                                    </form>
+                                                    @if($level->classrooms->isEmpty())
+                                                        <form method="POST" action="{{ $route('levels.destroy', $level) }}" class="mt-3" onsubmit="return confirm('Supprimer ce niveau ?')">
+                                                            @csrf @method('DELETE')
+                                                            <button class="app-button-danger w-full" type="submit">Supprimer le niveau</button>
+                                                        </form>
+                                                    @endif
+                                                </div>
+                                            </details>
+                                        </div>
+                                    </summary>
+                                    <div class="border-t border-slate-200 p-4">
+                                        <div class="grid gap-3 sm:grid-cols-2 2xl:grid-cols-3">
+                                            @forelse($level->classrooms as $classroom)
+                                                @php $isFull = $classroom->capacity && $classroom->students_count >= $classroom->capacity; @endphp
+                                                <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                                                    <div class="flex items-start justify-between gap-3">
+                                                        <div>
+                                                            <a href="{{ $route('classrooms.show', $classroom) }}" class="font-semibold text-slate-950 hover:text-sky-700">{{ $classroom->name }}</a>
+                                                            <p class="mt-1 text-xs text-slate-500">Section {{ $classroom->section }}</p>
+                                                        </div>
+                                                        <span class="rounded-full px-2 py-1 text-[0.68rem] font-semibold {{ $isFull ? 'bg-rose-50 text-rose-700' : 'bg-emerald-50 text-emerald-700' }}">{{ $classroom->students_count }}{{ $classroom->capacity ? '/'.$classroom->capacity : '' }}</span>
+                                                    </div>
+                                                    <details class="mt-4">
+                                                        <summary class="cursor-pointer list-none text-xs font-semibold text-sky-700">Modifier</summary>
+                                                        <form method="POST" action="{{ $route('classrooms.update', $classroom) }}" class="mt-3 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                                                            @csrf @method('PUT')
+                                                            <input name="name" value="{{ $classroom->name }}" class="app-input" required>
+                                                            <div class="grid grid-cols-2 gap-2">
+                                                                <input name="section" value="{{ $classroom->section }}" class="app-input" placeholder="A">
+                                                                <input name="capacity" value="{{ $classroom->capacity }}" type="number" min="1" max="200" class="app-input" placeholder="Capacité">
+                                                            </div>
+                                                            <button class="app-button-primary" type="submit">Enregistrer</button>
+                                                        </form>
+                                                        @if($classroom->students_count === 0)
+                                                            <form method="POST" action="{{ $route('classrooms.destroy', $classroom) }}" class="mt-2" onsubmit="return confirm('Supprimer cette classe ?')">
+                                                                @csrf @method('DELETE')
+                                                                <button class="app-button-danger w-full" type="submit">Supprimer la classe</button>
+                                                            </form>
+                                                        @endif
+                                                    </details>
+                                                </div>
+                                            @empty
+                                                <div class="col-span-full rounded-xl border border-dashed border-slate-300 px-4 py-5 text-sm text-slate-500">Aucune classe dans ce niveau.</div>
+                                            @endforelse
+                                        </div>
+                                    </div>
+                                </details>
+                            @empty
+                                <div class="rounded-xl border border-dashed border-slate-300 bg-white px-5 py-6 text-sm text-slate-500">Aucun niveau dans ce cycle.</div>
+                            @endforelse
+                        </div>
+                    </article>
                 @endforeach
             </div>
-        @endif
+        </div>
+
+        <aside class="space-y-5">
+            <div class="app-card px-5 py-5">
+                <p class="app-overline">Création rapide</p>
+                <h2 class="mt-2 text-lg font-semibold text-slate-950">Créer plusieurs classes</h2>
+                <p class="mt-2 text-sm leading-6 text-slate-500">Saisissez A, B, C pour générer automatiquement PS-A, PS-B et PS-C.</p>
+                <form method="POST" action="{{ $route('classrooms.bulk.store') }}" class="mt-5 space-y-4">
+                    @csrf
+                    <select name="level_id" class="app-input" required>
+                        <option value="">Choisir un niveau</option>
+                        @foreach($cycles as $cycle)<optgroup label="{{ $cycle->name }}">@foreach($cycle->levels as $level)<option value="{{ $level->id }}">{{ $level->code }} — {{ $level->name }}</option>@endforeach</optgroup>@endforeach
+                    </select>
+                    <input name="sections" class="app-input" placeholder="A, B, C" required>
+                    <input name="capacity" type="number" min="1" max="200" class="app-input" placeholder="Capacité par classe (optionnel)">
+                    <button class="app-button-primary w-full" type="submit">Créer les classes</button>
+                </form>
+            </div>
+
+            <div class="app-card px-5 py-5">
+                <p class="app-overline">Nouveau niveau</p>
+                <form method="POST" action="{{ $route('levels.store') }}" class="mt-4 space-y-3">
+                    @csrf
+                    <select name="education_cycle_id" class="app-input" required><option value="">Cycle</option>@foreach($cycles as $cycle)<option value="{{ $cycle->id }}">{{ $cycle->name }}</option>@endforeach</select>
+                    <div class="grid grid-cols-[100px_1fr] gap-2"><input name="code" class="app-input" placeholder="PS" required><input name="name" class="app-input" placeholder="Petite section" required></div>
+                    <button class="app-button-secondary w-full" type="submit">Ajouter le niveau</button>
+                </form>
+            </div>
+
+            <details class="app-card px-5 py-5">
+                <summary class="cursor-pointer list-none">
+                    <p class="app-overline">Classe personnalisée</p>
+                    <h2 class="mt-2 text-lg font-semibold text-slate-950">Créer une classe manuellement</h2>
+                </summary>
+                <form method="POST" action="{{ $route('classrooms.store') }}" class="mt-4 space-y-3">
+                    @csrf
+                    <select name="level_id" class="app-input" required>
+                        <option value="">Choisir un niveau</option>
+                        @foreach($cycles as $cycle)<optgroup label="{{ $cycle->name }}">@foreach($cycle->levels as $level)<option value="{{ $level->id }}">{{ $level->code }} — {{ $level->name }}</option>@endforeach</optgroup>@endforeach
+                    </select>
+                    <input name="name" class="app-input" placeholder="Nom affiché, ex. PS-A" required>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input name="section" class="app-input" placeholder="Section, ex. A">
+                        <input name="capacity" type="number" min="1" max="200" class="app-input" placeholder="Capacité">
+                    </div>
+                    <button class="app-button-secondary w-full" type="submit">Créer la classe</button>
+                </form>
+            </details>
+
+            <div class="app-card px-5 py-5">
+                <p class="app-overline">Nouveau cycle</p>
+                <form method="POST" action="{{ $route('cycles.store') }}" class="mt-4 space-y-3">
+                    @csrf
+                    <div class="grid grid-cols-[100px_1fr] gap-2"><input name="code" class="app-input" placeholder="SUP" required><input name="name" class="app-input" placeholder="Supérieur" required></div>
+                    <select name="color" class="app-input">@foreach(array_keys($cycleStyles) as $color)<option value="{{ $color }}">{{ ucfirst($color) }}</option>@endforeach</select>
+                    <button class="app-button-secondary w-full" type="submit">Ajouter le cycle</button>
+                </form>
+            </div>
+        </aside>
     </section>
 
     <script>
-        (function () {
-            const input = document.getElementById('searchBox');
-            const levelsWrap = document.getElementById('levelsWrap');
-            if (!input || !levelsWrap) return;
-
-            function applyFilter() {
-                const q = (input.value || '').trim().toLowerCase();
-                const levelItems = Array.from(levelsWrap.querySelectorAll('.level-item'));
-
-                levelItems.forEach(level => {
-                    const levelText = level.getAttribute('data-search') || '';
-                    const classItems = Array.from(level.querySelectorAll('.class-item'));
-
-                    if (!q) {
-                        level.classList.remove('hidden');
-                        classItems.forEach(c => c.classList.remove('hidden'));
-                        return;
-                    }
-
-                    let anyClassVisible = false;
-                    classItems.forEach(c => {
-                        const t = c.getAttribute('data-search') || '';
-                        const ok = t.includes(q);
-                        c.classList.toggle('hidden', !ok);
-                        if (ok) anyClassVisible = true;
-                    });
-
-                    const showLevel = levelText.includes(q) || anyClassVisible;
-                    level.classList.toggle('hidden', !showLevel);
-                });
-            }
-
-            input.addEventListener('input', applyFilter);
+        (() => {
+            const input = document.getElementById('structureSearch');
+            const items = [...document.querySelectorAll('.structure-cycle')];
+            input?.addEventListener('input', () => {
+                const query = input.value.trim().toLowerCase();
+                items.forEach(item => item.classList.toggle('hidden', query && !item.dataset.search.includes(query)));
+            });
         })();
     </script>
-</x-admin-layout>
+</x-dynamic-component>
