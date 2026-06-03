@@ -21,16 +21,16 @@
     @endif
 
     <section class="app-card overflow-hidden p-0">
-        <div class="border-b border-slate-200 bg-slate-950 px-6 py-7 text-white md:px-8">
+        <div class="border-b border-slate-200 bg-gradient-to-r from-sky-50 via-white to-emerald-50 px-6 py-7 text-slate-950 md:px-8">
             <div class="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
                 <div class="max-w-3xl">
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-sky-300">Organisation pédagogique</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">Organisation pédagogique</p>
                     <h2 class="mt-3 text-3xl font-semibold">Cycles, niveaux et classes</h2>
-                    <p class="mt-3 text-sm leading-6 text-slate-300">Organisez l'établissement par cycle, créez les niveaux, puis séparez-les en classes comme PS-A, PS-B ou 1AP-A.</p>
+                    <p class="mt-3 text-sm leading-6 text-slate-600">Organisez l'établissement par cycle, créez les niveaux, puis séparez-les en classes comme PS-A, PS-B ou 1AP-A.</p>
                 </div>
                 <form method="POST" action="{{ $route('presets.store') }}">
                     @csrf
-                    <button class="app-button-secondary border-white/20 bg-white text-slate-900" type="submit">Installer les niveaux standards</button>
+                    <button class="app-button-primary" type="submit">Installer les niveaux standards</button>
                 </form>
             </div>
         </div>
