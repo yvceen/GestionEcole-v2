@@ -1726,6 +1726,64 @@ header.sticky.top-0 {
   font-weight: 700;
 }
 
+@media (min-width: 1024px) {
+  .portal-shell .app-sidebar-panel {
+    padding: 0.65rem !important;
+  }
+
+  .portal-shell .app-sidebar-identity {
+    padding: 0.25rem 0.35rem 0.55rem;
+  }
+
+  .portal-shell .app-sidebar-identity .mt-3 {
+    margin-top: 0.45rem;
+  }
+
+  .portal-shell .app-sidebar-panel > nav {
+    flex: 0 1 auto;
+    overflow-y: visible;
+    margin-top: 0.4rem;
+    padding-right: 0;
+  }
+
+  .portal-shell .app-sidebar-panel > nav.space-y-1\.5 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.15rem;
+  }
+
+  .portal-shell .app-sidebar-section-label {
+    padding-top: 0.35rem;
+    font-size: 0.58rem;
+    line-height: 1rem;
+  }
+
+  .portal-shell .app-sidebar-link {
+    min-height: 2.15rem;
+    gap: 0.5rem;
+    padding: 0.22rem 0.45rem;
+    font-size: 0.78rem;
+  }
+
+  .portal-shell .app-sidebar-icon-wrap {
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 7px;
+  }
+
+  .portal-shell .app-sidebar-panel > .mt-4 {
+    margin-top: 0.45rem;
+    padding-top: 0.45rem;
+  }
+
+  .portal-shell .app-sidebar-footer {
+    padding: 0.35rem 0.45rem;
+  }
+
+  .portal-shell .app-sidebar-avatar {
+    width: 1.85rem;
+    height: 1.85rem;
+  }
+}
+
 .portal-shell .app-main {
   padding-top: 1.25rem;
 }
