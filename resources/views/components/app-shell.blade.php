@@ -212,7 +212,7 @@
         <aside class="hidden shrink-0 lg:block lg:w-[var(--sidebar-w)]">
             <div class="fixed bottom-0 left-0 top-[var(--navbar-h)] z-30 w-[var(--sidebar-w)] p-3 pr-0">
                 <div class="app-sidebar-panel p-4">
-                    <div class="app-sidebar-identity">
+                    <div class="app-sidebar-identity app-sidebar-desktop-identity">
                         <div class="flex items-start gap-3">
                             <div class="app-sidebar-brand-icon">
                                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -258,7 +258,7 @@
                     @endforelse
                     </nav>
 
-                    <div class="mt-4 border-t border-slate-200/80 pt-4">
+                    <div class="app-sidebar-desktop-footer mt-4 border-t border-slate-200/80 pt-4">
                         <div class="app-sidebar-footer">
                             <div class="app-sidebar-avatar">{{ mb_strtoupper(mb_substr((string) ($user?->name ?? 'U'), 0, 1)) }}</div>
                             <div class="min-w-0">
