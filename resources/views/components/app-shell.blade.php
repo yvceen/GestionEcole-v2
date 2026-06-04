@@ -210,7 +210,7 @@
 
     <div class="flex flex-1">
         <aside class="hidden shrink-0 lg:block lg:w-[var(--sidebar-w)]">
-            <div class="sticky top-[calc(var(--navbar-h)+0.75rem)] p-3 pr-0">
+            <div class="fixed bottom-0 left-0 top-[var(--navbar-h)] z-30 w-[var(--sidebar-w)] p-3 pr-0">
                 <div class="app-sidebar-panel p-4">
                     <div class="app-sidebar-identity">
                         <div class="flex items-start gap-3">
