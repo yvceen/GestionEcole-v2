@@ -17,6 +17,7 @@ Alpine.data('appNavbar', ({ unreadCount = 0, latestUnreadNotificationId = 0, mes
     searchQuery: '',
     searchItems: Array.isArray(searchItems) ? searchItems : [],
     refreshTimer: null,
+    navbarResizeObserver: null,
     audioContext: null,
     soundUnlocked: false,
     latestUnreadNotificationId: Number(latestUnreadNotificationId) || 0,
@@ -52,12 +53,23 @@ Alpine.data('appNavbar', ({ unreadCount = 0, latestUnreadNotificationId = 0, mes
         window.addEventListener('pointerdown', unlockSound, { once: true, passive: true });
         window.addEventListener('keydown', unlockSound, { once: true });
 
+        this.$nextTick(() => {
+            this.syncNavbarMetrics();
+            if (window.ResizeObserver) {
+                this.navbarResizeObserver = new ResizeObserver(() => this.syncNavbarMetrics());
+                this.navbarResizeObserver.observe(this.$root);
+            }
+        });
         this.handleScroll();
-        window.addEventListener('scroll', () => this.handleScroll(), { passive: true });
+        window.addEventListener('scroll', () => {
+            this.handleScroll();
+            this.syncNavbarMetrics();
+        }, { passive: true });
         window.addEventListener('mobile-sidebar-changed', (event) => {
             this.mobileOpen = !!(event?.detail?.open);
         });
         window.addEventListener('resize', () => {
+            this.syncNavbarMetrics();
             if (window.innerWidth >= 1024) {
                 this.mobileOpen = false;
             }
@@ -81,6 +93,10 @@ Alpine.data('appNavbar', ({ unreadCount = 0, latestUnreadNotificationId = 0, mes
     },
     handleScroll() {
         this.setUiState({ hasShadow: window.scrollY > 4 });
+    },
+    syncNavbarMetrics() {
+        const navbarBottom = Math.max(0, Math.round(this.$root?.getBoundingClientRect().bottom || 0));
+        document.documentElement.style.setProperty('--navbar-bottom', `${navbarBottom}px`);
     },
     get filteredSearchItems() {
         const query = this.searchQuery.trim().toLocaleLowerCase();
