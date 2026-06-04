@@ -18,6 +18,7 @@
     if (Route::has('teacher.attendance.index')) {
         $nav[] = ['label' => 'Présences', 'route' => 'teacher.attendance.index', 'icon' => 'shield'];
     }
+    $nav[] = ['label' => 'Santé et urgences', 'route' => 'teacher.health.index', 'icon' => 'shield', 'active_routes' => ['teacher.health.*']];
     if (Route::has('attendance.scan.page')) {
         $nav[] = ['label' => 'Scan QR', 'route' => 'attendance.scan.page', 'icon' => 'shield', 'active_routes' => ['attendance.scan.page']];
     }
@@ -26,6 +27,9 @@
     }
     if (Route::has('teacher.messages.index')) {
         $nav[] = ['label' => 'Messagerie', 'route' => 'teacher.messages.index', 'icon' => 'message'];
+    }
+    if (Route::has('teacher.feedback-cases.index')) {
+        $nav[] = ['label' => 'Réclamations', 'route' => 'teacher.feedback-cases.index', 'icon' => 'message', 'active_routes' => ['teacher.feedback-cases.*']];
     }
     if (Route::has('teacher.timetable.index')) {
         $nav[] = ['label' => 'Emploi du temps', 'route' => 'teacher.timetable.index', 'icon' => 'calendar'];

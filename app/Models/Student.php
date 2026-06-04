@@ -126,4 +126,19 @@ class Student extends Model
     {
         return $this->hasMany(\App\Models\SupportPlan::class, 'student_id');
     }
+
+    public function healthProfile(): HasOne
+    {
+        return $this->hasOne(StudentHealthProfile::class);
+    }
+
+    public function healthReports(): HasMany
+    {
+        return $this->hasMany(StudentHealthReport::class);
+    }
+
+    public function activeHealthReports(): HasMany
+    {
+        return $this->healthReports()->where('status', StudentHealthReport::STATUS_ACTIVE);
+    }
 }

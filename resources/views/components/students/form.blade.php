@@ -219,6 +219,24 @@
         </div>
     </x-ui.card>
 
+    <x-ui.card title="Santé et urgences" subtitle="Informations importantes accessibles aux personnes autorisées.">
+        @php($health = $student?->healthProfile)
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <x-ui.input label="Groupe sanguin" name="health_blood_type" :value="old('health_blood_type', $health?->blood_type)" placeholder="Ex. : O+" />
+            <x-ui.input label="Téléphone d'urgence" name="health_emergency_contact_phone" :value="old('health_emergency_contact_phone', $health?->emergency_contact_phone)" />
+            <x-ui.input label="Contact d'urgence" name="health_emergency_contact_name" :value="old('health_emergency_contact_name', $health?->emergency_contact_name)" />
+            <label class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3">
+                <input type="hidden" name="health_allow_first_aid" value="0">
+                <input type="checkbox" name="health_allow_first_aid" value="1" @checked(old('health_allow_first_aid', $health?->allow_first_aid ?? true))>
+                <span class="text-sm font-semibold text-slate-800">Premiers secours autorisés</span>
+            </label>
+            <x-ui.textarea name="health_allergies" label="Allergies" placeholder="Aliments, médicaments, autres...">{{ old('health_allergies', $health?->allergies) }}</x-ui.textarea>
+            <x-ui.textarea name="health_chronic_conditions" label="Maladies chroniques">{{ old('health_chronic_conditions', $health?->chronic_conditions) }}</x-ui.textarea>
+            <x-ui.textarea name="health_medications" label="Médicaments habituels">{{ old('health_medications', $health?->medications) }}</x-ui.textarea>
+            <x-ui.textarea name="health_emergency_instructions" label="Consignes d'urgence">{{ old('health_emergency_instructions', $health?->emergency_instructions) }}</x-ui.textarea>
+        </div>
+    </x-ui.card>
+
     <div class="app-form-actions">
         <p class="app-form-actions-copy">Vérifiez les informations principales, le parent lié et les options de transport avant validation.</p>
         <div class="flex items-center justify-end gap-2">

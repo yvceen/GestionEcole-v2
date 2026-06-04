@@ -6,10 +6,15 @@ use App\Http\Controllers\AttendanceScanController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DigitalAuthorizationController;
+use App\Http\Controllers\DocumentRequestController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\FeedbackCaseController;
 use App\Http\Controllers\NotificationCenterController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentHealthController;
 use App\Http\Controllers\TransportOpsController;
+use App\Http\Controllers\VisitorVisitController;
 use App\Models\School;
 
 // ======================
@@ -204,6 +209,132 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+
+foreach ([
+    ['prefix' => 'admin', 'middleware' => 'admin', 'name' => 'admin.'],
+    ['prefix' => 'school-life', 'middleware' => 'school_life', 'name' => 'school-life.'],
+] as $healthManager) {
+    Route::prefix($healthManager['prefix'])->middleware(['auth', $healthManager['middleware'], 'school.active'])->as($healthManager['name'])->group(function (): void {
+        Route::get('/health', [StudentHealthController::class, 'index'])->name('health.index');
+        Route::get('/health/students/{student}', [StudentHealthController::class, 'show'])->name('health.show');
+        Route::put('/health/students/{student}/profile', [StudentHealthController::class, 'updateProfile'])->name('health.profile.update');
+        Route::post('/health/students/{student}/reports', [StudentHealthController::class, 'storeReport'])->name('health.reports.store');
+        Route::put('/health/reports/{report}/resolve', [StudentHealthController::class, 'resolve'])->name('health.reports.resolve');
+    });
+}
+
+foreach ([
+    ['prefix' => 'director', 'middleware' => DirectorOnly::class, 'name' => 'director.'],
+    ['prefix' => 'teacher', 'middleware' => 'teacher', 'name' => 'teacher.'],
+    ['prefix' => 'chauffeur', 'middleware' => 'chauffeur', 'name' => 'chauffeur.'],
+] as $healthReader) {
+    Route::prefix($healthReader['prefix'])->middleware(['auth', $healthReader['middleware'], 'school.active'])->as($healthReader['name'])->group(function (): void {
+        Route::get('/health', [StudentHealthController::class, 'index'])->name('health.index');
+        Route::get('/health/students/{student}', [StudentHealthController::class, 'show'])->name('health.show');
+    });
+}
+
+Route::prefix('parent')->middleware(['auth', 'parent', 'school.active'])->as('parent.')->group(function (): void {
+    Route::get('/health', [StudentHealthController::class, 'index'])->name('health.index');
+    Route::get('/health/students/{student}', [StudentHealthController::class, 'show'])->name('health.show');
+    Route::post('/health/students/{student}/reports', [StudentHealthController::class, 'storeReport'])->name('health.reports.store');
+});
+
+foreach ([
+    ['prefix' => 'admin', 'middleware' => 'admin', 'name' => 'admin.'],
+    ['prefix' => 'school-life', 'middleware' => 'school_life', 'name' => 'school-life.'],
+] as $feedbackManager) {
+    Route::prefix($feedbackManager['prefix'])->middleware(['auth', $feedbackManager['middleware'], 'school.active'])->as($feedbackManager['name'])->group(function (): void {
+        Route::get('/feedback', [FeedbackCaseController::class, 'index'])->name('feedback-cases.index');
+        Route::get('/feedback/{feedbackCase}', [FeedbackCaseController::class, 'show'])->name('feedback-cases.show');
+        Route::post('/feedback/{feedbackCase}/reply', [FeedbackCaseController::class, 'reply'])->name('feedback-cases.reply');
+        Route::put('/feedback/{feedbackCase}', [FeedbackCaseController::class, 'update'])->name('feedback-cases.update');
+    });
+}
+
+Route::prefix('director')->middleware(['auth', DirectorOnly::class, 'school.active'])->as('director.')->group(function (): void {
+    Route::get('/feedback', [FeedbackCaseController::class, 'index'])->name('feedback-cases.index');
+    Route::get('/feedback/{feedbackCase}', [FeedbackCaseController::class, 'show'])->name('feedback-cases.show');
+});
+
+foreach ([
+    ['prefix' => 'parent', 'middleware' => 'parent', 'name' => 'parent.'],
+    ['prefix' => 'teacher', 'middleware' => 'teacher', 'name' => 'teacher.'],
+] as $feedbackSubmitter) {
+    Route::prefix($feedbackSubmitter['prefix'])->middleware(['auth', $feedbackSubmitter['middleware'], 'school.active'])->as($feedbackSubmitter['name'])->group(function (): void {
+        Route::get('/feedback', [FeedbackCaseController::class, 'index'])->name('feedback-cases.index');
+        Route::get('/feedback/create', [FeedbackCaseController::class, 'create'])->name('feedback-cases.create');
+        Route::post('/feedback', [FeedbackCaseController::class, 'store'])->name('feedback-cases.store');
+        Route::get('/feedback/{feedbackCase}', [FeedbackCaseController::class, 'show'])->name('feedback-cases.show');
+        Route::post('/feedback/{feedbackCase}/reply', [FeedbackCaseController::class, 'reply'])->name('feedback-cases.reply');
+    });
+}
+
+foreach ([
+    ['prefix' => 'admin', 'middleware' => 'admin', 'name' => 'admin.'],
+    ['prefix' => 'school-life', 'middleware' => 'school_life', 'name' => 'school-life.'],
+] as $documentManager) {
+    Route::prefix($documentManager['prefix'])->middleware(['auth', $documentManager['middleware'], 'school.active'])->as($documentManager['name'])->group(function (): void {
+        Route::get('/document-requests', [DocumentRequestController::class, 'index'])->name('document-requests.index');
+        Route::get('/document-requests/{documentRequest}', [DocumentRequestController::class, 'show'])->name('document-requests.show');
+        Route::put('/document-requests/{documentRequest}', [DocumentRequestController::class, 'update'])->name('document-requests.update');
+        Route::get('/document-requests/{documentRequest}/download', [DocumentRequestController::class, 'download'])->name('document-requests.download');
+    });
+}
+
+Route::prefix('director')->middleware(['auth', DirectorOnly::class, 'school.active'])->as('director.')->group(function (): void {
+    Route::get('/document-requests', [DocumentRequestController::class, 'index'])->name('document-requests.index');
+    Route::get('/document-requests/{documentRequest}', [DocumentRequestController::class, 'show'])->name('document-requests.show');
+    Route::get('/document-requests/{documentRequest}/download', [DocumentRequestController::class, 'download'])->name('document-requests.download');
+});
+
+Route::prefix('parent')->middleware(['auth', 'parent', 'school.active'])->as('parent.')->group(function (): void {
+    Route::get('/document-requests', [DocumentRequestController::class, 'index'])->name('document-requests.index');
+    Route::get('/document-requests/create', [DocumentRequestController::class, 'create'])->name('document-requests.create');
+    Route::post('/document-requests', [DocumentRequestController::class, 'store'])->name('document-requests.store');
+    Route::get('/document-requests/{documentRequest}', [DocumentRequestController::class, 'show'])->name('document-requests.show');
+    Route::put('/document-requests/{documentRequest}/cancel', [DocumentRequestController::class, 'cancel'])->name('document-requests.cancel');
+    Route::get('/document-requests/{documentRequest}/download', [DocumentRequestController::class, 'download'])->name('document-requests.download');
+});
+
+foreach ([
+    ['prefix' => 'admin', 'middleware' => 'admin', 'name' => 'admin.'],
+    ['prefix' => 'school-life', 'middleware' => 'school_life', 'name' => 'school-life.'],
+] as $visitorManager) {
+    Route::prefix($visitorManager['prefix'])->middleware(['auth', $visitorManager['middleware'], 'school.active'])->as($visitorManager['name'])->group(function (): void {
+        Route::get('/visitors', [VisitorVisitController::class, 'index'])->name('visitors.index');
+        Route::get('/visitors/create', [VisitorVisitController::class, 'create'])->name('visitors.create');
+        Route::post('/visitors', [VisitorVisitController::class, 'store'])->name('visitors.store');
+        Route::get('/visitors/{visitor}', [VisitorVisitController::class, 'show'])->name('visitors.show');
+        Route::put('/visitors/{visitor}/check-in', [VisitorVisitController::class, 'checkIn'])->name('visitors.check-in');
+        Route::put('/visitors/{visitor}/check-out', [VisitorVisitController::class, 'checkOut'])->name('visitors.check-out');
+        Route::put('/visitors/{visitor}/cancel', [VisitorVisitController::class, 'cancel'])->name('visitors.cancel');
+    });
+}
+
+foreach ([
+    ['prefix' => 'admin', 'middleware' => 'admin', 'name' => 'admin.'],
+    ['prefix' => 'school-life', 'middleware' => 'school_life', 'name' => 'school-life.'],
+] as $authorizationManager) {
+    Route::prefix($authorizationManager['prefix'])->middleware(['auth', $authorizationManager['middleware'], 'school.active'])->as($authorizationManager['name'])->group(function (): void {
+        Route::get('/digital-authorizations', [DigitalAuthorizationController::class, 'index'])->name('digital-authorizations.index');
+        Route::get('/digital-authorizations/create', [DigitalAuthorizationController::class, 'create'])->name('digital-authorizations.create');
+        Route::post('/digital-authorizations', [DigitalAuthorizationController::class, 'store'])->name('digital-authorizations.store');
+        Route::get('/digital-authorizations/{digitalAuthorization}', [DigitalAuthorizationController::class, 'show'])->name('digital-authorizations.show');
+        Route::put('/digital-authorizations/{digitalAuthorization}/close', [DigitalAuthorizationController::class, 'close'])->name('digital-authorizations.close');
+    });
+}
+
+Route::prefix('director')->middleware(['auth', DirectorOnly::class, 'school.active'])->as('director.')->group(function (): void {
+    Route::get('/digital-authorizations', [DigitalAuthorizationController::class, 'index'])->name('digital-authorizations.index');
+    Route::get('/digital-authorizations/{digitalAuthorization}', [DigitalAuthorizationController::class, 'show'])->name('digital-authorizations.show');
+});
+
+Route::prefix('parent')->middleware(['auth', 'parent', 'school.active'])->as('parent.')->group(function (): void {
+    Route::get('/digital-authorizations', [DigitalAuthorizationController::class, 'index'])->name('digital-authorizations.index');
+    Route::get('/digital-authorizations/{digitalAuthorization}', [DigitalAuthorizationController::class, 'show'])->name('digital-authorizations.show');
+    Route::post('/digital-authorizations/recipients/{recipient}/respond', [DigitalAuthorizationController::class, 'respond'])->name('digital-authorizations.respond');
+});
 
 // =====================================================================
 // ADMIN (School Admin)

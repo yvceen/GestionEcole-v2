@@ -228,6 +228,8 @@ class StudentController extends Controller
                 'classroom_id' => $data['classroom_id'],
             ]);
 
+            $this->syncHealthProfile($student, $data, $schoolId);
+
             \App\Models\StudentFeePlan::updateOrCreate(
                 ['student_id' => $student->id, 'academic_year_id' => $academicYearId],
                 [
@@ -284,6 +286,7 @@ class StudentController extends Controller
             'feePlan' => fn ($query) => $query->where('academic_year_id', $academicYearId),
             'transportAssignment.route',
             'transportAssignment.vehicle.driver',
+            'healthProfile',
         ]);
 
         $classrooms = Classroom::with('level')
@@ -372,6 +375,8 @@ class StudentController extends Controller
             'parent_user_id' => $data['parent_user_id'] ?? null,
             'classroom_id' => $data['classroom_id'],
         ]);
+
+        $this->syncHealthProfile($student, $data, $schoolId);
 
         $student->feePlan()->updateOrCreate(
             ['student_id' => $student->id, 'academic_year_id' => $academicYearId],
@@ -584,6 +589,25 @@ class StudentController extends Controller
             ->where('school_id', $schoolId)
             ->where('student_id', $student->id)
             ->delete();
+    }
+
+    private function syncHealthProfile(Student $student, array $data, int $schoolId): void
+    {
+        $student->healthProfile()->updateOrCreate(
+            ['student_id' => $student->id],
+            [
+                'school_id' => $schoolId,
+                'blood_type' => $data['health_blood_type'] ?? null,
+                'allergies' => $data['health_allergies'] ?? null,
+                'chronic_conditions' => $data['health_chronic_conditions'] ?? null,
+                'medications' => $data['health_medications'] ?? null,
+                'emergency_instructions' => $data['health_emergency_instructions'] ?? null,
+                'emergency_contact_name' => $data['health_emergency_contact_name'] ?? null,
+                'emergency_contact_phone' => $data['health_emergency_contact_phone'] ?? null,
+                'allow_first_aid' => (bool) ($data['health_allow_first_aid'] ?? true),
+                'updated_by_user_id' => auth()->id(),
+            ]
+        );
     }
 
     private function deleteUserRelations(User $user, int $schoolId, ?int $linkedStudentId = null): void

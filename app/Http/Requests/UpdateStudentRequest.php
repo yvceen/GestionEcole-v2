@@ -43,6 +43,14 @@ class UpdateStudentRequest extends FormRequest
             'transport_vehicle_id' => ['nullable', 'integer', $vehicleRule],
             'transport_period' => ['nullable', 'in:morning,evening,both'],
             'transport_pickup_point' => ['nullable', 'string', 'max:255'],
+            'health_blood_type' => ['nullable', 'string', 'max:10'],
+            'health_allergies' => ['nullable', 'string', 'max:3000'],
+            'health_chronic_conditions' => ['nullable', 'string', 'max:3000'],
+            'health_medications' => ['nullable', 'string', 'max:3000'],
+            'health_emergency_instructions' => ['nullable', 'string', 'max:3000'],
+            'health_emergency_contact_name' => ['nullable', 'string', 'max:255'],
+            'health_emergency_contact_phone' => ['nullable', 'string', 'max:40'],
+            'health_allow_first_aid' => ['nullable', 'boolean'],
         ];
     }
 

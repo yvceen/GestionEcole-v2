@@ -10,6 +10,7 @@
 
     $nav = [
         ['label' => 'Tableau de bord', 'route' => 'chauffeur.dashboard', 'icon' => 'home', 'section' => 'Transport'],
+        ['label' => 'Alertes santé', 'route' => 'chauffeur.health.index', 'icon' => 'shield', 'active_routes' => ['chauffeur.health.*'], 'section' => 'Transport'],
     ];
 @endphp
 
