@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\BelongsToSchool;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -31,6 +32,22 @@ class BillableEvent extends Model
         'due_date' => 'date',
         'amount_per_student' => 'decimal:2',
     ];
+
+    protected function title(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            set: fn ($value) => html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+        );
+    }
+
+    protected function description(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value === null ? null : html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            set: fn ($value) => $value === null ? null : html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+        );
+    }
 
     public function school(): BelongsTo
     {

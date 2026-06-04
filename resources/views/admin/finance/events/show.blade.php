@@ -52,6 +52,11 @@
     @if(session('success'))
         <x-ui.alert variant="success" class="mt-5">{{ session('success') }}</x-ui.alert>
     @endif
+    @if($errors->any())
+        <x-ui.alert variant="error" class="mt-5">
+            {{ $errors->first() }}
+        </x-ui.alert>
+    @endif
 
     <section class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div class="rounded-[26px] border border-sky-100 bg-sky-50 px-5 py-5 shadow-sm">
@@ -77,6 +82,16 @@
     </section>
 
     <section class="mt-5 rounded-[28px] border border-slate-200 bg-white px-5 py-5 shadow-sm">
+        <div class="mb-5 flex flex-col gap-2 rounded-2xl border border-sky-100 bg-sky-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <p class="font-semibold text-slate-950">Retrouver rapidement un paiement</p>
+                <p class="mt-1 text-sm text-slate-600">Recherchez le nom de l'élève, le nom du parent, son téléphone ou son email.</p>
+            </div>
+            <span class="shrink-0 rounded-full border border-sky-200 bg-white px-3 py-1 text-xs font-bold text-sky-700">
+                Rechercher, encaisser, imprimer
+            </span>
+        </div>
+
         <div class="mb-4 h-3 overflow-hidden rounded-full bg-slate-100">
             <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 via-sky-500 to-indigo-500" style="width: {{ $progress }}%"></div>
         </div>
@@ -84,7 +99,7 @@
         <form method="GET" action="{{ route($routePrefix . '.show', $event) }}" class="grid gap-3 lg:grid-cols-[minmax(0,1.4fr)_220px_220px_auto] lg:items-end">
             <div>
                 <label class="mb-1 block text-sm font-semibold text-slate-800">Recherche</label>
-                <input name="q" value="{{ $q }}" class="app-input" placeholder="Élève, parent, téléphone ou email">
+                <input name="q" value="{{ $q }}" class="app-input" placeholder="Nom de l'élève, parent, téléphone ou email" autofocus>
             </div>
             <div>
                 <label class="mb-1 block text-sm font-semibold text-slate-800">Classe</label>

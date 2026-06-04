@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class BillableEventController extends Controller
 {
@@ -228,6 +229,26 @@ class BillableEventController extends Controller
             ->firstOrFail();
 
         $payment = DB::transaction(function () use ($event, $target, $data) {
+            $paidTotal = (float) BillableEventPayment::query()
+                ->where('billable_event_id', $event->id)
+                ->where('student_id', $target->student_id)
+                ->lockForUpdate()
+                ->sum('amount');
+            $remaining = max(0, (float) $target->amount_due - $paidTotal);
+            $amount = (float) $data['amount'];
+
+            if ($remaining <= 0) {
+                throw ValidationException::withMessages([
+                    'amount' => 'Ce paiement est déjà soldé.',
+                ]);
+            }
+
+            if ($amount > $remaining) {
+                throw ValidationException::withMessages([
+                    'amount' => 'Le montant dépasse le reste à payer de ' . number_format($remaining, 2) . ' MAD.',
+                ]);
+            }
+
             $paidAt = !empty($data['paid_at']) ? Carbon::parse($data['paid_at']) : now();
             $receiptNumber = $this->nextReceiptNumber((int) $event->school_id, $paidAt);
 
@@ -237,7 +258,7 @@ class BillableEventController extends Controller
                 'student_id' => $target->student_id,
                 'parent_user_id' => $target->student?->parent_user_id,
                 'receipt_number' => $receiptNumber,
-                'amount' => $data['amount'],
+                'amount' => $amount,
                 'method' => $data['method'],
                 'paid_at' => $paidAt,
                 'received_by_user_id' => auth()->id(),

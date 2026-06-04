@@ -15,6 +15,7 @@
         ['label' => 'Élèves', 'route' => 'admin.students.index', 'icon' => 'users', 'section' => 'Gestion'],
         ['label' => 'Utilisateurs', 'route' => 'admin.users.index', 'icon' => 'user', 'section' => 'Gestion'],
         ['label' => 'Finance', 'route' => 'admin.finance.index', 'icon' => 'wallet', 'section' => 'Gestion'],
+        ['label' => 'Paiements événements', 'route' => 'admin.finance.events.index', 'icon' => 'calendar', 'section' => 'Gestion'],
         ['label' => 'Vie scolaire', 'route' => 'admin.school-life.index', 'icon' => 'shield', 'section' => 'Gestion'],
         ['label' => 'Matières', 'route' => 'admin.subjects.index', 'icon' => 'book', 'section' => 'Organisation'],
         ['label' => 'Emploi du temps', 'route' => 'admin.timetable.index', 'icon' => 'calendar', 'section' => 'Organisation'],
