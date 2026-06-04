@@ -11,8 +11,11 @@ Alpine.store('ui', {
     messageUnreadCount: 0,
 });
 
-Alpine.data('appNavbar', ({ unreadCount = 0, latestUnreadNotificationId = 0, messageUnreadCount = 0, refreshUrl = '' } = {}) => ({
+Alpine.data('appNavbar', ({ unreadCount = 0, latestUnreadNotificationId = 0, messageUnreadCount = 0, refreshUrl = '', searchItems = [] } = {}) => ({
     mobileOpen: false,
+    searchOpen: false,
+    searchQuery: '',
+    searchItems: Array.isArray(searchItems) ? searchItems : [],
     refreshTimer: null,
     audioContext: null,
     soundUnlocked: false,
@@ -59,6 +62,13 @@ Alpine.data('appNavbar', ({ unreadCount = 0, latestUnreadNotificationId = 0, mes
                 this.mobileOpen = false;
             }
         });
+        window.addEventListener('open-search', () => this.openSearch());
+        window.addEventListener('keydown', (event) => {
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+                event.preventDefault();
+                this.openSearch();
+            }
+        });
         this.refreshCounts();
         this.refreshTimer = window.setInterval(() => this.refreshCounts(), 30000);
     },
@@ -71,6 +81,33 @@ Alpine.data('appNavbar', ({ unreadCount = 0, latestUnreadNotificationId = 0, mes
     },
     handleScroll() {
         this.setUiState({ hasShadow: window.scrollY > 4 });
+    },
+    get filteredSearchItems() {
+        const query = this.searchQuery.trim().toLocaleLowerCase();
+        const items = this.searchItems.filter((item) => item && item.label && item.url);
+
+        if (!query) {
+            return items.slice(0, 10);
+        }
+
+        return items
+            .filter((item) => `${item.label} ${item.group || ''}`.toLocaleLowerCase().includes(query))
+            .slice(0, 12);
+    },
+    openSearch() {
+        this.searchOpen = true;
+        this.searchQuery = '';
+        this.$nextTick(() => this.$refs.commandSearch?.focus());
+    },
+    closeSearch() {
+        this.searchOpen = false;
+        this.searchQuery = '';
+    },
+    openFirstSearchResult() {
+        const first = this.filteredSearchItems[0];
+        if (first?.url) {
+            window.location.href = first.url;
+        }
     },
     async refreshCounts() {
         if (!refreshUrl) {

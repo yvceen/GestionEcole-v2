@@ -138,6 +138,22 @@
     $messagesIndexUrl = $messageRoutePrefix && Route::has($messageRoutePrefix . '.messages.index')
         ? route($messageRoutePrefix . '.messages.index')
         : null;
+
+    $searchItems = collect(is_array($links) ? $links : [])
+        ->filter(fn ($item) => is_array($item) && !empty($item['route']) && Route::has($item['route']))
+        ->map(fn ($item) => [
+            'label' => (string) ($item['label'] ?? 'Module'),
+            'group' => (string) ($item['section'] ?? 'Navigation'),
+            'url' => route((string) $item['route']),
+        ])
+        ->concat($roleActions->map(fn ($item) => [
+            'label' => (string) ($item['label'] ?? 'Action'),
+            'group' => 'Actions rapides',
+            'url' => route((string) $item['route']),
+        ]))
+        ->unique('url')
+        ->values()
+        ->all();
 @endphp
 
 <header
@@ -146,6 +162,7 @@
         latestUnreadNotificationId: {{ (int) $latestUnreadNotificationId }},
         messageUnreadCount: {{ (int) $messageUnreadCount }},
         refreshUrl: @js($notificationsIndexUrl ?: $messagesIndexUrl ?: url()->current()),
+        searchItems: @js($searchItems),
     })"
     class="app-navbar sticky top-0 z-50 w-full glass-nav transition-shadow duration-300"
     :class="$store.ui.hasShadow ? 'shadow-[0_18px_42px_-32px_rgba(15,23,42,0.24)]' : ''"
@@ -195,8 +212,11 @@
                 <input
                     class="app-input rounded-full border-slate-200 bg-white/90 pl-10 pr-16"
                     type="search"
-                    placeholder="Rechercher un Élève, une classe, un utilisateur..."
+                    placeholder="Rechercher une page ou une action..."
                     aria-label="Rechercher"
+                    readonly
+                    @click="openSearch()"
+                    @focus="openSearch()"
                 >
                 <span class="pointer-events-none absolute inset-y-0 right-3 hidden items-center rounded-full border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-500 lg:flex">
                     Ctrl+K
@@ -209,7 +229,7 @@
                 type="button"
                 class="app-button-secondary h-10 w-10 rounded-2xl px-0 md:hidden"
                 aria-label="Recherche"
-                @click="$dispatch('open-search', {})"
+                @click="openSearch()"
             >
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.35-5.15a7 7 0 1 0-7 7 7 7 0 0 0 7-7z" />
@@ -327,6 +347,52 @@
                     </form>
                 </div>
             </details>
+        </div>
+    </div>
+
+    <div
+        x-cloak
+        x-show="searchOpen"
+        x-transition.opacity
+        class="app-command-overlay"
+        @click.self="closeSearch()"
+        @keydown.escape.window="closeSearch()"
+    >
+        <div class="app-command-panel" x-transition>
+            <div class="app-command-input-wrap">
+                <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.35-5.15a7 7 0 1 0-7 7 7 7 0 0 0 7-7z"/>
+                </svg>
+                <input
+                    x-ref="commandSearch"
+                    x-model="searchQuery"
+                    class="app-command-input"
+                    type="search"
+                    placeholder="Rechercher une page ou une action..."
+                    @keydown.enter.prevent="openFirstSearchResult()"
+                >
+                <button type="button" class="app-command-close" @click="closeSearch()">Esc</button>
+            </div>
+
+            <div class="app-command-results">
+                <template x-for="item in filteredSearchItems" :key="item.url">
+                    <a :href="item.url" class="app-command-result">
+                        <span class="app-command-result-icon">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-5-5 5 5-5 5"/>
+                            </svg>
+                        </span>
+                        <span class="min-w-0 flex-1">
+                            <span class="block truncate text-sm font-semibold text-slate-900" x-text="item.label"></span>
+                            <span class="mt-0.5 block text-xs text-slate-500" x-text="item.group"></span>
+                        </span>
+                    </a>
+                </template>
+                <div x-show="filteredSearchItems.length === 0" class="px-5 py-10 text-center text-sm text-slate-500">
+                    Aucun résultat trouvé.
+                </div>
+            </div>
+            <div class="app-command-footer">Entrée pour ouvrir · Échap pour fermer</div>
         </div>
     </div>
 </header>
