@@ -147,7 +147,7 @@
         messageUnreadCount: {{ (int) $messageUnreadCount }},
         refreshUrl: @js($notificationsIndexUrl ?: $messagesIndexUrl ?: url()->current()),
     })"
-    class="sticky top-0 z-50 w-full glass-nav transition-shadow duration-300"
+    class="app-navbar sticky top-0 z-50 w-full glass-nav transition-shadow duration-300"
     :class="$store.ui.hasShadow ? 'shadow-[0_18px_42px_-32px_rgba(15,23,42,0.24)]' : ''"
     data-notification-unread="{{ (int) $notificationUnreadCount }}"
     data-notification-latest-id="{{ (int) $latestUnreadNotificationId }}"
@@ -169,8 +169,8 @@
                 </svg>
             </button>
 
-            <div class="flex min-w-0 items-center gap-3 rounded-2xl border border-slate-200 bg-white/80 px-3 py-2 shadow-sm">
-                <div class="grid h-11 w-11 place-items-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+            <div class="app-navbar-brand flex min-w-0 items-center gap-3 rounded-2xl border border-slate-200 bg-white/80 px-3 py-2 shadow-sm">
+                <div class="grid h-10 w-10 place-items-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
                     <img
                         src="{{ $schoolLogoUrl ?: $defaultLogoUrl }}"
                         class="h-full w-full {{ $schoolLogoUrl ? 'object-contain' : 'object-cover' }}"
@@ -186,7 +186,7 @@
         </div>
 
         <div class="hidden min-w-0 flex-1 justify-center md:flex">
-            <label class="relative w-full max-w-2xl">
+            <label class="app-navbar-search relative w-full max-w-2xl">
                 <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.35-5.15a7 7 0 1 0-7 7 7 7 0 0 0 7-7z" />
@@ -204,7 +204,7 @@
             </label>
         </div>
 
-        <div class="flex flex-none items-center gap-2">
+        <div class="app-navbar-actions flex flex-none items-center gap-2">
             <button
                 type="button"
                 class="app-button-secondary h-10 w-10 rounded-2xl px-0 md:hidden"

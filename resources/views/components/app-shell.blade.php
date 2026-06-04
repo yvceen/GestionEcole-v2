@@ -195,7 +195,7 @@
         $dispatch('mobile-sidebar-changed', { open: mobileOpen });
         document.body.classList.toggle('overflow-hidden', mobileOpen);
     "
-    class="app-shell-body flex min-h-screen flex-col"
+    class="app-shell-body portal-shell portal-role-{{ str_replace('_', '-', (string) ($user?->role ?? 'user')) }} flex min-h-screen flex-col"
 >
     <x-app-navbar :links="$resolvedLinks->all()" :navigation-title="$navigationTitle" />
 
@@ -210,11 +210,10 @@
 
     <div class="flex flex-1">
         <aside class="hidden shrink-0 lg:block lg:w-[var(--sidebar-w)]">
-            <div class="sticky top-[calc(var(--navbar-h)+1rem)] p-4 pr-0">
+            <div class="sticky top-[calc(var(--navbar-h)+0.75rem)] p-3 pr-0">
                 <div class="app-sidebar-panel p-4">
-                    <div class="border-b border-slate-200 px-2 pb-4">
-                        <p class="app-overline">Navigation</p>
-                        <div class="mt-3 flex items-start gap-3">
+                    <div class="app-sidebar-identity">
+                        <div class="flex items-start gap-3">
                             <div class="app-sidebar-brand-icon">
                                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 12.5L12 5l8 7.5v6A1.5 1.5 0 0 1 18.5 20H5.5A1.5 1.5 0 0 1 4 18.5v-6Z" />
@@ -222,13 +221,13 @@
                                 </svg>
                             </div>
                             <div class="min-w-0">
+                                <p class="app-sidebar-context">Espace de travail</p>
                                 <p class="text-sm font-semibold text-slate-900">{{ $navigationTitle }}</p>
                                 <p class="mt-1 text-xs leading-5 text-slate-500">{{ $schoolName }}</p>
                             </div>
                         </div>
-                        <div class="mt-4 flex flex-wrap gap-2">
+                        <div class="mt-3 flex flex-wrap gap-2">
                             <span class="app-sidebar-meta-pill">{{ $roleLabel }}</span>
-                            <span class="app-sidebar-meta-pill">{{ $user?->name ?? 'Utilisateur' }}</span>
                         </div>
                     </div>
 
@@ -259,11 +258,13 @@
                     @endforelse
                     </nav>
 
-                    <div class="mt-4 border-t border-slate-200 px-2 pt-4">
+                    <div class="mt-4 border-t border-slate-200/80 pt-4">
                         <div class="app-sidebar-footer">
-                            <p class="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Session active</p>
-                            <p class="mt-2 text-sm font-semibold text-slate-900">{{ $user?->name ?? 'Utilisateur' }}</p>
-                            <p class="mt-1 text-xs leading-5 text-slate-500">{{ $schoolName }}</p>
+                            <div class="app-sidebar-avatar">{{ mb_strtoupper(mb_substr((string) ($user?->name ?? 'U'), 0, 1)) }}</div>
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-semibold text-slate-900">{{ $user?->name ?? 'Utilisateur' }}</p>
+                                <p class="mt-0.5 truncate text-xs text-slate-500">{{ $roleLabel }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>

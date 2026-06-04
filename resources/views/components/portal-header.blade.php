@@ -30,17 +30,28 @@
 
 <section class="portal-hero">
     <div class="portal-hero-content">
-        <div class="min-w-0 space-y-4">
-            <div>
-                <p class="portal-eyebrow">{{ $eyebrow }}</p>
-                <h1 class="portal-hero-title">{{ $title }}</h1>
-                @if($subtitle)
-                    <p class="portal-hero-copy">{{ $subtitle }}</p>
-                @endif
+        <div class="min-w-0">
+            <div class="portal-heading-row">
+                <div class="portal-title-mark" aria-hidden="true">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <rect x="4" y="4" width="6" height="6" rx="1.5"/>
+                        <rect x="14" y="4" width="6" height="6" rx="1.5"/>
+                        <rect x="4" y="14" width="6" height="6" rx="1.5"/>
+                        <rect x="14" y="14" width="6" height="6" rx="1.5"/>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="portal-eyebrow">{{ $eyebrow }}</p>
+                    <h1 class="portal-hero-title">{{ $title }}</h1>
+                </div>
             </div>
 
+            @if($subtitle)
+                <p class="portal-hero-copy">{{ $subtitle }}</p>
+            @endif
+
             @if($badgeItems->isNotEmpty())
-                <div class="flex flex-wrap gap-2">
+                <div class="portal-context-row">
                     @foreach($badgeItems as $badge)
                         <span class="portal-chip">{{ $badge }}</span>
                     @endforeach
