@@ -10,6 +10,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\NotificationCenterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransportOpsController;
+use App\Models\School;
 
 // ======================
 // Admin
@@ -141,9 +142,16 @@ use App\Http\Middleware\DirectorOnly;
 // Public
 // ======================
 Route::get('/', function () {
-    return Auth::check()
-        ? redirect()->route('dashboard')
-        : view('welcome');
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+
+    $partnerSchools = School::query()
+        ->where('is_active', true)
+        ->orderBy('name')
+        ->get(['id', 'name', 'logo_path']);
+
+    return view('welcome', compact('partnerSchools'));
 });
 
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');

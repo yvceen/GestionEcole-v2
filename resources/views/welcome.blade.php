@@ -10,17 +10,13 @@
         .fut-logo-marquee{position:relative;z-index:1;width:100%;overflow:hidden;margin-top:3rem;padding:1.25rem 0 2rem;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
         .fut-logo-marquee:hover .fut-logo-track{animation-play-state:paused}
         .fut-logo-track{display:flex;width:max-content;gap:1rem;animation:myeduLogoMarquee 34s linear infinite}
-        .fut-logo-card{display:grid;min-width:15rem;min-height:6.5rem;grid-template-columns:3.25rem minmax(0,1fr);align-items:center;gap:1rem;border-radius:1.6rem;border:1px solid rgba(226,232,240,.86);background:rgba(255,255,255,.82);padding:1rem 1.1rem;box-shadow:0 24px 58px -46px rgba(15,23,42,.42);transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
+        .fut-logo-card{display:grid;min-width:15rem;min-height:6.5rem;grid-template-columns:4rem minmax(0,1fr);align-items:center;gap:1rem;border-radius:1.6rem;border:1px solid rgba(226,232,240,.86);background:rgba(255,255,255,.82);padding:1rem 1.1rem;box-shadow:0 24px 58px -46px rgba(15,23,42,.42);transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
         .fut-logo-card:hover{transform:translateY(-4px) scale(1.015);border-color:rgba(147,197,253,.8);box-shadow:0 32px 72px -44px rgba(37,99,235,.34)}
-        .fut-school-logo{position:relative;display:grid;width:3.25rem;height:3.25rem;place-items:center;overflow:hidden;border-radius:1.15rem;background:linear-gradient(135deg,#0ea5e9,#4f46e5);color:#fff;font-size:.78rem;font-weight:900;letter-spacing:.1em;box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 18px 38px -28px rgba(37,99,235,.75)}
-        .fut-school-logo::before{content:"";position:absolute;inset:.42rem;border:1px solid rgba(255,255,255,.42);border-radius:9999px}
-        .fut-school-logo::after{content:"";position:absolute;right:.55rem;top:.55rem;width:.42rem;height:.42rem;border-radius:9999px;background:rgba(255,255,255,.82)}
-        .fut-school-logo em{position:relative;z-index:1;font-style:normal}
-        .fut-logo-emerald{background:linear-gradient(135deg,#10b981,#0f766e)}
-        .fut-logo-violet{background:linear-gradient(135deg,#8b5cf6,#4338ca)}
-        .fut-logo-amber{background:linear-gradient(135deg,#f59e0b,#e11d48)}
-        .fut-logo-slate{background:linear-gradient(135deg,#334155,#0f172a)}
+        .fut-school-logo{display:grid;width:4rem;height:4rem;place-items:center;overflow:hidden;background:transparent}
+        .fut-school-logo img{display:block;width:100%;height:100%;object-fit:contain;background:transparent}
+        .fut-school-logo-fallback{display:grid;width:3.5rem;height:3.5rem;place-items:center;border-radius:1rem;background:#f0f9ff;color:#0369a1;font-size:.75rem;font-weight:900;letter-spacing:.08em}
         .fut-logo-card strong{overflow-wrap:anywhere;font-size:.98rem;color:#0f172a}
+        .fut-logo-empty{margin:2rem auto 0;max-width:32rem;border:1px dashed #cbd5e1;border-radius:1.5rem;background:rgba(255,255,255,.72);padding:1.5rem;text-align:center;color:#64748b}
         @keyframes myeduLogoMarquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
         @media(max-width:767px){.fut-logo-track{animation-duration:40s}.fut-logo-card{min-width:13rem;min-height:5.75rem}}
     </style>
@@ -35,19 +31,8 @@
     ];
 
     $community = ['Direction', 'Enseignants', 'Parents', 'Élèves', 'Vie scolaire', 'Administration'];
-
-    $partnerSchools = [
-        ['name' => 'Achbal Ryad', 'initials' => 'AR', 'tone' => 'sky'],
-        ['name' => 'Paul Robert', 'initials' => 'PR', 'tone' => 'violet'],
-        ['name' => 'Al Amal', 'initials' => 'AA', 'tone' => 'emerald'],
-        ['name' => 'Ibn Sina', 'initials' => 'IS', 'tone' => 'amber'],
-        ['name' => 'Atlas School', 'initials' => 'AS', 'tone' => 'slate'],
-        ['name' => 'Horizon', 'initials' => 'HZ', 'tone' => 'sky'],
-        ['name' => 'Les Etoiles', 'initials' => 'LE', 'tone' => 'violet'],
-        ['name' => 'Al Massira', 'initials' => 'AM', 'tone' => 'emerald'],
-        ['name' => 'Future Kids', 'initials' => 'FK', 'tone' => 'amber'],
-        ['name' => 'Smart School', 'initials' => 'SS', 'tone' => 'slate'],
-    ];
+    $partnerSchoolCarousel = $partnerSchools->concat($partnerSchools)->values();
+    $partnerSchoolCount = $partnerSchools->count();
 
     $reasons = [
         'Interface élégante',
@@ -162,22 +147,32 @@
                 </div>
             </div>
 
-            <div class="fut-logo-marquee" aria-label="Ecoles partenaires">
-                <div class="fut-logo-track">
-                    @foreach($partnerSchools as $school)
-                        <div class="fut-logo-card">
-                            <span class="fut-school-logo fut-logo-{{ $school['tone'] }}"><em>{{ $school['initials'] }}</em></span>
-                            <strong>{{ $school['name'] }}</strong>
-                        </div>
-                    @endforeach
-                    @foreach($partnerSchools as $school)
-                        <div class="fut-logo-card">
-                            <span class="fut-school-logo fut-logo-{{ $school['tone'] }}"><em>{{ $school['initials'] }}</em></span>
-                            <strong>{{ $school['name'] }}</strong>
-                        </div>
-                    @endforeach
+            <?php if ($partnerSchoolCount > 0): ?>
+                <div class="fut-logo-marquee" aria-label="Ecoles partenaires">
+                    <div class="fut-logo-track">
+                        <?php foreach ($partnerSchoolCarousel as $index => $school): ?>
+                            <?php
+                                $logoPath = is_string($school->logo_path) ? ltrim($school->logo_path, '/') : '';
+                                $logoUrl = $logoPath !== '' ? asset('storage/' . $logoPath) : null;
+                                $initials = \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr(\Illuminate\Support\Str::slug($school->name, ''), 0, 2));
+                                $duplicate = $index >= $partnerSchoolCount;
+                            ?>
+                            <div class="fut-logo-card" <?= $duplicate ? 'aria-hidden="true"' : '' ?>>
+                                <?php if ($logoUrl): ?>
+                                    <span class="fut-school-logo">
+                                        <img src="<?= e($logoUrl) ?>" alt="<?= e($duplicate ? '' : 'Logo ' . $school->name) ?>" loading="lazy">
+                                    </span>
+                                <?php else: ?>
+                                    <span class="fut-school-logo-fallback"><?= e($initials ?: 'EC') ?></span>
+                                <?php endif; ?>
+                                <strong><?= e($school->name) ?></strong>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
-            </div>
+            <?php else: ?>
+                <div class="fut-logo-empty">Les ecoles creees et activees par le Super Admin apparaitront automatiquement ici.</div>
+            <?php endif; ?>
         </section>
 
         <section id="about" class="fut-section fut-reveal">
