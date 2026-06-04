@@ -122,92 +122,82 @@
             </div>
         </div>
 
-        <div class="hidden overflow-x-auto md:block">
-            <table class="app-table min-w-[980px]">
-                <thead>
-                    <tr>
-                        <th class="min-w-[130px]">Classe</th>
-                        <th class="min-w-[250px]">Titre</th>
-                        <th class="min-w-[170px]">Enseignant</th>
-                        <th class="min-w-[165px]">Echeance</th>
-                        <th class="min-w-[120px]">Pieces jointes</th>
-                        <th class="min-w-[120px]">Statut</th>
-                        <th class="min-w-[165px]">Créé le</th>
-                        <th class="min-w-[260px] text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($homeworks as $hw)
-                        @php
-                            $normalized = $hw->normalized_status ?? 'pending';
-                            $badgeVariant = match($normalized) {
-                                'approved' => 'success',
-                                'rejected' => 'danger',
-                                default => 'warning',
-                            };
-                            $statusLabel = match($normalized) {
-                                'approved' => 'Approuve',
-                                'rejected' => 'Rejete',
-                                default => 'En attente',
-                            };
-                        @endphp
-                        <tr>
-                            <td><div class="font-semibold text-slate-900">{{ $hw->classroom?->name ?? '-' }}</div></td>
-                            <td>
-                                <div class="space-y-1">
-                                    <p class="font-semibold text-slate-950">{{ $hw->title }}</p>
-                                    <p class="text-xs text-slate-500">Maintenance et validation depuis la vie scolaire.</p>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="space-y-1">
-                                    <p class="font-medium text-slate-800">{{ $hw->teacher?->name ?? '-' }}</p>
-                                    <p class="text-xs text-slate-500">Soumission enseignant</p>
-                                </div>
-                            </td>
-                            <td class="text-slate-600">{{ optional($hw->due_at)->format('Y-m-d H:i') ?? '-' }}</td>
-                            <td>
-                                <span class="inline-flex min-w-10 items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">
-                                    {{ (int) ($hw->attachments_count ?? 0) }}
-                                </span>
-                            </td>
-                            <td>
-                                <x-ui.badge :variant="$badgeVariant" class="uppercase tracking-[0.12em]">
-                                    {{ $statusLabel }}
-                                </x-ui.badge>
-                            </td>
-                            <td class="text-slate-500">{{ optional($hw->created_at)->format('Y-m-d H:i') }}</td>
-                            <td>
-                                <div class="flex flex-wrap justify-end gap-2">
-                                    <x-ui.button :href="route($routePrefix . '.show', $hw)" variant="secondary" size="sm">Voir</x-ui.button>
-                                    <x-ui.button :href="route($routePrefix . '.edit', $hw)" variant="ghost" size="sm">Modifier</x-ui.button>
+        <div class="divide-y divide-slate-200/80">
+            @forelse($homeworks as $hw)
+                @php
+                    $normalized = $hw->normalized_status ?? 'pending';
+                    $badgeVariant = match($normalized) {
+                        'approved' => 'success',
+                        'rejected' => 'danger',
+                        default => 'warning',
+                    };
+                    $statusLabel = match($normalized) {
+                        'approved' => 'Approuve',
+                        'rejected' => 'Rejete',
+                        default => 'En attente',
+                    };
+                @endphp
 
-                                    @if($normalized === 'pending')
-                                        <form method="POST" action="{{ route($routePrefix . '.approve', $hw) }}">
-                                            @csrf
-                                            <button class="app-button-outline min-h-9 rounded-lg px-3 py-2 text-xs">Approuver</button>
-                                        </form>
-                                        <form method="POST" action="{{ route($routePrefix . '.reject', $hw) }}">
-                                            @csrf
-                                            <button class="app-button-danger min-h-9 rounded-lg px-3 py-2 text-xs">Rejeter</button>
-                                        </form>
-                                    @endif
+                <article class="grid gap-4 px-5 py-4 transition hover:bg-sky-50/50 xl:grid-cols-[minmax(120px,0.7fr)_minmax(180px,1.35fr)_minmax(150px,1fr)_minmax(130px,0.8fr)_auto_minmax(320px,auto)] xl:items-center">
+                    <div class="min-w-0">
+                        <p class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 xl:hidden">Classe</p>
+                        <p class="truncate text-sm font-semibold text-slate-900">{{ $hw->classroom?->name ?? '-' }}</p>
+                    </div>
 
-                                    <form method="POST" action="{{ route($routePrefix . '.destroy', $hw) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="app-button-danger min-h-9 rounded-lg px-3 py-2 text-xs" onclick="return confirm('Supprimer ce devoir ?');">Supprimer</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8" class="px-6 py-14 text-center text-sm text-slate-500">Aucun devoir pour ce filtre.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    <div class="min-w-0">
+                        <p class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 xl:hidden">Devoir</p>
+                        <a href="{{ route($routePrefix . '.show', $hw) }}" class="block truncate text-sm font-semibold text-slate-950 transition hover:text-sky-700">
+                            {{ $hw->title }}
+                        </a>
+                        <p class="mt-0.5 truncate text-xs text-slate-500">
+                            {{ (int) ($hw->attachments_count ?? 0) }} piece(s) jointe(s)
+                        </p>
+                    </div>
+
+                    <div class="min-w-0">
+                        <p class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 xl:hidden">Enseignant</p>
+                        <p class="truncate text-sm font-medium text-slate-800">{{ $hw->teacher?->name ?? '-' }}</p>
+                    </div>
+
+                    <div class="min-w-0">
+                        <p class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 xl:hidden">Echeance</p>
+                        <p class="whitespace-nowrap text-xs font-medium text-slate-600">{{ optional($hw->due_at)->format('d/m/Y H:i') ?? '-' }}</p>
+                    </div>
+
+                    <div>
+                        <x-ui.badge :variant="$badgeVariant" class="whitespace-nowrap uppercase tracking-[0.08em]">
+                            {{ $statusLabel }}
+                        </x-ui.badge>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-1.5 xl:flex-nowrap xl:justify-end">
+                        <a href="{{ route($routePrefix . '.show', $hw) }}" class="app-button-secondary min-h-8 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[11px]">Voir</a>
+                        <a href="{{ route($routePrefix . '.edit', $hw) }}" class="app-button-ghost min-h-8 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[11px]">Modifier</a>
+
+                        @if($normalized === 'pending')
+                            <form method="POST" action="{{ route($routePrefix . '.approve', $hw) }}">
+                                @csrf
+                                <button class="app-button-outline min-h-8 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[11px]">Approuver</button>
+                            </form>
+                            <form method="POST" action="{{ route($routePrefix . '.reject', $hw) }}">
+                                @csrf
+                                <button class="app-button-danger min-h-8 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[11px]">Rejeter</button>
+                            </form>
+                        @endif
+
+                        <form method="POST" action="{{ route($routePrefix . '.destroy', $hw) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button class="app-button-danger min-h-8 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[11px]" onclick="return confirm('Supprimer ce devoir ?');">Supprimer</button>
+                        </form>
+                    </div>
+                </article>
+            @empty
+                <div class="px-6 py-14 text-center">
+                    <p class="text-sm font-semibold text-slate-800">Aucun devoir pour ce filtre.</p>
+                    <p class="mt-1 text-xs text-slate-500">Les devoirs soumis par les enseignants apparaitront ici pour validation.</p>
+                </div>
+            @endforelse
         </div>
     </section>
 

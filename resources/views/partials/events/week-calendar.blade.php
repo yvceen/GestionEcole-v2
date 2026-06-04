@@ -10,10 +10,10 @@
         .myedu-agenda-shell .fc .fc-toolbar {
             align-items: center;
             gap: 0.75rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 0.65rem;
         }
         .myedu-agenda-shell .fc .fc-toolbar-title {
-            font-size: 1.15rem;
+            font-size: 1rem;
             font-weight: 800;
             letter-spacing: -0.02em;
             color: #0f172a;
@@ -25,7 +25,7 @@
             color: #075985;
             box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
             font-weight: 700;
-            padding: 0.45rem 0.8rem;
+            padding: 0.32rem 0.65rem;
         }
         .myedu-agenda-shell .fc .fc-button-primary:not(:disabled).fc-button-active,
         .myedu-agenda-shell .fc .fc-button-primary:not(:disabled):active {
@@ -35,22 +35,25 @@
         }
         .myedu-agenda-shell .fc .fc-col-header-cell {
             background: #f8fafc;
-            padding: 0.55rem 0;
-            font-size: 0.75rem;
+            padding: 0.35rem 0;
+            font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
         }
         .myedu-agenda-shell .fc .fc-timegrid-slot {
-            height: 3rem;
+            height: 1.65rem;
+        }
+        .myedu-agenda-shell .fc .fc-timegrid-slot-label {
+            font-size: 0.68rem;
         }
         .myedu-agenda-shell .fc .fc-event {
             border: 0;
-            border-radius: 14px;
+            border-radius: 8px;
             box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
             overflow: hidden;
         }
         .myedu-agenda-shell .fc .fc-timegrid-event {
-            padding: 0.15rem;
+            padding: 0.05rem;
         }
         @media (max-width: 767px) {
             .myedu-agenda-shell .fc .fc-toolbar {
@@ -134,8 +137,8 @@
 </x-ui.card>
 
 <x-ui.card title="Vue semaine" subtitle="Agenda hebdomadaire moderne avec blocs colores, optimise pour desktop et mobile." class="mt-5">
-    <div class="myedu-agenda-shell rounded-[30px] border border-slate-200 bg-gradient-to-br from-slate-50 to-sky-50/70 p-3 sm:p-5">
-        <div id="weeklyAgendaCalendar" class="min-h-[720px] rounded-[26px] bg-white p-3 shadow-sm ring-1 ring-slate-200/80 sm:p-5"></div>
+    <div class="myedu-agenda-shell rounded-[22px] border border-slate-200 bg-gradient-to-br from-slate-50 to-sky-50/70 p-2 sm:p-3">
+        <div id="weeklyAgendaCalendar" class="rounded-[18px] bg-white p-2 shadow-sm ring-1 ring-slate-200/80 sm:p-3"></div>
     </div>
 </x-ui.card>
 
@@ -253,7 +256,7 @@
                 eventContent(arg) {
                     const props = arg.event.extendedProps || {};
                     const wrap = document.createElement('div');
-                    wrap.className = 'rounded-xl px-1 py-0.5 text-[11px] leading-4 sm:text-xs';
+                    wrap.className = 'rounded-lg px-1 text-[10px] leading-3 sm:text-[11px]';
                     wrap.innerHTML = `
                         <div class="font-semibold">${arg.event.title}</div>
                         <div class="opacity-90">${props.classroom || ''}</div>

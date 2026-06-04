@@ -24,6 +24,26 @@
                     @error('requested_pickup_at')<p class="app-error">{{ $message }}</p>@enderror
                 </div>
 
+                <div class="grid gap-4 md:grid-cols-3">
+                    <x-ui.input
+                        label="Personne qui recuperera l'enfant"
+                        name="pickup_person_name"
+                        :value="old('pickup_person_name', auth()->user()?->name)"
+                        required
+                    />
+                    <x-ui.input
+                        label="Lien avec l'enfant"
+                        name="pickup_person_relationship"
+                        :value="old('pickup_person_relationship', 'Parent')"
+                        placeholder="Parent, oncle, tante..."
+                    />
+                    <x-ui.input
+                        label="Telephone du responsable"
+                        name="pickup_person_phone"
+                        :value="old('pickup_person_phone', auth()->user()?->phone)"
+                    />
+                </div>
+
                 <div class="app-field">
                     <label class="app-label" for="reason">Motif / note optionnelle</label>
                     <div class="mb-2 flex flex-wrap gap-2">

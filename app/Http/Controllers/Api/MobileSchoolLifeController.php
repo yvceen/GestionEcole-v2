@@ -113,6 +113,11 @@ class MobileSchoolLifeController extends Controller
                 'status' => (string) $pickup->status,
                 'status_label' => $this->pickupStatusLabel((string) $pickup->status),
                 'decision_note' => (string) ($pickup->decision_note ?? ''),
+                'pickup_person_name' => (string) ($pickup->pickup_person_name ?? $pickup->parentUser?->name ?? ''),
+                'pickup_person_relationship' => (string) ($pickup->pickup_person_relationship ?? ''),
+                'pickup_person_phone' => (string) ($pickup->pickup_person_phone ?? ''),
+                'verification_code' => (string) ($pickup->verification_code ?? ''),
+                'completed_at' => optional($pickup->completed_at)->toIso8601String(),
                 'reviewed_by' => (string) ($pickup->reviewedBy?->name ?? ''),
             ])->values()->all(),
             'behaviors' => $behaviors->map(fn (StudentBehavior $behavior) => [

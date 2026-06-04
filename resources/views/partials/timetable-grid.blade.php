@@ -38,15 +38,28 @@
                 | Seance standard : {{ (int) $settings->slot_minutes }} min
             </p>
         </div>
-        @if($settings->lunch_start && $settings->lunch_end)
-            <span class="app-badge app-badge-warning whitespace-nowrap">
-                Pause: {{ substr((string) $settings->lunch_start, 0, 5) }} - {{ substr((string) $settings->lunch_end, 0, 5) }}
-            </span>
-        @endif
+        <div class="flex flex-wrap items-center gap-2">
+            @if($editable)
+                <span class="app-badge app-badge-info whitespace-nowrap">Glissez pour deplacer</span>
+            @endif
+            @if($settings->lunch_start && $settings->lunch_end)
+                <span class="app-badge app-badge-warning whitespace-nowrap">
+                    Pause: {{ substr((string) $settings->lunch_start, 0, 5) }} - {{ substr((string) $settings->lunch_end, 0, 5) }}
+                </span>
+            @endif
+        </div>
     </header>
 
     @if($slots->isEmpty())
-        <div class="p-6 text-sm text-slate-600">Aucun creneau pour cette classe.</div>
+        <div class="px-6 py-14 text-center">
+            <div class="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-sky-50 text-sky-700 ring-1 ring-sky-100">
+                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 2v3m8-3v3M4 9h16M5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13A1.5 1.5 0 0 1 5.5 4Z"/>
+                </svg>
+            </div>
+            <p class="mt-4 text-sm font-semibold text-slate-900">Aucun creneau programme</p>
+            <p class="mt-1 text-sm text-slate-500">Ajoutez le premier cours pour construire la semaine de cette classe.</p>
+        </div>
     @else
         <div class="overflow-x-auto bg-slate-50/40">
             <div class="min-w-[1040px] p-3">
@@ -54,9 +67,11 @@
                     <div class="border-b border-r border-slate-200 bg-slate-50 px-4 py-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                         Heure
                     </div>
-                    @foreach($days as $dayLabel)
-                        <div class="border-b border-r border-slate-200 bg-slate-50 px-4 py-4 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 last:border-r-0">
-                            {{ $dayLabel }}
+                    @foreach($days as $dayNumber => $dayLabel)
+                        @php $headerDaySlots = $slotsByDay->get($dayNumber, collect()); @endphp
+                        <div class="border-b border-r border-slate-200 bg-slate-50 px-3 py-3 text-center last:border-r-0">
+                            <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-600">{{ $dayLabel }}</p>
+                            <p class="mt-1 text-[10px] font-medium text-slate-400">{{ $headerDaySlots->count() }} cours</p>
                         </div>
                     @endforeach
 

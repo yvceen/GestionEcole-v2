@@ -53,6 +53,9 @@ class MobilePickupRequestController extends Controller
             'student_id' => ['required', 'integer', 'in:' . implode(',', $childIds ?: [0])],
             'requested_pickup_at' => ['required', 'date', 'after_or_equal:now'],
             'reason' => ['nullable', 'string', 'max:1000'],
+            'pickup_person_name' => ['nullable', 'string', 'max:255'],
+            'pickup_person_relationship' => ['nullable', 'string', 'max:120'],
+            'pickup_person_phone' => ['nullable', 'string', 'max:40'],
         ]);
 
         $child = $children->firstWhere('id', (int) $data['student_id']);
@@ -64,6 +67,10 @@ class MobilePickupRequestController extends Controller
             'parent_user_id' => (int) $user->id,
             'requested_pickup_at' => $data['requested_pickup_at'],
             'reason' => trim((string) ($data['reason'] ?? '')) ?: null,
+            'pickup_person_name' => trim((string) ($data['pickup_person_name'] ?? $user->name)),
+            'pickup_person_relationship' => trim((string) ($data['pickup_person_relationship'] ?? '')) ?: null,
+            'pickup_person_phone' => trim((string) ($data['pickup_person_phone'] ?? $user->phone ?? '')) ?: null,
+            'verification_code' => (string) random_int(100000, 999999),
             'status' => PickupRequest::STATUS_PENDING,
         ]);
 
@@ -137,6 +144,10 @@ class MobilePickupRequestController extends Controller
             'requested_pickup_label' => $pickupRequest->requested_pickup_at?->format('d/m/Y H:i') ?? '',
             'reason' => (string) ($pickupRequest->reason ?? ''),
             'decision_note' => (string) ($pickupRequest->decision_note ?? ''),
+            'pickup_person_name' => (string) ($pickupRequest->pickup_person_name ?? ''),
+            'pickup_person_relationship' => (string) ($pickupRequest->pickup_person_relationship ?? ''),
+            'pickup_person_phone' => (string) ($pickupRequest->pickup_person_phone ?? ''),
+            'verification_code' => (string) ($pickupRequest->verification_code ?? ''),
             'reviewed_at' => optional($pickupRequest->reviewed_at)?->toIso8601String(),
             'reviewed_by' => (string) ($pickupRequest->reviewedBy?->name ?? ''),
             'student' => [

@@ -43,6 +43,18 @@
                     <p class="mt-4 text-sm text-slate-600">{{ $request->reason }}</p>
                 @endif
 
+                <div class="mt-4 grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm sm:grid-cols-2">
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Personne autorisee</p>
+                        <p class="mt-1 font-semibold text-slate-900">{{ $request->pickup_person_name ?: ($request->parentUser?->name ?? '-') }}</p>
+                        <p class="mt-0.5 text-xs text-slate-500">{{ $request->pickup_person_relationship ?: 'Non precise' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Code de verification</p>
+                        <p class="mt-1 font-mono text-lg font-bold tracking-[0.2em] text-sky-700">{{ $request->verification_code ?: '-' }}</p>
+                    </div>
+                </div>
+
                 @if($request->decision_note || $request->reviewedBy)
                     <div class="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
                         @if($request->reviewedBy)

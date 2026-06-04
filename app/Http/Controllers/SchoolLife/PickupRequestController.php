@@ -17,6 +17,7 @@ class PickupRequestController extends Controller
     public function index(Request $request)
     {
         $schoolId = $this->schoolId();
+        $date = $request->date('date')?->toDateString() ?? now()->toDateString();
         $status = trim((string) $request->get('status', ''));
         if (!in_array($status, PickupRequest::statuses(), true)) {
             $status = '';
@@ -24,6 +25,7 @@ class PickupRequestController extends Controller
 
         $requests = PickupRequest::query()
             ->where('school_id', $schoolId)
+            ->whereDate('requested_pickup_at', $date)
             ->when($status !== '', fn ($query) => $query->where('status', $status))
             ->with(['student.classroom.level', 'parentUser:id,name,phone,email', 'reviewedBy:id,name'])
             ->orderBy('requested_pickup_at')
@@ -31,13 +33,21 @@ class PickupRequestController extends Controller
             ->withQueryString();
 
         $stats = [
-            'pending' => PickupRequest::where('school_id', $schoolId)->where('status', PickupRequest::STATUS_PENDING)->count(),
-            'approved' => PickupRequest::where('school_id', $schoolId)->where('status', PickupRequest::STATUS_APPROVED)->count(),
-            'completed' => PickupRequest::where('school_id', $schoolId)->where('status', PickupRequest::STATUS_COMPLETED)->count(),
-            'rejected' => PickupRequest::where('school_id', $schoolId)->where('status', PickupRequest::STATUS_REJECTED)->count(),
+            'pending' => PickupRequest::where('school_id', $schoolId)->whereDate('requested_pickup_at', $date)->where('status', PickupRequest::STATUS_PENDING)->count(),
+            'approved' => PickupRequest::where('school_id', $schoolId)->whereDate('requested_pickup_at', $date)->where('status', PickupRequest::STATUS_APPROVED)->count(),
+            'completed' => PickupRequest::where('school_id', $schoolId)->whereDate('completed_at', $date)->where('status', PickupRequest::STATUS_COMPLETED)->count(),
+            'rejected' => PickupRequest::where('school_id', $schoolId)->whereDate('requested_pickup_at', $date)->where('status', PickupRequest::STATUS_REJECTED)->count(),
         ];
 
-        return view('school-life.pickup-requests.index', compact('requests', 'status', 'stats'));
+        $dailyExits = PickupRequest::query()
+            ->where('school_id', $schoolId)
+            ->where('status', PickupRequest::STATUS_COMPLETED)
+            ->whereDate('completed_at', $date)
+            ->with(['student.classroom.level', 'parentUser:id,name,phone,email', 'reviewedBy:id,name'])
+            ->orderBy('completed_at')
+            ->get();
+
+        return view('school-life.pickup-requests.index', compact('requests', 'status', 'stats', 'date', 'dailyExits'));
     }
 
     public function approve(Request $request, PickupRequest $pickupRequest)
