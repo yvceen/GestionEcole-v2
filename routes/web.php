@@ -151,7 +151,7 @@ Route::get('/', function () {
         ->orderBy('name')
         ->get(['id', 'name', 'logo_path']);
 
-    return view('welcome', compact('partnerSchools'));
+    return view('welcome-public', compact('partnerSchools'));
 });
 
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
