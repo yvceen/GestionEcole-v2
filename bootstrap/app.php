@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'student' => \App\Http\Middleware\StudentOnly::class,
             'chauffeur' => \App\Http\Middleware\ChauffeurOnly::class,
             'school_life' => \App\Http\Middleware\SchoolLifeOnly::class,
+            'accueil' => \App\Http\Middleware\AccueilOnly::class,
             'school.active' => \App\Http\Middleware\CheckSchoolActive::class,
         ]);
 

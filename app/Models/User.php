@@ -25,6 +25,7 @@ class User extends Authenticatable
     public const ROLE_STUDENT     = 'student';
     public const ROLE_CHAUFFEUR   = 'chauffeur';
     public const ROLE_SCHOOL_LIFE = 'school_life';
+    public const ROLE_ACCUEIL     = 'accueil';
 
     protected $fillable = [
         'school_id',
@@ -161,6 +162,7 @@ class User extends Authenticatable
             self::ROLE_STUDENT => 'Eleve',
             self::ROLE_CHAUFFEUR => 'Chauffeur',
             self::ROLE_SCHOOL_LIFE => 'Responsable scolaire',
+            self::ROLE_ACCUEIL => 'Accueil',
         ];
     }
 
@@ -182,6 +184,7 @@ class User extends Authenticatable
             self::ROLE_STUDENT => 'success',
             self::ROLE_CHAUFFEUR => 'warning',
             self::ROLE_SCHOOL_LIFE => 'warning',
+            self::ROLE_ACCUEIL => 'info',
             default => 'info',
         };
     }

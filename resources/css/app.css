@@ -1215,6 +1215,7 @@
     background: rgba(255, 255, 255, 0.96);
     border-radius: 1.5rem;
     padding: 0.45rem;
+    padding-bottom: calc(0.45rem + env(safe-area-inset-bottom, 0px));
     box-shadow: 0 24px 60px -36px rgba(15, 23, 42, 0.3);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
@@ -1241,6 +1242,10 @@
   .portal-mobile-dock-label {
     display: block;
     line-height: 1.1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .portal-loading-overlay,
@@ -1509,6 +1514,33 @@ header.sticky.top-0 {
     padding: 1rem 0.65rem 2.25rem;
   }
 
+  .ui-scope {
+    max-width: 100%;
+  }
+
+  .ui-scope section,
+  .ui-scope article,
+  .ui-scope form,
+  .ui-scope header,
+  .ui-scope .app-card,
+  .ui-scope .student-panel,
+  .ui-scope .student-kpi,
+  .ui-scope .portal-record-card {
+    min-width: 0;
+  }
+
+  .ui-scope h1,
+  .ui-scope h2,
+  .ui-scope h3,
+  .ui-scope p,
+  .ui-scope a,
+  .ui-scope button,
+  .ui-scope span,
+  .ui-scope td,
+  .ui-scope th {
+    overflow-wrap: anywhere;
+  }
+
   .app-title {
     font-size: 1.55rem;
     line-height: 2rem;
@@ -1537,6 +1569,18 @@ header.sticky.top-0 {
   .app-button-danger,
   .app-button-soft {
     min-height: 2.75rem;
+  }
+
+  .ui-scope .app-button-primary,
+  .ui-scope .app-button-secondary,
+  .ui-scope .app-button-outline,
+  .ui-scope .app-button-ghost,
+  .ui-scope .app-button-danger,
+  .ui-scope .app-button-soft {
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    line-height: 1.25rem;
   }
 
   .app-navbar-actions details > div,
@@ -1584,7 +1628,7 @@ header.sticky.top-0 {
 
 @media (max-width: 1023px) {
   .app-main-has-dock {
-    padding-bottom: 7.25rem;
+    padding-bottom: calc(7.25rem + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -2105,6 +2149,58 @@ header.sticky.top-0 {
 }
 
 @media (max-width: 639px) {
+  .portal-shell .glass-nav {
+    height: auto;
+    min-height: var(--navbar-h);
+  }
+
+  .portal-shell .glass-nav > div {
+    min-height: var(--navbar-h);
+    gap: 0.45rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .portal-shell .app-navbar-brand {
+    min-width: 0;
+    max-width: calc(100vw - 15.5rem);
+    gap: 0.45rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .portal-shell .app-navbar-brand .h-10.w-10 {
+    width: 2.25rem;
+    height: 2.25rem;
+    flex: 0 0 auto;
+  }
+
+  .portal-shell .app-navbar-actions {
+    gap: 0.35rem;
+  }
+
+  .portal-shell .app-navbar-actions .app-button-secondary,
+  .portal-shell .app-navbar-actions .app-button-ghost,
+  .portal-shell .app-navbar-actions summary {
+    min-height: 2.35rem;
+  }
+
+  .portal-shell .app-navbar-actions .app-button-secondary,
+  .portal-shell .app-navbar-actions .app-button-ghost {
+    width: 2.35rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .portal-shell .app-navbar-actions details:last-child summary > div {
+    padding: 0.2rem;
+  }
+
+  .portal-shell .app-navbar-actions details:last-child summary .h-9.w-9 {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
+
   .portal-shell .portal-hero {
     border-radius: 15px;
     padding: 1rem 1rem 0.7rem;
@@ -2124,6 +2220,103 @@ header.sticky.top-0 {
     flex-wrap: nowrap;
     overflow-x: auto;
     padding-bottom: 0.25rem;
+  }
+
+  .portal-shell .portal-top-nav {
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+
+  .portal-shell .portal-top-nav-link {
+    max-width: 9.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .portal-role-parent .app-main {
+    padding-left: 0.45rem;
+    padding-right: 0.45rem;
+  }
+
+  .portal-role-parent .ui-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .portal-role-parent .portal-mobile-dock {
+    left: max(0.45rem, env(safe-area-inset-left, 0px));
+    right: max(0.45rem, env(safe-area-inset-right, 0px));
+    bottom: max(0.45rem, env(safe-area-inset-bottom, 0px));
+    gap: 0.25rem;
+    border-radius: 1.15rem;
+    padding: 0.3rem;
+    padding-bottom: calc(0.3rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .portal-role-parent .portal-mobile-dock-link {
+    min-height: 3.55rem;
+    gap: 0.25rem;
+    border-radius: 0.9rem;
+    padding: 0.35rem 0.2rem;
+    font-size: 0.62rem;
+  }
+
+  .portal-role-parent .portal-mobile-dock-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .portal-role-parent .portal-mobile-dock-icon svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .portal-role-parent .app-card,
+  .portal-role-parent .student-panel,
+  .portal-role-parent .student-kpi,
+  .portal-role-parent .portal-record-card,
+  .portal-role-parent .rounded-3xl,
+  .portal-role-parent .rounded-\[28px\],
+  .portal-role-parent .rounded-\[30px\] {
+    border-radius: 1rem;
+  }
+
+  .portal-role-parent .app-card,
+  .portal-role-parent .student-panel,
+  .portal-role-parent .student-kpi {
+    padding: 1rem;
+  }
+
+  .portal-role-parent .portal-filter-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .portal-role-parent .student-chip,
+  .portal-role-parent .portal-chip,
+  .portal-role-parent .app-badge {
+    max-width: 100%;
+    white-space: normal;
+    text-align: left;
+  }
+
+  .portal-role-parent .portal-record-card-head > span,
+  .portal-role-parent .portal-record-card-head > .app-badge {
+    align-self: flex-start;
+  }
+
+  .portal-role-parent .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .portal-role-parent .pagination > * {
+    min-width: 0;
   }
 }
 

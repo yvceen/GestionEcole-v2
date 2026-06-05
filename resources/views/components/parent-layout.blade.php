@@ -12,14 +12,14 @@
             'icon' => 'users',
             'active_routes' => ['parent.children.*', 'parent.courses.*', 'parent.homeworks.*', 'parent.grades.*', 'parent.timetable.*'],
         ],
-        ['label' => 'Absences', 'route' => 'parent.attendance.index', 'icon' => 'shield', 'active_routes' => ['parent.attendance.*']],
-        ['label' => 'Santé', 'route' => 'parent.health.index', 'icon' => 'shield', 'active_routes' => ['parent.health.*']],
+        ['label' => 'Absences', 'route' => 'parent.attendance.index', 'icon' => 'calendar-check', 'active_routes' => ['parent.attendance.*']],
+        ['label' => 'Santé', 'route' => 'parent.health.index', 'icon' => 'heart', 'active_routes' => ['parent.health.*']],
         ['label' => 'Autorisations', 'route' => 'parent.digital-authorizations.index', 'icon' => 'clipboard', 'active_routes' => ['parent.digital-authorizations.*']],
-        ['label' => 'Mes documents', 'route' => 'parent.document-requests.index', 'icon' => 'book', 'active_routes' => ['parent.document-requests.*']],
+        ['label' => 'Documents', 'route' => 'parent.document-requests.index', 'icon' => 'file', 'active_routes' => ['parent.document-requests.*']],
         ['label' => 'Réclamations', 'route' => 'parent.feedback-cases.index', 'icon' => 'message', 'active_routes' => ['parent.feedback-cases.*']],
         ['label' => 'Agenda', 'route' => 'parent.events.index', 'icon' => 'calendar', 'active_routes' => ['parent.events.*', 'parent.calendar.*']],
-        ['label' => 'Activités', 'route' => 'parent.activities.index', 'icon' => 'calendar', 'active_routes' => ['parent.activities.*']],
-        ['label' => 'Transport', 'route' => 'parent.transport.index', 'icon' => 'users', 'active_routes' => ['parent.transport.*']],
+        ['label' => 'Activités', 'route' => 'parent.activities.index', 'icon' => 'spark', 'active_routes' => ['parent.activities.*']],
+        ['label' => 'Transport', 'route' => 'parent.transport.index', 'icon' => 'bus', 'active_routes' => ['parent.transport.*']],
         ['label' => 'Paiements', 'route' => 'parent.finance.index', 'icon' => 'wallet', 'active_routes' => ['parent.finance.*']],
     ];
 
@@ -28,14 +28,14 @@
         $requestLink = [
             'label' => 'Demandes',
             'route' => 'parent.pickup-requests.index',
-            'icon' => 'calendar',
+            'icon' => 'hand',
             'active_routes' => ['parent.pickup-requests.*', 'parent.appointments.*'],
         ];
     } elseif (\Illuminate\Support\Facades\Route::has('parent.appointments.create')) {
         $requestLink = [
             'label' => 'Demandes',
             'route' => 'parent.appointments.create',
-            'icon' => 'calendar',
+            'icon' => 'hand',
             'active_routes' => ['parent.appointments.*'],
         ];
     }
@@ -48,7 +48,7 @@
         $nav[] = [
             'label' => 'Cartes',
             'route' => 'parent.cards.index',
-            'icon' => 'users',
+            'icon' => 'card',
             'active_routes' => ['parent.cards.*'],
         ];
     }
@@ -77,6 +77,13 @@
         array_unshift($headerActions, ['label' => 'Envoyer une demande', 'route' => $requestLink['route']]);
         $headerActions = array_slice($headerActions, 0, 3);
     }
+
+    $mobileDockLinks = [
+        ['label' => 'Accueil', 'route' => 'parent.dashboard', 'icon' => 'home', 'active_routes' => ['parent.dashboard']],
+        ['label' => 'Enfants', 'route' => 'parent.children.index', 'icon' => 'users', 'active_routes' => ['parent.children.*', 'parent.courses.*', 'parent.homeworks.*', 'parent.grades.*', 'parent.timetable.*']],
+        ['label' => 'Absences', 'route' => 'parent.attendance.index', 'icon' => 'calendar-check', 'active_routes' => ['parent.attendance.*']],
+        ['label' => 'Paiements', 'route' => 'parent.finance.index', 'icon' => 'wallet', 'active_routes' => ['parent.finance.*']],
+    ];
 @endphp
 
 <!doctype html>
@@ -89,7 +96,7 @@
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 <body class="app-shell-body min-h-screen overflow-x-hidden m-0 p-0">
-    <x-app-shell :links="$nav" navigation-title="Portail parent">
+    <x-app-shell :links="$nav" :mobile-dock-links="$mobileDockLinks" navigation-title="Portail parent">
         <div x-data="portalShell()" data-portal-shell class="ui-scope portal-space space-y-6">
             <div
                 x-cloak

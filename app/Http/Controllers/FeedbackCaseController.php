@@ -95,7 +95,7 @@ class FeedbackCaseController extends Controller
         $this->authorizeCase($request->user(), $feedbackCase);
         $canManage = $this->canManage($request->user());
         $feedbackCase->load(['submitter:id,name,email,phone,role', 'student.classroom:id,name', 'assignedTo:id,name', 'messages' => fn ($query) => $query->with('user:id,name,role')->orderBy('created_at')]);
-        $managers = $canManage ? User::query()->where('school_id', $feedbackCase->school_id)->whereIn('role', [User::ROLE_ADMIN, User::ROLE_SCHOOL_LIFE])->where('is_active', true)->orderBy('name')->get(['id', 'name', 'role']) : collect();
+        $managers = $canManage ? User::query()->where('school_id', $feedbackCase->school_id)->whereIn('role', [User::ROLE_ADMIN, User::ROLE_SCHOOL_LIFE, User::ROLE_ACCUEIL])->where('is_active', true)->orderBy('name')->get(['id', 'name', 'role']) : collect();
 
         return view('feedback-cases.show', $this->viewData($request->user(), compact('feedbackCase', 'canManage', 'managers')));
     }
@@ -132,7 +132,7 @@ class FeedbackCaseController extends Controller
             'assigned_to_user_id' => ['nullable', 'integer'],
         ]);
         if (!empty($data['assigned_to_user_id'])) {
-            User::query()->where('school_id', $feedbackCase->school_id)->whereIn('role', [User::ROLE_ADMIN, User::ROLE_SCHOOL_LIFE])->findOrFail($data['assigned_to_user_id']);
+            User::query()->where('school_id', $feedbackCase->school_id)->whereIn('role', [User::ROLE_ADMIN, User::ROLE_SCHOOL_LIFE, User::ROLE_ACCUEIL])->findOrFail($data['assigned_to_user_id']);
         }
         if ($data['status'] === 'resolved') {
             $data['resolved_at'] = now();
@@ -151,7 +151,7 @@ class FeedbackCaseController extends Controller
 
     private function notifyManagers(FeedbackCase $case, string $title, string $body): void
     {
-        foreach ([User::ROLE_ADMIN => 'admin', User::ROLE_SCHOOL_LIFE => 'school-life'] as $role => $prefix) {
+        foreach ([User::ROLE_ADMIN => 'admin', User::ROLE_SCHOOL_LIFE => 'school-life', User::ROLE_ACCUEIL => 'accueil'] as $role => $prefix) {
             $ids = User::query()->where('school_id', $case->school_id)->where('role', $role)->pluck('id')->all();
             $this->notifications->notifyUsers($ids, 'feedback_case', $title, $body, ['feedback_case_id' => $case->id, 'school_id' => $case->school_id, 'route' => route($prefix . '.feedback-cases.show', $case, absolute: false)]);
         }
@@ -167,7 +167,7 @@ class FeedbackCaseController extends Controller
 
     private function canManage(User $user): bool
     {
-        return in_array((string) $user->role, [User::ROLE_ADMIN, User::ROLE_SCHOOL_LIFE], true);
+        return in_array((string) $user->role, [User::ROLE_ADMIN, User::ROLE_SCHOOL_LIFE, User::ROLE_ACCUEIL], true);
     }
 
     private function schoolId(User $user): int
@@ -182,6 +182,7 @@ class FeedbackCaseController extends Controller
         return match ((string) $user->role) {
             User::ROLE_ADMIN => 'admin.feedback-cases',
             User::ROLE_SCHOOL_LIFE => 'school-life.feedback-cases',
+            User::ROLE_ACCUEIL => 'accueil.feedback-cases',
             User::ROLE_DIRECTOR => 'director.feedback-cases',
             User::ROLE_TEACHER => 'teacher.feedback-cases',
             default => 'parent.feedback-cases',
@@ -199,10 +200,11 @@ class FeedbackCaseController extends Controller
         $layout = match ((string) $user->role) {
             User::ROLE_ADMIN => 'admin-layout',
             User::ROLE_SCHOOL_LIFE => 'school-life-layout',
+            User::ROLE_ACCUEIL => 'accueil-layout',
             User::ROLE_DIRECTOR => 'director-layout',
             User::ROLE_TEACHER => 'teacher-layout',
             default => 'parent-layout',
         };
-        return $data + ['routePrefix' => $this->routePrefix($user), 'layoutComponent' => $layout, 'canCreate' => !in_array((string) $user->role, [User::ROLE_ADMIN, User::ROLE_SCHOOL_LIFE, User::ROLE_DIRECTOR], true)];
+        return $data + ['routePrefix' => $this->routePrefix($user), 'layoutComponent' => $layout, 'canCreate' => !in_array((string) $user->role, [User::ROLE_ADMIN, User::ROLE_SCHOOL_LIFE, User::ROLE_ACCUEIL, User::ROLE_DIRECTOR], true)];
     }
 }

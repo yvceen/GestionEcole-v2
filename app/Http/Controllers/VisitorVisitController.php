@@ -62,7 +62,7 @@ class VisitorVisitController extends Controller
     {
         $schoolId = $this->schoolId($request->user());
         $hosts = User::query()->where('school_id', $schoolId)->where('is_active', true)
-            ->whereIn('role', [User::ROLE_ADMIN, User::ROLE_DIRECTOR, User::ROLE_TEACHER, User::ROLE_SCHOOL_LIFE])
+            ->whereIn('role', [User::ROLE_ADMIN, User::ROLE_DIRECTOR, User::ROLE_TEACHER, User::ROLE_SCHOOL_LIFE, User::ROLE_ACCUEIL])
             ->orderBy('name')->get(['id', 'name', 'role']);
         $students = Student::query()->active()->where('school_id', $schoolId)->with('classroom:id,name')->orderBy('full_name')->get(['id', 'full_name', 'classroom_id']);
 
@@ -185,13 +185,21 @@ class VisitorVisitController extends Controller
 
     private function routePrefix(User $user): string
     {
-        return (string) $user->role === User::ROLE_ADMIN ? 'admin.visitors' : 'school-life.visitors';
+        return match ((string) $user->role) {
+            User::ROLE_ADMIN => 'admin.visitors',
+            User::ROLE_ACCUEIL => 'accueil.visitors',
+            default => 'school-life.visitors',
+        };
     }
 
     private function viewData(User $user, array $data): array
     {
         return $data + [
-            'layoutComponent' => (string) $user->role === User::ROLE_ADMIN ? 'admin-layout' : 'school-life-layout',
+            'layoutComponent' => match ((string) $user->role) {
+                User::ROLE_ADMIN => 'admin-layout',
+                User::ROLE_ACCUEIL => 'accueil-layout',
+                default => 'school-life-layout',
+            },
             'routePrefix' => $this->routePrefix($user),
         ];
     }

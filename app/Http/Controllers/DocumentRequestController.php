@@ -84,7 +84,7 @@ class DocumentRequestController extends Controller
             'status' => DocumentRequest::STATUS_PENDING,
         ]);
 
-        foreach ([User::ROLE_ADMIN => 'admin', User::ROLE_SCHOOL_LIFE => 'school-life'] as $role => $prefix) {
+        foreach ([User::ROLE_ADMIN => 'admin', User::ROLE_SCHOOL_LIFE => 'school-life', User::ROLE_ACCUEIL => 'accueil'] as $role => $prefix) {
             $managerIds = User::query()->where('school_id', $schoolId)->where('role', $role)->pluck('id')->all();
             $this->notifications->notifyUsers($managerIds, 'document_request', 'Nouvelle demande de document', $user->name . ' a demandé ' . $documentRequest->type_label . '.', [
                 'document_request_id' => $documentRequest->id,
@@ -175,7 +175,7 @@ class DocumentRequestController extends Controller
     private function authorizeManager(User $user, DocumentRequest $documentRequest): void
     {
         $this->authorizeRequest($user, $documentRequest);
-        abort_unless(in_array((string) $user->role, [User::ROLE_ADMIN, User::ROLE_SCHOOL_LIFE], true), 403);
+        abort_unless(in_array((string) $user->role, [User::ROLE_ADMIN, User::ROLE_SCHOOL_LIFE, User::ROLE_ACCUEIL], true), 403);
     }
 
     private function schoolId(User $user): int
@@ -190,12 +190,14 @@ class DocumentRequestController extends Controller
         $prefix = match ((string) $user->role) {
             User::ROLE_ADMIN => 'admin.document-requests',
             User::ROLE_SCHOOL_LIFE => 'school-life.document-requests',
+            User::ROLE_ACCUEIL => 'accueil.document-requests',
             User::ROLE_DIRECTOR => 'director.document-requests',
             default => 'parent.document-requests',
         };
         $layout = match ((string) $user->role) {
             User::ROLE_ADMIN => 'admin-layout',
             User::ROLE_SCHOOL_LIFE => 'school-life-layout',
+            User::ROLE_ACCUEIL => 'accueil-layout',
             User::ROLE_DIRECTOR => 'director-layout',
             default => 'parent-layout',
         };
@@ -203,7 +205,7 @@ class DocumentRequestController extends Controller
         return $data + [
             'routePrefix' => $prefix,
             'layoutComponent' => $layout,
-            'canManage' => in_array((string) $user->role, [User::ROLE_ADMIN, User::ROLE_SCHOOL_LIFE], true),
+            'canManage' => in_array((string) $user->role, [User::ROLE_ADMIN, User::ROLE_SCHOOL_LIFE, User::ROLE_ACCUEIL], true),
         ];
     }
 }

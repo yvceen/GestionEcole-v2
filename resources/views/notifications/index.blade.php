@@ -2,7 +2,7 @@
     $role = $role ?? (string) auth()->user()?->role;
     $routePrefix = match ($role) {
         'school_life' => 'school-life',
-        'admin', 'teacher', 'student', 'parent' => $role,
+        'admin', 'teacher', 'student', 'parent', 'accueil' => $role,
         default => 'parent',
     };
     $layoutComponent = match ($role) {
@@ -11,6 +11,7 @@
         'student' => 'student-layout',
         'parent' => 'parent-layout',
         'school_life' => 'school-life-layout',
+        'accueil' => 'accueil-layout',
         'director' => 'director-layout',
         'super_admin' => 'super-layout',
         default => 'app-shell',

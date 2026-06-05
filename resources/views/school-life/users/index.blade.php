@@ -8,6 +8,7 @@
             \App\Models\User::ROLE_PARENT => 'Parents',
             \App\Models\User::ROLE_STUDENT => 'Élèves',
             \App\Models\User::ROLE_SCHOOL_LIFE => 'Responsables scolaires',
+            \App\Models\User::ROLE_ACCUEIL => 'Accueil',
             \App\Models\User::ROLE_CHAUFFEUR => 'Chauffeurs',
         ];
     @endphp

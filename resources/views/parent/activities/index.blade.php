@@ -69,15 +69,17 @@
                                         <p class="font-semibold text-slate-900">{{ $participant->student?->full_name ?? '-' }}</p>
                                         <p class="text-xs text-slate-500">{{ $participant->student?->classroom?->name ?? '-' }}</p>
                                     </div>
-                                    <div class="flex flex-wrap items-center gap-2">
-                                        <x-ui.badge :variant="$variant">{{ $label }}</x-ui.badge>
-                                        <form method="POST" action="{{ route('parent.activities.confirm', $activity) }}">
+                                    <div class="grid w-full grid-cols-2 items-center gap-2 sm:flex sm:w-auto sm:flex-wrap">
+                                        <div class="col-span-2 sm:col-span-1">
+                                            <x-ui.badge :variant="$variant">{{ $label }}</x-ui.badge>
+                                        </div>
+                                        <form method="POST" action="{{ route('parent.activities.confirm', $activity) }}" class="min-w-0">
                                             @csrf
                                             <input type="hidden" name="student_id" value="{{ $participant->student_id }}">
                                             <input type="hidden" name="confirmation_status" value="{{ \App\Models\ActivityParticipant::CONFIRMATION_CONFIRMED }}">
                                             <x-ui.button type="submit" variant="primary" size="sm">Confirmer</x-ui.button>
                                         </form>
-                                        <form method="POST" action="{{ route('parent.activities.confirm', $activity) }}">
+                                        <form method="POST" action="{{ route('parent.activities.confirm', $activity) }}" class="min-w-0">
                                             @csrf
                                             <input type="hidden" name="student_id" value="{{ $participant->student_id }}">
                                             <input type="hidden" name="confirmation_status" value="{{ \App\Models\ActivityParticipant::CONFIRMATION_DECLINED }}">

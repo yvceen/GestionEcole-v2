@@ -135,6 +135,7 @@ class MobileAuthController extends Controller
             User::ROLE_STUDENT => 'Student',
             User::ROLE_SCHOOL_LIFE => 'School Life',
             User::ROLE_CHAUFFEUR => 'Driver',
+            User::ROLE_ACCUEIL => 'Accueil',
             default => ucfirst(str_replace('_', ' ', $role)),
         };
     }

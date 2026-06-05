@@ -27,10 +27,10 @@
         @else
             @foreach($homeworks as $homework)
                 <article class="student-panel">
-                    <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div class="min-w-0">
                             <div class="flex flex-wrap items-center gap-2">
-                                <h2 class="text-xl font-semibold text-slate-950">{{ $homework->title }}</h2>
+                                <h2 class="w-full text-lg font-semibold text-slate-950 sm:w-auto sm:text-xl">{{ $homework->title }}</h2>
                                 <span class="student-chip">{{ $homework->classroom?->name ?? '-' }}</span>
                                 @if($homework->classroom?->level?->name)
                                     <span class="student-chip">{{ $homework->classroom->level->name }}</span>
@@ -50,7 +50,7 @@
                             @endif
                         </div>
 
-                        <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-right">
+                        <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-left sm:text-right">
                             <p class="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Fichiers</p>
                             <p class="mt-2 text-2xl font-semibold text-slate-950">{{ $homework->attachments->count() }}</p>
                         </div>
@@ -59,7 +59,7 @@
                     @if($homework->attachments->isNotEmpty())
                         <div class="mt-5 rounded-3xl border border-slate-200 bg-slate-50 p-4">
                             <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Pieces jointes</p>
-                            <div class="mt-3 flex flex-wrap gap-2">
+                            <div class="mt-3 grid gap-2 sm:flex sm:flex-wrap">
                                 @foreach($homework->attachments as $attachment)
                                     <a href="{{ route('parent.homeworks.attachments.download', $attachment) }}" data-no-loading="true" class="app-button-secondary rounded-full px-4 py-2 text-xs font-semibold">
                                         {{ $attachment->original_name }}

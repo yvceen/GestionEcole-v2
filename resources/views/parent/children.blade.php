@@ -13,8 +13,8 @@
                         $payments = $paymentsSummary[$child->id] ?? ['count' => 0, 'total' => 0];
                     @endphp
                     <article class="student-panel">
-                        <div class="flex items-start justify-between gap-4">
-                            <div>
+                        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                            <div class="min-w-0">
                                 <p class="student-eyebrow">Enfant</p>
                                 <h2 class="mt-2 text-xl font-semibold text-slate-950">{{ $child->full_name }}</h2>
                                 <p class="mt-2 text-sm text-slate-600">
@@ -25,7 +25,7 @@
                                 </p>
                             </div>
 
-                            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-right">
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-left sm:text-right">
                                 <p class="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Moyenne</p>
                                 <p class="mt-2 text-2xl font-semibold text-slate-950">{{ $average !== null ? number_format((float) $average, 2) . '%' : '-' }}</p>
                             </div>
@@ -46,13 +46,13 @@
                             </div>
                         </div>
 
-                        <div class="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-                            <a href="{{ route('parent.children.courses', $child) }}" data-loading-label="Ouverture des cours..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Cours</a>
-                            <a href="{{ route('parent.children.homeworks', $child) }}" data-loading-label="Ouverture des devoirs..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Devoirs</a>
-                            <a href="{{ route('parent.children.grades', $child) }}" data-loading-label="Ouverture des notes..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Notes</a>
-                            <a href="{{ route('parent.children.attendance', $child) }}" data-loading-label="Ouverture des présences..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Présence</a>
-                            <a href="{{ route('parent.children.timetable', $child) }}" data-loading-label="Ouverture de l'emploi du temps..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Emploi du temps</a>
-                            <a href="{{ route('parent.children.finance', $child) }}" data-loading-label="Ouverture de la finance..." class="app-button-soft justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900">Finance</a>
+                        <div class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                            <a href="{{ route('parent.children.courses', $child) }}" data-loading-label="Ouverture des cours..." class="app-button-soft rounded-2xl px-3 py-3 text-center text-sm font-semibold text-slate-900">Cours</a>
+                            <a href="{{ route('parent.children.homeworks', $child) }}" data-loading-label="Ouverture des devoirs..." class="app-button-soft rounded-2xl px-3 py-3 text-center text-sm font-semibold text-slate-900">Devoirs</a>
+                            <a href="{{ route('parent.children.grades', $child) }}" data-loading-label="Ouverture des notes..." class="app-button-soft rounded-2xl px-3 py-3 text-center text-sm font-semibold text-slate-900">Notes</a>
+                            <a href="{{ route('parent.children.attendance', $child) }}" data-loading-label="Ouverture des présences..." class="app-button-soft rounded-2xl px-3 py-3 text-center text-sm font-semibold text-slate-900">Présence</a>
+                            <a href="{{ route('parent.children.timetable', $child) }}" data-loading-label="Ouverture de l'emploi du temps..." class="app-button-soft rounded-2xl px-3 py-3 text-center text-sm font-semibold text-slate-900">Emploi du temps</a>
+                            <a href="{{ route('parent.children.finance', $child) }}" data-loading-label="Ouverture de la finance..." class="app-button-soft rounded-2xl px-3 py-3 text-center text-sm font-semibold text-slate-900">Finance</a>
                         </div>
 
                         <p class="mt-4 text-sm text-slate-500">

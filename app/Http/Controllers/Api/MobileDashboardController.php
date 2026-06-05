@@ -7,6 +7,7 @@ use App\Models\AcademicYear;
 use App\Models\AppNotification;
 use App\Models\Attendance;
 use App\Models\Classroom;
+use App\Models\DocumentRequest;
 use App\Models\Grade;
 use App\Models\Homework;
 use App\Models\MobileAppConfig;
@@ -16,7 +17,9 @@ use App\Models\School;
 use App\Models\Student;
 use App\Models\StudentBehavior;
 use App\Models\Timetable;
+use App\Models\TransportAssignment;
 use App\Models\User;
+use App\Models\VisitorVisit;
 use App\Services\AcademicYearService;
 use App\Services\AttendanceReportingService;
 use App\Services\FinanceArrearsService;
@@ -86,6 +89,8 @@ class MobileDashboardController extends Controller
             User::ROLE_STUDENT => $this->studentStats($user, $schoolId, $unread),
             User::ROLE_TEACHER => $this->teacherStats($user, $schoolId, $unread),
             User::ROLE_SCHOOL_LIFE => $this->schoolLifeStats($schoolId),
+            User::ROLE_CHAUFFEUR => $this->chauffeurStats($user, $schoolId, $unread),
+            User::ROLE_ACCUEIL => $this->accueilStats($schoolId, $unread),
             User::ROLE_DIRECTOR => $this->directorStats($schoolId),
             User::ROLE_ADMIN => $this->adminStats($schoolId),
             User::ROLE_SUPER_ADMIN => $this->superAdminStats($unread),
@@ -158,6 +163,32 @@ class MobileDashboardController extends Controller
             $this->stat('Absent today', (string) $this->yearAwareQuery(Attendance::query(), $schoolId)->where('school_id', $schoolId)->whereDate('date', $today)->where('status', Attendance::STATUS_ABSENT)->count(), 'Attendance monitoring', 'error_outline'),
             $this->stat('Late today', (string) $this->yearAwareQuery(Attendance::query(), $schoolId)->where('school_id', $schoolId)->whereDate('date', $today)->where('status', Attendance::STATUS_LATE)->count(), 'Operations', 'schedule'),
             $this->stat('Pickup pending', (string) PickupRequest::query()->where('school_id', $schoolId)->where('status', PickupRequest::STATUS_PENDING)->count(), 'Awaiting action', 'local_taxi'),
+        ];
+    }
+
+    private function chauffeurStats(User $user, int $schoolId, int $unread): array
+    {
+        $assignments = TransportAssignment::query()
+            ->where('school_id', $schoolId)
+            ->whereHas('vehicle', fn ($query) => $query->where('driver_id', (int) $user->id));
+
+        $activeAssignments = (clone $assignments)->where('is_active', true);
+
+        return [
+            $this->stat('Assigned students', (string) (clone $activeAssignments)->distinct('student_id')->count('student_id'), 'Active transport records', 'directions_bus'),
+            $this->stat('Routes', (string) (clone $activeAssignments)->distinct('route_id')->count('route_id'), 'Current routes', 'map'),
+            $this->stat('Vehicles', (string) (clone $assignments)->distinct('vehicle_id')->count('vehicle_id'), 'Linked vehicles', 'airport_shuttle'),
+            $this->stat('Unread alerts', (string) $unread, 'Notifications waiting', 'notifications_active'),
+        ];
+    }
+
+    private function accueilStats(int $schoolId, int $unread): array
+    {
+        return [
+            $this->stat('Visitors inside', (string) VisitorVisit::query()->where('school_id', $schoolId)->where('status', VisitorVisit::STATUS_CHECKED_IN)->count(), 'Active visits', 'badge'),
+            $this->stat('Expected today', (string) VisitorVisit::query()->where('school_id', $schoolId)->where('status', VisitorVisit::STATUS_EXPECTED)->whereDate('expected_at', today())->count(), 'Reception planning', 'event'),
+            $this->stat('Documents pending', (string) DocumentRequest::query()->where('school_id', $schoolId)->whereIn('status', [DocumentRequest::STATUS_PENDING, DocumentRequest::STATUS_PROCESSING])->count(), 'Requests to follow', 'description'),
+            $this->stat('Unread alerts', (string) $unread, 'Notifications waiting', 'notifications_active'),
         ];
     }
 
@@ -773,6 +804,8 @@ class MobileDashboardController extends Controller
             User::ROLE_PARENT => 'Parent',
             User::ROLE_STUDENT => 'Student',
             User::ROLE_SCHOOL_LIFE => 'School Life',
+            User::ROLE_CHAUFFEUR => 'Driver',
+            User::ROLE_ACCUEIL => 'Accueil',
             default => ucfirst(str_replace('_', ' ', $role)),
         };
     }

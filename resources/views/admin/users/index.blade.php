@@ -44,6 +44,7 @@
             'parent' => 'Parents',
             'student' => 'Élèves',
             'school_life' => 'Responsables scolaires',
+            'accueil' => 'Accueil',
             'chauffeur' => 'Chauffeurs',
         ];
     @endphp

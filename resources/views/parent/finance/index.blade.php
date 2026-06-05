@@ -128,7 +128,7 @@
                 </div>
 
                 <div class="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
-                    <div class="overflow-hidden rounded-2xl border border-slate-200">
+                    <div class="hidden overflow-hidden rounded-2xl border border-slate-200 md:block">
                         <table class="min-w-full text-sm">
                             <thead class="bg-slate-50 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                                 <tr>
@@ -149,6 +149,32 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+
+                    <div class="portal-record-stack md:hidden">
+                        @foreach($receipt->payments as $payment)
+                            <article class="portal-record-card">
+                                <div class="portal-record-card-head">
+                                    <div class="min-w-0">
+                                        <p class="portal-record-title">{{ $payment->student?->full_name ?? '-' }}</p>
+                                        <p class="portal-record-subtitle">{{ $payment->student?->classroom?->name ?? '-' }}</p>
+                                    </div>
+                                    <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                        {{ number_format((float) $payment->amount, 2) }} MAD
+                                    </span>
+                                </div>
+                                <div class="portal-record-meta">
+                                    <div class="portal-record-meta-item">
+                                        <p class="portal-record-meta-label">Mois</p>
+                                        <p class="portal-record-meta-value">{{ $payment->period_month?->format('Y-m') ?? '-' }}</p>
+                                    </div>
+                                    <div class="portal-record-meta-item">
+                                        <p class="portal-record-meta-label">Méthode</p>
+                                        <p class="portal-record-meta-value">{{ strtoupper((string) $receipt->method) }}</p>
+                                    </div>
+                                </div>
+                            </article>
+                        @endforeach
                     </div>
 
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">

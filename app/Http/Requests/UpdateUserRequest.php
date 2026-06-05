@@ -21,7 +21,7 @@ class UpdateUserRequest extends FormRequest
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', "unique:users,email,{$userId}"],
             'phone'    => ['nullable', 'string', 'max:20'],
-            'role'     => ['required', 'in:admin,director,teacher,parent,student,chauffeur,school_life'],
+            'role'     => ['required', 'in:admin,director,teacher,parent,student,chauffeur,school_life,accueil'],
             'password' => ['nullable', Password::min(8)->letters()->numbers()],
         ];
     }

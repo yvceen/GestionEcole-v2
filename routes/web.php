@@ -140,6 +140,7 @@ use App\Http\Controllers\SchoolLife\TimetableSettingsController as SchoolLifeTim
 use App\Http\Controllers\SchoolLife\UserController as SchoolLifeUserController;
 use App\Http\Controllers\SchoolLife\BillableEventController as SchoolLifeBillableEventController;
 use App\Http\Controllers\Chauffeur\DashboardController as ChauffeurDashboardController;
+use App\Http\Controllers\Accueil\DashboardController as AccueilDashboardController;
 
 use App\Http\Middleware\DirectorOnly;
 
@@ -180,6 +181,7 @@ Route::get('/dashboard', function () {
         'student'     => redirect()->route('student.dashboard'),
         'chauffeur'   => redirect()->route('chauffeur.dashboard'),
         'school_life' => redirect()->route('school-life.dashboard'),
+        'accueil'     => redirect()->route('accueil.dashboard'),
         default       => redirect('/'),
     };
 })->middleware('auth')->name('dashboard');
@@ -243,6 +245,7 @@ Route::prefix('parent')->middleware(['auth', 'parent', 'school.active'])->as('pa
 foreach ([
     ['prefix' => 'admin', 'middleware' => 'admin', 'name' => 'admin.'],
     ['prefix' => 'school-life', 'middleware' => 'school_life', 'name' => 'school-life.'],
+    ['prefix' => 'accueil', 'middleware' => 'accueil', 'name' => 'accueil.'],
 ] as $feedbackManager) {
     Route::prefix($feedbackManager['prefix'])->middleware(['auth', $feedbackManager['middleware'], 'school.active'])->as($feedbackManager['name'])->group(function (): void {
         Route::get('/feedback', [FeedbackCaseController::class, 'index'])->name('feedback-cases.index');
@@ -273,6 +276,7 @@ foreach ([
 foreach ([
     ['prefix' => 'admin', 'middleware' => 'admin', 'name' => 'admin.'],
     ['prefix' => 'school-life', 'middleware' => 'school_life', 'name' => 'school-life.'],
+    ['prefix' => 'accueil', 'middleware' => 'accueil', 'name' => 'accueil.'],
 ] as $documentManager) {
     Route::prefix($documentManager['prefix'])->middleware(['auth', $documentManager['middleware'], 'school.active'])->as($documentManager['name'])->group(function (): void {
         Route::get('/document-requests', [DocumentRequestController::class, 'index'])->name('document-requests.index');
@@ -300,6 +304,7 @@ Route::prefix('parent')->middleware(['auth', 'parent', 'school.active'])->as('pa
 foreach ([
     ['prefix' => 'admin', 'middleware' => 'admin', 'name' => 'admin.'],
     ['prefix' => 'school-life', 'middleware' => 'school_life', 'name' => 'school-life.'],
+    ['prefix' => 'accueil', 'middleware' => 'accueil', 'name' => 'accueil.'],
 ] as $visitorManager) {
     Route::prefix($visitorManager['prefix'])->middleware(['auth', $visitorManager['middleware'], 'school.active'])->as($visitorManager['name'])->group(function (): void {
         Route::get('/visitors', [VisitorVisitController::class, 'index'])->name('visitors.index');
@@ -763,6 +768,19 @@ Route::prefix('school-life')
             Route::post('/{message}/approve', [SchoolLifeMessageController::class, 'approve'])->whereNumber('message')->name('approve');
             Route::post('/{message}/reject', [SchoolLifeMessageController::class, 'reject'])->whereNumber('message')->name('reject');
         });
+    });
+
+// =====================================================================
+// ACCUEIL
+// =====================================================================
+Route::prefix('accueil')
+    ->middleware(['auth', 'accueil', 'school.active'])
+    ->as('accueil.')
+    ->group(function (): void {
+        Route::get('/', [AccueilDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/notifications', [NotificationCenterController::class, 'index'])->name('notifications.index');
+        Route::get('/notifications/{notification}/open', [NotificationCenterController::class, 'open'])->name('notifications.open');
+        Route::post('/notifications/read-all', [NotificationCenterController::class, 'markAllRead'])->name('notifications.read_all');
     });
 
 // =====================================================================

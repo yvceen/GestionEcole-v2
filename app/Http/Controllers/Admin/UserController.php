@@ -42,6 +42,7 @@ class UserController extends Controller
             User::ROLE_STUDENT,
             User::ROLE_CHAUFFEUR,
             User::ROLE_SCHOOL_LIFE,
+            User::ROLE_ACCUEIL,
         ];
     }
 

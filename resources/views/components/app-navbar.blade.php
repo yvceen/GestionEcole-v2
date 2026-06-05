@@ -25,6 +25,7 @@
         'parent' => 'Parent',
         'student' => 'Élève',
         'school_life' => 'Responsable scolaire',
+        'accueil' => 'Accueil',
         default => 'Utilisateur',
     };
 
@@ -77,11 +78,17 @@
             ['label' => 'Élèves', 'route' => 'school-life.students.index'],
             ['label' => 'Présences', 'route' => 'school-life.attendance.index'],
         ],
+        'accueil' => [
+            ['label' => 'Nouveau visiteur', 'route' => 'accueil.visitors.create'],
+            ['label' => 'Documents', 'route' => 'accueil.document-requests.index'],
+            ['label' => 'Réclamations', 'route' => 'accueil.feedback-cases.index'],
+        ],
         default => [],
     })->filter(fn ($item) => is_array($item) && !empty($item['route']) && Route::has($item['route']))->values();
 
     $notificationRoutePrefix = match ((string) $user?->role) {
         'school_life' => 'school-life',
+        'accueil' => 'accueil',
         'admin', 'teacher', 'student', 'parent' => (string) $user->role,
         default => null,
     };
