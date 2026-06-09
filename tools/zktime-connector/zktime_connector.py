@@ -3,6 +3,7 @@ import hashlib
 import json
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 from datetime import datetime
@@ -150,12 +151,7 @@ def post_records(api_url, token, school_id, source_file, records):
         return json.loads(response.read().decode("utf-8"))
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config", default="config.json")
-    args = parser.parse_args()
-
-    config_path = Path(args.config).resolve()
+def run_once(config_path):
     config = load_json(config_path, {})
     export_dir = Path(config.get("export_dir", "")).resolve()
     state_path = (config_path.parent / config.get("state_file", ".zktime_state.json")).resolve()
@@ -180,7 +176,7 @@ def main():
                 source_files.append(path.name)
 
     if not pending:
-        print("No new ZKBioTime records.")
+        print("No new ZKBioTime records.", flush=True)
         return 0
 
     total_sent = 0
@@ -197,11 +193,37 @@ def main():
         for record in batch:
             sent.add(record["_fingerprint"])
         total_sent += len(batch)
-        print(f"Sent {len(batch)} records: {result}")
+        print(f"Sent {len(batch)} records: {result}", flush=True)
 
     state["sent"] = sorted(sent)[-50000:]
     save_json(state_path, state)
-    print(f"Done. Sent {total_sent} new records.")
+    print(f"Done. Sent {total_sent} new records.", flush=True)
+    return total_sent
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", default="config.json")
+    parser.add_argument("--watch", action="store_true", help="Keep running and sync new records continuously.")
+    parser.add_argument("--interval", type=int, default=60, help="Seconds between sync checks when --watch is enabled.")
+    args = parser.parse_args()
+
+    config_path = Path(args.config).resolve()
+
+    if not args.watch:
+        run_once(config_path)
+        return 0
+
+    interval = max(10, int(args.interval))
+    print(f"My Edu ZKBioTime connector started. Checking every {interval} seconds.", flush=True)
+    print("Keep this window open. Press Ctrl+C to stop.", flush=True)
+    while True:
+        try:
+            run_once(config_path)
+        except Exception as exc:
+            print(f"Sync error: {exc}", file=sys.stderr, flush=True)
+        time.sleep(interval)
+
     return 0
 
 
