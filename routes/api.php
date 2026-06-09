@@ -29,11 +29,15 @@ use App\Http\Controllers\Api\MobileTeacherAttendanceController;
 use App\Http\Controllers\Api\MobileTeacherHomeworkController;
 use App\Http\Controllers\Api\MobileTimetableController;
 use App\Http\Controllers\Api\MobileTransportController;
+use App\Http\Controllers\Api\ZkTimeAttendanceController;
 use App\Http\Middleware\AuthenticateMobileApiToken;
 use App\Http\Middleware\EnsureApiSchoolAccess;
 use App\Http\Middleware\IdentifySchoolFromSubdomain;
 use App\Http\Middleware\SetCurrentSchool;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/integrations/zktime/attendance', [ZkTimeAttendanceController::class, 'store'])
+    ->name('api.integrations.zktime.attendance');
 
 Route::middleware([IdentifySchoolFromSubdomain::class])->group(function (): void {
     Route::post('/login', [MobileAuthController::class, 'login'])->name('api.login');

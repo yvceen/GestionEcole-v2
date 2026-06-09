@@ -24,6 +24,7 @@
         ['label' => 'Activités', 'route' => 'admin.activities.index', 'icon' => 'calendar', 'section' => 'Organisation'],
         ['label' => 'Transport scolaire', 'route' => 'admin.transport.index', 'icon' => 'users', 'section' => 'Organisation'],
         ['label' => 'Présences', 'route' => 'admin.attendance.index', 'icon' => 'shield', 'section' => 'Suivi'],
+        ['label' => 'Présence personnel', 'route' => 'admin.staff-attendance.index', 'icon' => 'users', 'active_routes' => ['admin.staff-attendance.*'], 'section' => 'Suivi'],
         ['label' => 'Santé et urgences', 'route' => 'admin.health.index', 'icon' => 'shield', 'active_routes' => ['admin.health.*'], 'section' => 'Suivi'],
         ['label' => 'Autorisations numériques', 'route' => 'admin.digital-authorizations.index', 'icon' => 'clipboard', 'active_routes' => ['admin.digital-authorizations.*'], 'section' => 'Suivi'],
         ['label' => 'Gestion des visiteurs', 'route' => 'admin.visitors.index', 'icon' => 'users', 'active_routes' => ['admin.visitors.*'], 'section' => 'Suivi'],

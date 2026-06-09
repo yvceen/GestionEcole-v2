@@ -1,0 +1,8 @@
+{
+  "api_url": "https://myedu.school/api/integrations/zktime/attendance",
+  "token": "CHANGE_ME",
+  "school_id": 1,
+  "export_dir": "C:\\ZKBioTime\\files\\temp\\AutoExport",
+  "state_file": ".zktime_state.json",
+  "batch_size": 200
+}

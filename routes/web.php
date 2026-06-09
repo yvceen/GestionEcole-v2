@@ -44,6 +44,7 @@ use App\Http\Controllers\Admin\HomeworkController as AdminHomeworkController;
 use App\Http\Controllers\Admin\FinanceReminderController as AdminFinanceReminderController;
 use App\Http\Controllers\Admin\ActivityController as AdminActivityController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\StaffAttendanceController as AdminStaffAttendanceController;
 use App\Http\Controllers\Admin\AcademicYearController as AdminAcademicYearController;
 use App\Http\Controllers\Admin\StudentPromotionController as AdminStudentPromotionController;
 use App\Http\Controllers\Admin\TimetableController as AdminTimetableController;
@@ -465,6 +466,9 @@ Route::prefix('admin')
         Route::post('/homeworks/{homework}/reject', [AdminHomeworkController::class, 'reject'])->name('homeworks.reject');
         Route::get('/homeworks/attachments/{attachment}', [AdminHomeworkController::class, 'downloadAttachment'])->name('homeworks.attachments.download');
         Route::get('/attendance', [AdminAttendanceController::class, 'index'])->name('attendance.index');
+        Route::get('/staff-attendance', [AdminStaffAttendanceController::class, 'index'])->name('staff-attendance.index');
+        Route::get('/staff-attendance/mappings', [AdminStaffAttendanceController::class, 'mappings'])->name('staff-attendance.mappings');
+        Route::put('/staff-attendance/mappings/{mapping}', [AdminStaffAttendanceController::class, 'updateMapping'])->name('staff-attendance.mappings.update');
         Route::post('/courses/{course}/approve', [AdminCourseController::class, 'approve'])->name('courses.approve');
         Route::post('/courses/{course}/reject', [AdminCourseController::class, 'reject'])->name('courses.reject');
         Route::get('/timetable/settings', [AdminTimetableSettingsController::class, 'edit'])->name('timetable.settings.edit');

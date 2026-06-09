@@ -42,4 +42,8 @@ return [
         'server_key' => env('FCM_SERVER_KEY'),
     ],
 
+    'zktime' => [
+        'token' => env('ZKTIME_CONNECTOR_TOKEN'),
+    ],
+
 ];
